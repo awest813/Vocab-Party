@@ -11,19 +11,29 @@ export class ResultsScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.add.rectangle(0, 0, w, h, 0x1a1a2e).setOrigin(0)
+    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
+    this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
 
-    for (let i = 0; i < 80; i++) {
-      this.add.circle(
+    for (let i = 0; i < 90; i++) {
+      const star = this.add.circle(
         Phaser.Math.Between(0, w), Phaser.Math.Between(0, h),
-        Phaser.Math.FloatBetween(1, 3), 0xffffff, Phaser.Math.FloatBetween(0.3, 1)
+        Phaser.Math.FloatBetween(0.8, 2.8), 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9)
       )
+      this.tweens.add({
+        targets: star,
+        alpha: Phaser.Math.FloatBetween(0.05, 0.3),
+        duration: Phaser.Math.Between(700, 2800),
+        yoyo: true,
+        repeat: -1,
+        delay: Phaser.Math.Between(0, 2000),
+        ease: 'Sine.easeInOut'
+      })
     }
 
     const sorted = [...state.players].sort((a, b) => b.score - a.score)
 
-    const title = this.add.text(w / 2, 60, '🏆 FINAL RESULTS 🏆', {
-      fontSize: '56px',
+    const title = this.add.text(w / 2, 52, '🏆 FINAL RESULTS 🏆', {
+      fontSize: '52px',
       fontFamily: 'Arial Black',
       color: '#FFD700',
       stroke: '#884400',
@@ -35,8 +45,15 @@ export class ResultsScene extends Phaser.Scene {
     const medals = ['🥇', '🥈', '🥉', '4️⃣']
     const podiumColors = [0xFFD700, 0xC0C0C0, 0xCD7F32, 0x888888]
     const podiumH = [200, 160, 120, 80]
-    const podiumX = [w / 2, w / 2 - 200, w / 2 + 200, w / 2 - 400]
-    const podiumBase = h - 160
+    const playerCount = sorted.length
+    const podiumSpacing = playerCount === 4 ? 220 : 240
+    const podiumX = [
+      w / 2,
+      w / 2 - podiumSpacing,
+      w / 2 + podiumSpacing,
+      w / 2 - podiumSpacing * 1.5
+    ]
+    const podiumBase = h - 120
 
     sorted.forEach((player, rank) => {
       const x = podiumX[rank]
@@ -85,8 +102,8 @@ export class ResultsScene extends Phaser.Scene {
 
     this.time.delayedCall(1200, () => {
       showConfetti(this)
-      const banner = this.add.text(w / 2, 160, `🎉 ${sorted[0].name} WINS! 🎉`, {
-        fontSize: '42px',
+      const banner = this.add.text(w / 2, 130, `🎉 ${sorted[0].name} WINS! 🎉`, {
+        fontSize: '38px',
         fontFamily: 'Arial Black',
         color: '#FFD700',
         stroke: '#884400',

@@ -78,36 +78,40 @@ export class BoardScene extends Phaser.Scene {
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
     this.boardOriginX = (w - boardW) / 2
-    this.boardOriginY = (h - boardH) / 2 + 30
+    this.boardOriginY = (h - boardH) / 2 - 24
 
-    this.add.rectangle(0, 0, w, h, 0x1a1a2e).setOrigin(0)
+    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
     this.drawBoard()
 
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
 
     this.hud = new PlayerHUD(this, this.state)
 
-    this.statusText = this.add.text(w / 2, h - 90, '', {
-      fontSize: '22px',
+    // Bottom control panel
+    this.add.rectangle(w / 2, h - 56, w, 112, 0x12122a).setOrigin(0.5, 0.5)
+    this.add.rectangle(w / 2, h - 112, w, 2, 0x334466).setOrigin(0.5, 0.5)
+
+    this.statusText = this.add.text(w / 2 - 160, h - 56, '', {
+      fontSize: '20px',
       fontFamily: 'Arial Black, Arial',
       color: '#ffffff',
       stroke: '#000033',
-      strokeThickness: 5
+      strokeThickness: 4
     }).setOrigin(0.5)
 
-    this.diceText = this.add.text(w / 2, h - 130, '🎲', {
-      fontSize: '48px',
+    this.diceText = this.add.text(w / 2 + 80, h - 56, '🎲', {
+      fontSize: '52px',
     }).setOrigin(0.5)
 
-    this.roundText = this.add.text(w - 20, 20, '', {
-      fontSize: '20px',
+    this.roundText = this.add.text(w - 16, 18, '', {
+      fontSize: '18px',
       fontFamily: 'Arial Black',
       color: '#aaddff',
       stroke: '#000033',
       strokeThickness: 4
     }).setOrigin(1, 0)
 
-    this.rollBtn = createButton(this, w / 2 + 250, h - 90, '🎲 ROLL DICE', 0xffcc00, 0xcc9900)
+    this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
     this.updateStatus()

@@ -33,49 +33,61 @@ export class SetupScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.add.rectangle(0, 0, w, h, 0x1a1a2e).setOrigin(0)
+    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
+    this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
+    this.createStars()
+
+    // Back button (top-left)
+    const backBtn = createButton(this, 70, 36, '← MENU', 0x334466, 0x223355, 130, 44)
+    backBtn.on('pointerdown', () => {
+      this.cameras.main.flash(200, 255, 255, 255)
+      this.time.delayedCall(200, () => this.scene.start('MenuScene'))
+    })
 
     // Title
-    this.add.text(w / 2, 60, '🎉 VOCAB PARTY', {
-      fontSize: '52px',
+    this.add.text(w / 2, 56, '🎉 VOCAB PARTY', {
+      fontSize: '48px',
       fontFamily: 'Arial Black',
       color: '#FFD700',
-      stroke: '#cc6600',
+      stroke: '#8B4500',
       strokeThickness: 7
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, 120, 'Player Setup', {
-      fontSize: '28px',
+    this.add.text(w / 2, 108, 'Player Setup', {
+      fontSize: '26px',
       fontFamily: 'Arial',
       color: '#aaddff',
-      stroke: '#003366',
+      stroke: '#001133',
       strokeThickness: 3
     }).setOrigin(0.5)
 
-    // Player count control
-    this.add.text(w / 2, 190, 'Number of Players', {
-      fontSize: '22px',
+    // Player count panel
+    const countPanelY = 175
+    this.add.rectangle(w / 2, countPanelY, 340, 72, 0x1a1a38).setStrokeStyle(2, 0x334466)
+
+    this.add.text(w / 2, countPanelY - 22, 'Number of Players', {
+      fontSize: '18px',
       fontFamily: 'Arial Black',
-      color: '#ffffff'
+      color: '#aabbdd'
     }).setOrigin(0.5)
 
-    this.minusBtn = createButton(this, w / 2 - 70, 235, '−', 0x554488, 0x332266, 50, 44)
+    this.minusBtn = createButton(this, w / 2 - 80, countPanelY + 8, '−', 0x554488, 0x332266, 48, 40)
     this.minusBtn.on('pointerdown', () => this.changeCount(-1))
 
-    this.countText = this.add.text(w / 2, 235, String(this.playerCount), {
-      fontSize: '32px',
+    this.countText = this.add.text(w / 2, countPanelY + 8, String(this.playerCount), {
+      fontSize: '34px',
       fontFamily: 'Arial Black',
       color: '#FFD700'
     }).setOrigin(0.5)
 
-    this.plusBtn = createButton(this, w / 2 + 70, 235, '+', 0x554488, 0x332266, 50, 44)
+    this.plusBtn = createButton(this, w / 2 + 80, countPanelY + 8, '+', 0x554488, 0x332266, 48, 40)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
 
-    // Name rows
-    this.add.text(w / 2, 290, 'Enter player names (click a box to type)', {
-      fontSize: '18px',
+    // Name rows header
+    this.add.text(w / 2, 242, 'Enter player names (click to type, Tab/Enter to cycle)', {
+      fontSize: '16px',
       fontFamily: 'Arial',
-      color: '#aaaacc'
+      color: '#667788'
     }).setOrigin(0.5)
 
     this.rows = []
@@ -86,7 +98,7 @@ export class SetupScene extends Phaser.Scene {
     this.refreshRows()
 
     // Start button
-    this.startBtn = createButton(this, w / 2, h - 80, '▶  START GAME', 0x22bb55, 0x1a8844, 280)
+    this.startBtn = createButton(this, w / 2, h - 70, '▶  START GAME', 0x22bb55, 0x1a8844, 300, 60)
     this.startBtn.on('pointerdown', () => this.startGame())
 
     // Keyboard input
@@ -98,26 +110,51 @@ export class SetupScene extends Phaser.Scene {
     })
   }
 
+  createStars() {
+    const w = this.scale.width
+    const h = this.scale.height
+    for (let i = 0; i < 50; i++) {
+      const x = Phaser.Math.Between(0, w)
+      const y = Phaser.Math.Between(0, h)
+      const size = Phaser.Math.FloatBetween(0.8, 2.5)
+      const star = this.add.circle(x, y, size, 0xffffff, Phaser.Math.FloatBetween(0.15, 0.7))
+      this.tweens.add({
+        targets: star,
+        alpha: Phaser.Math.FloatBetween(0.05, 0.25),
+        duration: Phaser.Math.Between(900, 3000),
+        yoyo: true,
+        repeat: -1,
+        delay: Phaser.Math.Between(0, 2000),
+        ease: 'Sine.easeInOut'
+      })
+    }
+  }
+
   buildRow(index: number) {
     const w = this.scale.width
-    const rowY = 345 + index * 80
-    const inputW = 400
-    const inputH = 52
-    const inputX = w / 2 + 40
+    const rowY = 310 + index * 88
+    const inputW = 380
+    const inputH = 54
+    const inputX = w / 2 + 60
 
     const container = this.add.container(0, 0)
     this.rowContainers.push(container)
 
+    // Color swatch
+    const swatchColor = parseInt(PLAYER_COLORS[index].replace('#', ''), 16)
+    const swatch = this.add.rectangle(w / 2 - 240, rowY, 18, 18, swatchColor)
+    swatch.setStrokeStyle(2, 0xffffff)
+
     // Player label
-    const label = this.add.text(w / 2 - 220, rowY, `${PLAYER_EMOJIS[index]} Player ${index + 1}`, {
-      fontSize: '22px',
+    const label = this.add.text(w / 2 - 222, rowY, `${PLAYER_EMOJIS[index]} Player ${index + 1}`, {
+      fontSize: '20px',
       fontFamily: 'Arial Black',
       color: PLAYER_COLORS[index]
     }).setOrigin(0, 0.5)
 
     // Input background
-    const bg = this.add.rectangle(inputX, rowY, inputW, inputH, 0x222244)
-    bg.setStrokeStyle(3, 0x445588)
+    const bg = this.add.rectangle(inputX, rowY, inputW, inputH, 0x181830)
+    bg.setStrokeStyle(2, 0x334466)
     bg.setInteractive()
     bg.on('pointerdown', () => this.setActiveRow(index))
 
@@ -135,7 +172,7 @@ export class SetupScene extends Phaser.Scene {
       color: '#88aaff'
     }).setOrigin(0, 0.5).setVisible(false)
 
-    container.add([label, bg, nameText, cursor])
+    container.add([swatch, label, bg, nameText, cursor])
 
     const row: InputRow = {
       label,
@@ -181,8 +218,8 @@ export class SetupScene extends Phaser.Scene {
     this.rows.forEach((row, i) => {
       const isActive = i === index && i < this.playerCount
       row.active = isActive
-      row.bg.setStrokeStyle(3, isActive ? 0xaaddff : 0x445588)
-      row.bg.setFillStyle(isActive ? 0x2a3a66 : 0x222244)
+      row.bg.setStrokeStyle(2, isActive ? 0x88aaff : 0x334466)
+      row.bg.setFillStyle(isActive ? 0x1e2248 : 0x181830)
       if (!isActive) row.cursor.setVisible(false)
     })
   }
@@ -207,9 +244,9 @@ export class SetupScene extends Phaser.Scene {
 
   updateRowDisplay(index: number) {
     const row = this.rows[index]
-    const inputW = 400
+    const inputW = 380
     const w = this.scale.width
-    const inputX = w / 2 + 40
+    const inputX = w / 2 + 60
     const displayName = row.value || ' '
     row.nameText.setText(displayName)
     // Position cursor after text
