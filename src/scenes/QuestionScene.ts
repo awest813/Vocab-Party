@@ -77,6 +77,7 @@ export class QuestionScene extends Phaser.Scene {
     const answerColors = [0x4444cc, 0xcc4444, 0x44aa44, 0xcc8800]
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
+    let countdownTimer: Phaser.Time.TimerEvent
 
     q.answers.forEach((ans, i) => {
       const row = Math.floor(i / 2)
@@ -90,6 +91,7 @@ export class QuestionScene extends Phaser.Scene {
       btn.on('pointerdown', () => {
         if (answered) return
         answered = true
+        countdownTimer?.remove()
         const correct = i === q.correct
         this.handleAnswer(correct, btn, onComplete, q.explanation)
       })
@@ -101,12 +103,33 @@ export class QuestionScene extends Phaser.Scene {
     const timerBar = this.add.rectangle(w / 2 - 400, h / 2 + 225, 800, 12, 0x44ff88)
     timerBar.setOrigin(0, 0.5)
 
+    let secondsLeft = 15
+    const countdownText = this.add.text(w / 2 + 430, h / 2 + 225, '15', {
+      fontSize: '22px',
+      fontFamily: 'Arial Black',
+      color: '#44ff88',
+      stroke: '#002200',
+      strokeThickness: 3
+    }).setOrigin(0, 0.5)
+
+    countdownTimer = this.time.addEvent({
+      delay: 1000,
+      repeat: 14,
+      callback: () => {
+        secondsLeft--
+        countdownText.setText(String(secondsLeft))
+        if (secondsLeft <= 5) countdownText.setColor('#ff3333')
+        else if (secondsLeft <= 10) countdownText.setColor('#ff8800')
+      }
+    })
+
     this.tweens.add({
       targets: timerBar,
       width: 0,
       duration: 15000,
       ease: 'Linear',
       onComplete: () => {
+        countdownTimer.remove()
         if (!answered) {
           answered = true
           this.handleAnswer(false, null, onComplete)
