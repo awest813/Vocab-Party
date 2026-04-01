@@ -4,6 +4,7 @@ import { rollDice } from '../systems/DiceSystem'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
+import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 
 const TILE_SIZE = 56
 const BOARD_COLS = 12
@@ -26,16 +27,6 @@ function buildPath(cols: number, rows: number): {col: number, row: number}[] {
   return path
 }
 
-const TILE_COLORS: Record<TileType, number> = {
-  vocab: 0x4488ff,
-  grammar: 0xff8844,
-  bonus: 0xffdd00,
-  mystery: 0xaa44ff,
-  minigame: 0xff44aa,
-  swap: 0x44ffaa,
-  start: 0x22cc44
-}
-
 const TILE_LABELS: Record<TileType, string> = {
   vocab: '📖',
   grammar: '✏️',
@@ -46,7 +37,6 @@ const TILE_LABELS: Record<TileType, string> = {
   start: '🏠'
 }
 
-const PLAYER_COLORS = [0xff4444, 0x4488ff, 0x44dd44, 0xffcc00]
 const PLAYER_NAMES = ['Alex', 'Blake', 'Casey', 'Dana']
 const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
 
@@ -59,7 +49,7 @@ export class BoardScene extends Phaser.Scene {
   private hud!: PlayerHUD
   private rollBtn!: Phaser.GameObjects.Container
   private statusText!: Phaser.GameObjects.Text
-  private diceText!: Phaser.GameObjects.Text
+  private diceSprite!: Phaser.GameObjects.Image
   private rolling = false
   private roundText!: Phaser.GameObjects.Text
 
@@ -99,9 +89,7 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5)
 
-    this.diceText = this.add.text(w / 2 + 80, h - 56, '🎲', {
-      fontSize: '52px',
-    }).setOrigin(0.5)
+    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52)
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
@@ -123,10 +111,12 @@ export class BoardScene extends Phaser.Scene {
       const type: TileType = i === 0 ? 'start' : TILE_TYPES[i % TILE_TYPES.length]
       const x = this.boardOriginX + cell.col * TILE_SIZE + TILE_SIZE / 2
       const y = this.boardOriginY + cell.row * TILE_SIZE + TILE_SIZE / 2
-      const color = TILE_COLORS[type]
 
-      const rect = this.add.rectangle(x, y, TILE_SIZE - 4, TILE_SIZE - 4, color)
-      rect.setStrokeStyle(2, 0xffffff)
+      const img = this.add.image(x, y, TILE_TEXTURE_KEY(type))
+      img.setDisplaySize(TILE_SIZE - 4, TILE_SIZE - 4)
+      img.setInteractive()
+      img.on('pointerover', () => img.setAlpha(0.8))
+      img.on('pointerout', () => img.setAlpha(1))
 
       this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5)
 
@@ -134,10 +124,6 @@ export class BoardScene extends Phaser.Scene {
         fontSize: '9px',
         color: '#ffffff'
       }).setAlpha(0.7)
-
-      rect.setInteractive()
-      rect.on('pointerover', () => rect.setAlpha(0.8))
-      rect.on('pointerout', () => rect.setAlpha(1))
     })
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
@@ -151,10 +137,9 @@ export class BoardScene extends Phaser.Scene {
     const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
     const offset = offsets[index]
     const container = this.add.container(x + offset.x, y + offset.y)
-    const circle = this.add.circle(0, 0, 14, PLAYER_COLORS[index])
-    circle.setStrokeStyle(2, 0xffffff)
-    const label = this.add.text(0, 0, player.emoji, { fontSize: '14px' }).setOrigin(0.5)
-    container.add([circle, label])
+    const sprite = this.add.image(0, 0, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(28, 28)
+    const label = this.add.text(0, 0, player.emoji, { fontSize: '12px' }).setOrigin(0.5)
+    container.add([sprite, label])
     container.setDepth(10)
     return container
   }
@@ -180,7 +165,6 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn.setAlpha(0.5)
 
     const player = this.state.players[this.state.currentPlayer]
-    const diceValues = ['⚀','⚁','⚂','⚃','⚄','⚅']
 
     // Dramatic dice roll animation
     this.time.addEvent({
@@ -188,7 +172,7 @@ export class BoardScene extends Phaser.Scene {
       repeat: 14,
       callback: () => {
         const face = Phaser.Math.Between(1, 6)
-        this.diceText.setText(diceValues[face - 1])
+        this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face - 1])
         this.cameras.main.shake(50, 0.003)
       }
     })
@@ -196,11 +180,11 @@ export class BoardScene extends Phaser.Scene {
     await new Promise<void>(res => this.time.delayedCall(1300, res))
 
     const result = rollDice()
-    this.diceText.setText(diceValues[result - 1])
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[result - 1])
     this.statusText.setText(`${player.emoji} ${player.name} rolled a ${result}!`)
 
     this.tweens.add({
-      targets: this.diceText,
+      targets: this.diceSprite,
       scaleX: 1.5, scaleY: 1.5,
       duration: 150,
       yoyo: true,
