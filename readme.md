@@ -1,112 +1,155 @@
-# Phaser 3 + Vite.js Template
-> Make Phaser 3 games with modern frontend tooling.
+# 🎉 Vocab Party
 
-![License](https://img.shields.io/badge/license-MIT-green)
+A Mario Party-style vocabulary and grammar browser game built with **Phaser 3** and **TypeScript**.
+
+Players take turns rolling dice, moving around the board, and landing on tiles that trigger vocabulary questions, grammar challenges, minigames, and surprise events. The player with the most points after 10 rounds wins the trophy!
+
+---
 
 ## Prerequisites
 
-You'll need [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) installed.
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm v9 or higher
 
-It is highly recommended to use [Node Version Manager](https://github.com/nvm-sh/nvm) (nvm) to install Node.js and npm.
+---
 
-For Windows users there is [Node Version Manager for Windows](https://github.com/coreybutler/nvm-windows).
-
-Install Node.js and `npm` with `nvm`:
-
-```bash
-nvm install node
-
-nvm use node
-```
-
-Replace 'node' with 'latest' for `nvm-windows`.
-
-## Getting Started
-
-You can clone this repository or use [degit](https://github.com/Rich-Harris/degit) to scaffold the project like this:
+## Setup
 
 ```bash
-npx degit https://github.com/ourcade/phaser3-vite-template my-folder-name
-cd my-folder-name
-
+git clone <repo-url>
+cd Vocab-Party
 npm install
 ```
 
-Start development server:
+---
 
-```
-npm run start
-```
+## How to Run
 
-To create a production build:
+```bash
+# Start development server (http://localhost:8000)
+npm start
 
-```
+# Build for production
 npm run build
+
+# Preview production build
+npm run preview
 ```
 
-Production files will be placed in the `dist` folder. Then upload those files to a web server. 🎉
+---
+
+## Game Instructions
+
+1. **4 players** take turns in order (Alex 🔴, Blake 🔵, Casey 🟢, Dana 🟡).
+2. Click **🎲 ROLL DICE** on your turn to roll a die (1–6).
+3. Your token moves along the board. The tile you land on determines what happens:
+
+| Tile | Effect |
+|------|--------|
+| 🏠 Start | +3 bonus points |
+| 📖 Vocab | Answer a vocabulary multiple-choice question (+10 pts) |
+| ✏️ Grammar | Answer a grammar question (+10 pts) |
+| ⭐ Bonus | Instant +5 points |
+| ❓ Mystery | Random effect: bonus, penalty, or extra roll |
+| 🕹️ Minigame | Everyone plays a fast minigame; winner gets +15 pts |
+| 🔄 Swap | Swap board positions with a random player |
+
+4. After **10 rounds** (40 total turns), the **Final Results** screen shows the podium.
+5. Click **🔄 PLAY AGAIN** or **🏠 MAIN MENU** to play again.
+
+### Minigames
+
+- **🔍 Context Clue Clash** — Fill in the blank using context clues
+- **😱 Comma Crisis** — Pick the sentence with correct comma placement
+- **🗣️ Parts of Speech Panic** — Identify the part of speech of the highlighted word
+
+---
 
 ## Project Structure
 
 ```
-    .
-    ├── dist
-    ├── node_modules
-    ├── public
-    ├── src
-    │   ├── HelloWorldScene.js
-    │   ├── main.js
-	├── index.html
-    ├── package.json
+Vocab-Party/
+├── index.html
+├── vite.config.js
+├── tsconfig.json
+├── package.json
+├── public/
+│   └── data/
+│       ├── vocab.json       # Vocabulary questions & context clue minigame data
+│       └── grammar.json     # Grammar questions, comma & parts-of-speech minigame data
+└── src/
+    ├── main.ts              # Phaser game config & scene list
+    ├── scenes/
+    │   ├── BootScene.ts     # Initial boot, starts preload
+    │   ├── PreloadScene.ts  # Loading bar, loads JSON data files
+    │   ├── MenuScene.ts     # Main menu with animated background
+    │   ├── BoardScene.ts    # Core game board, dice rolling, turn management
+    │   ├── QuestionScene.ts # Vocabulary & grammar question overlay
+    │   ├── MinigameScene.ts # Three minigame implementations
+    │   └── ResultsScene.ts  # Final podium and winner announcement
+    ├── systems/
+    │   ├── GameState.ts     # Player/state types and factory
+    │   └── DiceSystem.ts    # Dice rolling utilities
+    └── ui/
+        ├── Button.ts        # Reusable animated button component
+        ├── PlayerHUD.ts     # Top player score panels
+        └── Confetti.ts      # Confetti particle effect
 ```
 
-JavaScript files are intended for the `src` folder. `main.js` is the entry point referenced by `index.html`.
+---
 
-Other than that there is no opinion on how you should structure your project.
+## Adding Custom Questions
 
-There is an example `HelloWorldScene.js` file that can be placed inside a `scenes` folder to organize by type or elsewhere to organize by function. For example, you can keep all files specific to the HelloWorld scene in a `hello-world` folder.
+### Vocabulary Questions (`public/data/vocab.json`)
 
-It is all up to you!
+Add entries to the `questions` array:
 
-## Static Assets
-
-Any static assets like images or audio files should be placed in the `public` folder. It'll then be served from the root. For example: http://localhost:8000/images/my-image.png
-
-Example `public` structure:
-
-```
-    public
-    ├── images
-    │   ├── my-image.png
-    ├── music
-    │   ├── ...
-    ├── sfx
-    │   ├── ...
-```
-
-They can then be loaded by Phaser with `this.image.load('my-image', 'images/my-image.png')`.
-
-# ESLint
-
-This template uses a basic `eslint` set up for code linting to help you find and fix common problems in your JavaScript code.
-
-It does not aim to be opinionated.
-
-[See here for rules to turn on or off](https://eslint.org/docs/rules/).
-
-## Dev Server Port
-
-You can change the dev server's port number by modifying the `vite.config.js` file. Look for the `server` section:
-
-```js
+```json
 {
-	// ...
-	server: { host: '0.0.0.0', port: 8000 },
+  "question": "What does 'resilient' mean?",
+  "answers": ["Easily broken", "Quick to recover", "Slow to move", "Hard to see"],
+  "correct": 1,
+  "explanation": "Resilient means able to recover quickly from difficulties."
 }
 ```
 
-Change 8000 to whatever you want.
+### Grammar Questions (`public/data/grammar.json`)
+
+Same format as vocab questions. Also supports minigame data:
+
+```json
+// minigame_comma — add to "minigame_comma" array
+{
+  "sentence": "...",
+  "correct": "...",
+  "choices": ["...", "...", "...", "..."],
+  "correct_index": 2
+}
+
+// minigame_pos — add to "minigame_pos" array
+{
+  "word": "JOYFUL",
+  "sentence": "The joyful child laughed all day.",
+  "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+  "correct": 2
+}
+```
+
+### Context Clue Minigame (`public/data/vocab.json`)
+
+Add to the `minigame_context_clues` array:
+
+```json
+{
+  "sentence": "The athlete was _____ after winning the championship.",
+  "word": "elated",
+  "choices": ["elated", "tired", "nervous", "angry"],
+  "correct": 0
+}
+```
+
+---
 
 ## License
 
-[MIT License](https://github.com/ourcade/phaser3-vite-template/blob/master/LICENSE)
+MIT
