@@ -79,8 +79,8 @@ export class ResultsScene extends Phaser.Scene {
       }
 
       this.add.text(x, podiumBase - ph / 2, String(rank + 1), {
-        fontSize: '28px', fontFamily: 'Arial Black', color: '#000000', alpha: 0.4
-      } as any).setOrigin(0.5)
+        fontSize: '28px', fontFamily: 'Arial Black', color: '#000000'
+      }).setAlpha(0.4).setOrigin(0.5)
     })
 
     this.time.delayedCall(1200, () => {

@@ -115,9 +115,8 @@ export class BoardScene extends Phaser.Scene {
 
       this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
         fontSize: '9px',
-        color: '#ffffff',
-        alpha: 0.7
-      } as any)
+        color: '#ffffff'
+      }).setAlpha(0.7)
 
       rect.setInteractive()
       rect.on('pointerover', () => rect.setAlpha(0.8))

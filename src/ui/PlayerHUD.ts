@@ -6,6 +6,7 @@ const PLAYER_COLORS = ['#ff6666', '#6688ff', '#66dd66', '#ffdd44']
 export class PlayerHUD {
   private scene: Phaser.Scene
   private containers: Phaser.GameObjects.Container[] = []
+  private activeTweenTarget: number = -1
 
   constructor(scene: Phaser.Scene, state: GameState) {
     this.scene = scene
@@ -61,7 +62,8 @@ export class PlayerHUD {
       const bg = container.getAt(0) as Phaser.GameObjects.Rectangle
       const isActive = i === state.currentPlayer
       bg.setFillStyle(isActive ? 0x443388 : 0x222244)
-      if (isActive) {
+      if (isActive && this.activeTweenTarget !== i) {
+        this.activeTweenTarget = i
         this.scene.tweens.add({ targets: container, scaleX: 1.08, scaleY: 1.08, duration: 200, yoyo: true })
       }
     })
