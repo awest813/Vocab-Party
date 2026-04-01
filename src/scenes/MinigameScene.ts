@@ -131,8 +131,7 @@ export class MinigameScene extends Phaser.Scene {
           this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
             fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
           }).setOrigin(0.5)
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          this.time.delayedCall(2000, () => onComplete(winner))
+          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
         } else {
           const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
           if (btnBg) btnBg.setFillStyle(0xaa2222)
@@ -199,8 +198,7 @@ export class MinigameScene extends Phaser.Scene {
           this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
             fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
           }).setOrigin(0.5)
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          this.time.delayedCall(2000, () => onComplete(winner))
+          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
         } else {
           const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
           if (btnBg) btnBg.setFillStyle(0xaa2222)
@@ -277,8 +275,7 @@ export class MinigameScene extends Phaser.Scene {
           this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
             fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
           }).setOrigin(0.5)
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          this.time.delayedCall(2000, () => onComplete(winner))
+          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
         } else {
           const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
           if (btnBg) btnBg.setFillStyle(0xaa2222)

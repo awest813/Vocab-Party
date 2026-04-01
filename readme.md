@@ -8,8 +8,8 @@ Players take turns rolling dice, moving around the board, and landing on tiles t
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) v16 or higher
-- npm v8 or higher
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm v9 or higher
 
 ---
 

@@ -91,7 +91,7 @@ export class QuestionScene extends Phaser.Scene {
         if (answered) return
         answered = true
         const correct = i === q.correct
-        this.handleAnswer(correct, btn, q.answers.map((_, j) => j === q.correct), onComplete, q.explanation)
+        this.handleAnswer(correct, btn, onComplete, q.explanation)
       })
     })
 
@@ -109,7 +109,7 @@ export class QuestionScene extends Phaser.Scene {
       onComplete: () => {
         if (!answered) {
           answered = true
-          this.handleAnswer(false, null, q.answers.map((_, j) => j === q.correct), onComplete)
+          this.handleAnswer(false, null, onComplete)
         }
       }
     })
@@ -121,7 +121,6 @@ export class QuestionScene extends Phaser.Scene {
   handleAnswer(
     correct: boolean,
     _btn: Phaser.GameObjects.Container | null,
-    _correctFlags: boolean[],
     onComplete: (c: boolean) => void,
     explanation?: string
   ) {

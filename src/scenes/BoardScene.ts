@@ -8,6 +8,7 @@ import { showConfetti } from '../ui/Confetti'
 const TILE_SIZE = 56
 const BOARD_COLS = 12
 const BOARD_ROWS = 8
+const ROUNDS_PER_GAME = 10
 
 const TILE_TYPES: TileType[] = [
   'vocab','grammar','bonus','vocab','grammar','minigame','vocab','grammar','mystery','vocab','bonus','grammar',
@@ -315,7 +316,7 @@ export class BoardScene extends Phaser.Scene {
     const effects = [
       { msg: '⭐ +8 Mystery Bonus!', color: '#FFD700', fn: () => { player.score += 8 } },
       { msg: '😱 -5 Oops!', color: '#ff4444', fn: () => { player.score = Math.max(0, player.score - 5) } },
-      { msg: '🎲 Extra Roll!', color: '#88aaff', fn: () => { /* extra roll effect */ } },
+      { msg: '🎲 Extra Roll!', color: '#88aaff', fn: () => { this.time.delayedCall(1400, () => this.handleRoll()) } },
     ]
     const effect = Phaser.Utils.Array.GetRandom(effects)
     effect.fn()
@@ -351,7 +352,7 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn.setAlpha(1)
 
     this.state.turn++
-    const totalTurns = this.state.players.length * 10
+    const totalTurns = this.state.players.length * ROUNDS_PER_GAME
     if (this.state.turn >= totalTurns) {
       this.time.delayedCall(500, () => {
         this.scene.start('ResultsScene', { state: this.state })
