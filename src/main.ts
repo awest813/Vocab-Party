@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { BootScene } from './scenes/BootScene'
 import { PreloadScene } from './scenes/PreloadScene'
 import { MenuScene } from './scenes/MenuScene'
+import { SetupScene } from './scenes/SetupScene'
 import { BoardScene } from './scenes/BoardScene'
 import { QuestionScene } from './scenes/QuestionScene'
 import { MinigameScene } from './scenes/MinigameScene'
@@ -17,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false }
   },
-  scene: [BootScene, PreloadScene, MenuScene, BoardScene, QuestionScene, MinigameScene, ResultsScene]
+  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene]
 }
 
 new Phaser.Game(config)

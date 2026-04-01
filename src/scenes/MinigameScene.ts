@@ -151,8 +151,10 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          onComplete(winner)
+          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+          }).setOrigin(0.5)
+          this.time.delayedCall(1500, () => onComplete(-1))
         }
       }
     })
@@ -218,8 +220,10 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          onComplete(winner)
+          this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+          }).setOrigin(0.5)
+          this.time.delayedCall(1500, () => onComplete(-1))
         }
       }
     })
@@ -295,8 +299,10 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
-          const winner = Phaser.Math.Between(0, state.players.length - 1)
-          onComplete(winner)
+          this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+          }).setOrigin(0.5)
+          this.time.delayedCall(1500, () => onComplete(-1))
         }
       }
     })

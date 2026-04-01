@@ -112,7 +112,7 @@ export class ResultsScene extends Phaser.Scene {
     const playAgainBtn = createButton(this, w / 2 - 150, h - 60, '🔄 PLAY AGAIN', 0x22bb55, 0x1a8844)
     playAgainBtn.on('pointerdown', () => {
       this.cameras.main.flash(300, 255, 255, 255)
-      this.time.delayedCall(300, () => this.scene.start('BoardScene'))
+      this.time.delayedCall(300, () => this.scene.start('SetupScene'))
     })
 
     const menuBtn = createButton(this, w / 2 + 150, h - 60, '🏠 MAIN MENU', 0x5566ff, 0x3344cc)

@@ -59,6 +59,96 @@
       "answers": ["Dull and boring", "Producing strong, clear images", "Short and simple", "Old and outdated"],
       "correct": 1,
       "explanation": "Vivid means producing powerful feelings or clear images in the mind."
+    },
+    {
+      "question": "What does 'resilient' mean?",
+      "answers": ["Easily broken", "Quick to recover from hardship", "Slow to move", "Hard to see"],
+      "correct": 1,
+      "explanation": "Resilient means able to recover quickly from difficulties."
+    },
+    {
+      "question": "What is the meaning of 'scrutinize'?",
+      "answers": ["To ignore completely", "To examine very carefully", "To celebrate noisily", "To move slowly"],
+      "correct": 1,
+      "explanation": "Scrutinize means to examine or inspect closely and thoroughly."
+    },
+    {
+      "question": "What does 'collaborate' mean?",
+      "answers": ["To compete fiercely", "To work jointly with others", "To study alone", "To argue strongly"],
+      "correct": 1,
+      "explanation": "Collaborate means to work jointly on an activity or project."
+    },
+    {
+      "question": "Which word means 'to make something worse'?",
+      "answers": ["Alleviate", "Improve", "Exacerbate", "Simplify"],
+      "correct": 2,
+      "explanation": "Exacerbate means to make a problem or bad situation worse."
+    },
+    {
+      "question": "What does 'meticulous' mean?",
+      "answers": ["Careless and messy", "Showing great attention to detail", "Moving very fast", "Extremely loud"],
+      "correct": 1,
+      "explanation": "Meticulous means showing great attention to detail and precision."
+    },
+    {
+      "question": "What does 'tranquil' describe?",
+      "answers": ["Noisy and chaotic", "Free from disturbance; calm", "Bitterly cold", "Extremely busy"],
+      "correct": 1,
+      "explanation": "Tranquil means free from disturbance — calm and peaceful."
+    },
+    {
+      "question": "What does 'antagonist' mean in a story?",
+      "answers": ["The main hero", "A character who opposes the hero", "The story's narrator", "A helpful friend"],
+      "correct": 1,
+      "explanation": "The antagonist is the character who opposes or works against the protagonist."
+    },
+    {
+      "question": "What does 'diligent' mean?",
+      "answers": ["Lazy and careless", "Having or showing careful effort", "Loud and boisterous", "Sad and gloomy"],
+      "correct": 1,
+      "explanation": "Diligent means having or showing careful and persistent effort."
+    },
+    {
+      "question": "What is the meaning of 'unprecedented'?",
+      "answers": ["Common and expected", "Never done or known before", "Repeated many times", "Slightly unusual"],
+      "correct": 1,
+      "explanation": "Unprecedented means never having happened or existed before."
+    },
+    {
+      "question": "What does 'empathy' mean?",
+      "answers": ["Feeling superior to others", "Understanding another's feelings", "Disliking someone strongly", "Being very logical"],
+      "correct": 1,
+      "explanation": "Empathy is the ability to understand and share the feelings of another."
+    },
+    {
+      "question": "What does 'skeptical' mean?",
+      "answers": ["Fully trusting", "Doubtful or questioning", "Extremely happy", "Very tired"],
+      "correct": 1,
+      "explanation": "Skeptical means not easily convinced; having doubts."
+    },
+    {
+      "question": "What is an 'inference'?",
+      "answers": ["A direct statement of fact", "A conclusion reached by reasoning", "An exact quotation", "A summary"],
+      "correct": 1,
+      "explanation": "An inference is a conclusion or opinion formed from evidence and reasoning."
+    },
+    {
+      "question": "What does 'concise' mean?",
+      "answers": ["Long and detailed", "Giving much information in few words", "Confusing and unclear", "Emotional and dramatic"],
+      "correct": 1,
+      "explanation": "Concise means giving a lot of information clearly and in few words."
+    },
+    {
+      "question": "What does 'inevitable' mean?",
+      "answers": ["Easy to prevent", "Certain to happen; unavoidable", "Hard to understand", "Unlikely to occur"],
+      "correct": 1,
+      "explanation": "Inevitable means certain to happen and impossible to avoid."
+    },
+    {
+      "question": "What does 'emphatically' mean?",
+      "answers": ["In a quiet, hesitant way", "In a forceful and clear manner", "In a confused way", "In a lazy manner"],
+      "correct": 1,
+      "explanation": "Emphatically means in a forceful way that leaves no doubt."
     }
   ],
   "minigame_context_clues": [
@@ -84,6 +174,54 @@
       "sentence": "He spoke in a _____ voice so as not to wake the sleeping baby.",
       "word": "quiet",
       "choices": ["loud", "angry", "quiet", "confused"],
+      "correct": 2
+    },
+    {
+      "sentence": "The old bridge was _____, so engineers warned people not to cross it.",
+      "word": "unstable",
+      "choices": ["beautiful", "unstable", "colorful", "popular"],
+      "correct": 1
+    },
+    {
+      "sentence": "After days of hard work, the team felt _____ when they finally finished the project.",
+      "word": "relieved",
+      "choices": ["relieved", "bored", "angry", "nervous"],
+      "correct": 0
+    },
+    {
+      "sentence": "The puppy wagged its tail and licked everyone it met — it was incredibly _____.",
+      "word": "friendly",
+      "choices": ["fierce", "tired", "friendly", "shy"],
+      "correct": 2
+    },
+    {
+      "sentence": "The hikers followed the _____ trail, carefully marked with bright orange signs.",
+      "word": "designated",
+      "choices": ["dangerous", "narrow", "designated", "unknown"],
+      "correct": 2
+    },
+    {
+      "sentence": "The teacher used many examples and diagrams to help the students _____ the concept.",
+      "word": "understand",
+      "choices": ["forget", "memorize", "ignore", "understand"],
+      "correct": 3
+    },
+    {
+      "sentence": "After the storm, the town was in complete _____, with downed trees and flooded streets.",
+      "word": "chaos",
+      "choices": ["chaos", "silence", "joy", "celebration"],
+      "correct": 0
+    },
+    {
+      "sentence": "The kind stranger offered to _____ the lost tourist to the nearest bus stop.",
+      "word": "guide",
+      "choices": ["chase", "guide", "ignore", "stop"],
+      "correct": 1
+    },
+    {
+      "sentence": "The chef prepared a _____ meal using only fresh, local ingredients.",
+      "word": "delicious",
+      "choices": ["terrible", "plain", "delicious", "frozen"],
       "correct": 2
     }
   ]
