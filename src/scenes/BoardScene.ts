@@ -317,14 +317,24 @@ export class BoardScene extends Phaser.Scene {
 
   handleMystery(player: Player) {
     const effects = [
-      { msg: '⭐ +8 Mystery Bonus!', color: '#FFD700', fn: () => { player.score += 8 } },
-      { msg: '😱 -5 Oops!', color: '#ff4444', fn: () => { player.score = Math.max(0, player.score - 5) } },
-      { msg: '🎲 Extra Roll!', color: '#88aaff', fn: () => { this.time.delayedCall(1400, () => this.handleRoll()) } },
+      { msg: '⭐ +8 Mystery Bonus!', color: '#FFD700', extraRoll: false, apply: () => { player.score += 8 } },
+      { msg: '😱 -5 Oops!', color: '#ff4444', extraRoll: false, apply: () => { player.score = Math.max(0, player.score - 5) } },
+      { msg: '🎲 Extra Roll!', color: '#88aaff', extraRoll: true, apply: () => {} },
     ]
     const effect = Phaser.Utils.Array.GetRandom(effects)
-    effect.fn()
     this.statusText.setText(effect.msg)
     this.showFloatyText(player, effect.msg, effect.color)
+
+    if (effect.extraRoll) {
+      this.time.delayedCall(1200, () => {
+        this.rolling = false
+        this.rollBtn.setAlpha(1)
+        this.handleRoll()
+      })
+      return
+    }
+
+    effect.apply()
     this.time.delayedCall(1200, () => this.endTurn())
   }
 
