@@ -1,0 +1,133 @@
+{
+  "questions": [
+    {
+      "question": "Which sentence uses a comma correctly?",
+      "answers": [
+        "I went to the store, and I bought milk.",
+        "I went, to the store and I bought milk.",
+        "I, went to the store and I bought milk.",
+        "I went to the store and, I bought milk."
+      ],
+      "correct": 0,
+      "explanation": "Use a comma before a coordinating conjunction joining two independent clauses."
+    },
+    {
+      "question": "Which sentence has correct subject-verb agreement?",
+      "answers": [
+        "The dogs runs in the park.",
+        "The dogs run in the park.",
+        "The dogs is running in the park.",
+        "The dogs were runs in the park."
+      ],
+      "correct": 1,
+      "explanation": "The plural subject 'dogs' requires the plural verb 'run'."
+    },
+    {
+      "question": "Which is the correct plural of 'child'?",
+      "answers": ["Childs", "Childes", "Children", "Childrens"],
+      "correct": 2,
+      "explanation": "The irregular plural of 'child' is 'children'."
+    },
+    {
+      "question": "Which sentence is in the active voice?",
+      "answers": [
+        "The cake was eaten by the children.",
+        "The children ate the cake.",
+        "The cake had been eaten.",
+        "Eaten was the cake."
+      ],
+      "correct": 1,
+      "explanation": "Active voice: subject performs the action directly."
+    },
+    {
+      "question": "Which word is a conjunction?",
+      "answers": ["Quickly", "Beautiful", "Although", "Ran"],
+      "correct": 2,
+      "explanation": "'Although' is a subordinating conjunction."
+    },
+    {
+      "question": "Which sentence uses an apostrophe correctly?",
+      "answers": [
+        "The cat's toy is lost.",
+        "The cats toy is lost.",
+        "The cat is toy's lost.",
+        "The cats' toy is lost."
+      ],
+      "correct": 0,
+      "explanation": "Use 's to show singular possession."
+    },
+    {
+      "question": "What type of sentence is this: 'Run!'",
+      "answers": ["Declarative", "Interrogative", "Imperative", "Exclamatory"],
+      "correct": 2,
+      "explanation": "An imperative sentence gives a command."
+    },
+    {
+      "question": "Which word is an adverb in: 'She sings beautifully'?",
+      "answers": ["She", "sings", "beautifully", "None"],
+      "correct": 2,
+      "explanation": "Beautifully modifies the verb 'sings' — it's an adverb."
+    }
+  ],
+  "minigame_comma": [
+    {
+      "sentence": "Before you leave please turn off the lights and close the door.",
+      "correct": "Before you leave, please turn off the lights, and close the door.",
+      "choices": [
+        "Before you leave please turn off the lights and close the door.",
+        "Before you leave, please turn off the lights, and close the door.",
+        "Before, you leave please turn off the lights and close, the door.",
+        "Before you leave please, turn off the lights and close the door."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "My favorite foods are pizza tacos and sushi.",
+      "correct": "My favorite foods are pizza, tacos, and sushi.",
+      "choices": [
+        "My favorite foods are pizza tacos and sushi.",
+        "My, favorite foods are pizza tacos and sushi.",
+        "My favorite foods are pizza, tacos, and sushi.",
+        "My favorite foods, are pizza tacos and sushi."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "Although it was raining we decided to go for a walk.",
+      "correct": "Although it was raining, we decided to go for a walk.",
+      "choices": [
+        "Although it was raining we decided to go for a walk.",
+        "Although, it was raining we decided to go for a walk.",
+        "Although it was raining, we decided to go for a walk.",
+        "Although it was raining we, decided to go for a walk."
+      ],
+      "correct_index": 2
+    }
+  ],
+  "minigame_pos": [
+    {
+      "word": "QUICKLY",
+      "sentence": "She ran quickly to catch the bus.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 3
+    },
+    {
+      "word": "BRILLIANT",
+      "sentence": "The brilliant student aced every test.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 2
+    },
+    {
+      "word": "LIBRARY",
+      "sentence": "She visited the library every week.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 0
+    },
+    {
+      "word": "CLIMBED",
+      "sentence": "He climbed the tall mountain with ease.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 1
+    }
+  ]
+}

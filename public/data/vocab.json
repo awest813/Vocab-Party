@@ -1,0 +1,90 @@
+{
+  "questions": [
+    {
+      "question": "What does the word 'benevolent' mean?",
+      "answers": ["Kind and generous", "Angry and hostile", "Confused and lost", "Loud and boisterous"],
+      "correct": 0,
+      "explanation": "Benevolent means well-meaning and kindly."
+    },
+    {
+      "question": "Choose the correct meaning of 'ambiguous'.",
+      "answers": ["Clear and obvious", "Open to more than one interpretation", "Completely false", "Extremely precise"],
+      "correct": 1,
+      "explanation": "Ambiguous means open to multiple interpretations."
+    },
+    {
+      "question": "What does 'persevere' mean?",
+      "answers": ["To give up quickly", "To continue despite difficulty", "To celebrate loudly", "To ignore problems"],
+      "correct": 1,
+      "explanation": "Persevere means to continue in spite of difficulty."
+    },
+    {
+      "question": "What is the meaning of 'hypothesis'?",
+      "answers": ["A proven fact", "A proposed explanation to test", "A type of experiment", "A conclusion"],
+      "correct": 1,
+      "explanation": "A hypothesis is a proposed explanation made as a starting point for investigation."
+    },
+    {
+      "question": "What does 'eloquent' mean?",
+      "answers": ["Rude and harsh", "Fluent and persuasive in speech", "Silent and shy", "Confused and unclear"],
+      "correct": 1,
+      "explanation": "Eloquent means fluent or persuasive in speaking or writing."
+    },
+    {
+      "question": "What is the meaning of 'tenacious'?",
+      "answers": ["Easily giving up", "Holding firmly to a position", "Moving very quickly", "Being very quiet"],
+      "correct": 1,
+      "explanation": "Tenacious means holding fast; not giving up."
+    },
+    {
+      "question": "What does 'melancholy' describe?",
+      "answers": ["Great happiness", "A pensive sadness", "Extreme anger", "Wild excitement"],
+      "correct": 1,
+      "explanation": "Melancholy describes a feeling of pensive sadness."
+    },
+    {
+      "question": "What does 'inquisitive' mean?",
+      "answers": ["Uninterested in learning", "Curious and eager to learn", "Afraid of new things", "Careful and cautious"],
+      "correct": 1,
+      "explanation": "Inquisitive means having a strong desire to learn or know things."
+    },
+    {
+      "question": "What is a 'protagonist'?",
+      "answers": ["The villain of a story", "The main character of a story", "A minor character", "The narrator"],
+      "correct": 1,
+      "explanation": "The protagonist is the main character in a story."
+    },
+    {
+      "question": "What does 'vivid' mean in writing?",
+      "answers": ["Dull and boring", "Producing strong, clear images", "Short and simple", "Old and outdated"],
+      "correct": 1,
+      "explanation": "Vivid means producing powerful feelings or clear images in the mind."
+    }
+  ],
+  "minigame_context_clues": [
+    {
+      "sentence": "The scientist made an important _____ that changed how we understand the universe.",
+      "word": "discovery",
+      "choices": ["discovery", "confusion", "mistake", "question"],
+      "correct": 0
+    },
+    {
+      "sentence": "She was so _____ that she finished the race even though her legs were exhausted.",
+      "word": "determined",
+      "choices": ["lazy", "determined", "confused", "sad"],
+      "correct": 1
+    },
+    {
+      "sentence": "The _____ forest was home to hundreds of species of plants and animals.",
+      "word": "diverse",
+      "choices": ["empty", "cold", "diverse", "ancient"],
+      "correct": 2
+    },
+    {
+      "sentence": "He spoke in a _____ voice so as not to wake the sleeping baby.",
+      "word": "quiet",
+      "choices": ["loud", "angry", "quiet", "confused"],
+      "correct": 2
+    }
+  ]
+}

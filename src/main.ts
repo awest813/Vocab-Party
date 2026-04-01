@@ -1,0 +1,23 @@
+import Phaser from 'phaser'
+import { BootScene } from './scenes/BootScene'
+import { PreloadScene } from './scenes/PreloadScene'
+import { MenuScene } from './scenes/MenuScene'
+import { BoardScene } from './scenes/BoardScene'
+import { QuestionScene } from './scenes/QuestionScene'
+import { MinigameScene } from './scenes/MinigameScene'
+import { ResultsScene } from './scenes/ResultsScene'
+
+const config: Phaser.Types.Core.GameConfig = {
+  type: Phaser.AUTO,
+  parent: 'app',
+  width: 1280,
+  height: 720,
+  backgroundColor: '#1a1a2e',
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 0 }, debug: false }
+  },
+  scene: [BootScene, PreloadScene, MenuScene, BoardScene, QuestionScene, MinigameScene, ResultsScene]
+}
+
+new Phaser.Game(config)
