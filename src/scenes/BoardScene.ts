@@ -61,14 +61,18 @@ export class BoardScene extends Phaser.Scene {
   private statusText!: Phaser.GameObjects.Text
   private diceText!: Phaser.GameObjects.Text
   private rolling = false
+  private roundText!: Phaser.GameObjects.Text
 
   constructor() { super('BoardScene') }
 
-  create() {
+  create(data?: { playerNames?: string[], playerEmojis?: string[] }) {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.state = createInitialState(PLAYER_NAMES, PLAYER_EMOJIS)
+    const names = data?.playerNames ?? PLAYER_NAMES
+    const emojis = data?.playerEmojis ?? PLAYER_EMOJIS
+
+    this.state = createInitialState(names, emojis)
     this.path = buildPath(BOARD_COLS, BOARD_ROWS)
 
     const boardW = BOARD_COLS * TILE_SIZE
@@ -94,6 +98,14 @@ export class BoardScene extends Phaser.Scene {
     this.diceText = this.add.text(w / 2, h - 130, '🎲', {
       fontSize: '48px',
     }).setOrigin(0.5)
+
+    this.roundText = this.add.text(w - 20, 20, '', {
+      fontSize: '20px',
+      fontFamily: 'Arial Black',
+      color: '#aaddff',
+      stroke: '#000033',
+      strokeThickness: 4
+    }).setOrigin(1, 0)
 
     this.rollBtn = createButton(this, w / 2 + 250, h - 90, '🎲 ROLL DICE', 0xffcc00, 0xcc9900)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
@@ -154,6 +166,7 @@ export class BoardScene extends Phaser.Scene {
   updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
     this.statusText.setText(`${p.emoji} ${p.name}'s Turn`)
+    this.roundText.setText(`Round ${this.state.round} / ${ROUNDS_PER_GAME}`)
     this.hud.update(this.state)
   }
 
@@ -273,9 +286,11 @@ export class BoardScene extends Phaser.Scene {
             state: this.state,
             onComplete: (winnerId: number) => {
               this.scene.stop('MinigameScene')
-              this.state.players[winnerId].score += 15
-              this.showFloatyText(this.state.players[winnerId], '+15 Minigame Win!', '#ff88ff')
-              showConfetti(this)
+              if (winnerId >= 0) {
+                this.state.players[winnerId].score += 15
+                this.showFloatyText(this.state.players[winnerId], '+15 Minigame Win!', '#ff88ff')
+                showConfetti(this)
+              }
               this.time.delayedCall(600, () => this.endTurn())
             }
           })
@@ -361,6 +376,9 @@ export class BoardScene extends Phaser.Scene {
     }
 
     this.state.currentPlayer = (this.state.currentPlayer + 1) % this.state.players.length
+    if (this.state.currentPlayer === 0) {
+      this.state.round++
+    }
     this.updateStatus()
   }
 }

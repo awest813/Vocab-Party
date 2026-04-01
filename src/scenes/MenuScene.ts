@@ -48,7 +48,7 @@ export class MenuScene extends Phaser.Scene {
     const startBtn = createButton(this, w / 2, 370, '▶  START GAME', 0x22bb55, 0x1a8844)
     startBtn.on('pointerdown', () => {
       this.cameras.main.flash(300, 255, 255, 255)
-      this.time.delayedCall(300, () => this.scene.start('BoardScene'))
+      this.time.delayedCall(300, () => this.scene.start('SetupScene'))
     })
 
     // How to play

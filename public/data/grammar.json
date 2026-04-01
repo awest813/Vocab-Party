@@ -67,6 +67,108 @@
       "answers": ["She", "sings", "beautifully", "None"],
       "correct": 2,
       "explanation": "Beautifully modifies the verb 'sings' — it's an adverb."
+    },
+    {
+      "question": "Which sentence is punctuated correctly?",
+      "answers": [
+        "Wow that is amazing",
+        "Wow, that is amazing!",
+        "Wow that is, amazing!",
+        "Wow! that is amazing."
+      ],
+      "correct": 1,
+      "explanation": "An interjection like 'Wow' is followed by a comma, then the rest of the sentence."
+    },
+    {
+      "question": "Which word correctly completes: 'Neither the teacher ___ the students were late.'?",
+      "answers": ["or", "nor", "but", "and"],
+      "correct": 1,
+      "explanation": "'Neither...nor' is a correlative conjunction pair."
+    },
+    {
+      "question": "What is the correct past tense of 'bring'?",
+      "answers": ["Bringed", "Brung", "Brought", "Broughts"],
+      "correct": 2,
+      "explanation": "The irregular past tense of 'bring' is 'brought'."
+    },
+    {
+      "question": "Which sentence uses 'its' correctly?",
+      "answers": [
+        "The dog wagged it's tail.",
+        "The dog wagged its tail.",
+        "The dog wagged its' tail.",
+        "The dog wagged its tail's."
+      ],
+      "correct": 1,
+      "explanation": "'Its' (no apostrophe) is the possessive pronoun; 'it's' means 'it is'."
+    },
+    {
+      "question": "What is a compound sentence?",
+      "answers": [
+        "A sentence with one independent clause",
+        "A sentence joined by a coordinating conjunction",
+        "A sentence with only a dependent clause",
+        "A sentence with no verbs"
+      ],
+      "correct": 1,
+      "explanation": "A compound sentence joins two independent clauses with a coordinating conjunction."
+    },
+    {
+      "question": "Which word is a preposition in: 'The book is on the table'?",
+      "answers": ["book", "is", "on", "table"],
+      "correct": 2,
+      "explanation": "'On' is a preposition showing the relationship between the book and the table."
+    },
+    {
+      "question": "Which sentence uses the correct form of 'lie/lay'?",
+      "answers": [
+        "I need to lay down for a nap.",
+        "I need to lie down for a nap.",
+        "I need to laying down for a nap.",
+        "I need to lied down for a nap."
+      ],
+      "correct": 1,
+      "explanation": "'Lie' means to recline; 'lay' requires an object."
+    },
+    {
+      "question": "Which sentence correctly uses a semicolon?",
+      "answers": [
+        "I love pizza; because it is delicious.",
+        "I love pizza; it is my favorite food.",
+        "I; love pizza it is delicious.",
+        "I love; pizza it is delicious."
+      ],
+      "correct": 1,
+      "explanation": "A semicolon connects two closely related independent clauses."
+    },
+    {
+      "question": "What part of speech is 'beautiful' in: 'The beautiful sunset amazed us'?",
+      "answers": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 2,
+      "explanation": "'Beautiful' modifies the noun 'sunset', so it is an adjective."
+    },
+    {
+      "question": "Which sentence avoids a double negative?",
+      "answers": [
+        "I didn't do nothing wrong.",
+        "I didn't do anything wrong.",
+        "I did nothing not wrong.",
+        "I never did nothing."
+      ],
+      "correct": 1,
+      "explanation": "Double negatives cancel each other out. Use 'anything' with 'didn't'."
+    },
+    {
+      "question": "Which homophone correctly completes: 'I did not ___ the answer.'?",
+      "answers": ["no", "know", "now", "knoe"],
+      "correct": 1,
+      "explanation": "'Know' means to be aware of something; 'no' is a negative response."
+    },
+    {
+      "question": "What punctuation ends an interrogative sentence?",
+      "answers": ["Period (.)", "Exclamation mark (!)", "Comma (,)", "Question mark (?)"],
+      "correct": 3,
+      "explanation": "An interrogative sentence asks a question and ends with a question mark."
     }
   ],
   "minigame_comma": [
@@ -102,6 +204,83 @@
         "Although it was raining we, decided to go for a walk."
       ],
       "correct_index": 2
+    },
+    {
+      "sentence": "The tall dark and handsome stranger walked into the room.",
+      "correct": "The tall, dark, and handsome stranger walked into the room.",
+      "choices": [
+        "The tall dark and handsome stranger walked into the room.",
+        "The tall, dark, and handsome stranger walked into the room.",
+        "The, tall dark and handsome stranger walked into the room.",
+        "The tall, dark and handsome, stranger walked into the room."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "Yes I would love to come to your birthday party.",
+      "correct": "Yes, I would love to come to your birthday party.",
+      "choices": [
+        "Yes I would love to come to your birthday party.",
+        "Yes, I would love to come to your birthday party.",
+        "Yes I, would love to come to your birthday party.",
+        "Yes I would love, to come to your birthday party."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "We visited Paris France last summer.",
+      "correct": "We visited Paris, France last summer.",
+      "choices": [
+        "We visited Paris France last summer.",
+        "We visited Paris France, last summer.",
+        "We visited Paris, France last summer.",
+        "We visited, Paris France last summer."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "The cat however refused to come inside.",
+      "correct": "The cat, however, refused to come inside.",
+      "choices": [
+        "The cat however refused to come inside.",
+        "The cat, however refused to come inside.",
+        "The, cat however, refused to come inside.",
+        "The cat, however, refused to come inside."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "I wanted to go swimming but it was too cold outside.",
+      "correct": "I wanted to go swimming, but it was too cold outside.",
+      "choices": [
+        "I wanted to go swimming but it was too cold outside.",
+        "I, wanted to go swimming but it was too cold outside.",
+        "I wanted to go swimming, but it was too cold outside.",
+        "I wanted to go swimming but, it was too cold outside."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "On Monday March 15 2024 the new library will open.",
+      "correct": "On Monday, March 15, 2024, the new library will open.",
+      "choices": [
+        "On Monday March 15 2024 the new library will open.",
+        "On Monday, March 15, 2024, the new library will open.",
+        "On, Monday March 15 2024 the new library will open.",
+        "On Monday March, 15, 2024 the new library will open."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "Maria who is my best friend just moved to a new city.",
+      "correct": "Maria, who is my best friend, just moved to a new city.",
+      "choices": [
+        "Maria who is my best friend just moved to a new city.",
+        "Maria, who is my best friend just moved to a new city.",
+        "Maria, who is my best friend, just moved to a new city.",
+        "Maria who is, my best friend, just moved to a new city."
+      ],
+      "correct_index": 2
     }
   ],
   "minigame_pos": [
@@ -128,6 +307,54 @@
       "sentence": "He climbed the tall mountain with ease.",
       "choices": ["Noun", "Verb", "Adjective", "Adverb"],
       "correct": 1
+    },
+    {
+      "word": "JOYFUL",
+      "sentence": "The joyful child laughed all day.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 2
+    },
+    {
+      "word": "WHISPERED",
+      "sentence": "She whispered a secret into his ear.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 1
+    },
+    {
+      "word": "SILENTLY",
+      "sentence": "The children sat silently during the test.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 3
+    },
+    {
+      "word": "MOUNTAIN",
+      "sentence": "The mountain was covered in snow.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 0
+    },
+    {
+      "word": "ENORMOUS",
+      "sentence": "An enormous whale surfaced near the boat.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 2
+    },
+    {
+      "word": "DANCED",
+      "sentence": "They danced under the stars all evening.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 1
+    },
+    {
+      "word": "BRAVELY",
+      "sentence": "The firefighter bravely entered the burning building.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 3
+    },
+    {
+      "word": "FRIENDSHIP",
+      "sentence": "Friendship is one of life's greatest gifts.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 0
     }
   ]
 }
