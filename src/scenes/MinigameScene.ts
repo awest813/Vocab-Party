@@ -16,7 +16,7 @@ export class MinigameScene extends Phaser.Scene {
     const h = this.scale.height
     const { state, onComplete } = data
 
-    const games = ['context-clue', 'comma-crisis', 'parts-of-speech']
+    const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix']
     const chosen = Phaser.Utils.Array.GetRandom(games) as string
 
     // Announcement screen
@@ -25,7 +25,9 @@ export class MinigameScene extends Phaser.Scene {
     const names: Record<string, string> = {
       'context-clue': '🔍 CONTEXT CLUE CLASH',
       'comma-crisis': '😱 COMMA CRISIS',
-      'parts-of-speech': '🗣️ PARTS OF SPEECH PANIC'
+      'parts-of-speech': '🗣️ PARTS OF SPEECH PANIC',
+      'synonym-blitz': '⚡ SYNONYM BLITZ',
+      'sentence-fix': '✨ SENTENCE FIX SHOWDOWN'
     }
 
     const announce = this.add.text(w / 2, h / 2 - 100, '🕹️ MINIGAME TIME!', {
@@ -83,6 +85,8 @@ export class MinigameScene extends Phaser.Scene {
       case 'context-clue': this.playContextClue(state, onComplete); break
       case 'comma-crisis': this.playCommaCrisis(state, onComplete); break
       case 'parts-of-speech': this.playPartsOfSpeech(state, onComplete); break
+      case 'synonym-blitz': this.playSynonymBlitz(state, onComplete); break
+      case 'sentence-fix': this.playSentenceFix(state, onComplete); break
     }
   }
 
@@ -300,6 +304,147 @@ export class MinigameScene extends Phaser.Scene {
         if (!done) {
           done = true
           this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+          }).setOrigin(0.5)
+          this.time.delayedCall(1500, () => onComplete(-1))
+        }
+      }
+    })
+  }
+
+  playSynonymBlitz(state: GameState, onComplete: (winnerId: number) => void) {
+    const w = this.scale.width
+    const h = this.scale.height
+    const questions = this.cache.json.get('vocab').minigame_synonyms || []
+
+    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+      word: 'rapid',
+      choices: ['fast', 'slow', 'heavy', 'quiet'],
+      correct: 0
+    }
+
+    this.add.text(w / 2, 60, '⚡ SYNONYM BLITZ', {
+      fontSize: '36px', fontFamily: 'Arial Black', color: '#66ddff', stroke: '#003344', strokeThickness: 6
+    }).setOrigin(0.5)
+
+    this.add.text(w / 2, 130, 'Tap the word that means almost the same thing!', {
+      fontSize: '22px', fontFamily: 'Arial', color: '#aeeeff'
+    }).setOrigin(0.5)
+
+    this.add.text(w / 2, 240, q.word.toUpperCase(), {
+      fontSize: '72px', fontFamily: 'Arial Black', color: '#ffffff',
+      stroke: '#224466', strokeThickness: 8
+    }).setOrigin(0.5)
+
+    let done = false
+    const cols = 2
+    q.choices.forEach((choice: string, ci: number) => {
+      const col = ci % cols
+      const row = Math.floor(ci / cols)
+      const bx = w / 2 + (col === 0 ? -260 : 260)
+      const by = 400 + row * 100
+      const btn = createButton(this, bx, by, choice, 0x116688, 0x003344, 440, 70)
+      btn.on('pointerdown', () => {
+        if (done) return
+        done = true
+        const correct = ci === q.correct
+        if (correct) {
+          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+          if (btnBg) btnBg.setFillStyle(0x44aa44)
+          showConfetti(this)
+          this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
+            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          }).setOrigin(0.5)
+          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+        } else {
+          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+          if (btnBg) btnBg.setFillStyle(0xaa2222)
+          this.cameras.main.shake(200, 0.008)
+          this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          }).setOrigin(0.5)
+          done = false
+        }
+      })
+    })
+
+    const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ddff).setOrigin(0, 0.5)
+    this.add.rectangle(w / 2, h - 40, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
+    this.tweens.add({
+      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
+      onComplete: () => {
+        if (!done) {
+          done = true
+          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+          }).setOrigin(0.5)
+          this.time.delayedCall(1500, () => onComplete(-1))
+        }
+      }
+    })
+  }
+
+  playSentenceFix(state: GameState, onComplete: (winnerId: number) => void) {
+    const w = this.scale.width
+    const h = this.scale.height
+    const questions = this.cache.json.get('grammar').minigame_sentence_fix || []
+
+    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+      prompt: 'Which sentence is written correctly?',
+      choices: [
+        'Me and him went to the store.',
+        'He and I went to the store.',
+        'Him and I went to the store.',
+        'Me and he went to the store.'
+      ],
+      correct_index: 1
+    }
+
+    this.add.text(w / 2, 55, '✨ SENTENCE FIX SHOWDOWN', {
+      fontSize: '34px', fontFamily: 'Arial Black', color: '#88ffcc', stroke: '#114433', strokeThickness: 6
+    }).setOrigin(0.5)
+
+    this.add.text(w / 2, 118, q.prompt, {
+      fontSize: '22px', fontFamily: 'Arial', color: '#ccffee',
+      wordWrap: { width: 980 }, align: 'center'
+    }).setOrigin(0.5)
+
+    let done = false
+    q.choices.forEach((choice: string, ci: number) => {
+      const by = 200 + ci * 105
+      const btn = createButton(this, w / 2, by, choice, 0x1a4d40, 0x0a2a22, 1000, 78)
+      btn.on('pointerdown', () => {
+        if (done) return
+        done = true
+        const correct = ci === q.correct_index
+        if (correct) {
+          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+          if (btnBg) btnBg.setFillStyle(0x44aa44)
+          showConfetti(this)
+          this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
+            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          }).setOrigin(0.5)
+          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+        } else {
+          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+          if (btnBg) btnBg.setFillStyle(0xaa2222)
+          this.cameras.main.shake(200, 0.008)
+          this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          }).setOrigin(0.5)
+          done = false
+        }
+      })
+    })
+
+    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x66ffcc).setOrigin(0, 0.5)
+    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
+    this.tweens.add({
+      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
+      onComplete: () => {
+        if (!done) {
+          done = true
+          this.add.text(w / 2, h - 78, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))

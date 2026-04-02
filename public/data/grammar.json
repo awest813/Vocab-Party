@@ -356,5 +356,107 @@
       "choices": ["Noun", "Verb", "Adjective", "Adverb"],
       "correct": 0
     }
+  ],
+  "minigame_sentence_fix": [
+    {
+      "prompt": "Which sentence uses correct subject-verb agreement?",
+      "choices": [
+        "The team of players are ready.",
+        "The team of players is ready.",
+        "The team of players were ready.",
+        "The team of players be ready."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses pronouns correctly?",
+      "choices": [
+        "Between you and I, the secret is safe.",
+        "Between you and me, the secret is safe.",
+        "Between we and them, the secret is safe.",
+        "Between him and I, the secret is safe."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence is punctuated correctly?",
+      "choices": [
+        "Its a beautiful day outside.",
+        "It's a beautiful day outside.",
+        "Its' a beautiful day outside.",
+        "Its's a beautiful day outside."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence avoids a double negative?",
+      "choices": [
+        "I don't need no help.",
+        "I don't need any help.",
+        "I don't need never help.",
+        "I don't need none help."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which uses the correct homophone?",
+      "choices": [
+        "They're going to bring there books over they're.",
+        "They're going to bring their books over there.",
+        "Their going to bring they're books over their.",
+        "There going to bring there books over they're."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence has correct parallel structure?",
+      "choices": [
+        "She likes hiking, to swim, and biking.",
+        "She likes hiking, swimming, and biking.",
+        "She likes to hike, swimming, and to bike.",
+        "She likes hiking, swim, and bikes."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses \"who\" correctly as the subject?",
+      "choices": [
+        "Whom is at the door?",
+        "Who is at the door?",
+        "Give the prize to who won.",
+        "The winner, whom is here, smiled."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which is a complete sentence?",
+      "choices": [
+        "Because the rain stopped.",
+        "The rain stopped suddenly.",
+        "When the bell rang.",
+        "Running through the park."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which correctly combines these ideas?",
+      "choices": [
+        "The book was long but I finished it.",
+        "The book was long, but I finished it.",
+        "The book was long but, I finished it.",
+        "The book was long; but I finished it."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence makes the meaning clearest?",
+      "choices": [
+        "I saw a squirrel in my pajamas climbing a tree.",
+        "While I was in my pajamas, I saw a squirrel climbing a tree.",
+        "Climbing a tree, my pajamas saw a squirrel.",
+        "A squirrel climbing a tree wore my pajamas."
+      ],
+      "correct_index": 1
+    }
   ]
 }
