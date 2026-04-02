@@ -17,8 +17,8 @@ export class PlayerHUD {
 
   build(state: GameState) {
     const w = this.scene.scale.width
-    const panelW = 200
-    const panelH = 80
+    const panelW = 212
+    const panelH = 96
     const startX = (w - state.players.length * (panelW + 10)) / 2 + panelW / 2
 
     state.players.forEach((player, i) => {
@@ -43,12 +43,19 @@ export class PlayerHUD {
         parts.push(gem)
         scoreX = scoreLeft + 26
       }
-      const scoreText = this.scene.add.text(scoreX, 4, `${player.score} pts`, {
-        fontSize: '18px',
+      const scoreText = this.scene.add.text(scoreX, -2, `${player.score} pts`, {
+        fontSize: '17px',
         fontFamily: 'Arial Black',
         color: '#FFD700'
       }).setOrigin(0, 0.5)
       parts.push(scoreText)
+
+      const metaText = this.scene.add.text(scoreLeft + 4, 22, `🪙${player.coins}  🌟${player.trophies}  🧱${player.bricksCollected}`, {
+        fontSize: '12px',
+        fontFamily: 'Arial',
+        color: '#ccddee'
+      }).setOrigin(0, 0.5)
+      parts.push(metaText)
 
       container.add(parts)
       container.setDepth(5)
@@ -59,7 +66,7 @@ export class PlayerHUD {
 
   update(state: GameState) {
     const w = this.scene.scale.width
-    const panelW = 200
+    const panelW = 212
     const startX = (w - state.players.length * (panelW + 10)) / 2 + panelW / 2
 
     state.players.forEach((player, i) => {
@@ -69,6 +76,10 @@ export class PlayerHUD {
       container.setX(x)
       const scoreText = this.scoreTexts[i]
       if (scoreText) scoreText.setText(`${player.score} pts`)
+      const metaText = container.getAt(container.length - 1) as Phaser.GameObjects.Text
+      if (metaText && metaText.setText) {
+        metaText.setText(`🪙${player.coins}  🌟${player.trophies}  🧱${player.bricksCollected}`)
+      }
 
       // Highlight current player
       const bg = container.getAt(0) as Phaser.GameObjects.Rectangle
