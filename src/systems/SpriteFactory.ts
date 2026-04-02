@@ -15,6 +15,9 @@ const TILE_COLORS: Record<string, number> = {
   minigame: 0xff44aa,
   swap:     0x44ffaa,
   start:    0x22cc44,
+  shop:     0xc45c26,
+  star:     0x6b2d8b,
+  brick:    0xcc5533,
 }
 
 const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
@@ -173,6 +176,51 @@ function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number,
       g.fillPath()
       g.lineStyle(1.5, 0x116622, 0.6)
       g.strokePath()
+      break
+    }
+    case 'shop': {
+      g.fillStyle(0xffffff, 0.5)
+      g.fillRoundedRect(cx - 12, cy - 6, 24, 18, 2)
+      g.fillStyle(0x2244aa, 0.85)
+      g.fillRoundedRect(cx - 8, cy - 2, 6, 8, 1)
+      g.fillRoundedRect(cx + 2, cy - 2, 6, 8, 1)
+      g.fillStyle(0xaa3333, 0.9)
+      g.beginPath()
+      g.moveTo(cx - 12, cy - 6)
+      g.lineTo(cx, cy - 14)
+      g.lineTo(cx + 12, cy - 6)
+      g.closePath()
+      g.fillPath()
+      break
+    }
+    case 'star': {
+      const spikes = 5
+      const ro = 10
+      const ri = 4
+      g.fillStyle(0xffee66, 0.95)
+      g.beginPath()
+      for (let i = 0; i < spikes * 2; i++) {
+        const a = (i * Math.PI) / spikes - Math.PI / 2
+        const r = i % 2 === 0 ? ro : ri
+        const px = cx + Math.cos(a) * r
+        const py = cy + Math.sin(a) * r
+        i === 0 ? g.moveTo(px, py) : g.lineTo(px, py)
+      }
+      g.closePath()
+      g.fillPath()
+      break
+    }
+    case 'brick': {
+      g.fillStyle(0xdd6644, 0.95)
+      g.fillRect(cx - 12, cy - 4, 10, 6)
+      g.fillRect(cx - 1, cy - 4, 10, 6)
+      g.fillRect(cx - 12, cy + 4, 10, 6)
+      g.fillRect(cx - 1, cy + 4, 10, 6)
+      g.lineStyle(1, 0x442211, 0.5)
+      g.strokeRect(cx - 12, cy - 4, 10, 6)
+      g.strokeRect(cx - 1, cy - 4, 10, 6)
+      g.strokeRect(cx - 12, cy + 4, 10, 6)
+      g.strokeRect(cx - 1, cy + 4, 10, 6)
       break
     }
     default:

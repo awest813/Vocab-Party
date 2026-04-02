@@ -1,4 +1,14 @@
-export type TileType = 'vocab' | 'grammar' | 'bonus' | 'mystery' | 'minigame' | 'swap' | 'start'
+export type TileType =
+  | 'vocab'
+  | 'grammar'
+  | 'bonus'
+  | 'mystery'
+  | 'minigame'
+  | 'swap'
+  | 'start'
+  | 'shop'
+  | 'star'
+  | 'brick'
 
 export interface Player {
   id: number
@@ -7,6 +17,8 @@ export interface Player {
   score: number
   position: number
   trophies: number
+  coins: number
+  bricksCollected: number
 }
 
 export interface GameState {
@@ -24,7 +36,9 @@ export function createInitialState(names: string[], emojis: string[]): GameState
       emoji: emojis[i],
       score: 0,
       position: 0,
-      trophies: 0
+      trophies: 0,
+      coins: 18,
+      bricksCollected: 0
     })),
     currentPlayer: 0,
     turn: 0,
