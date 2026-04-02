@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { GameState, Player, TileType, createInitialState } from '../systems/GameState'
-import { rollDice } from '../systems/DiceSystem'
+import { rollDice, rollBlockDie } from '../systems/DiceSystem'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
@@ -14,9 +14,9 @@ const BOARD_ROWS = 8
 const ROUNDS_PER_GAME = 10
 
 const TILE_TYPES: TileType[] = [
-  'vocab','grammar','bonus','vocab','grammar','minigame','vocab','grammar','mystery','vocab','bonus','grammar',
-  'vocab','grammar','vocab','minigame','grammar','vocab','bonus','mystery','vocab','grammar','swap','vocab',
-  'bonus','vocab','grammar','vocab','mystery','grammar','vocab','minigame','grammar','vocab','bonus','vocab',
+  'shop','vocab','grammar','bonus','star','grammar','minigame','vocab','brick','mystery','vocab','shop',
+  'vocab','grammar','shop','minigame','grammar','star','bonus','mystery','brick','vocab','grammar','swap',
+  'bonus','vocab','shop','grammar','mystery','brick','vocab','minigame','grammar','star','bonus','vocab',
 ]
 
 function buildPath(cols: number, rows: number): {col: number, row: number}[] {
@@ -36,8 +36,18 @@ const TILE_LABELS: Record<TileType, string> = {
   mystery: '❓',
   minigame: '🕹️',
   swap: '🔄',
-  start: '🏠'
+  start: '🏠',
+  shop: '🏪',
+  star: '🌟',
+  brick: '🧱'
 }
+
+const STAR_COST_COINS = 20
+const SHOP_PRICE_COINS = 8
+const SHOP_RENT_COINS = 3
+const SHOP_OWNER_INCOME = 2
+const BRICKS_FOR_BUILD_BONUS = 4
+const BUILD_BONUS_SCORE = 6
 
 const PLAYER_NAMES = ['Alex', 'Blake', 'Casey', 'Dana']
 const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
@@ -56,8 +66,14 @@ export class BoardScene extends Phaser.Scene {
   private roundText!: Phaser.GameObjects.Text
   private turnGlow?: Phaser.GameObjects.Arc
   private turnGlowTween?: Phaser.Tweens.Tween
+  /** Tile index → owner player id (Fortune Street–style shops). */
+  private shopOwners: Record<number, number> = {}
 
   constructor() { super('BoardScene') }
+
+  private getTileTypeAt(tileIndex: number): TileType {
+    return tileIndex === 0 ? 'start' : TILE_TYPES[tileIndex % TILE_TYPES.length]
+  }
 
   create(data?: { playerNames?: string[], playerEmojis?: string[] }) {
     const w = this.scale.width
@@ -146,7 +162,7 @@ export class BoardScene extends Phaser.Scene {
 
     const path = this.path
     path.forEach((cell, i) => {
-      const type: TileType = i === 0 ? 'start' : TILE_TYPES[i % TILE_TYPES.length]
+      const type = this.getTileTypeAt(i)
       const x = this.boardOriginX + cell.col * TILE_SIZE + TILE_SIZE / 2
       const y = this.boardOriginY + cell.row * TILE_SIZE + TILE_SIZE / 2
 
@@ -251,9 +267,9 @@ export class BoardScene extends Phaser.Scene {
 
     await new Promise<void>(res => this.time.delayedCall(1300, res))
 
-    const result = rollDice()
+    const result = rollBlockDie()
     this.diceSprite.setTexture(DICE_TEXTURE_KEYS[result - 1])
-    this.statusText.setText(`${player.emoji} ${player.name} rolled a ${result}!`)
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result} (block die)!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -275,7 +291,12 @@ export class BoardScene extends Phaser.Scene {
     const off = offsets[playerIndex]
 
     for (let s = 0; s < steps; s++) {
+      const prev = player.position
       player.position = (player.position + 1) % this.path.length
+      if (prev > 0 && player.position === 0) {
+        player.coins += 5
+        this.showFloatyText(player, '+5 Lap Coins!', '#ffcc66')
+      }
       const {x, y} = this.getTileXY(player.position)
       await new Promise<void>(res => {
         this.tweens.add({
@@ -304,7 +325,7 @@ export class BoardScene extends Phaser.Scene {
   landOnTile(playerIndex: number) {
     const player = this.state.players[playerIndex]
     const tileIndex = player.position
-    const type: TileType = tileIndex === 0 ? 'start' : TILE_TYPES[tileIndex % TILE_TYPES.length]
+    const type = this.getTileTypeAt(tileIndex)
 
     this.statusText.setText(`${player.emoji} ${player.name} landed on ${TILE_LABELS[type]} ${type.toUpperCase()}!`)
 
@@ -312,12 +333,14 @@ export class BoardScene extends Phaser.Scene {
       switch (type) {
         case 'start':
           player.score += 3
-          this.showFloatyText(player, '+3 Bonus!', '#FFD700')
+          player.coins += 3
+          this.showFloatyText(player, '+3 Bonus & coins!', '#FFD700')
           this.endTurn()
           break
         case 'bonus':
           player.score += 5
-          this.showFloatyText(player, '+5 Points!', '#FFD700')
+          player.coins += 4
+          this.showFloatyText(player, '+5 pts +4 coins!', '#FFD700')
           showConfetti(this)
           this.endTurn()
           break
@@ -331,7 +354,8 @@ export class BoardScene extends Phaser.Scene {
               this.scene.stop('QuestionScene')
               if (correct) {
                 player.score += 10
-                this.showFloatyText(player, '+10 Points!', '#44ff88')
+                player.coins += 3
+                this.showFloatyText(player, '+10 pts +3 coins!', '#44ff88')
                 showConfetti(this)
               } else {
                 this.showFloatyText(player, 'Missed!', '#ff4444')
@@ -347,8 +371,10 @@ export class BoardScene extends Phaser.Scene {
             onComplete: (winnerId: number) => {
               this.scene.stop('MinigameScene')
               if (winnerId >= 0) {
-                this.state.players[winnerId].score += 15
-                this.showFloatyText(this.state.players[winnerId], '+15 Minigame Win!', '#ff88ff')
+                const w = this.state.players[winnerId]
+                w.score += 15
+                w.coins += 5
+                this.showFloatyText(w, '+15 pts +5 coins!', '#ff88ff')
                 showConfetti(this)
               }
               this.time.delayedCall(600, () => this.endTurn())
@@ -361,6 +387,15 @@ export class BoardScene extends Phaser.Scene {
           break
         case 'swap':
           this.handleSwap(player, playerIndex)
+          break
+        case 'shop':
+          this.handleShop(player, playerIndex, tileIndex)
+          break
+        case 'star':
+          this.handleStarShop(player)
+          break
+        case 'brick':
+          this.handleBrickCollect(player)
           break
         default:
           this.endTurn()
@@ -390,10 +425,79 @@ export class BoardScene extends Phaser.Scene {
     })
   }
 
+  handleShop(player: Player, playerIndex: number, tileIndex: number) {
+    const ownerId = this.shopOwners[tileIndex]
+
+    if (ownerId === undefined) {
+      if (player.coins >= SHOP_PRICE_COINS) {
+        player.coins -= SHOP_PRICE_COINS
+        this.shopOwners[tileIndex] = player.id
+        this.statusText.setText(`🏪 ${player.name} bought this shop!`)
+        this.showFloatyText(player, `-${SHOP_PRICE_COINS} 🪙 · You own it!`, '#ffaa66')
+      } else {
+        this.statusText.setText(`🏪 Too pricey! Need ${SHOP_PRICE_COINS} coins.`)
+        this.showFloatyText(player, 'Window shopping…', '#aaaaaa')
+      }
+      this.time.delayedCall(1200, () => this.endTurn())
+      return
+    }
+
+    if (ownerId === player.id) {
+      player.coins += SHOP_OWNER_INCOME
+      this.statusText.setText(`🏪 Your shop pays out!`)
+      this.showFloatyText(player, `+${SHOP_OWNER_INCOME} shop income!`, '#88ffaa')
+      this.time.delayedCall(1200, () => this.endTurn())
+      return
+    }
+
+    const owner = this.state.players[ownerId]
+    const pay = Math.min(player.coins, SHOP_RENT_COINS)
+    player.coins -= pay
+    owner.coins += pay
+    this.statusText.setText(`🏪 Rent to ${owner.name}!`)
+    this.showFloatyText(player, `-${pay} rent`, '#ff8888')
+    this.showFloatyText(owner, `+${pay} rent!`, '#88ff88')
+    this.time.delayedCall(1200, () => this.endTurn())
+  }
+
+  handleStarShop(player: Player) {
+    if (player.coins >= STAR_COST_COINS) {
+      player.coins -= STAR_COST_COINS
+      player.trophies += 1
+      player.score += 12
+      this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
+      this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
+      showConfetti(this)
+    } else {
+      player.coins += 2
+      this.statusText.setText(`🌟 Save up! Stars cost ${STAR_COST_COINS} coins.`)
+      this.showFloatyText(player, '+2 pity coins', '#aaccff')
+    }
+    this.time.delayedCall(1200, () => this.endTurn())
+  }
+
+  handleBrickCollect(player: Player) {
+    player.bricksCollected += 1
+    player.coins += 1
+    const n = player.bricksCollected
+    let msg = '+1 brick · +1 coin'
+    if (n % BRICKS_FOR_BUILD_BONUS === 0) {
+      player.score += BUILD_BONUS_SCORE
+      msg = `Build bonus! +${BUILD_BONUS_SCORE} pts`
+      this.statusText.setText(`🧱 ${player.name} built a set!`)
+      showConfetti(this)
+    } else {
+      this.statusText.setText(`🧱 Brick ${n} collected!`)
+    }
+    this.showFloatyText(player, msg, '#ff9966')
+    this.time.delayedCall(1200, () => this.endTurn())
+  }
+
   handleMystery(player: Player) {
     const effects = [
-      { msg: '⭐ +8 Mystery Bonus!', color: '#FFD700', extraRoll: false, apply: () => { player.score += 8 } },
+      { msg: '⭐ +8 Mystery Bonus!', color: '#FFD700', extraRoll: false, apply: () => { player.score += 8; player.coins += 3 } },
       { msg: '😱 -5 Oops!', color: '#ff4444', extraRoll: false, apply: () => { player.score = Math.max(0, player.score - 5) } },
+      { msg: '🪙 +10 Coin Shower!', color: '#ffdd88', extraRoll: false, apply: () => { player.coins += 10 } },
       { msg: '🎲 Extra Roll!', color: '#88aaff', extraRoll: true, apply: () => {} },
     ]
     const effect = Phaser.Utils.Array.GetRandom(effects)

@@ -43,7 +43,10 @@ export class ResultsScene extends Phaser.Scene {
       })
     }
 
-    const sorted = [...state.players].sort((a, b) => b.score - a.score)
+    const sorted = [...state.players].sort((a, b) => {
+      if (b.trophies !== a.trophies) return b.trophies - a.trophies
+      return b.score - a.score
+    })
 
     const title = this.add.text(w / 2, 52, '🏆 FINAL RESULTS 🏆', {
       fontSize: '52px',
@@ -89,8 +92,8 @@ export class ResultsScene extends Phaser.Scene {
       const nameT = this.add.text(x, cardY + 10, player.name, {
         fontSize: '18px', fontFamily: 'Arial Black', color: '#ffffff'
       }).setOrigin(0.5).setAlpha(0)
-      const scoreT = this.add.text(x, cardY + 38, `${player.score} pts`, {
-        fontSize: '22px', fontFamily: 'Arial Black', color: '#FFD700'
+      const scoreT = this.add.text(x, cardY + 38, `${player.score} pts · 🌟${player.trophies}`, {
+        fontSize: '20px', fontFamily: 'Arial Black', color: '#FFD700'
       }).setOrigin(0.5).setAlpha(0)
       const medal = this.add.text(x, cardY - 72, medals[rank], { fontSize: '32px' }).setOrigin(0.5).setAlpha(0)
 
