@@ -4,6 +4,8 @@ import { rollDice } from '../systems/DiceSystem'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
+import { addStarfieldBackdrop } from '../ui/Starfield'
+import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 
 const TILE_SIZE = 56
@@ -109,6 +111,7 @@ export class BoardScene extends Phaser.Scene {
 
   drawBackdrop(w: number, h: number) {
     this.add.rectangle(0, 0, w, h, 0x080814).setOrigin(0)
+    addStarfieldBackdrop(this, 0.38)
     for (let i = 0; i < 48; i++) {
       const sx = Phaser.Math.Between(8, w - 8)
       const sy = Phaser.Math.Between(8, h - 140)
@@ -375,6 +378,9 @@ export class BoardScene extends Phaser.Scene {
       stroke: '#000000',
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(20)
+    if (msg.includes('+')) {
+      playCoinBurst(this, tokenPos.x, tokenPos.y - 8)
+    }
     this.tweens.add({
       targets: txt,
       y: tokenPos.y - 80,
