@@ -74,29 +74,150 @@ function generatePlayerTextures(scene: Phaser.Scene): void {
 }
 
 // ---------------------------------------------------------------------------
-// Board tile textures  (52 × 52)
+// Board tile textures  (52 × 52) — type-specific motifs + glossy finish
 // ---------------------------------------------------------------------------
+function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number, cy: number): void {
+  const s = 52
+  switch (type) {
+    case 'vocab': {
+      g.fillStyle(0xffffff, 0.35)
+      g.fillRoundedRect(cx - 10, cy - 8, 9, 14, 2)
+      g.fillRoundedRect(cx + 1, cy - 8, 9, 14, 2)
+      g.lineStyle(1.2, 0x2244aa, 0.5)
+      g.strokeLineShape(new Phaser.Geom.Line(cx - 8, cy + 2, cx - 3, cy + 2))
+      g.strokeLineShape(new Phaser.Geom.Line(cx + 3, cy + 2, cx + 8, cy + 2))
+      break
+    }
+    case 'grammar': {
+      g.lineStyle(2.5, 0xffffff, 0.55)
+      const tipX = cx + 10
+      const tipY = cy + 8
+      g.beginPath()
+      g.moveTo(cx - 10, cy - 6)
+      g.lineTo(tipX, tipY)
+      g.strokePath()
+      g.fillStyle(0xffaa66, 0.9)
+      g.fillTriangle(tipX, tipY, tipX - 4, tipY - 2, tipX - 2, tipY + 4)
+      break
+    }
+    case 'bonus': {
+      g.fillStyle(0xffffff, 0.9)
+      const r = 7
+      for (let i = 0; i < 5; i++) {
+        const a = (i * (Math.PI * 2)) / 5 - Math.PI / 2
+        const x = cx + Math.cos(a) * r
+        const y = cy + Math.sin(a) * r
+        if (i === 0) g.beginPath()
+        i === 0 ? g.moveTo(x, y) : g.lineTo(x, y)
+      }
+      g.closePath()
+      g.fillPath()
+      g.fillStyle(0xffee88, 0.85)
+      g.fillCircle(cx, cy, 3)
+      break
+    }
+    case 'mystery': {
+      g.fillStyle(0xffffff, 0.5)
+      g.fillCircle(cx, cy - 2, 9)
+      g.fillStyle(0x440066, 0.35)
+      g.fillRect(cx - 2, cy + 2, 4, 7)
+      g.fillCircle(cx - 5, cy - 6, 2)
+      g.fillCircle(cx + 5, cy - 6, 2)
+      break
+    }
+    case 'minigame': {
+      g.fillStyle(0xffffff, 0.25)
+      g.fillRoundedRect(cx - 12, cy - 8, 24, 16, 3)
+      g.fillStyle(0xffffff, 0.7)
+      g.fillCircle(cx - 6, cy + 2, 2.5)
+      g.fillCircle(cx + 6, cy + 2, 2.5)
+      g.lineStyle(1.5, 0xffffff, 0.4)
+      g.strokeRoundedRect(cx - 12, cy - 8, 24, 16, 3)
+      break
+    }
+    case 'swap': {
+      g.lineStyle(2.2, 0xffffff, 0.65)
+      g.beginPath()
+      g.moveTo(cx - 10, cy - 4)
+      g.lineTo(cx + 2, cy - 4)
+      g.lineTo(cx + 2, cy - 8)
+      g.lineTo(cx + 8, cy - 2)
+      g.lineTo(cx + 2, cy + 4)
+      g.lineTo(cx + 2, cy)
+      g.lineTo(cx - 10, cy)
+      g.closePath()
+      g.strokePath()
+      g.beginPath()
+      g.moveTo(cx + 10, cy + 4)
+      g.lineTo(cx - 2, cy + 4)
+      g.lineTo(cx - 2, cy + 8)
+      g.lineTo(cx - 8, cy + 2)
+      g.lineTo(cx - 2, cy - 4)
+      g.lineTo(cx - 2, cy)
+      g.lineTo(cx + 10, cy)
+      g.closePath()
+      g.strokePath()
+      break
+    }
+    case 'start': {
+      g.fillStyle(0xffffff, 0.45)
+      g.beginPath()
+      g.moveTo(cx, cy - 10)
+      g.lineTo(cx + 12, cy + 2)
+      g.lineTo(cx + 8, cy + 2)
+      g.lineTo(cx + 8, cy + 10)
+      g.lineTo(cx - 8, cy + 10)
+      g.lineTo(cx - 8, cy + 2)
+      g.lineTo(cx - 12, cy + 2)
+      g.closePath()
+      g.fillPath()
+      g.lineStyle(1.5, 0x116622, 0.6)
+      g.strokePath()
+      break
+    }
+    default:
+      break
+  }
+}
+
 function generateTileTextures(scene: Phaser.Scene): void {
   const SIZE = 52
-  const CORNER = 7
+  const CORNER = 8
 
   Object.entries(TILE_COLORS).forEach(([type, color]) => {
     const key = TILE_TEXTURE_KEY(type)
     if (scene.textures.exists(key)) return
 
     const g = scene.add.graphics()
+    const darker = Phaser.Display.Color.IntegerToColor(color)
+    darker.darken(28)
+    const darkInt = darker.color
 
-    // Base fill
-    g.fillStyle(color, 1)
+    // Soft outer shadow
+    g.fillStyle(0x000000, 0.18)
+    g.fillRoundedRect(2, 3, SIZE - 2, SIZE - 2, CORNER)
+
+    // Base + vertical gradient band (richer than flat fill)
+    g.fillStyle(darkInt, 1)
     g.fillRoundedRect(0, 0, SIZE, SIZE, CORNER)
+    g.fillStyle(color, 1)
+    g.fillRoundedRect(1, 1, SIZE - 2, (SIZE - 2) * 0.55, CORNER - 1)
 
-    // Top-half highlight (gives a subtle 3-D look)
-    g.fillStyle(0xffffff, 0.22)
-    g.fillRoundedRect(2, 2, SIZE - 4, SIZE / 2 - 2, CORNER)
+    // Inner vignette
+    g.fillStyle(0x000000, 0.12)
+    g.fillRoundedRect(3, SIZE * 0.45, SIZE - 6, SIZE * 0.48, CORNER - 2)
 
-    // White border
-    g.lineStyle(2, 0xffffff, 0.85)
-    g.strokeRoundedRect(1, 1, SIZE - 2, SIZE - 2, CORNER)
+    drawTileMotif(g, type, SIZE / 2, SIZE / 2 + 2)
+
+    // Specular shine
+    g.fillStyle(0xffffff, 0.2)
+    g.fillEllipse(SIZE * 0.35, SIZE * 0.28, SIZE * 0.42, SIZE * 0.22)
+
+    // Rim light
+    g.lineStyle(2.5, 0xffffff, 0.55)
+    g.strokeRoundedRect(1.5, 1.5, SIZE - 3, SIZE - 3, CORNER - 1)
+    g.lineStyle(1, 0x000000, 0.15)
+    g.strokeRoundedRect(2.5, 2.5, SIZE - 5, SIZE - 5, CORNER - 2)
 
     g.generateTexture(key, SIZE, SIZE)
     g.destroy()

@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
+import { addStarfieldBackdrop } from '../ui/Starfield'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -14,14 +16,25 @@ export class ResultsScene extends Phaser.Scene {
     this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
     this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
 
-    for (let i = 0; i < 90; i++) {
-      const star = this.add.circle(
-        Phaser.Math.Between(0, w), Phaser.Math.Between(0, h),
-        Phaser.Math.FloatBetween(0.8, 2.8), 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9)
-      )
+    addStarfieldBackdrop(this, 0.4)
+    const useStarTex = this.textures.exists(TEXTURE_KEYS.starSmall)
+    const starCount = useStarTex ? 48 : 90
+    for (let i = 0; i < starCount; i++) {
+      const x = Phaser.Math.Between(0, w)
+      const y = Phaser.Math.Between(0, h)
+      const star = useStarTex
+        ? this.add.image(x, y, TEXTURE_KEYS.starSmall).setDisplaySize(
+            Phaser.Math.Between(8, 18),
+            Phaser.Math.Between(8, 18)
+          )
+        : this.add.circle(
+            x, y,
+            Phaser.Math.FloatBetween(0.8, 2.8), 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9)
+          )
+      star.setAlpha(Phaser.Math.FloatBetween(0.25, 0.85))
       this.tweens.add({
         targets: star,
-        alpha: Phaser.Math.FloatBetween(0.05, 0.3),
+        alpha: Phaser.Math.FloatBetween(0.05, 0.35),
         duration: Phaser.Math.Between(700, 2800),
         yoyo: true,
         repeat: -1,

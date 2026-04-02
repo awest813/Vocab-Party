@@ -224,5 +224,19 @@
       "choices": ["terrible", "plain", "delicious", "frozen"],
       "correct": 2
     }
+  ],
+  "minigame_synonyms": [
+    { "word": "rapid", "choices": ["fast", "slow", "heavy", "quiet"], "correct": 0 },
+    { "word": "brave", "choices": ["cowardly", "fearless", "lazy", "noisy"], "correct": 1 },
+    { "word": "ancient", "choices": ["modern", "very old", "tiny", "loud"], "correct": 1 },
+    { "word": "fragile", "choices": ["strong", "easily broken", "colorful", "quick"], "correct": 1 },
+    { "word": "enormous", "choices": ["small", "huge", "quiet", "bitter"], "correct": 1 },
+    { "word": "silent", "choices": ["noisy", "without sound", "angry", "bright"], "correct": 1 },
+    { "word": "generous", "choices": ["selfish", "giving freely", "sleepy", "sharp"], "correct": 1 },
+    { "word": "furious", "choices": ["calm", "extremely angry", "hungry", "polite"], "correct": 1 },
+    { "word": "timid", "choices": ["shy", "bold", "clever", "tall"], "correct": 0 },
+    { "word": "gloomy", "choices": ["cheerful", "dark and sad", "tiny", "sweet"], "correct": 1 },
+    { "word": "sparse", "choices": ["crowded", "thinly scattered", "shiny", "round"], "correct": 1 },
+    { "word": "meticulous", "choices": ["careless", "very careful", "sleepy", "cheap"], "correct": 1 }
   ]
 }

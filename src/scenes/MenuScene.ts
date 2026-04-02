@@ -1,5 +1,7 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
+import { addStarfieldBackdrop } from '../ui/Starfield'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 const TILE_LEGEND = [
   { emoji: '📖', label: 'Vocab', color: 0x4488ff },
@@ -21,6 +23,7 @@ export class MenuScene extends Phaser.Scene {
     this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
     this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
 
+    addStarfieldBackdrop(this, 0.42)
     this.createStars()
 
     // Decorative glow behind title
@@ -124,14 +127,21 @@ export class MenuScene extends Phaser.Scene {
   createStars() {
     const w = this.scale.width
     const h = this.scale.height
-    for (let i = 0; i < 70; i++) {
+    const useTex = this.textures.exists(TEXTURE_KEYS.starSmall)
+    const count = useTex ? 42 : 70
+    for (let i = 0; i < count; i++) {
       const x = Phaser.Math.Between(0, w)
       const y = Phaser.Math.Between(0, h)
-      const size = Phaser.Math.FloatBetween(0.8, 2.8)
-      const star = this.add.circle(x, y, size, 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9))
+      const star = useTex
+        ? this.add.image(x, y, TEXTURE_KEYS.starSmall).setDisplaySize(
+            Phaser.Math.Between(10, 22),
+            Phaser.Math.Between(10, 22)
+          )
+        : this.add.circle(x, y, Phaser.Math.FloatBetween(0.8, 2.8), 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9))
+      star.setAlpha(Phaser.Math.FloatBetween(0.25, 0.85))
       this.tweens.add({
         targets: star,
-        alpha: Phaser.Math.FloatBetween(0.05, 0.35),
+        alpha: Phaser.Math.FloatBetween(0.08, 0.45),
         duration: Phaser.Math.Between(700, 2800),
         yoyo: true,
         repeat: -1,

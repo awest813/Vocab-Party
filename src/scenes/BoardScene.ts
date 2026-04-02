@@ -4,6 +4,8 @@ import { rollDice } from '../systems/DiceSystem'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
+import { addStarfieldBackdrop } from '../ui/Starfield'
+import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 
 const TILE_SIZE = 56
@@ -52,6 +54,8 @@ export class BoardScene extends Phaser.Scene {
   private diceSprite!: Phaser.GameObjects.Image
   private rolling = false
   private roundText!: Phaser.GameObjects.Text
+  private turnGlow?: Phaser.GameObjects.Arc
+  private turnGlowTween?: Phaser.Tweens.Tween
 
   constructor() { super('BoardScene') }
 
@@ -70,7 +74,7 @@ export class BoardScene extends Phaser.Scene {
     this.boardOriginX = (w - boardW) / 2
     this.boardOriginY = (h - boardH) / 2 - 24
 
-    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
+    this.drawBackdrop(w, h)
     this.drawBoard()
 
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
@@ -105,7 +109,41 @@ export class BoardScene extends Phaser.Scene {
     this.updateStatus()
   }
 
+  drawBackdrop(w: number, h: number) {
+    this.add.rectangle(0, 0, w, h, 0x080814).setOrigin(0)
+    addStarfieldBackdrop(this, 0.38)
+    for (let i = 0; i < 48; i++) {
+      const sx = Phaser.Math.Between(8, w - 8)
+      const sy = Phaser.Math.Between(8, h - 140)
+      const a = Phaser.Math.FloatBetween(0.08, 0.22)
+      this.add.circle(sx, sy, Phaser.Math.Between(1, 2), 0xaaccff, a).setDepth(-5)
+    }
+  }
+
   drawBoard() {
+    const boardW = BOARD_COLS * TILE_SIZE
+    const boardH = BOARD_ROWS * TILE_SIZE
+    const pad = 18
+    const frameW = boardW + pad * 2
+    const frameH = boardH + pad * 2
+    const fx = this.boardOriginX - pad
+    const fy = this.boardOriginY - pad
+
+    this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 14, frameH + 14, 0x2a1810).setDepth(-3)
+    this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 6, frameH + 6, 0x4a3020).setDepth(-3)
+    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, 0x0e2418)
+    felt.setStrokeStyle(4, 0x1f4d32, 1).setDepth(-2)
+
+    const pathSet = new Set(this.path.map(p => `${p.col},${p.row}`))
+    for (let row = 0; row < BOARD_ROWS; row++) {
+      for (let col = 0; col < BOARD_COLS; col++) {
+        if (pathSet.has(`${col},${row}`)) continue
+        const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
+        const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
+        this.add.rectangle(x, y, TILE_SIZE - 6, TILE_SIZE - 6, 0x07160f, 0.92).setDepth(-1)
+      }
+    }
+
     const path = this.path
     path.forEach((cell, i) => {
       const type: TileType = i === 0 ? 'start' : TILE_TYPES[i % TILE_TYPES.length]
@@ -114,22 +152,37 @@ export class BoardScene extends Phaser.Scene {
 
       const img = this.add.image(x, y, TILE_TEXTURE_KEY(type))
       img.setDisplaySize(TILE_SIZE - 4, TILE_SIZE - 4)
+      img.setDepth(0)
       img.setInteractive()
       img.on('pointerover', () => img.setAlpha(0.8))
       img.on('pointerout', () => img.setAlpha(1))
 
-      this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5)
+      this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1)
 
       this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
         fontSize: '9px',
         color: '#ffffff'
-      }).setAlpha(0.7)
+      }).setAlpha(0.7).setDepth(1)
     })
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
     const cy = this.boardOriginY + BOARD_ROWS * TILE_SIZE / 2
-    this.add.text(cx, cy - 20, '🎉 VOCAB', { fontSize: '28px', fontFamily: 'Arial Black' }).setOrigin(0.5)
-    this.add.text(cx, cy + 20, 'PARTY', { fontSize: '28px', fontFamily: 'Arial Black', color: '#FFD700' }).setOrigin(0.5)
+    const titlePanel = this.add.rectangle(cx, cy, 220, 88, 0x0a1520, 0.88)
+    titlePanel.setStrokeStyle(2, 0x335577, 0.9).setDepth(2)
+    this.add.text(cx, cy - 18, '🎉 VOCAB', {
+      fontSize: '26px',
+      fontFamily: 'Arial Black',
+      color: '#e8f4ff',
+      stroke: '#102040',
+      strokeThickness: 4
+    }).setOrigin(0.5).setDepth(3)
+    this.add.text(cx, cy + 18, 'PARTY', {
+      fontSize: '26px',
+      fontFamily: 'Arial Black',
+      color: '#FFD700',
+      stroke: '#553300',
+      strokeThickness: 4
+    }).setOrigin(0.5).setDepth(3)
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
@@ -157,6 +210,25 @@ export class BoardScene extends Phaser.Scene {
     this.statusText.setText(`${p.emoji} ${p.name}'s Turn`)
     this.roundText.setText(`Round ${this.state.round} / ${ROUNDS_PER_GAME}`)
     this.hud.update(this.state)
+
+    this.turnGlowTween?.stop()
+    this.turnGlow?.destroy()
+
+    const pos = p.position
+    const { x, y } = this.getTileXY(pos)
+    this.turnGlow = this.add.circle(x, y, TILE_SIZE * 0.48)
+    this.turnGlow.setStrokeStyle(4, 0xffe066, 0.95)
+    this.turnGlow.setFillStyle(0xffcc33, 0.12)
+    this.turnGlow.setDepth(4)
+    this.turnGlowTween = this.tweens.add({
+      targets: this.turnGlow,
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: 650,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    })
   }
 
   async handleRoll() {
@@ -306,6 +378,9 @@ export class BoardScene extends Phaser.Scene {
       stroke: '#000000',
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(20)
+    if (msg.includes('+')) {
+      playCoinBurst(this, tokenPos.x, tokenPos.y - 8)
+    }
     this.tweens.add({
       targets: txt,
       y: tokenPos.y - 80,

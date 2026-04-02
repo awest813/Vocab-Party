@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { EXTERNAL_ASSETS, TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene') }
@@ -45,6 +46,19 @@ export class PreloadScene extends Phaser.Scene {
     // Load JSON data
     this.load.json('vocab', 'data/vocab.json')
     this.load.json('grammar', 'data/grammar.json')
+
+    // Phaser 3 official examples asset mirror (samme/phaser3-examples-assets)
+    this.load.image(TEXTURE_KEYS.starfield, EXTERNAL_ASSETS.starfield)
+    this.load.image(TEXTURE_KEYS.particleYellow, EXTERNAL_ASSETS.particleYellow)
+    this.load.image(TEXTURE_KEYS.particleRed, EXTERNAL_ASSETS.particleRed)
+    this.load.image(TEXTURE_KEYS.particleBlue, EXTERNAL_ASSETS.particleBlue)
+    this.load.image(TEXTURE_KEYS.particleSquare, EXTERNAL_ASSETS.particleSquare)
+    this.load.image(TEXTURE_KEYS.gem, EXTERNAL_ASSETS.gem)
+    this.load.image(TEXTURE_KEYS.starSmall, EXTERNAL_ASSETS.starSmall)
+    this.load.spritesheet(TEXTURE_KEYS.coin, EXTERNAL_ASSETS.coinSheet, {
+      frameWidth: 16,
+      frameHeight: 16
+    })
   }
 
   create() {

@@ -1,11 +1,13 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 const PLAYER_COLORS = ['#ff6666', '#6688ff', '#66dd66', '#ffdd44']
 
 export class PlayerHUD {
   private scene: Phaser.Scene
   private containers: Phaser.GameObjects.Container[] = []
+  private scoreTexts: Phaser.GameObjects.Text[] = []
   private activeTweenTarget: number = -1
 
   constructor(scene: Phaser.Scene, state: GameState) {
@@ -33,15 +35,25 @@ export class PlayerHUD {
         color: PLAYER_COLORS[i]
       })
 
-      const scoreText = this.scene.add.text(-panelW / 2 + 8, 4, `⭐ ${player.score} pts`, {
+      const scoreLeft = -panelW / 2 + 8
+      const parts: Phaser.GameObjects.GameObject[] = [bg, nameText]
+      let scoreX = scoreLeft
+      if (this.scene.textures.exists(TEXTURE_KEYS.gem)) {
+        const gem = this.scene.add.image(scoreLeft + 11, 4, TEXTURE_KEYS.gem).setDisplaySize(22, 22).setOrigin(0.5, 0.5)
+        parts.push(gem)
+        scoreX = scoreLeft + 26
+      }
+      const scoreText = this.scene.add.text(scoreX, 4, `${player.score} pts`, {
         fontSize: '18px',
         fontFamily: 'Arial Black',
         color: '#FFD700'
-      })
+      }).setOrigin(0, 0.5)
+      parts.push(scoreText)
 
-      container.add([bg, nameText, scoreText])
+      container.add(parts)
       container.setDepth(5)
       this.containers.push(container)
+      this.scoreTexts.push(scoreText)
     })
   }
 
@@ -55,8 +67,8 @@ export class PlayerHUD {
       if (!container) return
       const x = startX + i * (panelW + 10)
       container.setX(x)
-      const scoreText = container.getAt(2) as Phaser.GameObjects.Text
-      if (scoreText) scoreText.setText(`⭐ ${player.score} pts`)
+      const scoreText = this.scoreTexts[i]
+      if (scoreText) scoreText.setText(`${player.score} pts`)
 
       // Highlight current player
       const bg = container.getAt(0) as Phaser.GameObjects.Rectangle
