@@ -3,7 +3,7 @@ import { createButton } from '../ui/Button'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 
 const MAX_PLAYERS = 4
-const MIN_PLAYERS = 2
+const MIN_PLAYERS = 1
 
 const DEFAULT_NAMES = ['Alex', 'Blake', 'Casey', 'Dana']
 const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']

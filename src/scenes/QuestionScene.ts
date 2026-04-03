@@ -79,6 +79,30 @@ export class QuestionScene extends Phaser.Scene {
     let answered = false
     let countdownTimer: Phaser.Time.TimerEvent
 
+    const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
+      if (answered) return
+      answered = true
+      countdownTimer?.remove()
+      const correct = i === q.correct
+      this.handleAnswer(correct, btn, onComplete, q.explanation)
+    }
+
+    const keyToIndex: Record<string, number> = {
+      Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3,
+      Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3,
+      KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3
+    }
+    const onKeyDown = (ev: KeyboardEvent) => {
+      const idx = keyToIndex[ev.code]
+      if (idx === undefined || idx >= q.answers.length) return
+      ev.preventDefault()
+      pickAnswer(idx, null)
+    }
+    this.input.keyboard?.on('keydown', onKeyDown)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.keyboard?.off('keydown', onKeyDown)
+    })
+
     q.answers.forEach((ans, i) => {
       const row = Math.floor(i / 2)
       const col = i % 2
@@ -88,14 +112,14 @@ export class QuestionScene extends Phaser.Scene {
       btn.setAlpha(0)
       this.tweens.add({ targets: btn, alpha: 1, duration: 300, delay: 400 + i * 80 })
 
-      btn.on('pointerdown', () => {
-        if (answered) return
-        answered = true
-        countdownTimer?.remove()
-        const correct = i === q.correct
-        this.handleAnswer(correct, btn, onComplete, q.explanation)
-      })
+      btn.on('pointerdown', () => pickAnswer(i, btn))
     })
+
+    this.add.text(w / 2, h / 2 + 188, 'Keys: 1–4 or A–D', {
+      fontSize: '14px',
+      fontFamily: 'Arial',
+      color: '#7788aa'
+    }).setOrigin(0.5)
 
     // Timer bar
     this.add.rectangle(w / 2, h / 2 + 225, 800, 16, 0x333355)

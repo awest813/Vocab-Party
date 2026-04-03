@@ -83,7 +83,7 @@ export class MenuScene extends Phaser.Scene {
     howBtn.on('pointerdown', () => this.showHowToPlay())
 
     // Info footer
-    this.add.text(w / 2, 572, '2–4 Players  •  Turn-Based  •  10 Rounds', {
+    this.add.text(w / 2, 572, '1–4 Players  •  Turn-Based  •  Keyboard: R / Space to roll', {
       fontSize: '18px',
       fontFamily: 'Arial',
       color: '#556677'
@@ -213,7 +213,7 @@ export class MenuScene extends Phaser.Scene {
       tileObjects.push(bg, emojiT, labelT, descT)
     })
 
-    const winText = this.add.text(w / 2, h / 2 + 190, '🏆  The player with the most points after 10 rounds wins!', {
+    const winText = this.add.text(w / 2, h / 2 + 190, '🏆  Most points wins (round count is set in setup; solo play is supported).', {
       fontSize: '18px',
       fontFamily: 'Arial Black',
       color: '#FFD700',

@@ -113,7 +113,24 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
+    const rollKeyHandler = (ev: KeyboardEvent) => {
+      if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
+        ev.preventDefault()
+        this.tryRollFromKeyboard()
+      }
+    }
+    this.input.keyboard?.on('keydown', rollKeyHandler)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.keyboard?.off('keydown', rollKeyHandler)
+    })
+
     this.updateStatus()
+  }
+
+  /** Roll the die from keyboard when it is the human's turn (board scene active, not mid-roll). */
+  private tryRollFromKeyboard() {
+    if (this.scene.isPaused() || this.rolling) return
+    this.handleRoll()
   }
 
   drawBackdrop(w: number, h: number) {
@@ -250,7 +267,7 @@ export class BoardScene extends Phaser.Scene {
       delay: 80,
       repeat: 14,
       callback: () => {
-        const face = Phaser.Math.Between(1, 6)
+        const face = Phaser.Math.Between(1, 3)
         this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face - 1])
         this.cameras.main.shake(50, 0.003)
       }
@@ -260,7 +277,7 @@ export class BoardScene extends Phaser.Scene {
 
     const result = rollBlockDie()
     this.diceSprite.setTexture(DICE_TEXTURE_KEYS[result - 1])
-    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result} (block die)!`)
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result} (block die: 1–3)!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -510,6 +527,12 @@ export class BoardScene extends Phaser.Scene {
 
   handleSwap(player: Player, playerIndex: number) {
     const others = this.state.players.filter((_, i) => i !== playerIndex)
+    if (others.length === 0) {
+      this.statusText.setText('🔄 No one to swap with in a solo game.')
+      this.showFloatyText(player, 'Solo — no swap!', '#aaaaaa')
+      this.time.delayedCall(1200, () => this.endTurn())
+      return
+    }
     const target = Phaser.Utils.Array.GetRandom(others)
     const targetIndex = this.state.players.indexOf(target)
 
