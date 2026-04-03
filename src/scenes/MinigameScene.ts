@@ -77,7 +77,7 @@ export class MinigameScene extends Phaser.Scene {
     const h = this.scale.height
     const { state, onComplete } = data
 
-    const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix']
+    const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix', 'tactical-clash']
     const chosen = Phaser.Utils.Array.GetRandom(games) as string
 
     // Announcement screen
@@ -88,7 +88,8 @@ export class MinigameScene extends Phaser.Scene {
       'comma-crisis': '😱 COMMA CRISIS',
       'parts-of-speech': '🗣️ PARTS OF SPEECH PANIC',
       'synonym-blitz': '⚡ SYNONYM BLITZ',
-      'sentence-fix': '✨ SENTENCE FIX SHOWDOWN'
+      'sentence-fix': '✨ SENTENCE FIX SHOWDOWN',
+      'tactical-clash': '⚔️ TACTICAL CLASH (ACTION)'
     }
 
     const announce = this.add.text(w / 2, h / 2 - 100, '🕹️ MINIGAME TIME!', {
@@ -135,6 +136,19 @@ export class MinigameScene extends Phaser.Scene {
     this.time.delayedCall(1200, doCount)
   }
 
+  /** KH2/FF7R-inspired action encounter: dodge i-frames, combo chain, ATB ability, stagger, lock-on camera. */
+  private playTacticalClash(state: GameState, onComplete: (winnerId: number) => void) {
+    this.scene.pause()
+    this.scene.launch('TacticalClashScene', {
+      state,
+      onComplete: (winnerId: number) => {
+        this.scene.resume()
+        this.scene.stop('TacticalClashScene')
+        onComplete(winnerId)
+      }
+    })
+  }
+
   launchMinigame(type: string, state: GameState, onComplete: (winnerId: number) => void) {
     this.clearChoiceKeys()
     this.children.removeAll(true)
@@ -149,6 +163,7 @@ export class MinigameScene extends Phaser.Scene {
       case 'parts-of-speech': this.playPartsOfSpeech(state, onComplete); break
       case 'synonym-blitz': this.playSynonymBlitz(state, onComplete); break
       case 'sentence-fix': this.playSentenceFix(state, onComplete); break
+      case 'tactical-clash': this.playTacticalClash(state, onComplete); break
     }
   }
 
