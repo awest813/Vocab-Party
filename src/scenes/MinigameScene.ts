@@ -42,7 +42,35 @@ interface SentenceFixQuestion {
 }
 
 export class MinigameScene extends Phaser.Scene {
+  private choiceKeyCleanup?: () => void
+
   constructor() { super('MinigameScene') }
+
+  private clearChoiceKeys() {
+    this.choiceKeyCleanup?.()
+    this.choiceKeyCleanup = undefined
+  }
+
+  /** Map 1–4 / A–D / numpad to choice index 0..3 */
+  private registerChoiceKeys(
+    numChoices: number,
+    onPick: (index: number) => void
+  ) {
+    this.clearChoiceKeys()
+    const keyToIndex: Record<string, number> = {
+      Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3,
+      Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3,
+      KeyA: 0, KeyB: 1, KeyC: 2, KeyD: 3
+    }
+    const handler = (ev: KeyboardEvent) => {
+      const idx = keyToIndex[ev.code]
+      if (idx === undefined || idx >= numChoices) return
+      ev.preventDefault()
+      onPick(idx)
+    }
+    this.input.keyboard?.on('keydown', handler)
+    this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', handler)
+  }
 
   create(data: MinigameSceneData) {
     const w = this.scale.width
@@ -108,6 +136,7 @@ export class MinigameScene extends Phaser.Scene {
   }
 
   launchMinigame(type: string, state: GameState, onComplete: (winnerId: number) => void) {
+    this.clearChoiceKeys()
     this.children.removeAll(true)
     const w = this.scale.width
     const h = this.scale.height
@@ -154,6 +183,31 @@ export class MinigameScene extends Phaser.Scene {
 
     let done = false
 
+    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
+      if (done) return
+      done = true
+      const correct = ci === q.correct
+      if (correct) {
+        this.clearChoiceKeys()
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        showConfetti(this)
+        this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
+          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        }).setOrigin(0.5)
+        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+      } else {
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        this.cameras.main.shake(200, 0.008)
+        this.add.text(w / 2, h - 100, '❌ Wrong! Try again...', {
+          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+        }).setOrigin(0.5)
+        done = false
+      }
+    }
+
+    const choiceButtons: Phaser.GameObjects.Container[] = []
     const cols = 2
     q.choices.forEach((choice: string, ci: number) => {
       const col = ci % cols
@@ -161,29 +215,18 @@ export class MinigameScene extends Phaser.Scene {
       const bx = w / 2 + (col === 0 ? -260 : 260)
       const by = 380 + row * 100
       const btn = createButton(this, bx, by, choice, 0x224488, 0x112255, 440, 70)
-      btn.on('pointerdown', () => {
-        if (done) return
-        done = true
-        const correct = ci === q.correct
-        if (correct) {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0x44aa44)
-          showConfetti(this)
-          this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
-            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-          }).setOrigin(0.5)
-          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-        } else {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0xaa2222)
-          this.cameras.main.shake(200, 0.008)
-          this.add.text(w / 2, h - 100, '❌ Wrong! Try again...', {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
-          }).setOrigin(0.5)
-          done = false
-        }
-      })
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci, btn))
     })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => {
+      const btn = choiceButtons[ci]
+      if (btn) onChoice(ci, btn)
+    })
+
+    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
+      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+    }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
     this.add.rectangle(w / 2, h - 40, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
@@ -192,6 +235,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
+          this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
@@ -231,32 +275,47 @@ export class MinigameScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     let done = false
+
+    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
+      if (done) return
+      done = true
+      const correct = ci === q.correct_index
+      if (correct) {
+        this.clearChoiceKeys()
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        showConfetti(this)
+        this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
+          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        }).setOrigin(0.5)
+        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+      } else {
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        this.cameras.main.shake(200, 0.008)
+        this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
+          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+        }).setOrigin(0.5)
+        done = false
+      }
+    }
+
+    const choiceButtons: Phaser.GameObjects.Container[] = []
     q.choices.forEach((choice: string, ci: number) => {
       const by = 260 + ci * 105
       const btn = createButton(this, w / 2, by, choice, 0x442200, 0x221100, 1000, 80)
-      btn.on('pointerdown', () => {
-        if (done) return
-        done = true
-        const correct = ci === q.correct_index
-        if (correct) {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0x44aa44)
-          showConfetti(this)
-          this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
-            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-          }).setOrigin(0.5)
-          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-        } else {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0xaa2222)
-          this.cameras.main.shake(200, 0.008)
-          this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
-          }).setOrigin(0.5)
-          done = false
-        }
-      })
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci, btn))
     })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => {
+      const btn = choiceButtons[ci]
+      if (btn) onChoice(ci, btn)
+    })
+
+    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
+      fontSize: '14px', fontFamily: 'Arial', color: '#aa8866'
+    }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff8844).setOrigin(0, 0.5)
     this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
@@ -265,6 +324,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
+          this.clearChoiceKeys()
           this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
@@ -311,35 +371,50 @@ export class MinigameScene extends Phaser.Scene {
 
     const posColors = [0x3355cc, 0xcc3333, 0x33aa33, 0xcc8800]
     let done = false
+
+    const onChoice = (ci: number, btn: Phaser.GameObjects.Container, choice: string) => {
+      if (done) return
+      done = true
+      const correct = ci === q.correct
+      if (correct) {
+        this.clearChoiceKeys()
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        showConfetti(this)
+        this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
+          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        }).setOrigin(0.5)
+        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+      } else {
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        this.cameras.main.shake(200, 0.008)
+        this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
+          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+        }).setOrigin(0.5)
+        done = false
+      }
+    }
+
+    const choiceButtons: Phaser.GameObjects.Container[] = []
     q.choices.forEach((choice: string, ci: number) => {
       const col = ci % 2
       const row = Math.floor(ci / 2)
       const bx = w / 2 + (col === 0 ? -230 : 230)
       const by = 430 + row * 100
       const btn = createButton(this, bx, by, choice, posColors[ci], posColors[ci] - 0x112211, 380, 70)
-      btn.on('pointerdown', () => {
-        if (done) return
-        done = true
-        const correct = ci === q.correct
-        if (correct) {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0x44aa44)
-          showConfetti(this)
-          this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
-            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-          }).setOrigin(0.5)
-          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-        } else {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0xaa2222)
-          this.cameras.main.shake(200, 0.008)
-          this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
-          }).setOrigin(0.5)
-          done = false
-        }
-      })
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci, btn, choice))
     })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => {
+      const btn = choiceButtons[ci]
+      if (btn) onChoice(ci, btn, q.choices[ci])
+    })
+
+    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
+      fontSize: '14px', fontFamily: 'Arial', color: '#aa88cc'
+    }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff44ff).setOrigin(0, 0.5)
     this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
@@ -348,6 +423,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
+          this.clearChoiceKeys()
           this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
@@ -386,6 +462,32 @@ export class MinigameScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     let done = false
+
+    const onChoice = (ci: number, btn: Phaser.GameObjects.Container, choice: string) => {
+      if (done) return
+      done = true
+      const correct = ci === q.correct
+      if (correct) {
+        this.clearChoiceKeys()
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        showConfetti(this)
+        this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
+          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        }).setOrigin(0.5)
+        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+      } else {
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        this.cameras.main.shake(200, 0.008)
+        this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
+          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+        }).setOrigin(0.5)
+        done = false
+      }
+    }
+
+    const choiceButtons: Phaser.GameObjects.Container[] = []
     const cols = 2
     q.choices.forEach((choice: string, ci: number) => {
       const col = ci % cols
@@ -393,29 +495,18 @@ export class MinigameScene extends Phaser.Scene {
       const bx = w / 2 + (col === 0 ? -260 : 260)
       const by = 400 + row * 100
       const btn = createButton(this, bx, by, choice, 0x116688, 0x003344, 440, 70)
-      btn.on('pointerdown', () => {
-        if (done) return
-        done = true
-        const correct = ci === q.correct
-        if (correct) {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0x44aa44)
-          showConfetti(this)
-          this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
-            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-          }).setOrigin(0.5)
-          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-        } else {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0xaa2222)
-          this.cameras.main.shake(200, 0.008)
-          this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
-          }).setOrigin(0.5)
-          done = false
-        }
-      })
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci, btn, choice))
     })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => {
+      const btn = choiceButtons[ci]
+      if (btn) onChoice(ci, btn, q.choices[ci])
+    })
+
+    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
+      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+    }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ddff).setOrigin(0, 0.5)
     this.add.rectangle(w / 2, h - 40, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
@@ -424,6 +515,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
+          this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
@@ -463,32 +555,47 @@ export class MinigameScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     let done = false
+
+    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
+      if (done) return
+      done = true
+      const correct = ci === q.correct_index
+      if (correct) {
+        this.clearChoiceKeys()
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        showConfetti(this)
+        this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
+          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        }).setOrigin(0.5)
+        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
+      } else {
+        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        this.cameras.main.shake(200, 0.008)
+        this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
+          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+        }).setOrigin(0.5)
+        done = false
+      }
+    }
+
+    const choiceButtons: Phaser.GameObjects.Container[] = []
     q.choices.forEach((choice: string, ci: number) => {
       const by = 200 + ci * 105
       const btn = createButton(this, w / 2, by, choice, 0x1a4d40, 0x0a2a22, 1000, 78)
-      btn.on('pointerdown', () => {
-        if (done) return
-        done = true
-        const correct = ci === q.correct_index
-        if (correct) {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0x44aa44)
-          showConfetti(this)
-          this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
-            fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-          }).setOrigin(0.5)
-          this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-        } else {
-          const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-          if (btnBg) btnBg.setFillStyle(0xaa2222)
-          this.cameras.main.shake(200, 0.008)
-          this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
-          }).setOrigin(0.5)
-          done = false
-        }
-      })
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci, btn))
     })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => {
+      const btn = choiceButtons[ci]
+      if (btn) onChoice(ci, btn)
+    })
+
+    this.add.text(w / 2, h - 46, 'Keys: 1–4 or A–D', {
+      fontSize: '14px', fontFamily: 'Arial', color: '#66aa99'
+    }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x66ffcc).setOrigin(0, 0.5)
     this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
@@ -497,6 +604,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (!done) {
           done = true
+          this.clearChoiceKeys()
           this.add.text(w / 2, h - 78, "⏱️ Time's up! No winner.", {
             fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
