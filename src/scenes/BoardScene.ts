@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { GameState, Player, TileType, createInitialState } from '../systems/GameState'
-import { rollDice, rollBlockDie } from '../systems/DiceSystem'
+import { rollBlockDie } from '../systems/DiceSystem'
+import { BOARD_COLS, BOARD_ROWS, BOARD_PATH } from '../systems/BoardLayout'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
@@ -9,25 +10,13 @@ import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 
 const TILE_SIZE = 56
-const BOARD_COLS = 12
-const BOARD_ROWS = 8
-const ROUNDS_PER_GAME = 10
+const DEFAULT_ROUNDS_PER_GAME = 10
 
 const TILE_TYPES: TileType[] = [
   'shop','vocab','grammar','bonus','star','grammar','minigame','vocab','brick','mystery','vocab','shop',
   'vocab','grammar','shop','minigame','grammar','star','bonus','mystery','brick','vocab','grammar','swap',
   'bonus','vocab','shop','grammar','mystery','brick','vocab','minigame','grammar','star','bonus','vocab',
 ]
-
-function buildPath(cols: number, rows: number): {col: number, row: number}[] {
-  const path: {col: number, row: number}[] = []
-  // Clockwise around a rectangle
-  for (let c = 0; c < cols; c++) path.push({ col: c, row: 0 })
-  for (let r = 1; r < rows; r++) path.push({ col: cols - 1, row: r })
-  for (let c = cols - 2; c >= 0; c--) path.push({ col: c, row: rows - 1 })
-  for (let r = rows - 2; r > 0; r--) path.push({ col: 0, row: r })
-  return path
-}
 
 const TILE_LABELS: Record<TileType, string> = {
   vocab: '📖',
@@ -55,6 +44,7 @@ const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
   private path!: {col: number, row: number}[]
+  private roundsPerGame = DEFAULT_ROUNDS_PER_GAME
   private boardOriginX!: number
   private boardOriginY!: number
   private playerTokens!: Phaser.GameObjects.Container[]
@@ -75,15 +65,16 @@ export class BoardScene extends Phaser.Scene {
     return tileIndex === 0 ? 'start' : TILE_TYPES[tileIndex % TILE_TYPES.length]
   }
 
-  create(data?: { playerNames?: string[], playerEmojis?: string[] }) {
+  create(data?: { playerNames?: string[], playerEmojis?: string[], roundsPerGame?: number }) {
     const w = this.scale.width
     const h = this.scale.height
 
     const names = data?.playerNames ?? PLAYER_NAMES
     const emojis = data?.playerEmojis ?? PLAYER_EMOJIS
+    this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
 
     this.state = createInitialState(names, emojis)
-    this.path = buildPath(BOARD_COLS, BOARD_ROWS)
+    this.path = BOARD_PATH
 
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
@@ -224,7 +215,7 @@ export class BoardScene extends Phaser.Scene {
   updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
     this.statusText.setText(`${p.emoji} ${p.name}'s Turn`)
-    this.roundText.setText(`Round ${this.state.round} / ${ROUNDS_PER_GAME}`)
+    this.roundText.setText(`Round ${this.state.round} / ${this.roundsPerGame}`)
     this.hud.update(this.state)
 
     this.turnGlowTween?.stop()
@@ -544,7 +535,7 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn.setAlpha(1)
 
     this.state.turn++
-    const totalTurns = this.state.players.length * ROUNDS_PER_GAME
+    const totalTurns = this.state.players.length * this.roundsPerGame
     if (this.state.turn >= totalTurns) {
       this.time.delayedCall(500, () => {
         this.scene.start('ResultsScene', { state: this.state })

@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
+import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 2
@@ -17,8 +18,12 @@ interface InputRow {
   value: string
 }
 
+const CLASSIC_ROUNDS = 10
+
 export class SetupScene extends Phaser.Scene {
   private playerCount = 4
+  /** When true, game lasts one lap per player (rounds = tiles on the track). */
+  private fullMapMode = false
   private rows: InputRow[] = []
   private activeRow = -1
   private countText!: Phaser.GameObjects.Text
@@ -83,8 +88,22 @@ export class SetupScene extends Phaser.Scene {
     this.plusBtn = createButton(this, w / 2 + 80, countPanelY + 8, '+', 0x554488, 0x332266, 48, 40)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
 
+    // Game length: classic 10 rounds vs full track (one round per board tile)
+    const lengthY = 248
+    this.add.text(w / 2, lengthY - 28, 'Game length', {
+      fontSize: '18px',
+      fontFamily: 'Arial Black',
+      color: '#aabbdd'
+    }).setOrigin(0.5)
+
+    const classicBtn = createButton(this, w / 2 - 175, lengthY + 8, `Classic · ${CLASSIC_ROUNDS} rounds`, 0x334466, 0x223355, 320, 44)
+    const fullMapBtn = createButton(this, w / 2 + 175, lengthY + 8, `Full map · ${BOARD_PATH_LENGTH} rounds`, 0x2a5533, 0x1a4422, 320, 44)
+    classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
+    fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
+    this.setFullMapMode(false, classicBtn, fullMapBtn)
+
     // Name rows header
-    this.add.text(w / 2, 242, 'Enter player names (click to type, Tab/Enter to cycle)', {
+    this.add.text(w / 2, 318, 'Enter player names (click to type, Tab/Enter to cycle)', {
       fontSize: '16px',
       fontFamily: 'Arial',
       color: '#667788'
@@ -92,8 +111,9 @@ export class SetupScene extends Phaser.Scene {
 
     this.rows = []
     this.rowContainers = []
+    const nameRowsStartY = 334
     for (let i = 0; i < MAX_PLAYERS; i++) {
-      this.buildRow(i)
+      this.buildRow(i, nameRowsStartY)
     }
     this.refreshRows()
 
@@ -130,9 +150,15 @@ export class SetupScene extends Phaser.Scene {
     }
   }
 
-  buildRow(index: number) {
+  setFullMapMode(fullMap: boolean, classicBtn: Phaser.GameObjects.Container, fullMapBtn: Phaser.GameObjects.Container) {
+    this.fullMapMode = fullMap
+    classicBtn.setAlpha(fullMap ? 0.55 : 1)
+    fullMapBtn.setAlpha(fullMap ? 1 : 0.55)
+  }
+
+  buildRow(index: number, firstRowY: number) {
     const w = this.scale.width
-    const rowY = 310 + index * 88
+    const rowY = firstRowY + index * 88
     const inputW = 380
     const inputH = 54
     const inputX = w / 2 + 60
@@ -260,9 +286,10 @@ export class SetupScene extends Phaser.Scene {
       r.value.trim() || DEFAULT_NAMES[i]
     )
     const emojis = PLAYER_EMOJIS.slice(0, this.playerCount)
+    const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
     this.cameras.main.flash(300, 255, 255, 255)
     this.time.delayedCall(300, () => {
-      this.scene.start('BoardScene', { playerNames: names, playerEmojis: emojis })
+      this.scene.start('BoardScene', { playerNames: names, playerEmojis: emojis, roundsPerGame })
     })
   }
 }
