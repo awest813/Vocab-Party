@@ -8,6 +8,39 @@ interface MinigameSceneData {
   onComplete: (winnerId: number) => void
 }
 
+interface ContextClueQuestion {
+  sentence: string
+  word: string
+  choices: string[]
+  correct: number
+}
+
+interface CommaCrisisQuestion {
+  sentence: string
+  correct: string
+  choices: string[]
+  correct_index: number
+}
+
+interface PartsOfSpeechQuestion {
+  word: string
+  sentence: string
+  choices: string[]
+  correct: number
+}
+
+interface SynonymBlitzQuestion {
+  word: string
+  choices: string[]
+  correct: number
+}
+
+interface SentenceFixQuestion {
+  prompt: string
+  choices: string[]
+  correct_index: number
+}
+
 export class MinigameScene extends Phaser.Scene {
   constructor() { super('MinigameScene') }
 
@@ -93,14 +126,18 @@ export class MinigameScene extends Phaser.Scene {
   playContextClue(state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
-    const questions = this.cache.json.get('vocab').minigame_context_clues || []
+    const questions = (this.cache.json.get('vocab') as { minigame_context_clues?: ContextClueQuestion[] })
+      .minigame_context_clues ?? []
 
-    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+    const fallbackContext: ContextClueQuestion = {
       sentence: 'The scientist made an important _____ that changed how we understand the universe.',
       word: 'discovery',
       choices: ['discovery', 'confusion', 'mistake', 'question'],
       correct: 0
     }
+    const q: ContextClueQuestion = questions.length > 0
+      ? (Phaser.Utils.Array.GetRandom(questions) as ContextClueQuestion)
+      : fallbackContext
 
     this.add.text(w / 2, 60, '🔍 CONTEXT CLUE CLASH', {
       fontSize: '36px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 6
@@ -167,9 +204,10 @@ export class MinigameScene extends Phaser.Scene {
   playCommaCrisis(state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
-    const questions = this.cache.json.get('grammar').minigame_comma || []
+    const questions = (this.cache.json.get('grammar') as { minigame_comma?: CommaCrisisQuestion[] })
+      .minigame_comma ?? []
 
-    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+    const fallbackComma: CommaCrisisQuestion = {
       sentence: 'Before you leave please turn off the lights and close the door.',
       correct: 'Before you leave, please turn off the lights, and close the door.',
       choices: [
@@ -180,6 +218,9 @@ export class MinigameScene extends Phaser.Scene {
       ],
       correct_index: 1
     }
+    const q: CommaCrisisQuestion = questions.length > 0
+      ? (Phaser.Utils.Array.GetRandom(questions) as CommaCrisisQuestion)
+      : fallbackComma
 
     this.add.text(w / 2, 60, '😱 COMMA CRISIS', {
       fontSize: '36px', fontFamily: 'Arial Black', color: '#ff8844', stroke: '#442200', strokeThickness: 6
@@ -236,14 +277,18 @@ export class MinigameScene extends Phaser.Scene {
   playPartsOfSpeech(state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
-    const questions = this.cache.json.get('grammar').minigame_pos || []
+    const questions = (this.cache.json.get('grammar') as { minigame_pos?: PartsOfSpeechQuestion[] })
+      .minigame_pos ?? []
 
-    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+    const fallbackPos: PartsOfSpeechQuestion = {
       word: 'QUICKLY',
       sentence: 'She ran quickly to catch the bus.',
       choices: ['Noun', 'Verb', 'Adjective', 'Adverb'],
       correct: 3
     }
+    const q: PartsOfSpeechQuestion = questions.length > 0
+      ? (Phaser.Utils.Array.GetRandom(questions) as PartsOfSpeechQuestion)
+      : fallbackPos
 
     this.add.text(w / 2, 60, '🗣️ PARTS OF SPEECH PANIC', {
       fontSize: '36px', fontFamily: 'Arial Black', color: '#ff44ff', stroke: '#440044', strokeThickness: 6
@@ -315,13 +360,17 @@ export class MinigameScene extends Phaser.Scene {
   playSynonymBlitz(state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
-    const questions = this.cache.json.get('vocab').minigame_synonyms || []
+    const questions = (this.cache.json.get('vocab') as { minigame_synonyms?: SynonymBlitzQuestion[] })
+      .minigame_synonyms ?? []
 
-    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+    const fallbackSynonym: SynonymBlitzQuestion = {
       word: 'rapid',
       choices: ['fast', 'slow', 'heavy', 'quiet'],
       correct: 0
     }
+    const q: SynonymBlitzQuestion = questions.length > 0
+      ? (Phaser.Utils.Array.GetRandom(questions) as SynonymBlitzQuestion)
+      : fallbackSynonym
 
     this.add.text(w / 2, 60, '⚡ SYNONYM BLITZ', {
       fontSize: '36px', fontFamily: 'Arial Black', color: '#66ddff', stroke: '#003344', strokeThickness: 6
@@ -387,9 +436,10 @@ export class MinigameScene extends Phaser.Scene {
   playSentenceFix(state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
-    const questions = this.cache.json.get('grammar').minigame_sentence_fix || []
+    const questions = (this.cache.json.get('grammar') as { minigame_sentence_fix?: SentenceFixQuestion[] })
+      .minigame_sentence_fix ?? []
 
-    const q = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) : {
+    const fallbackSentenceFix: SentenceFixQuestion = {
       prompt: 'Which sentence is written correctly?',
       choices: [
         'Me and him went to the store.',
@@ -399,6 +449,9 @@ export class MinigameScene extends Phaser.Scene {
       ],
       correct_index: 1
     }
+    const q: SentenceFixQuestion = questions.length > 0
+      ? (Phaser.Utils.Array.GetRandom(questions) as SentenceFixQuestion)
+      : fallbackSentenceFix
 
     this.add.text(w / 2, 55, '✨ SENTENCE FIX SHOWDOWN', {
       fontSize: '34px', fontFamily: 'Arial Black', color: '#88ffcc', stroke: '#114433', strokeThickness: 6
