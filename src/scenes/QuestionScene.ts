@@ -14,6 +14,8 @@ interface QuestionSceneData {
   playerIndex: number
   state: any
   onComplete: (correct: boolean) => void
+  /** When set, auto-picks after delay (correct with given probability). */
+  cpuResolve?: { delayMs: number; correctChance: number }
 }
 
 export class QuestionScene extends Phaser.Scene {
@@ -22,7 +24,7 @@ export class QuestionScene extends Phaser.Scene {
   create(data: QuestionSceneData) {
     const w = this.scale.width
     const h = this.scale.height
-    const { type, playerIndex, state, onComplete } = data
+    const { type, playerIndex, state, onComplete, cpuResolve } = data
 
     const questions: QuestionData[] = type === 'vocab'
       ? this.cache.json.get('vocab').questions
@@ -147,7 +149,7 @@ export class QuestionScene extends Phaser.Scene {
       }
     })
 
-    this.tweens.add({
+    const timerBarTween = this.tweens.add({
       targets: timerBar,
       width: 0,
       duration: 15000,
@@ -163,6 +165,22 @@ export class QuestionScene extends Phaser.Scene {
 
     this.time.delayedCall(10000, () => { if (!answered) timerBar.setFillStyle(0xff8800) })
     this.time.delayedCall(13000, () => { if (!answered) timerBar.setFillStyle(0xff3333) })
+
+    if (cpuResolve) {
+      this.time.delayedCall(cpuResolve.delayMs, () => {
+        if (answered) return
+        answered = true
+        countdownTimer.remove()
+        timerBarTween.stop()
+        const wantCorrect = Phaser.Math.FloatBetween(0, 1) < cpuResolve.correctChance
+        const wrongIndices = q.answers.map((_, i) => i).filter(i => i !== q.correct)
+        const pickIndex = wantCorrect
+          ? q.correct
+          : (wrongIndices.length > 0 ? Phaser.Utils.Array.GetRandom(wrongIndices) : q.correct)
+        const correct = pickIndex === q.correct
+        this.handleAnswer(correct, null, onComplete, q.explanation)
+      })
+    }
   }
 
   handleAnswer(

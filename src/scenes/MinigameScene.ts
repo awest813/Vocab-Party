@@ -6,6 +6,8 @@ import { createButton } from '../ui/Button'
 interface MinigameSceneData {
   state: GameState
   onComplete: (winnerId: number) => void
+  /** Skip UI and pick a random winner (biased toward current player). */
+  cpuMode?: boolean
 }
 
 interface ContextClueQuestion {
@@ -75,7 +77,21 @@ export class MinigameScene extends Phaser.Scene {
   create(data: MinigameSceneData) {
     const w = this.scale.width
     const h = this.scale.height
-    const { state, onComplete } = data
+    const { state, onComplete, cpuMode } = data
+
+    if (cpuMode) {
+      this.time.delayedCall(Phaser.Math.Between(900, 1800), () => {
+        const n = state.players.length
+        let winnerId = -1
+        if (n > 0) {
+          winnerId = Phaser.Math.FloatBetween(0, 1) < 0.38
+            ? state.currentPlayer
+            : Phaser.Math.Between(0, n - 1)
+        }
+        onComplete(winnerId)
+      })
+      return
+    }
 
     const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix']
     const chosen = Phaser.Utils.Array.GetRandom(games) as string

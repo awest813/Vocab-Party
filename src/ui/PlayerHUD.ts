@@ -29,7 +29,8 @@ export class PlayerHUD {
       const bg = this.scene.add.rectangle(0, 0, panelW, panelH, 0x222244)
       bg.setStrokeStyle(3, parseInt(PLAYER_COLORS[i].replace('#', ''), 16))
 
-      const nameText = this.scene.add.text(-panelW / 2 + 8, -22, `${player.emoji} ${player.name}`, {
+      const nameLine = player.isCpu ? `${player.emoji} ${player.name} 🤖` : `${player.emoji} ${player.name}`
+      const nameText = this.scene.add.text(-panelW / 2 + 8, -22, nameLine, {
         fontSize: '16px',
         fontFamily: 'Arial Black',
         color: PLAYER_COLORS[i]

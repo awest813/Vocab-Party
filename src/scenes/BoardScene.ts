@@ -65,15 +65,21 @@ export class BoardScene extends Phaser.Scene {
     return tileIndex === 0 ? 'start' : TILE_TYPES[tileIndex % TILE_TYPES.length]
   }
 
-  create(data?: { playerNames?: string[], playerEmojis?: string[], roundsPerGame?: number }) {
+  create(data?: {
+    playerNames?: string[]
+    playerEmojis?: string[]
+    roundsPerGame?: number
+    playerCpu?: boolean[]
+  }) {
     const w = this.scale.width
     const h = this.scale.height
 
     const names = data?.playerNames ?? PLAYER_NAMES
     const emojis = data?.playerEmojis ?? PLAYER_EMOJIS
     this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
+    const cpuFlags = data?.playerCpu ?? names.map(() => false)
 
-    this.state = createInitialState(names, emojis)
+    this.state = createInitialState(names, emojis, cpuFlags)
     this.path = BOARD_PATH
 
     const boardW = BOARD_COLS * TILE_SIZE
@@ -125,12 +131,27 @@ export class BoardScene extends Phaser.Scene {
     })
 
     this.updateStatus()
+    this.maybeScheduleCpuTurn()
   }
 
   /** Roll the die from keyboard when it is the human's turn (board scene active, not mid-roll). */
   private tryRollFromKeyboard() {
     if (this.scene.isPaused() || this.rolling) return
+    if (this.state.players[this.state.currentPlayer]?.isCpu) return
     this.handleRoll()
+  }
+
+  /** After status updates, CPU players roll automatically after a short beat. */
+  private maybeScheduleCpuTurn() {
+    if (this.scene.isPaused() || this.rolling) return
+    const p = this.state.players[this.state.currentPlayer]
+    if (!p?.isCpu) return
+    this.rollBtn.setAlpha(0.42)
+    this.time.delayedCall(Phaser.Math.Between(550, 1100), () => {
+      if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
+      if (!this.state.players[this.state.currentPlayer]?.isCpu) return
+      this.handleRoll(true)
+    })
   }
 
   drawBackdrop(w: number, h: number) {
@@ -231,9 +252,16 @@ export class BoardScene extends Phaser.Scene {
 
   updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
-    this.statusText.setText(`${p.emoji} ${p.name}'s Turn`)
+    const cpuTag = p.isCpu ? ' 🤖' : ''
+    this.statusText.setText(`${p.emoji} ${p.name}'s Turn${cpuTag}`)
     this.roundText.setText(`Round ${this.state.round} / ${this.roundsPerGame}`)
     this.hud.update(this.state)
+
+    if (p.isCpu && !this.rolling) {
+      this.rollBtn.setAlpha(0.42)
+    } else if (!this.rolling) {
+      this.rollBtn.setAlpha(1)
+    }
 
     this.turnGlowTween?.stop()
     this.turnGlow?.destroy()
@@ -253,10 +281,15 @@ export class BoardScene extends Phaser.Scene {
       repeat: -1,
       ease: 'Sine.easeInOut'
     })
+
+    this.maybeScheduleCpuTurn()
   }
 
-  async handleRoll() {
+  /** @param isCpuInvocation - must be true when the automated CPU triggers the roll */
+  async handleRoll(isCpuInvocation = false) {
     if (this.rolling) return
+    const cur = this.state.players[this.state.currentPlayer]
+    if (cur.isCpu !== isCpuInvocation) return
     this.rolling = true
     this.rollBtn.setAlpha(0.5)
 
@@ -358,6 +391,9 @@ export class BoardScene extends Phaser.Scene {
             type,
             playerIndex,
             state: this.state,
+            ...(player.isCpu
+              ? { cpuResolve: { delayMs: Phaser.Math.Between(1400, 2600), correctChance: 0.52 } }
+              : {}),
             onComplete: (correct: boolean) => {
               this.scene.stop('QuestionScene')
               if (correct) {
@@ -376,6 +412,7 @@ export class BoardScene extends Phaser.Scene {
         case 'minigame':
           this.scene.launch('MinigameScene', {
             state: this.state,
+            cpuMode: player.isCpu,
             onComplete: (winnerId: number) => {
               this.scene.stop('MinigameScene')
               if (winnerId >= 0) {
@@ -516,7 +553,8 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(1200, () => {
         this.rolling = false
         this.rollBtn.setAlpha(1)
-        this.handleRoll()
+        const cpu = this.state.players[this.state.currentPlayer]?.isCpu ?? false
+        this.handleRoll(cpu)
       })
       return
     }
