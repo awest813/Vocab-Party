@@ -20,6 +20,9 @@ const TILE_COLORS: Record<string, number> = {
   brick:    0xcc5533,
 }
 
+/** Tile types with bundled PNGs in PreloadScene (Kenney composites). */
+export const BOARD_TILE_TYPES = Object.keys(TILE_COLORS) as (keyof typeof TILE_COLORS)[]
+
 const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
   [{ x: 24, y: 24 }],
   [{ x: 14, y: 14 }, { x: 34, y: 34 }],

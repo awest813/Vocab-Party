@@ -1,5 +1,11 @@
 import Phaser from 'phaser'
-import { EXTERNAL_ASSETS, TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { BUNDLED_GAME_ASSETS, EXTERNAL_ASSETS, TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import {
+  BOARD_TILE_TYPES,
+  DICE_TEXTURE_KEYS,
+  PLAYER_TEXTURE_KEYS,
+  TILE_TEXTURE_KEY,
+} from '../systems/SpriteFactory'
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene') }
@@ -58,6 +64,16 @@ export class PreloadScene extends Phaser.Scene {
     this.load.spritesheet(TEXTURE_KEYS.coin, EXTERNAL_ASSETS.coinSheet, {
       frameWidth: 16,
       frameHeight: 16
+    })
+
+    BUNDLED_GAME_ASSETS.kenneyDiceFaces.forEach((path, i) => {
+      this.load.image(DICE_TEXTURE_KEYS[i], path)
+    })
+    BUNDLED_GAME_ASSETS.quaterniusPlayers.forEach((path, i) => {
+      this.load.image(PLAYER_TEXTURE_KEYS[i], path)
+    })
+    BOARD_TILE_TYPES.forEach((type) => {
+      this.load.image(TILE_TEXTURE_KEY(type), BUNDLED_GAME_ASSETS.kenneyTile(type))
     })
   }
 
