@@ -19,6 +19,8 @@ export interface Player {
   trophies: number
   coins: number
   bricksCollected: number
+  /** When true, the board auto-rolls and resolves vocab/grammar/minigames without human input. */
+  isCpu: boolean
 }
 
 export interface GameState {
@@ -28,7 +30,7 @@ export interface GameState {
   round: number
 }
 
-export function createInitialState(names: string[], emojis: string[]): GameState {
+export function createInitialState(names: string[], emojis: string[], cpuFlags?: boolean[]): GameState {
   return {
     players: names.map((name, i) => ({
       id: i,
@@ -38,7 +40,8 @@ export function createInitialState(names: string[], emojis: string[]): GameState
       position: 0,
       trophies: 0,
       coins: 18,
-      bricksCollected: 0
+      bricksCollected: 0,
+      isCpu: cpuFlags?.[i] ?? false
     })),
     currentPlayer: 0,
     turn: 0,
