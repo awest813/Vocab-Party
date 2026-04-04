@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { isAutoSimMode } from '../systems/gameFlags'
 
 const TILE_LEGEND = [
   { emoji: '📖', label: 'Vocab', color: 0x4488ff },
@@ -78,6 +79,10 @@ export class MenuScene extends Phaser.Scene {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('SetupScene'))
     })
+
+    if (isAutoSimMode()) {
+      this.scene.start('SetupScene')
+    }
 
     const howBtn = createButton(this, w / 2, 498, '❓  HOW TO PLAY', 0x5566ff, 0x3344cc, 340, 56)
     howBtn.on('pointerdown', () => this.showHowToPlay())

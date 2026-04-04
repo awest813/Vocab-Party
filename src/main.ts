@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { initGameFlagsFromLocation } from './systems/gameFlags'
 import { BootScene } from './scenes/BootScene'
 import { PreloadScene } from './scenes/PreloadScene'
 import { MenuScene } from './scenes/MenuScene'
@@ -24,5 +25,7 @@ const config: Phaser.Types.Core.GameConfig = {
   },
   scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene]
 }
+
+initGameFlagsFromLocation()
 
 new Phaser.Game(config)

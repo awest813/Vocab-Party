@@ -4,6 +4,7 @@ import { showConfetti } from '../ui/Confetti'
 import { createButton } from '../ui/Button'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
+import { scaleAutoSimDelay } from '../systems/gameFlags'
 
 interface MinigameSceneData {
   state: GameState
@@ -87,7 +88,8 @@ export class MinigameScene extends Phaser.Scene {
       const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math, cpuLevel)
       const n = state.players.length
       const winnerId = n > 0 && currentPlayerWins ? state.currentPlayer : -1
-      this.time.delayedCall(Math.max(400, totalDelayMs), () => onComplete(winnerId))
+      const wait = scaleAutoSimDelay(Math.max(400, totalDelayMs))
+      this.time.delayedCall(Math.max(24, wait), () => onComplete(winnerId))
       return
     }
 
