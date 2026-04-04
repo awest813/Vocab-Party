@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
+import type { GameState } from '../systems/GameState'
 
 interface QuestionData {
   question: string
@@ -12,7 +13,7 @@ interface QuestionData {
 interface QuestionSceneData {
   type: 'vocab' | 'grammar'
   playerIndex: number
-  state: any
+  state: GameState
   onComplete: (correct: boolean) => void
   /** When set, auto-picks after delay (correct with given probability). */
   cpuResolve?: { delayMs: number; correctChance: number }

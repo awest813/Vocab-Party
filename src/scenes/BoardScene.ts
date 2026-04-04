@@ -8,6 +8,7 @@ import { showConfetti } from '../ui/Confetti'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
+import { cpuBoardQuestionResolve, cpuRollDelayMs } from '../systems/CpuPolicy'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
@@ -147,7 +148,7 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p?.isCpu) return
     this.rollBtn.setAlpha(0.42)
-    this.time.delayedCall(Phaser.Math.Between(550, 1100), () => {
+    this.time.delayedCall(cpuRollDelayMs(Phaser.Math), () => {
       if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
       if (!this.state.players[this.state.currentPlayer]?.isCpu) return
       this.handleRoll(true)
@@ -391,9 +392,7 @@ export class BoardScene extends Phaser.Scene {
             type,
             playerIndex,
             state: this.state,
-            ...(player.isCpu
-              ? { cpuResolve: { delayMs: Phaser.Math.Between(1400, 2600), correctChance: 0.52 } }
-              : {}),
+            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math) } : {}),
             onComplete: (correct: boolean) => {
               this.scene.stop('QuestionScene')
               if (correct) {
