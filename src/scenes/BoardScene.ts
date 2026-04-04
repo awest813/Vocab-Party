@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_PATH } from '../systems/BoardLayout'
@@ -71,6 +72,7 @@ export class BoardScene extends Phaser.Scene {
     playerEmojis?: string[]
     roundsPerGame?: number
     playerCpu?: boolean[]
+    playerCpuLevels?: CpuLevel[]
   }) {
     const w = this.scale.width
     const h = this.scale.height
@@ -79,8 +81,9 @@ export class BoardScene extends Phaser.Scene {
     const emojis = data?.playerEmojis ?? PLAYER_EMOJIS
     this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
     const cpuFlags = data?.playerCpu ?? names.map(() => false)
+    const cpuLevels = data?.playerCpuLevels
 
-    this.state = createInitialState(names, emojis, cpuFlags)
+    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels)
     this.path = BOARD_PATH
 
     const boardW = BOARD_COLS * TILE_SIZE
@@ -148,7 +151,7 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p?.isCpu) return
     this.rollBtn.setAlpha(0.42)
-    this.time.delayedCall(cpuRollDelayMs(Phaser.Math), () => {
+    this.time.delayedCall(cpuRollDelayMs(Phaser.Math, p.cpuLevel), () => {
       if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
       if (!this.state.players[this.state.currentPlayer]?.isCpu) return
       this.handleRoll(true)
@@ -392,7 +395,7 @@ export class BoardScene extends Phaser.Scene {
             type,
             playerIndex,
             state: this.state,
-            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math) } : {}),
+            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel) } : {}),
             onComplete: (correct: boolean) => {
               this.scene.stop('QuestionScene')
               if (correct) {
@@ -412,6 +415,7 @@ export class BoardScene extends Phaser.Scene {
           this.scene.launch('MinigameScene', {
             state: this.state,
             cpuMode: player.isCpu,
+            cpuLevel: player.cpuLevel,
             onComplete: (winnerId: number) => {
               this.scene.stop('MinigameScene')
               if (winnerId >= 0) {

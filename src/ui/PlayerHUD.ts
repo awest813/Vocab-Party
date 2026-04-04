@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
+import { CPU_LEVEL_LABEL } from '../systems/CpuPolicy'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 const PLAYER_COLORS = ['#ff6666', '#6688ff', '#66dd66', '#ffdd44']
@@ -29,7 +30,9 @@ export class PlayerHUD {
       const bg = this.scene.add.rectangle(0, 0, panelW, panelH, 0x222244)
       bg.setStrokeStyle(3, parseInt(PLAYER_COLORS[i].replace('#', ''), 16))
 
-      const nameLine = player.isCpu ? `${player.emoji} ${player.name} 🤖` : `${player.emoji} ${player.name}`
+      const nameLine = player.isCpu
+        ? `${player.emoji} ${player.name} 🤖 ${CPU_LEVEL_LABEL[player.cpuLevel]}`
+        : `${player.emoji} ${player.name}`
       const nameText = this.scene.add.text(-panelW / 2 + 8, -22, nameLine, {
         fontSize: '16px',
         fontFamily: 'Arial Black',

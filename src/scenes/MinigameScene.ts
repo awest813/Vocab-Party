@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
 import { createButton } from '../ui/Button'
+import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 
 interface MinigameSceneData {
@@ -9,6 +10,8 @@ interface MinigameSceneData {
   onComplete: (winnerId: number) => void
   /** Skip UI and pick a random winner (biased toward current player). */
   cpuMode?: boolean
+  /** Used with `cpuMode` for board-question-style difficulty scaling. */
+  cpuLevel?: CpuLevel
 }
 
 interface ContextClueQuestion {
@@ -78,10 +81,10 @@ export class MinigameScene extends Phaser.Scene {
   create(data: MinigameSceneData) {
     const w = this.scale.width
     const h = this.scale.height
-    const { state, onComplete, cpuMode } = data
+    const { state, onComplete, cpuMode, cpuLevel } = data
 
     if (cpuMode) {
-      const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math)
+      const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math, cpuLevel)
       const n = state.players.length
       const winnerId = n > 0 && currentPlayerWins ? state.currentPlayer : -1
       this.time.delayedCall(Math.max(400, totalDelayMs), () => onComplete(winnerId))
