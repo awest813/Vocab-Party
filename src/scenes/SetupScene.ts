@@ -1,6 +1,8 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
+import type { CpuLevel } from '../systems/CpuPolicy'
+import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 1
@@ -20,10 +22,12 @@ interface InputRow {
 
 const CLASSIC_ROUNDS = 10
 
+type CpuSlotMode = 'off' | CpuLevel
+
 export class SetupScene extends Phaser.Scene {
   private playerCount = 4
-  /** Per-slot CPU control; only first `playerCount` entries are used. */
-  private cpuByRow = [false, false, false, false]
+  /** Per-slot: human, or CPU at a difficulty level. Only first `playerCount` entries matter. */
+  private cpuModeByRow: CpuSlotMode[] = ['off', 'off', 'off', 'off']
   private cpuToggleTexts: Phaser.GameObjects.Text[] = []
   /** When true, game lasts one lap per player (rounds = tiles on the track). */
   private fullMapMode = false
@@ -106,7 +110,7 @@ export class SetupScene extends Phaser.Scene {
     this.setFullMapMode(false, classicBtn, fullMapBtn)
 
     // Name rows header
-    this.add.text(w / 2, 318, 'Names: click to type · Tab/Enter to cycle · (CPU) toggles computer control', {
+    this.add.text(w / 2, 318, 'Names: click to type · Tab/Enter to cycle · CPU: click to cycle off → Easy → Normal → Hard', {
       fontSize: '16px',
       fontFamily: 'Arial',
       color: '#667788'
@@ -190,7 +194,11 @@ export class SetupScene extends Phaser.Scene {
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
       if (index >= this.playerCount) return
-      this.cpuByRow[index] = !this.cpuByRow[index]
+      const cur = this.cpuModeByRow[index]
+      if (cur === 'off') this.cpuModeByRow[index] = 'easy'
+      else if (cur === 'easy') this.cpuModeByRow[index] = 'normal'
+      else if (cur === 'normal') this.cpuModeByRow[index] = 'hard'
+      else this.cpuModeByRow[index] = 'off'
       this.refreshCpuToggle(index)
     })
     this.cpuToggleTexts.push(cpuToggle)
@@ -241,9 +249,14 @@ export class SetupScene extends Phaser.Scene {
   refreshCpuToggle(index: number) {
     const t = this.cpuToggleTexts[index]
     if (!t) return
-    const on = this.cpuByRow[index]
-    t.setText(on ? '(CPU on)' : '(CPU)')
-    t.setColor(on ? '#88ddaa' : '#6699aa')
+    const mode = this.cpuModeByRow[index]
+    if (mode === 'off') {
+      t.setText('(CPU)')
+      t.setColor('#6699aa')
+    } else {
+      t.setText(`CPU · ${CPU_LEVEL_LABEL[mode]}`)
+      t.setColor(mode === 'hard' ? '#ffcc88' : '#88ddaa')
+    }
   }
 
   refreshRows() {
@@ -258,7 +271,7 @@ export class SetupScene extends Phaser.Scene {
         if (enabled) cpuT.setInteractive({ useHandCursor: true })
         else {
           cpuT.disableInteractive()
-          this.cpuByRow[i] = false
+          this.cpuModeByRow[i] = 'off'
           this.refreshCpuToggle(i)
         }
       }
@@ -323,9 +336,17 @@ export class SetupScene extends Phaser.Scene {
     const emojis = PLAYER_EMOJIS.slice(0, this.playerCount)
     const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
     this.cameras.main.flash(300, 255, 255, 255)
-    const playerCpu = this.cpuByRow.slice(0, this.playerCount)
+    const slice = this.cpuModeByRow.slice(0, this.playerCount)
+    const playerCpu = slice.map(m => m !== 'off')
+    const playerCpuLevels = slice.map(m => (m === 'off' ? DEFAULT_CPU_LEVEL : m))
     this.time.delayedCall(300, () => {
-      this.scene.start('BoardScene', { playerNames: names, playerEmojis: emojis, roundsPerGame, playerCpu })
+      this.scene.start('BoardScene', {
+        playerNames: names,
+        playerEmojis: emojis,
+        roundsPerGame,
+        playerCpu,
+        playerCpuLevels
+      })
     })
   }
 }
