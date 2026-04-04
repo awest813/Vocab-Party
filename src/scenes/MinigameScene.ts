@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
 import { createButton } from '../ui/Button'
+import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 
 interface MinigameSceneData {
   state: GameState
@@ -80,16 +81,10 @@ export class MinigameScene extends Phaser.Scene {
     const { state, onComplete, cpuMode } = data
 
     if (cpuMode) {
-      this.time.delayedCall(Phaser.Math.Between(900, 1800), () => {
-        const n = state.players.length
-        let winnerId = -1
-        if (n > 0) {
-          winnerId = Phaser.Math.FloatBetween(0, 1) < 0.38
-            ? state.currentPlayer
-            : Phaser.Math.Between(0, n - 1)
-        }
-        onComplete(winnerId)
-      })
+      const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math)
+      const n = state.players.length
+      const winnerId = n > 0 && currentPlayerWins ? state.currentPlayer : -1
+      this.time.delayedCall(Math.max(400, totalDelayMs), () => onComplete(winnerId))
       return
     }
 
