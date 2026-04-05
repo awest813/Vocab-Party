@@ -112,8 +112,6 @@ export class BoardScene extends Phaser.Scene {
         return `Tile ${tileIndex}: STAR — spend ${STAR_COST_COINS} coins for a trophy (+12 score).`
       case 'brick':
         return `Tile ${tileIndex}: BRICK — gather pieces; every ${BRICKS_FOR_BUILD_BONUS} gives +${BUILD_BONUS_SCORE} score.`
-      default:
-        return `Tile ${tileIndex}: ${type.toUpperCase()}`
     }
   }
 
