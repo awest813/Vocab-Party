@@ -9,6 +9,9 @@ export class PlayerHUD {
   private scene: Phaser.Scene
   private containers: Phaser.GameObjects.Container[] = []
   private scoreTexts: Phaser.GameObjects.Text[] = []
+  private metaTexts: Phaser.GameObjects.Text[] = []
+  private rankTexts: Phaser.GameObjects.Text[] = []
+  private lastScores: number[] = []
   private activeTweenTarget: number = -1
 
   constructor(scene: Phaser.Scene, state: GameState) {
@@ -53,6 +56,7 @@ export class PlayerHUD {
         color: '#FFD700'
       }).setOrigin(0, 0.5)
       parts.push(scoreText)
+      this.lastScores[i] = player.score
 
       const metaText = this.scene.add.text(scoreLeft + 4, 22, `🪙${player.coins}  🌟${player.trophies}  🧱${player.bricksCollected}`, {
         fontSize: '12px',
@@ -61,10 +65,19 @@ export class PlayerHUD {
       }).setOrigin(0, 0.5)
       parts.push(metaText)
 
+      const rankText = this.scene.add.text(panelW / 2 - 8, -panelH / 2 + 7, '', {
+        fontSize: '13px',
+        fontFamily: 'Arial Black',
+        color: '#ddeeff'
+      }).setOrigin(1, 0)
+      parts.push(rankText)
+
       container.add(parts)
       container.setDepth(5)
       this.containers.push(container)
       this.scoreTexts.push(scoreText)
+      this.metaTexts.push(metaText)
+      this.rankTexts.push(rankText)
     })
   }
 
@@ -72,6 +85,15 @@ export class PlayerHUD {
     const w = this.scene.scale.width
     const panelW = 212
     const startX = (w - state.players.length * (panelW + 10)) / 2 + panelW / 2
+    const sortedIds = [...state.players]
+      .sort((a, b) => {
+        if (b.trophies !== a.trophies) return b.trophies - a.trophies
+        if (b.score !== a.score) return b.score - a.score
+        return b.coins - a.coins
+      })
+      .map(p => p.id)
+    const rankById = new Map<number, number>()
+    sortedIds.forEach((id, idx) => rankById.set(id, idx + 1))
 
     state.players.forEach((player, i) => {
       const container = this.containers[i]
@@ -79,10 +101,33 @@ export class PlayerHUD {
       const x = startX + i * (panelW + 10)
       container.setX(x)
       const scoreText = this.scoreTexts[i]
-      if (scoreText) scoreText.setText(`${player.score} pts`)
-      const metaText = container.getAt(container.length - 1) as Phaser.GameObjects.Text
-      if (metaText && metaText.setText) {
-        metaText.setText(`🪙${player.coins}  🌟${player.trophies}  🧱${player.bricksCollected}`)
+      if (scoreText) {
+        scoreText.setText(`${player.score} pts`)
+        if (this.lastScores[i] !== player.score) {
+          this.scene.tweens.add({
+            targets: scoreText,
+            scaleX: 1.16,
+            scaleY: 1.16,
+            duration: 130,
+            yoyo: true
+          })
+          this.lastScores[i] = player.score
+        }
+      }
+      const momentum: string[] = []
+      if (player.answerStreak >= 2) momentum.push(`🧠x${player.answerStreak}`)
+      if (player.speedBoostTurns > 0) momentum.push(`💨x${player.speedBoostTurns}`)
+      const metaText = this.metaTexts[i]
+      if (metaText) {
+        const suffix = momentum.length > 0 ? `  ${momentum.join(' ')}` : ''
+        metaText.setText(`🪙${player.coins}  🌟${player.trophies}  🧱${player.bricksCollected}${suffix}`)
+      }
+
+      const rankText = this.rankTexts[i]
+      const rank = rankById.get(player.id) ?? state.players.length
+      const rankBadge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '🏁'
+      if (rankText) {
+        rankText.setText(`${rankBadge} #${rank}`)
       }
 
       // Highlight current player

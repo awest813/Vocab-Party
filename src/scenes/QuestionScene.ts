@@ -11,11 +11,17 @@ interface QuestionData {
   explanation?: string
 }
 
+export interface QuestionResolution {
+  correct: boolean
+  timeBonus: number
+  speedSurge: boolean
+}
+
 interface QuestionSceneData {
   type: 'vocab' | 'grammar'
   playerIndex: number
   state: GameState
-  onComplete: (correct: boolean) => void
+  onComplete: (result: QuestionResolution) => void
   /** When set, auto-picks after delay (correct with given probability). */
   cpuResolve?: { delayMs: number; correctChance: number }
 }
@@ -86,13 +92,16 @@ export class QuestionScene extends Phaser.Scene {
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
     let countdownTimer: Phaser.Time.TimerEvent
+    let secondsLeft = 15
 
     const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
       if (answered) return
       answered = true
       countdownTimer?.remove()
       const correct = i === q.correct
-      this.handleAnswer(correct, btn, onComplete, q.explanation)
+      const timeBonus = correct ? Math.max(1, Math.ceil(secondsLeft / 3)) : 0
+      const speedSurge = correct && secondsLeft >= 10
+      this.handleAnswer(correct, timeBonus, speedSurge, btn, onComplete, q.explanation)
     }
 
     const keyToIndex: Record<string, number> = {
@@ -140,7 +149,6 @@ export class QuestionScene extends Phaser.Scene {
     const timerBar = this.add.rectangle(w / 2 - 400, h / 2 + 225, 800, 12, 0x44ff88)
     timerBar.setOrigin(0, 0.5)
 
-    let secondsLeft = 15
     const countdownText = this.add.text(w / 2 + 430, h / 2 + 225, '15', {
       fontSize: '22px',
       fontFamily: 'Arial Black',
@@ -169,7 +177,7 @@ export class QuestionScene extends Phaser.Scene {
         countdownTimer.remove()
         if (!answered) {
           answered = true
-          this.handleAnswer(false, null, onComplete)
+          this.handleAnswer(false, 0, false, null, onComplete)
         }
       }
     })
@@ -189,15 +197,20 @@ export class QuestionScene extends Phaser.Scene {
           ? q.correct
           : (wrongIndices.length > 0 ? Phaser.Utils.Array.GetRandom(wrongIndices) : q.correct)
         const correct = pickIndex === q.correct
-        this.handleAnswer(correct, null, onComplete, q.explanation)
+        const simulatedSecondsLeft = Math.max(1, Math.floor(secondsLeft * Phaser.Math.FloatBetween(0.45, 0.95)))
+        const timeBonus = correct ? Math.max(1, Math.ceil(simulatedSecondsLeft / 3)) : 0
+        const speedSurge = correct && simulatedSecondsLeft >= 10
+        this.handleAnswer(correct, timeBonus, speedSurge, null, onComplete, q.explanation)
       })
     }
   }
 
   handleAnswer(
     correct: boolean,
+    timeBonus: number,
+    speedSurge: boolean,
     _btn: Phaser.GameObjects.Container | null,
-    onComplete: (c: boolean) => void,
+    onComplete: (result: QuestionResolution) => void,
     explanation?: string
   ) {
     const w = this.scale.width
@@ -206,7 +219,7 @@ export class QuestionScene extends Phaser.Scene {
     if (correct) {
       showConfetti(this)
       this.cameras.main.flash(400, 100, 255, 100)
-      const msg = this.add.text(w / 2, h / 2 - 240, '✅ CORRECT! +10 Points!', {
+      const msg = this.add.text(w / 2, h / 2 - 240, `✅ CORRECT! +${10 + timeBonus} Points!`, {
         fontSize: '36px',
         fontFamily: 'Arial Black',
         color: '#44ff88',
@@ -214,6 +227,28 @@ export class QuestionScene extends Phaser.Scene {
         strokeThickness: 5
       }).setOrigin(0.5).setScale(0.1)
       this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 400, ease: 'Back.easeOut' })
+      if (timeBonus > 0) {
+        this.time.delayedCall(this.d(120), () => {
+          this.add.text(w / 2, h / 2 - 198, `⚡ Fast-answer bonus +${timeBonus}`, {
+            fontSize: '20px',
+            fontFamily: 'Arial Black',
+            color: '#88ddff',
+            stroke: '#102844',
+            strokeThickness: 4
+          }).setOrigin(0.5)
+        })
+      }
+      if (speedSurge) {
+        this.time.delayedCall(this.d(220), () => {
+          this.add.text(w / 2, h / 2 - 166, '💨 Speed Surge earned! Next roll gets +1 move.', {
+            fontSize: '18px',
+            fontFamily: 'Arial Black',
+            color: '#aaddee',
+            stroke: '#203344',
+            strokeThickness: 4
+          }).setOrigin(0.5)
+        })
+      }
     } else {
       this.cameras.main.shake(300, 0.01)
       const msg = this.add.text(w / 2, h / 2 - 240, '❌ INCORRECT!', {
@@ -238,6 +273,10 @@ export class QuestionScene extends Phaser.Scene {
       })
     }
 
-    this.time.delayedCall(this.d(2200), () => onComplete(correct))
+    this.time.delayedCall(this.d(2200), () => onComplete({
+      correct,
+      timeBonus,
+      speedSurge: correct && speedSurge
+    }))
   }
 }
