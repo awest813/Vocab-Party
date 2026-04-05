@@ -113,10 +113,13 @@ export class ResultsScene extends Phaser.Scene {
       const scoreT = this.add.text(x, cardY + 38, `${player.score} pts · 🌟${player.trophies}`, {
         fontSize: '20px', fontFamily: 'Arial Black', color: '#FFD700'
       }).setOrigin(0.5).setAlpha(0)
+      const detailT = this.add.text(x, cardY + 62, `🪙${player.coins}   🧱${player.bricksCollected}`, {
+        fontSize: '14px', fontFamily: 'Arial', color: '#d9e8ff'
+      }).setOrigin(0.5).setAlpha(0)
       const medal = this.add.text(x, cardY - 72, medals[rank], { fontSize: '32px' }).setOrigin(0.5).setAlpha(0)
 
       this.tweens.add({
-        targets: [emoji, nameT, scoreT, medal],
+        targets: [emoji, nameT, scoreT, detailT, medal],
         alpha: 1,
         duration: isAutoSimMode() ? 30 : 300,
         delay: isAutoSimMode() ? rank * 12 + 24 : rank * 200 + 400
@@ -124,7 +127,7 @@ export class ResultsScene extends Phaser.Scene {
 
       if (rank === 0 && !isAutoSimMode()) {
         this.tweens.add({
-          targets: [card, emoji, nameT, scoreT, medal],
+          targets: [card, emoji, nameT, scoreT, detailT, medal],
           y: '-=8',
           duration: 800,
           yoyo: true,

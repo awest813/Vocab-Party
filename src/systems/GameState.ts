@@ -22,6 +22,10 @@ export interface Player {
   trophies: number
   coins: number
   bricksCollected: number
+  /** Consecutive correct board-question answers. */
+  answerStreak: number
+  /** Number of upcoming turns with a boosted block die. */
+  speedBoostTurns: number
   /** When true, the board auto-rolls and resolves vocab/grammar/minigames without human input. */
   isCpu: boolean
   /** Difficulty for `isCpu` players; ignored for humans (kept at default). */
@@ -51,6 +55,8 @@ export function createInitialState(
       trophies: 0,
       coins: 18,
       bricksCollected: 0,
+      answerStreak: 0,
+      speedBoostTurns: 0,
       isCpu: cpuFlags?.[i] ?? false,
       cpuLevel: cpuLevels?.[i] ?? DEFAULT_CPU_LEVEL
     })),
