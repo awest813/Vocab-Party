@@ -10,6 +10,7 @@ import { addStarfieldBackdrop } from '../ui/Starfield'
 import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import { cpuBoardQuestionResolve, cpuRollDelayMs } from '../systems/CpuPolicy'
+import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
@@ -60,6 +61,10 @@ export class BoardScene extends Phaser.Scene {
   private turnGlowTween?: Phaser.Tweens.Tween
   /** Tile index → owner player id (Fortune Street–style shops). */
   private shopOwners: Record<number, number> = {}
+
+  private d(ms: number) {
+    return scaleAutoSimDelay(ms)
+  }
 
   constructor() { super('BoardScene') }
 
@@ -151,7 +156,7 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p?.isCpu) return
     this.rollBtn.setAlpha(0.42)
-    this.time.delayedCall(cpuRollDelayMs(Phaser.Math, p.cpuLevel), () => {
+    this.time.delayedCall(this.d(cpuRollDelayMs(Phaser.Math, p.cpuLevel)), () => {
       if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
       if (!this.state.players[this.state.currentPlayer]?.isCpu) return
       this.handleRoll(true)
@@ -280,7 +285,7 @@ export class BoardScene extends Phaser.Scene {
       targets: this.turnGlow,
       scaleX: 1.1,
       scaleY: 1.1,
-      duration: 650,
+      duration: isAutoSimMode() ? 40 : 650,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
@@ -301,7 +306,7 @@ export class BoardScene extends Phaser.Scene {
 
     // Dramatic dice roll animation
     this.time.addEvent({
-      delay: 80,
+      delay: isAutoSimMode() ? 12 : 80,
       repeat: 14,
       callback: () => {
         const face = Phaser.Math.Between(1, 3)
@@ -310,7 +315,7 @@ export class BoardScene extends Phaser.Scene {
       }
     })
 
-    await new Promise<void>(res => this.time.delayedCall(1300, res))
+    await new Promise<void>(res => this.time.delayedCall(this.d(1300), res))
 
     const result = rollBlockDie()
     this.diceSprite.setTexture(DICE_TEXTURE_KEYS[result - 1])
@@ -319,12 +324,12 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({
       targets: this.diceSprite,
       scaleX: 1.5, scaleY: 1.5,
-      duration: 150,
+      duration: isAutoSimMode() ? 24 : 150,
       yoyo: true,
       ease: 'Back.easeOut'
     })
 
-    await new Promise<void>(res => this.time.delayedCall(600, res))
+    await new Promise<void>(res => this.time.delayedCall(this.d(600), res))
 
     await this.movePlayer(this.state.currentPlayer, result)
   }
@@ -348,7 +353,7 @@ export class BoardScene extends Phaser.Scene {
           targets: token,
           x: x + off.x,
           y: y + off.y,
-          duration: 180,
+          duration: isAutoSimMode() ? 28 : 180,
           ease: 'Back.easeOut',
           onComplete: () => res()
         })
@@ -359,11 +364,11 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({
       targets: token,
       scaleX: 1.4, scaleY: 0.7,
-      duration: 80,
+      duration: isAutoSimMode() ? 16 : 80,
       yoyo: true
     })
 
-    await new Promise<void>(res => this.time.delayedCall(300, res))
+    await new Promise<void>(res => this.time.delayedCall(this.d(300), res))
     this.landOnTile(playerIndex)
   }
 
@@ -374,7 +379,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.statusText.setText(`${player.emoji} ${player.name} landed on ${TILE_LABELS[type]} ${type.toUpperCase()}!`)
 
-    this.time.delayedCall(700, () => {
+    this.time.delayedCall(this.d(700), () => {
       switch (type) {
         case 'start':
           player.score += 3
@@ -398,6 +403,7 @@ export class BoardScene extends Phaser.Scene {
             ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel) } : {}),
             onComplete: (correct: boolean) => {
               this.scene.stop('QuestionScene')
+              this.scene.resume()
               if (correct) {
                 player.score += 10
                 player.coins += 3
@@ -406,7 +412,7 @@ export class BoardScene extends Phaser.Scene {
               } else {
                 this.showFloatyText(player, 'Missed!', '#ff4444')
               }
-              this.time.delayedCall(600, () => this.endTurn())
+              this.time.delayedCall(this.d(600), () => this.endTurn())
             }
           })
           this.scene.pause()
@@ -418,6 +424,7 @@ export class BoardScene extends Phaser.Scene {
             cpuLevel: player.cpuLevel,
             onComplete: (winnerId: number) => {
               this.scene.stop('MinigameScene')
+              this.scene.resume()
               if (winnerId >= 0) {
                 const w = this.state.players[winnerId]
                 w.score += 15
@@ -425,7 +432,7 @@ export class BoardScene extends Phaser.Scene {
                 this.showFloatyText(w, '+15 pts +5 coins!', '#ff88ff')
                 showConfetti(this)
               }
-              this.time.delayedCall(600, () => this.endTurn())
+              this.time.delayedCall(this.d(600), () => this.endTurn())
             }
           })
           this.scene.pause()
@@ -468,7 +475,7 @@ export class BoardScene extends Phaser.Scene {
       targets: txt,
       y: tokenPos.y - 80,
       alpha: 0,
-      duration: 1200,
+      duration: isAutoSimMode() ? 80 : 1200,
       onComplete: () => txt.destroy()
     })
   }
@@ -486,7 +493,7 @@ export class BoardScene extends Phaser.Scene {
         this.statusText.setText(`🏪 Too pricey! Need ${SHOP_PRICE_COINS} coins.`)
         this.showFloatyText(player, 'Window shopping…', '#aaaaaa')
       }
-      this.time.delayedCall(1200, () => this.endTurn())
+      this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
 
@@ -494,7 +501,7 @@ export class BoardScene extends Phaser.Scene {
       player.coins += SHOP_OWNER_INCOME
       this.statusText.setText(`🏪 Your shop pays out!`)
       this.showFloatyText(player, `+${SHOP_OWNER_INCOME} shop income!`, '#88ffaa')
-      this.time.delayedCall(1200, () => this.endTurn())
+      this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
 
@@ -505,7 +512,7 @@ export class BoardScene extends Phaser.Scene {
     this.statusText.setText(`🏪 Rent to ${owner.name}!`)
     this.showFloatyText(player, `-${pay} rent`, '#ff8888')
     this.showFloatyText(owner, `+${pay} rent!`, '#88ff88')
-    this.time.delayedCall(1200, () => this.endTurn())
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
   handleStarShop(player: Player) {
@@ -521,7 +528,7 @@ export class BoardScene extends Phaser.Scene {
       this.statusText.setText(`🌟 Save up! Stars cost ${STAR_COST_COINS} coins.`)
       this.showFloatyText(player, '+2 pity coins', '#aaccff')
     }
-    this.time.delayedCall(1200, () => this.endTurn())
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
   handleBrickCollect(player: Player) {
@@ -538,7 +545,7 @@ export class BoardScene extends Phaser.Scene {
       this.statusText.setText(`🧱 Brick ${n} collected!`)
     }
     this.showFloatyText(player, msg, '#ff9966')
-    this.time.delayedCall(1200, () => this.endTurn())
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
   handleMystery(player: Player) {
@@ -553,7 +560,7 @@ export class BoardScene extends Phaser.Scene {
     this.showFloatyText(player, effect.msg, effect.color)
 
     if (effect.extraRoll) {
-      this.time.delayedCall(1200, () => {
+      this.time.delayedCall(this.d(1200), () => {
         this.rolling = false
         this.rollBtn.setAlpha(1)
         const cpu = this.state.players[this.state.currentPlayer]?.isCpu ?? false
@@ -563,7 +570,7 @@ export class BoardScene extends Phaser.Scene {
     }
 
     effect.apply()
-    this.time.delayedCall(1200, () => this.endTurn())
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
   handleSwap(player: Player, playerIndex: number) {
@@ -571,7 +578,7 @@ export class BoardScene extends Phaser.Scene {
     if (others.length === 0) {
       this.statusText.setText('🔄 No one to swap with in a solo game.')
       this.showFloatyText(player, 'Solo — no swap!', '#aaaaaa')
-      this.time.delayedCall(1200, () => this.endTurn())
+      this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
     const target = Phaser.Utils.Array.GetRandom(others)
@@ -586,11 +593,12 @@ export class BoardScene extends Phaser.Scene {
     const p2 = this.getTileXY(target.position)
     const o1 = offsets[playerIndex]
     const o2 = offsets[targetIndex]
-    this.tweens.add({ targets: this.playerTokens[playerIndex], x: p1.x + o1.x, y: p1.y + o1.y, duration: 500 })
-    this.tweens.add({ targets: this.playerTokens[targetIndex], x: p2.x + o2.x, y: p2.y + o2.y, duration: 500 })
+    const swapDur = isAutoSimMode() ? 60 : 500
+    this.tweens.add({ targets: this.playerTokens[playerIndex], x: p1.x + o1.x, y: p1.y + o1.y, duration: swapDur })
+    this.tweens.add({ targets: this.playerTokens[targetIndex], x: p2.x + o2.x, y: p2.y + o2.y, duration: swapDur })
 
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
-    this.time.delayedCall(1200, () => this.endTurn())
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
   endTurn() {
@@ -601,7 +609,7 @@ export class BoardScene extends Phaser.Scene {
     this.state.turn++
     const totalTurns = this.state.players.length * this.roundsPerGame
     if (this.state.turn >= totalTurns) {
-      this.time.delayedCall(500, () => {
+      this.time.delayedCall(this.d(500), () => {
         this.scene.start('ResultsScene', { state: this.state })
       })
       return

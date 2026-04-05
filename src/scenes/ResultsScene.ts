@@ -4,12 +4,20 @@ import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
 
+  private d(ms: number) {
+    return scaleAutoSimDelay(ms)
+  }
+
   create(data: { state: GameState }) {
     const { state } = data
+    if (typeof window !== 'undefined') {
+      ;(window as unknown as { __VOCAB_PARTY_RESULTS_READY__?: boolean }).__VOCAB_PARTY_RESULTS_READY__ = true
+    }
     const w = this.scale.width
     const h = this.scale.height
 
@@ -56,7 +64,7 @@ export class ResultsScene extends Phaser.Scene {
       strokeThickness: 8
     }).setOrigin(0.5).setScale(0)
 
-    this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, duration: 600, ease: 'Back.easeOut' })
+    this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 50 : 600, ease: 'Back.easeOut' })
 
     const medals = ['🥇', '🥈', '🥉', '4️⃣']
     const podiumColors = [0xFFD700, 0xC0C0C0, 0xCD7F32, 0x888888]
@@ -80,13 +88,23 @@ export class ResultsScene extends Phaser.Scene {
       podium.setStrokeStyle(3, 0xffffff)
       podium.setOrigin(0.5, 1)
       podium.setAlpha(0)
-      this.tweens.add({ targets: podium, alpha: 1, duration: 400, delay: rank * 200 })
+      this.tweens.add({
+        targets: podium,
+        alpha: 1,
+        duration: isAutoSimMode() ? 40 : 400,
+        delay: isAutoSimMode() ? rank * 12 : rank * 200
+      })
 
       const cardY = podiumBase - ph - 80
       const card = this.add.rectangle(x, cardY, 150, 140, 0x222244)
       card.setStrokeStyle(4, pColor)
       card.setAlpha(0)
-      this.tweens.add({ targets: card, alpha: 1, duration: 400, delay: rank * 200 + 200 })
+      this.tweens.add({
+        targets: card,
+        alpha: 1,
+        duration: isAutoSimMode() ? 40 : 400,
+        delay: isAutoSimMode() ? rank * 12 + 12 : rank * 200 + 200
+      })
 
       const emoji = this.add.text(x, cardY - 30, player.emoji, { fontSize: '36px' }).setOrigin(0.5).setAlpha(0)
       const nameT = this.add.text(x, cardY + 10, player.name, {
@@ -97,9 +115,14 @@ export class ResultsScene extends Phaser.Scene {
       }).setOrigin(0.5).setAlpha(0)
       const medal = this.add.text(x, cardY - 72, medals[rank], { fontSize: '32px' }).setOrigin(0.5).setAlpha(0)
 
-      this.tweens.add({ targets: [emoji, nameT, scoreT, medal], alpha: 1, duration: 300, delay: rank * 200 + 400 })
+      this.tweens.add({
+        targets: [emoji, nameT, scoreT, medal],
+        alpha: 1,
+        duration: isAutoSimMode() ? 30 : 300,
+        delay: isAutoSimMode() ? rank * 12 + 24 : rank * 200 + 400
+      })
 
-      if (rank === 0) {
+      if (rank === 0 && !isAutoSimMode()) {
         this.tweens.add({
           targets: [card, emoji, nameT, scoreT, medal],
           y: '-=8',
@@ -116,7 +139,7 @@ export class ResultsScene extends Phaser.Scene {
       }).setAlpha(0.4).setOrigin(0.5)
     })
 
-    this.time.delayedCall(1200, () => {
+    this.time.delayedCall(this.d(1200), () => {
       showConfetti(this)
       const banner = this.add.text(w / 2, 130, `🎉 ${sorted[0].name} WINS! 🎉`, {
         fontSize: '38px',
@@ -125,20 +148,22 @@ export class ResultsScene extends Phaser.Scene {
         stroke: '#884400',
         strokeThickness: 7
       }).setOrigin(0.5).setScale(0)
-      this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeOut' })
+      this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 500, ease: 'Back.easeOut' })
 
-      for (let t = 0; t < 8; t++) {
-        this.time.delayedCall(t * 150, () => {
-          const tx = this.add.text(Phaser.Math.Between(100, w - 100), -40, '🏆', { fontSize: '40px' })
-          this.tweens.add({
-            targets: tx,
-            y: Phaser.Math.Between(200, h - 200),
-            rotation: Phaser.Math.FloatBetween(-1, 1),
-            duration: 1500,
-            ease: 'Bounce.easeOut',
-            onComplete: () => this.time.delayedCall(2000, () => tx.destroy())
+      if (!isAutoSimMode()) {
+        for (let t = 0; t < 8; t++) {
+          this.time.delayedCall(t * 150, () => {
+            const tx = this.add.text(Phaser.Math.Between(100, w - 100), -40, '🏆', { fontSize: '40px' })
+            this.tweens.add({
+              targets: tx,
+              y: Phaser.Math.Between(200, h - 200),
+              rotation: Phaser.Math.FloatBetween(-1, 1),
+              duration: 1500,
+              ease: 'Bounce.easeOut',
+              onComplete: () => this.time.delayedCall(2000, () => tx.destroy())
+            })
           })
-        })
+        }
       }
     })
 

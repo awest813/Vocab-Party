@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import type { GameState } from '../systems/GameState'
+import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 
 interface QuestionData {
   question: string
@@ -21,6 +22,10 @@ interface QuestionSceneData {
 
 export class QuestionScene extends Phaser.Scene {
   constructor() { super('QuestionScene') }
+
+  private d(ms: number) {
+    return scaleAutoSimDelay(ms)
+  }
 
   create(data: QuestionSceneData) {
     const w = this.scale.width
@@ -45,7 +50,7 @@ export class QuestionScene extends Phaser.Scene {
 
     // Panel entrance
     panel.setScale(0.1)
-    this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: 300, ease: 'Back.easeOut' })
+    this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 300, ease: 'Back.easeOut' })
 
     // Header
     const headerColor = type === 'vocab' ? '#4488ff' : '#ff8844'
@@ -64,7 +69,7 @@ export class QuestionScene extends Phaser.Scene {
       color: '#aaaacc'
     }).setOrigin(0.5)
 
-    this.tweens.add({ targets: header, alpha: 1, duration: 300, delay: 200 })
+    this.tweens.add({ targets: header, alpha: 1, duration: isAutoSimMode() ? 30 : 300, delay: isAutoSimMode() ? 0 : 200 })
 
     // Question text
     const qText = this.add.text(w / 2, h / 2 - 100, q.question, {
@@ -74,7 +79,7 @@ export class QuestionScene extends Phaser.Scene {
       wordWrap: { width: 820 },
       align: 'center'
     }).setOrigin(0.5).setAlpha(0)
-    this.tweens.add({ targets: qText, alpha: 1, duration: 400, delay: 300 })
+    this.tweens.add({ targets: qText, alpha: 1, duration: isAutoSimMode() ? 30 : 400, delay: isAutoSimMode() ? 0 : 300 })
 
     // Answer buttons
     const answerColors = [0x4444cc, 0xcc4444, 0x44aa44, 0xcc8800]
@@ -113,7 +118,12 @@ export class QuestionScene extends Phaser.Scene {
       const by = h / 2 + 40 + row * 90
       const btn = createButton(this, bx, by, `${labels[i]}: ${ans}`, answerColors[i], answerColors[i] - 0x222222, 380, 64)
       btn.setAlpha(0)
-      this.tweens.add({ targets: btn, alpha: 1, duration: 300, delay: 400 + i * 80 })
+      this.tweens.add({
+        targets: btn,
+        alpha: 1,
+        duration: isAutoSimMode() ? 20 : 300,
+        delay: isAutoSimMode() ? 0 : 400 + i * 80
+      })
 
       btn.on('pointerdown', () => pickAnswer(i, btn))
     })
@@ -140,7 +150,7 @@ export class QuestionScene extends Phaser.Scene {
     }).setOrigin(0, 0.5)
 
     countdownTimer = this.time.addEvent({
-      delay: 1000,
+      delay: isAutoSimMode() ? 60 : 1000,
       repeat: 14,
       callback: () => {
         secondsLeft--
@@ -153,7 +163,7 @@ export class QuestionScene extends Phaser.Scene {
     const timerBarTween = this.tweens.add({
       targets: timerBar,
       width: 0,
-      duration: 15000,
+      duration: isAutoSimMode() ? 900 : 15000,
       ease: 'Linear',
       onComplete: () => {
         countdownTimer.remove()
@@ -164,11 +174,11 @@ export class QuestionScene extends Phaser.Scene {
       }
     })
 
-    this.time.delayedCall(10000, () => { if (!answered) timerBar.setFillStyle(0xff8800) })
-    this.time.delayedCall(13000, () => { if (!answered) timerBar.setFillStyle(0xff3333) })
+    this.time.delayedCall(this.d(10000), () => { if (!answered) timerBar.setFillStyle(0xff8800) })
+    this.time.delayedCall(this.d(13000), () => { if (!answered) timerBar.setFillStyle(0xff3333) })
 
     if (cpuResolve) {
-      this.time.delayedCall(cpuResolve.delayMs, () => {
+      this.time.delayedCall(this.d(cpuResolve.delayMs), () => {
         if (answered) return
         answered = true
         countdownTimer.remove()
@@ -203,7 +213,7 @@ export class QuestionScene extends Phaser.Scene {
         stroke: '#004400',
         strokeThickness: 5
       }).setOrigin(0.5).setScale(0.1)
-      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: 400, ease: 'Back.easeOut' })
+      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 400, ease: 'Back.easeOut' })
     } else {
       this.cameras.main.shake(300, 0.01)
       const msg = this.add.text(w / 2, h / 2 - 240, '❌ INCORRECT!', {
@@ -213,11 +223,11 @@ export class QuestionScene extends Phaser.Scene {
         stroke: '#440000',
         strokeThickness: 5
       }).setOrigin(0.5).setScale(0.1)
-      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: 400, ease: 'Back.easeOut' })
+      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 400, ease: 'Back.easeOut' })
     }
 
     if (explanation) {
-      this.time.delayedCall(300, () => {
+      this.time.delayedCall(this.d(300), () => {
         this.add.text(w / 2, h / 2 + 230, `💡 ${explanation}`, {
           fontSize: '18px',
           fontFamily: 'Arial',
@@ -228,6 +238,6 @@ export class QuestionScene extends Phaser.Scene {
       })
     }
 
-    this.time.delayedCall(2200, () => onComplete(correct))
+    this.time.delayedCall(this.d(2200), () => onComplete(correct))
   }
 }

@@ -3,6 +3,7 @@ import { createButton } from '../ui/Button'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
+import { isAutoSimMode } from '../systems/gameFlags'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 1
@@ -129,6 +130,16 @@ export class SetupScene extends Phaser.Scene {
     // Start button
     this.startBtn = createButton(this, w / 2, h - 70, '▶  START GAME', 0x22bb55, 0x1a8844, 300, 60)
     this.startBtn.on('pointerdown', () => this.startGame())
+
+    if (isAutoSimMode()) {
+      this.playerCount = 4
+      this.countText.setText(String(this.playerCount))
+      this.fullMapMode = false
+      this.cpuModeByRow = ['normal', 'normal', 'normal', 'normal']
+      for (let i = 0; i < MAX_PLAYERS; i++) this.refreshCpuToggle(i)
+      this.refreshRows()
+      this.time.delayedCall(80, () => this.startGameWithRounds(1))
+    }
 
     // Keyboard input
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))
@@ -330,16 +341,22 @@ export class SetupScene extends Phaser.Scene {
   }
 
   startGame() {
+    const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
+    this.startGameWithRounds(roundsPerGame)
+  }
+
+  private startGameWithRounds(roundsPerGame: number) {
     const names = this.rows.slice(0, this.playerCount).map((r, i) =>
       r.value.trim() || DEFAULT_NAMES[i]
     )
     const emojis = PLAYER_EMOJIS.slice(0, this.playerCount)
-    const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
-    this.cameras.main.flash(300, 255, 255, 255)
+    const flashMs = isAutoSimMode() ? 0 : 300
+    const delayMs = isAutoSimMode() ? 0 : 300
+    if (flashMs > 0) this.cameras.main.flash(flashMs, 255, 255, 255)
     const slice = this.cpuModeByRow.slice(0, this.playerCount)
     const playerCpu = slice.map(m => m !== 'off')
     const playerCpuLevels = slice.map(m => (m === 'off' ? DEFAULT_CPU_LEVEL : m))
-    this.time.delayedCall(300, () => {
+    this.time.delayedCall(delayMs, () => {
       this.scene.start('BoardScene', {
         playerNames: names,
         playerEmojis: emojis,

@@ -7,10 +7,12 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "capture:gameplay": "node scripts/capture-gameplay.mjs"
   },
   "devDependencies": {
     "eslint": "^8.25.0",
+    "playwright": "^1.49.0",
     "typescript": "^5.0.0",
     "vite": "^4.5.0"
   },
