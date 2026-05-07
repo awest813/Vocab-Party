@@ -17,7 +17,7 @@ export interface BattleResult {
 }
 
 export class BattleScene extends Phaser.Scene {
-  private data!: BattleSceneData
+  private battleData!: BattleSceneData
   private attackerRoll = 0
   private defenderRoll = 0
   private statusText!: Phaser.GameObjects.Text
@@ -28,7 +28,7 @@ export class BattleScene extends Phaser.Scene {
   constructor() { super('BattleScene') }
 
   create(data: BattleSceneData) {
-    this.data = data
+    this.battleData = data
     const w = this.scale.width
     const h = this.scale.height
 
@@ -95,7 +95,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private async startAttackerTurn() {
-    const attacker = this.data.state.players[this.data.attackerIndex]
+    const attacker = this.battleData.state.players[this.battleData.attackerIndex]
     this.statusText.setText(`${attacker.name}'s Attack Roll!`)
     
     await new Promise(r => this.time.delayedCall(1000, r))
@@ -111,7 +111,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private async startDefenderTurn() {
-    const defender = this.data.state.players[this.data.defenderIndex]
+    const defender = this.battleData.state.players[this.battleData.defenderIndex]
     this.statusText.setText(`${defender.name}'s Choice!`)
 
     if (defender.isCpu) {
@@ -134,7 +134,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private async resolveDefender(choice: 'defend' | 'evade') {
-    const defender = this.data.state.players[this.data.defenderIndex]
+    const defender = this.battleData.state.players[this.battleData.defenderIndex]
     const roll = Phaser.Math.Between(1, 6)
     
     const rollText = this.defenderContainer.getByName('rollText') as Phaser.GameObjects.Text
@@ -154,16 +154,18 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private animateRoll(textObj: Phaser.GameObjects.Text, final: number) {
+    let count = 0
     this.time.addEvent({
       delay: 50,
       repeat: 10,
       callback: () => {
         textObj.setText(String(Phaser.Math.Between(1, 9)))
-      },
-      onComplete: () => {
-        textObj.setText(String(final))
-        textObj.setScale(1.5)
-        this.tweens.add({ targets: textObj, scaleX: 1, scaleY: 1, duration: 200, ease: 'Back.easeOut' })
+        count++
+        if (count > 10) {
+          textObj.setText(String(final))
+          textObj.setScale(1.5)
+          this.tweens.add({ targets: textObj, scaleX: 1, scaleY: 1, duration: 200, ease: 'Back.easeOut' })
+        }
       }
     })
   }
@@ -181,7 +183,7 @@ export class BattleScene extends Phaser.Scene {
       }
     }
 
-    const defender = this.data.state.players[this.data.defenderIndex]
+    const defender = this.battleData.state.players[this.battleData.defenderIndex]
 
     // Shield Check
     if (dmg > 0 && defender.shieldActive) {
@@ -192,8 +194,8 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(2000, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-          this.data.onComplete({
-            winnerIndex: this.data.defenderIndex,
+          this.battleData.onComplete({
+            winnerIndex: this.battleData.defenderIndex,
             scoreLost: 0,
             coinsLost: 0
           })
@@ -215,8 +217,8 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(2000, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-          this.data.onComplete({
-            winnerIndex: this.data.attackerIndex,
+          this.battleData.onComplete({
+            winnerIndex: this.battleData.attackerIndex,
             scoreLost,
             coinsLost
           })
@@ -228,8 +230,8 @@ export class BattleScene extends Phaser.Scene {
       this.time.delayedCall(2000, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-          this.data.onComplete({
-            winnerIndex: this.data.defenderIndex,
+          this.battleData.onComplete({
+            winnerIndex: this.battleData.defenderIndex,
             scoreLost: 0,
             coinsLost: 0
           })
