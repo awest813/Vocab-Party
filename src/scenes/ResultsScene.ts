@@ -51,6 +51,34 @@ export class ResultsScene extends Phaser.Scene {
       })
     }
 
+    // Volumetric Light Beams
+    const beams = this.add.graphics()
+    beams.fillGradientStyle(0xffd700, 0xffd700, 0x000000, 0x000000, 0.15, 0.15, 0, 0)
+    beams.beginPath()
+    beams.moveTo(w / 2, -100)
+    beams.lineTo(0, h)
+    beams.lineTo(w, h)
+    beams.closePath()
+    beams.fillPath()
+    beams.setAlpha(0.3).setDepth(-1)
+
+    // Ambient Dust Motes
+    for (let i = 0; i < 40; i++) {
+      const mote = this.add.circle(
+        Phaser.Math.Between(0, w),
+        Phaser.Math.Between(0, h),
+        Phaser.Math.Between(1, 3),
+        0xffffff,
+        Phaser.Math.FloatBetween(0.1, 0.4)
+      ).setDepth(-1)
+      this.tweens.add({
+        targets: mote,
+        y: '-=100', alpha: 0,
+        duration: Phaser.Math.Between(4000, 8000),
+        repeat: -1, delay: Phaser.Math.Between(0, 4000)
+      })
+    }
+
     const sorted = [...state.players].sort((a, b) => {
       if (b.trophies !== a.trophies) return b.trophies - a.trophies
       return b.score - a.score
@@ -84,21 +112,26 @@ export class ResultsScene extends Phaser.Scene {
       const ph = podiumH[rank]
       const pColor = podiumColors[rank]
 
-      const podium = this.add.rectangle(x, podiumBase, 140, ph, pColor)
-      podium.setStrokeStyle(3, 0xffffff)
+      // Podium with glow
+      const podium = this.add.rectangle(x, podiumBase, 140, ph, pColor, 0.9)
+      podium.setStrokeStyle(3, 0xffffff, 0.4)
       podium.setOrigin(0.5, 1)
       podium.setAlpha(0)
+      
+      const podiumGlow = this.add.ellipse(x, podiumBase, 200, 40, pColor, 0.2).setOrigin(0.5, 1).setDepth(-1)
+
       this.tweens.add({
-        targets: podium,
+        targets: [podium, podiumGlow],
         alpha: 1,
         duration: isAutoSimMode() ? 40 : 400,
         delay: isAutoSimMode() ? rank * 12 : rank * 200
       })
 
-      const cardY = podiumBase - ph - 80
-      const card = this.add.rectangle(x, cardY, 150, 140, 0x222244)
-      card.setStrokeStyle(4, pColor)
+      const cardY = podiumBase - ph - 90
+      const card = this.add.rectangle(x, cardY, 160, 160, 0x0d0d1f, 0.8)
+      card.setStrokeStyle(4, pColor, 0.8)
       card.setAlpha(0)
+      
       this.tweens.add({
         targets: card,
         alpha: 1,
@@ -106,20 +139,17 @@ export class ResultsScene extends Phaser.Scene {
         delay: isAutoSimMode() ? rank * 12 + 12 : rank * 200 + 200
       })
 
-      const emoji = this.add.text(x, cardY - 30, player.emoji, { fontSize: '36px' }).setOrigin(0.5).setAlpha(0)
-      const nameT = this.add.text(x, cardY + 10, player.name, {
-        fontSize: '18px', fontFamily: 'Arial Black', color: '#ffffff'
+      const emoji = this.add.text(x, cardY - 40, player.emoji, { fontSize: '48px' }).setOrigin(0.5).setAlpha(0)
+      const nameT = this.add.text(x, cardY + 15, player.name, {
+        fontSize: '20px', fontFamily: 'Arial Black', color: '#ffffff'
       }).setOrigin(0.5).setAlpha(0)
-      const scoreT = this.add.text(x, cardY + 38, `${player.score} pts · 🌟${player.trophies}`, {
-        fontSize: '20px', fontFamily: 'Arial Black', color: '#FFD700'
+      const scoreT = this.add.text(x, cardY + 45, `${player.score} pts · 🌟${player.trophies}`, {
+        fontSize: '18px', fontFamily: 'Arial Black', color: '#FFD700'
       }).setOrigin(0.5).setAlpha(0)
-      const detailT = this.add.text(x, cardY + 62, `🪙${player.coins}   🧱${player.bricksCollected}`, {
-        fontSize: '14px', fontFamily: 'Arial', color: '#d9e8ff'
-      }).setOrigin(0.5).setAlpha(0)
-      const medal = this.add.text(x, cardY - 72, medals[rank], { fontSize: '32px' }).setOrigin(0.5).setAlpha(0)
+      const medal = this.add.text(x, cardY - 95, medals[rank], { fontSize: '42px' }).setOrigin(0.5).setAlpha(0)
 
       this.tweens.add({
-        targets: [emoji, nameT, scoreT, detailT, medal],
+        targets: [emoji, nameT, scoreT, medal],
         alpha: 1,
         duration: isAutoSimMode() ? 30 : 300,
         delay: isAutoSimMode() ? rank * 12 + 24 : rank * 200 + 400
@@ -127,19 +157,18 @@ export class ResultsScene extends Phaser.Scene {
 
       if (rank === 0 && !isAutoSimMode()) {
         this.tweens.add({
-          targets: [card, emoji, nameT, scoreT, detailT, medal],
-          y: '-=8',
-          duration: 800,
+          targets: [card, emoji, nameT, scoreT, medal],
+          y: '-=12',
+          duration: 1000,
           yoyo: true,
           repeat: -1,
-          ease: 'Sine.easeInOut',
-          delay: 1200
+          ease: 'Sine.easeInOut'
         })
       }
 
       this.add.text(x, podiumBase - ph / 2, String(rank + 1), {
-        fontSize: '28px', fontFamily: 'Arial Black', color: '#000000'
-      }).setAlpha(0.4).setOrigin(0.5)
+        fontSize: '32px', fontFamily: 'Arial Black', color: '#000000'
+      }).setAlpha(0.2).setOrigin(0.5)
     })
 
     this.time.delayedCall(this.d(1200), () => {
@@ -154,17 +183,11 @@ export class ResultsScene extends Phaser.Scene {
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 500, ease: 'Back.easeOut' })
 
       if (!isAutoSimMode()) {
-        for (let t = 0; t < 8; t++) {
-          this.time.delayedCall(t * 150, () => {
-            const tx = this.add.text(Phaser.Math.Between(100, w - 100), -40, '🏆', { fontSize: '40px' })
-            this.tweens.add({
-              targets: tx,
-              y: Phaser.Math.Between(200, h - 200),
-              rotation: Phaser.Math.FloatBetween(-1, 1),
-              duration: 1500,
-              ease: 'Bounce.easeOut',
-              onComplete: () => this.time.delayedCall(2000, () => tx.destroy())
-            })
+        for (let t = 0; t < 12; t++) {
+          this.time.delayedCall(t * 300, () => {
+            const fx = Phaser.Math.Between(200, w - 200)
+            const fy = Phaser.Math.Between(100, h - 300)
+            this.createFirework(fx, fy)
           })
         }
       }
@@ -181,5 +204,22 @@ export class ResultsScene extends Phaser.Scene {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('MenuScene'))
     })
+  private createFirework(x: number, y: number) {
+    const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff]
+    const color = Phaser.Utils.Array.GetRandom(colors)
+    
+    const particles = this.add.particles(x, y, TEXTURE_KEYS.particleYellow, {
+      speed: { min: 100, max: 200 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.6, end: 0 },
+      lifespan: 800,
+      gravityY: 100,
+      tint: color,
+      blendMode: 'ADD',
+      quantity: 40
+    })
+    
+    this.time.delayedCall(800, () => particles.destroy())
+    this.cameras.main.flash(100, (color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff, true)
   }
 }

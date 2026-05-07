@@ -12,35 +12,37 @@ export function createButton(
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y)
 
-  const bg = scene.add.rectangle(0, 0, width, height, fillColor)
-  bg.setStrokeStyle(3, 0xffffff)
+  // Glass background with neon stroke
+  const bg = scene.add.rectangle(0, 0, width, height, fillColor, 0.85)
+  bg.setStrokeStyle(3, 0xffffff, 0.4)
   bg.setInteractive({ useHandCursor: true })
+
+  // Gloss highlight
+  const gloss = scene.add.rectangle(0, -height / 4, width - 8, height / 2, 0xffffff, 0.1)
 
   const text = scene.add.text(0, 0, label, {
     fontSize: '22px',
     fontFamily: 'Arial Black, Arial',
     color: '#ffffff',
-    stroke: '#000044',
-    strokeThickness: 3
+    stroke: '#000000',
+    strokeThickness: 4
   }).setOrigin(0.5)
 
-  container.add([bg, text])
-  container.setInteractive(
-    new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height),
-    Phaser.Geom.Rectangle.Contains
-  )
+  container.add([bg, gloss, text])
 
-  // Hover
-  container.on('pointerover', () => {
+  bg.on('pointerover', () => {
     bg.setFillStyle(hoverColor)
-    scene.tweens.add({ targets: container, scaleX: 1.07, scaleY: 1.07, duration: 100 })
+    bg.setStrokeStyle(3, 0x44ccff, 1)
+    scene.tweens.add({ targets: container, scaleX: 1.08, scaleY: 1.08, duration: 150, ease: 'Cubic.easeOut' })
   })
-  container.on('pointerout', () => {
+  bg.on('pointerout', () => {
     bg.setFillStyle(fillColor)
-    scene.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 100 })
+    bg.setStrokeStyle(3, 0xffffff, 0.4)
+    scene.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 150, ease: 'Cubic.easeOut' })
   })
-  container.on('pointerdown', () => {
-    scene.tweens.add({ targets: container, scaleX: 0.93, scaleY: 0.93, duration: 80, yoyo: true })
+  bg.on('pointerdown', () => {
+    scene.tweens.add({ targets: container, scaleX: 0.9, scaleY: 0.9, duration: 80, yoyo: true })
+    container.emit('pointerdown')
   })
 
   return container

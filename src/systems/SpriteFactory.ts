@@ -18,6 +18,8 @@ const TILE_COLORS: Record<string, number> = {
   shop:     0xc45c26,
   star:     0x6b2d8b,
   brick:    0xcc5533,
+  item_shop: 0x44ccff,
+  penalty:   0xee2222,
 }
 
 /** Tile types with bundled PNGs in PreloadScene (Kenney composites). */
@@ -48,7 +50,7 @@ export function generateGameTextures(scene: Phaser.Scene): void {
 // ---------------------------------------------------------------------------
 // Player token textures  (32 × 32)
 // ---------------------------------------------------------------------------
-function generatePlayerTextures(scene: Phaser.Scene): void {
+export function generatePlayerTextures(scene: Phaser.Scene): void {
   const SIZE = 32
   const RADIUS = SIZE / 2 - 2
 
@@ -226,12 +228,33 @@ function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number,
       g.strokeRect(cx - 1, cy + 4, 10, 6)
       break
     }
-    default:
+    case 'item_shop': {
+      g.fillStyle(0xffffff, 0.6)
+      g.fillRoundedRect(cx - 10, cy - 6, 20, 18, 3)
+      g.lineStyle(2, 0xffffff, 0.7)
+      g.beginPath()
+      g.moveTo(cx - 8, cy - 6)
+      g.lineTo(cx, cy - 14)
+      g.lineTo(cx + 8, cy - 6)
+      g.strokePath()
+      g.fillStyle(0x0066ff, 0.8)
+      g.fillCircle(cx, cy + 3, 4)
       break
+    }
+    case 'penalty': {
+      g.fillStyle(0xffffff, 0.45)
+      // Draw a white '!' or 'X'
+      g.fillRect(cx - 3, cy - 8, 6, 11)
+      g.fillCircle(cx, cy + 7, 3.5)
+      break
+    }
+    default: {
+      break
+    }
   }
 }
 
-function generateTileTextures(scene: Phaser.Scene): void {
+export function generateTileTextures(scene: Phaser.Scene): void {
   const SIZE = 52
   const CORNER = 8
 
@@ -244,21 +267,33 @@ function generateTileTextures(scene: Phaser.Scene): void {
     darker.darken(28)
     const darkInt = darker.color
 
-    // Soft outer shadow
+    // Soft outer shadow (must stay within SIZE x SIZE)
     g.fillStyle(0x000000, 0.18)
-    g.fillRoundedRect(2, 3, SIZE - 2, SIZE - 2, CORNER)
+    g.fillRoundedRect(2, 2, SIZE - 4, SIZE - 4, CORNER)
 
-    // Base + vertical gradient band (richer than flat fill)
+    // Base 3D Body
     g.fillStyle(darkInt, 1)
-    g.fillRoundedRect(0, 0, SIZE, SIZE, CORNER)
+    g.fillRoundedRect(0, 4, SIZE, SIZE - 4, CORNER)
+    
+    // Top Face
     g.fillStyle(color, 1)
-    g.fillRoundedRect(1, 1, SIZE - 2, (SIZE - 2) * 0.55, CORNER - 1)
+    g.fillRoundedRect(0, 0, SIZE, SIZE - 4, CORNER)
 
-    // Inner vignette
-    g.fillStyle(0x000000, 0.12)
-    g.fillRoundedRect(3, SIZE * 0.45, SIZE - 6, SIZE * 0.48, CORNER - 2)
+    // Inner Glow / Bevel
+    g.lineStyle(2, 0xffffff, 0.3)
+    g.strokeRoundedRect(2, 2, SIZE - 4, SIZE - 8, CORNER - 1)
 
-    drawTileMotif(g, type, SIZE / 2, SIZE / 2 + 2)
+    // Glossy Overlay
+    g.fillStyle(0xffffff, 0.15)
+    g.beginPath()
+    g.moveTo(2, 2)
+    g.lineTo(SIZE - 2, 2)
+    g.lineTo(SIZE - 2, SIZE * 0.35)
+    g.lineTo(2, SIZE * 0.45)
+    g.closePath()
+    g.fillPath()
+
+    drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
 
     // Specular shine
     g.fillStyle(0xffffff, 0.2)
@@ -270,7 +305,7 @@ function generateTileTextures(scene: Phaser.Scene): void {
     g.lineStyle(1, 0x000000, 0.15)
     g.strokeRoundedRect(2.5, 2.5, SIZE - 5, SIZE - 5, CORNER - 2)
 
-    g.generateTexture(key, SIZE, SIZE)
+    g.generateTexture(key, SIZE + 2, SIZE + 2)
     g.destroy()
   })
 }
@@ -278,7 +313,7 @@ function generateTileTextures(scene: Phaser.Scene): void {
 // ---------------------------------------------------------------------------
 // Dice face textures  (48 × 48)
 // ---------------------------------------------------------------------------
-function generateDiceTextures(scene: Phaser.Scene): void {
+export function generateDiceTextures(scene: Phaser.Scene): void {
   const SIZE = 48
   const CORNER = 9
 
@@ -306,7 +341,7 @@ function generateDiceTextures(scene: Phaser.Scene): void {
       g.fillCircle(x, y, 3.5)
     })
 
-    g.generateTexture(key, SIZE, SIZE)
+    g.generateTexture(key, SIZE + 2, SIZE + 2)
     g.destroy()
   }
 }

@@ -46,69 +46,56 @@ export class SetupScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
-    this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
+    // Cinematic Backdrop
+    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
+    const ambient = this.add.graphics()
+    ambient.fillGradientStyle(0x1a1a3a, 0x1a1a3a, 0x050510, 0x050510, 0.4)
+    ambient.fillRect(0, 0, w, h)
     this.createStars()
 
-    // Back button (top-left)
-    const backBtn = createButton(this, 70, 36, '← MENU', 0x334466, 0x223355, 130, 44)
-    backBtn.on('pointerdown', () => {
-      this.cameras.main.flash(200, 255, 255, 255)
-      this.time.delayedCall(200, () => this.scene.start('MenuScene'))
-    })
+    // Back button
+    const backBtn = createButton(this, 100, 50, '← MENU', 0x334466, 0x223355, 140, 48)
+    backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
 
-    // Title
-    this.add.text(w / 2, 56, '🎉 VOCAB PARTY', {
-      fontSize: '48px',
-      fontFamily: 'Arial Black',
-      color: '#FFD700',
-      stroke: '#8B4500',
-      strokeThickness: 7
+    // Glassmorphic Header Panel
+    const headerPanel = this.add.container(w / 2, 80)
+    const hBg = this.add.rectangle(0, 0, 1100, 100, 0x0a1528, 0.7)
+    hBg.setStrokeStyle(2, 0x4488ff, 0.3)
+    const titleText = this.add.text(0, -10, '🚀 EXPEDITION SETUP', {
+      fontSize: '48px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#4488ff', strokeThickness: 8
     }).setOrigin(0.5)
+    headerPanel.add([hBg, titleText])
 
-    this.add.text(w / 2, 108, 'Player Setup', {
-      fontSize: '26px',
-      fontFamily: 'Arial',
-      color: '#aaddff',
-      stroke: '#001133',
-      strokeThickness: 3
-    }).setOrigin(0.5)
-
-    // Player count panel
-    const countPanelY = 175
-    this.add.rectangle(w / 2, countPanelY, 340, 72, 0x1a1a38).setStrokeStyle(2, 0x334466)
-
-    this.add.text(w / 2, countPanelY - 22, 'Number of Players', {
-      fontSize: '18px',
-      fontFamily: 'Arial Black',
-      color: '#aabbdd'
-    }).setOrigin(0.5)
-
-    this.minusBtn = createButton(this, w / 2 - 80, countPanelY + 8, '−', 0x554488, 0x332266, 48, 40)
+    // Player Count Console
+    const countY = 180
+    const countPanel = this.add.container(w / 2, countY)
+    const cpBg = this.add.rectangle(0, 0, 400, 80, 0x1a2a4a, 0.8)
+    cpBg.setStrokeStyle(3, 0xffd700, 0.5)
+    
+    const countLabel = this.add.text(0, -25, 'PLAYER COUNT', { fontSize: '14px', fontFamily: 'Arial Black', color: '#ffd700' }).setOrigin(0.5)
+    
+    this.minusBtn = createButton(this, -120, 10, '−', 0x554488, 0x332266, 60, 44)
     this.minusBtn.on('pointerdown', () => this.changeCount(-1))
-
-    this.countText = this.add.text(w / 2, countPanelY + 8, String(this.playerCount), {
-      fontSize: '34px',
-      fontFamily: 'Arial Black',
-      color: '#FFD700'
+ 
+    this.countText = this.add.text(0, 10, String(this.playerCount), {
+      fontSize: '42px', fontFamily: 'Arial Black', color: '#ffffff'
     }).setOrigin(0.5)
-
-    this.plusBtn = createButton(this, w / 2 + 80, countPanelY + 8, '+', 0x554488, 0x332266, 48, 40)
+ 
+    this.plusBtn = createButton(this, 120, 10, '+', 0x554488, 0x332266, 60, 44)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
+    
+    countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
 
-    // Game length: classic 10 rounds vs full track (one round per board tile)
-    const lengthY = 248
-    this.add.text(w / 2, lengthY - 28, 'Game length', {
-      fontSize: '18px',
-      fontFamily: 'Arial Black',
-      color: '#aabbdd'
-    }).setOrigin(0.5)
-
-    const classicBtn = createButton(this, w / 2 - 175, lengthY + 8, `Classic · ${CLASSIC_ROUNDS} rounds`, 0x334466, 0x223355, 320, 44)
-    const fullMapBtn = createButton(this, w / 2 + 175, lengthY + 8, `Full map · ${BOARD_PATH_LENGTH} rounds`, 0x2a5533, 0x1a4422, 320, 44)
+    // Game Length Console
+    const lengthY = 275
+    const lenPanel = this.add.container(w / 2, lengthY)
+    
+    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, 0x334466, 0x223355, 360, 50)
+    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, 0x2a5533, 0x1a4422, 360, 50)
     classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
     fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
     this.setFullMapMode(false, classicBtn, fullMapBtn)
+    lenPanel.add([classicBtn, fullMapBtn])
 
     // Name rows header
     this.add.text(w / 2, 318, 'Names: click to type · Tab/Enter to cycle · CPU: click to cycle off → Easy → Normal → Hard', {
@@ -120,15 +107,22 @@ export class SetupScene extends Phaser.Scene {
     this.rows = []
     this.rowContainers = []
     this.cpuToggleTexts = []
-    const nameRowsStartY = 334
+    const startY = 360
     for (let i = 0; i < MAX_PLAYERS; i++) {
-      this.buildRow(i, nameRowsStartY)
+      this.buildRow(i, startY)
+      this.rowContainers[i].setAlpha(0).setX(this.rowContainers[i].x - 50)
+      this.tweens.add({
+        targets: this.rowContainers[i],
+        alpha: 1, x: '+=50',
+        duration: 400, delay: 200 + i * 100,
+        ease: 'Cubic.easeOut'
+      })
       this.refreshCpuToggle(i)
     }
     this.refreshRows()
-
-    // Start button
-    this.startBtn = createButton(this, w / 2, h - 70, '▶  START GAME', 0x22bb55, 0x1a8844, 300, 60)
+ 
+    // Start Button
+    this.startBtn = createButton(this, w / 2, h - 80, '🚀 COMMENCE EXPEDITION', 0x22bb55, 0x1a8844, 420, 64)
     this.startBtn.on('pointerdown', () => this.startGame())
 
     if (isAutoSimMode()) {
@@ -341,8 +335,13 @@ export class SetupScene extends Phaser.Scene {
   }
 
   startGame() {
-    const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
-    this.startGameWithRounds(roundsPerGame)
+    console.log('SetupScene: Start Game clicked')
+    try {
+      const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
+      this.startGameWithRounds(roundsPerGame)
+    } catch (e) {
+      console.error('SetupScene: Error starting game', e)
+    }
   }
 
   private startGameWithRounds(roundsPerGame: number) {

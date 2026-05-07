@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS, ItemType } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
-import { BOARD_COLS, BOARD_ROWS, BOARD_PATH } from '../systems/BoardLayout'
+import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
@@ -11,15 +11,16 @@ import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import { cpuBoardQuestionResolve, cpuRollDelayMs } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
-import type { QuestionResolution } from './QuestionScene'
+import { MinigameScene } from './MinigameScene'
+import { BattleResult } from './BattleScene'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
 
 const TILE_TYPES: TileType[] = [
-  'shop','vocab','grammar','bonus','star','grammar','minigame','vocab','brick','mystery','vocab','shop',
-  'vocab','grammar','shop','minigame','grammar','star','bonus','mystery','brick','vocab','grammar','swap',
-  'bonus','vocab','shop','grammar','mystery','brick','vocab','minigame','grammar','star','bonus','vocab',
+  'shop','vocab','penalty','grammar','bonus','star','item_shop','minigame','vocab','brick','penalty','mystery','vocab','shop',
+  'vocab','grammar','item_shop','minigame','grammar','penalty','star','bonus','mystery','brick','vocab','grammar','swap',
+  'penalty','bonus','vocab','item_shop','grammar','mystery','brick','vocab','minigame','penalty','grammar','star','bonus','vocab',
 ]
 
 const TILE_LABELS: Record<TileType, string> = {
@@ -30,9 +31,11 @@ const TILE_LABELS: Record<TileType, string> = {
   minigame: '🕹️',
   swap: '🔄',
   start: '🏠',
-  shop: '🏪',
-  star: '🌟',
-  brick: '🧱'
+  shop:     '🏪',
+  star:     '🌟',
+  brick:    '🧱',
+  item_shop: '🛍️',
+  penalty:   '💀'
 }
 
 const STAR_COST_COINS = 20
@@ -53,15 +56,17 @@ const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
 
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
-  private path!: {col: number, row: number}[]
+  private nodes!: BoardNode[]
   private roundsPerGame = DEFAULT_ROUNDS_PER_GAME
   private boardOriginX!: number
   private boardOriginY!: number
   private playerTokens!: Phaser.GameObjects.Container[]
   private hud!: PlayerHUD
   private rollBtn!: Phaser.GameObjects.Container
+  private itemBtn!: Phaser.GameObjects.Container
   private statusText!: Phaser.GameObjects.Text
   private tileHintText?: Phaser.GameObjects.Text
+  private itemMenu?: Phaser.GameObjects.Container
   private diceSprite!: Phaser.GameObjects.Image
   private rolling = false
   private roundText!: Phaser.GameObjects.Text
@@ -112,6 +117,8 @@ export class BoardScene extends Phaser.Scene {
         return `Tile ${tileIndex}: STAR — spend ${STAR_COST_COINS} coins for a trophy (+12 score).`
       case 'brick':
         return `Tile ${tileIndex}: BRICK — gather pieces; every ${BRICKS_FOR_BUILD_BONUS} gives +${BUILD_BONUS_SCORE} score.`
+      case 'item_shop':
+        return `Tile ${tileIndex}: ITEM SHOP — buy powerful cards to use during your turn.`
     }
   }
 
@@ -138,12 +145,12 @@ export class BoardScene extends Phaser.Scene {
     const cpuLevels = data?.playerCpuLevels
 
     this.state = createInitialState(names, emojis, cpuFlags, cpuLevels)
-    this.path = BOARD_PATH
+    this.nodes = BOARD_NODES
 
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
     this.boardOriginX = (w - boardW) / 2
-    this.boardOriginY = (h - boardH) / 2 - 24
+    this.boardOriginY = (h - boardH) / 2 + 50
 
     this.drawBackdrop(w, h)
     this.drawBoard()
@@ -151,6 +158,8 @@ export class BoardScene extends Phaser.Scene {
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
 
     this.hud = new PlayerHUD(this, this.state)
+    this.createPauseButton()
+    this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
 
     // Bottom control panel
     this.add.rectangle(w / 2, h - 56, w, 112, 0x12122a).setOrigin(0.5, 0.5)
@@ -176,6 +185,9 @@ export class BoardScene extends Phaser.Scene {
 
     this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
+
+    this.itemBtn = createButton(this, w - 300, h - 56, '🎒 ITEMS', 0x44ccff, 0x0088cc, 160, 56)
+    this.itemBtn.on('pointerdown', () => this.toggleItemMenu())
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
@@ -213,50 +225,85 @@ export class BoardScene extends Phaser.Scene {
   }
 
   drawBackdrop(w: number, h: number) {
-    this.add.rectangle(0, 0, w, h, 0x080814).setOrigin(0)
-    addStarfieldBackdrop(this, 0.38)
-    for (let i = 0; i < 48; i++) {
-      const sx = Phaser.Math.Between(8, w - 8)
-      const sy = Phaser.Math.Between(8, h - 140)
-      const a = Phaser.Math.FloatBetween(0.08, 0.22)
-      this.add.circle(sx, sy, Phaser.Math.Between(1, 2), 0xaaccff, a).setDepth(-5)
+    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
+    
+    // Ambient color wash (Flat to avoid WebGL texture generation issues)
+    this.add.rectangle(0, 0, w, h, 0x111122, 0.3).setOrigin(0).setDepth(-10)
+
+    addStarfieldBackdrop(this, 0.45)
+    
+    // Floating dust/motes
+    for (let i = 0; i < 30; i++) {
+      const mote = this.add.circle(
+        Phaser.Math.Between(0, w),
+        Phaser.Math.Between(0, h),
+        Phaser.Math.Between(1, 3),
+        0x44ccff,
+        0.15
+      ).setDepth(-5)
+      
+      this.tweens.add({
+        targets: mote,
+        alpha: 0.6,
+        y: '-=40',
+        duration: Phaser.Math.Between(3000, 6000),
+        yoyo: true,
+        repeat: -1,
+        delay: Phaser.Math.Between(0, 3000)
+      })
     }
   }
 
   drawBoard() {
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
-    const pad = 18
+    const pad = 24
     const frameW = boardW + pad * 2
     const frameH = boardH + pad * 2
     const fx = this.boardOriginX - pad
     const fy = this.boardOriginY - pad
 
-    this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 14, frameH + 14, 0x2a1810).setDepth(-3)
-    this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 6, frameH + 6, 0x4a3020).setDepth(-3)
-    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, 0x0e2418)
-    felt.setStrokeStyle(4, 0x1f4d32, 1).setDepth(-2)
+    // Ornate outer frame
+    const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, 0x0d0d1f).setDepth(-3)
+    outer.setStrokeStyle(4, 0xffd700, 0.4)
+    
+    const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, 0x111122).setDepth(-2)
+    inner.setStrokeStyle(2, 0x44ccff, 0.3)
+    
+    // Board felt with inner vignette
+    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, 0x0d0d1f)
+    felt.setStrokeStyle(1, 0x334466, 0.5).setDepth(-1)
 
-    const pathSet = new Set(this.path.map(p => `${p.col},${p.row}`))
+    const nodeSet = new Set(this.nodes.map(p => `${p.col},${p.row}`))
     for (let row = 0; row < BOARD_ROWS; row++) {
       for (let col = 0; col < BOARD_COLS; col++) {
-        if (pathSet.has(`${col},${row}`)) continue
+        if (nodeSet.has(`${col},${row}`)) continue
         const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
         const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
         this.add.rectangle(x, y, TILE_SIZE - 6, TILE_SIZE - 6, 0x07160f, 0.92).setDepth(-1)
       }
     }
 
-    const path = this.path
-    path.forEach((cell, i) => {
+    this.nodes.forEach((node, i) => {
       const type = this.getTileTypeAt(i)
-      const x = this.boardOriginX + cell.col * TILE_SIZE + TILE_SIZE / 2
-      const y = this.boardOriginY + cell.row * TILE_SIZE + TILE_SIZE / 2
+      const x = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
+      const y = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
 
       const img = this.add.image(x, y, TILE_TEXTURE_KEY(type))
       img.setDisplaySize(TILE_SIZE - 4, TILE_SIZE - 4)
       img.setDepth(0)
       img.setInteractive()
+      img.setScale(0)
+
+      this.tweens.add({
+        targets: img,
+        scaleX: (TILE_SIZE - 4) / img.width,
+        scaleY: (TILE_SIZE - 4) / img.height,
+        duration: 400,
+        delay: i * 20,
+        ease: 'Back.easeOut'
+      })
+
       img.on('pointerover', () => {
         img.setAlpha(0.8)
         this.tileHintText?.setText(this.describeTile(i, type))
@@ -266,7 +313,8 @@ export class BoardScene extends Phaser.Scene {
         this.tileHintText?.setText('Hover a tile to inspect its effect.')
       })
 
-      this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1)
+      const label = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1).setScale(0)
+      this.tweens.add({ targets: label, scaleX: 1, scaleY: 1, duration: 400, delay: i * 20 + 200, ease: 'Back.easeOut' })
 
       this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
         fontSize: '9px',
@@ -313,15 +361,74 @@ export class BoardScene extends Phaser.Scene {
   }
 
   getTileXY(index: number): {x: number, y: number} {
-    const cell = this.path[index % this.path.length]
+    const node = this.nodes[index]
     return {
-      x: this.boardOriginX + cell.col * TILE_SIZE + TILE_SIZE / 2,
-      y: this.boardOriginY + cell.row * TILE_SIZE + TILE_SIZE / 2
+      x: this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2,
+      y: this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
     }
   }
 
-  updateStatus() {
+  private showImpactText(x: number, y: number, text: string, color: string = '#ffffff') {
+    const txt = this.add.text(x, y, text, {
+      fontSize: '82px', fontFamily: 'Arial Black', color, stroke: '#000000', strokeThickness: 12
+    }).setOrigin(0.5).setDepth(300).setScale(0)
+
+    this.tweens.add({
+      targets: txt,
+      scaleX: 1, scaleY: 1,
+      duration: 300,
+      ease: 'Back.easeOut',
+      onComplete: () => {
+        this.time.delayedCall(600, () => {
+          this.tweens.add({ targets: txt, alpha: 0, scaleX: 2, scaleY: 2, duration: 300, onComplete: () => txt.destroy() })
+        })
+      }
+    })
+  }
+
+  private async showAnnouncement(msg: string, color: string = '#ffffff') {
+    const w = this.scale.width
+    const h = this.scale.height
+
+    const banner = this.add.container(w + 600, h / 2).setDepth(200)
+    const bg = this.add.rectangle(0, 0, w * 2, 120, 0x000000, 0.7)
+    const text = this.add.text(0, 0, msg, {
+      fontSize: '64px', fontFamily: 'Arial Black', color, stroke: '#000000', strokeThickness: 10
+    }).setOrigin(0.5)
+    
+    banner.add([bg, text])
+
+    return new Promise<void>(resolve => {
+      this.tweens.add({
+        targets: banner,
+        x: w / 2,
+        duration: 500,
+        ease: 'Back.easeOut',
+        onComplete: () => {
+          this.time.delayedCall(800, () => {
+            this.tweens.add({
+              targets: banner,
+              x: -600,
+              duration: 400,
+              ease: 'Cubic.easeIn',
+              onComplete: () => {
+                banner.destroy()
+                resolve()
+              }
+            })
+          })
+        }
+      })
+    })
+  }
+
+  async updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
+    
+    if (!this.rolling) {
+      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, PLAYER_COLORS[this.state.currentPlayer])
+    }
+
     const cpuTag = p.isCpu ? ' 🤖' : ''
     const momentum: string[] = []
     if (p.answerStreak >= 2) momentum.push(`🧠x${p.answerStreak}`)
@@ -333,8 +440,10 @@ export class BoardScene extends Phaser.Scene {
 
     if (p.isCpu && !this.rolling) {
       this.rollBtn.setAlpha(0.42)
+      this.itemBtn.setAlpha(0.42)
     } else if (!this.rolling) {
       this.rollBtn.setAlpha(1)
+      this.itemBtn.setAlpha(1)
     }
 
     this.turnGlowTween?.stop()
@@ -342,21 +451,34 @@ export class BoardScene extends Phaser.Scene {
 
     const pos = p.position
     const { x, y } = this.getTileXY(pos)
-    this.turnGlow = this.add.circle(x, y, TILE_SIZE * 0.48)
-    this.turnGlow.setStrokeStyle(4, 0xffe066, 0.95)
-    this.turnGlow.setFillStyle(0xffcc33, 0.12)
-    this.turnGlow.setDepth(4)
+    
+    this.turnGlow = this.add.circle(x, y, TILE_SIZE * 0.7, 0x44ccff, 0.15)
+    this.turnGlow.setStrokeStyle(3, 0x44ccff, 0.5)
+    this.turnGlow.setDepth(2)
+    
     this.turnGlowTween = this.tweens.add({
       targets: this.turnGlow,
-      scaleX: 1.1,
-      scaleY: 1.1,
-      duration: isAutoSimMode() ? 40 : 650,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+      scaleX: 1.3, scaleY: 1.3,
+      alpha: 0,
+      duration: 1200,
+      repeat: -1
     })
 
     this.maybeScheduleCpuTurn()
+  }
+
+  maybeScheduleCpuTurn() {
+    const p = this.state.players[this.state.currentPlayer]
+    if (p.isCpu && !this.rolling) {
+      this.rollBtn.setAlpha(0.4)
+      this.itemBtn.setAlpha(0.4)
+      this.time.delayedCall(this.d(cpuRollDelayMs()), () => {
+        // Double check it's still their turn and we haven't rolled
+        if (this.state.currentPlayer === this.state.players.indexOf(p) && !this.rolling) {
+          this.handleRoll(true)
+        }
+      })
+    }
   }
 
   /** @param isCpuInvocation - must be true when the automated CPU triggers the roll */
@@ -364,10 +486,39 @@ export class BoardScene extends Phaser.Scene {
     if (this.rolling) return
     const cur = this.state.players[this.state.currentPlayer]
     if (cur.isCpu !== isCpuInvocation) return
+
+    // CPU Strategic Item Usage
+    if (cur.isCpu && cur.inventory.length > 0) {
+      const distToStar = 5 // Simplified: check if close to star shop
+      const isLow = cur.coins < 5 || cur.score < 10
+      const inLast = this.state.players.every(p => p.id === cur.id || p.score >= cur.score)
+      
+      let itemToUseIdx = -1
+      if (cur.inventory.includes('golden_key') && distToStar <= 5) itemToUseIdx = cur.inventory.indexOf('golden_key')
+      else if (cur.inventory.includes('shield') && isLow) itemToUseIdx = cur.inventory.indexOf('shield')
+      else if (cur.inventory.includes('dash') && Math.random() < 0.5) itemToUseIdx = cur.inventory.indexOf('dash')
+      else if (cur.inventory.includes('swap') && inLast) itemToUseIdx = cur.inventory.indexOf('swap')
+      else if (Math.random() < 0.2) itemToUseIdx = 0 // Occasional random use
+
+      if (itemToUseIdx >= 0) {
+        await this.useItem(this.state.currentPlayer, itemToUseIdx)
+        await new Promise(r => this.time.delayedCall(this.d(1400), r))
+      }
+    }
+
     this.rolling = true
     this.rollBtn.setAlpha(0.5)
+    this.itemBtn.setAlpha(0.5)
+    this.closeItemMenu()
 
     const player = this.state.players[this.state.currentPlayer]
+
+    // Handle forced moves (Golden Key)
+    let roll = rollBlockDie()
+    if (player.forcedMoveValue > 0) {
+      roll = player.forcedMoveValue
+      player.forcedMoveValue = 0 // consume
+    }
 
     // Dramatic dice roll animation
     this.time.addEvent({
@@ -376,6 +527,17 @@ export class BoardScene extends Phaser.Scene {
       callback: () => {
         const face = Phaser.Math.Between(1, 3)
         this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face - 1])
+        this.diceSprite.setScale(1.2 + Math.random() * 0.3)
+        this.diceSprite.setAngle(Math.random() * 20 - 10)
+        
+        // Rolling Sparks
+        if (!isAutoSimMode()) {
+          const spark = this.add.particles(this.diceSprite.x, this.diceSprite.y, TEXTURE_KEYS.particleYellow, {
+            speed: 100, scale: { start: 0.4, end: 0 }, lifespan: 200, quantity: 1
+          })
+          this.time.delayedCall(100, () => spark.destroy())
+        }
+
         this.cameras.main.shake(50, 0.003)
       }
     })
@@ -384,13 +546,19 @@ export class BoardScene extends Phaser.Scene {
 
     let result = rollBlockDie()
     const hadSpeedBoost = player.speedBoostTurns > 0
+    const hadDash = player.dashActive
+    if (hadDash) {
+      const r2 = rollBlockDie()
+      result += r2
+      player.dashActive = false
+    }
     if (hadSpeedBoost) {
       result = Math.min(3, result + 1)
       player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
     }
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[result - 1])
-    const surgeText = hadSpeedBoost ? ' + 💨 Speed Surge' : ''
-    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result} (block die: 1–3)${surgeText}!`)
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, result - 1)])
+    const surgeText = (hadSpeedBoost ? ' + 💨 Speed Surge' : '') + (hadDash ? ' + 🏃 Dash!' : '')
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${hadDash ? ' (2 dice)' : ' (1-3)'}${surgeText}!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -412,44 +580,203 @@ export class BoardScene extends Phaser.Scene {
     const off = offsets[playerIndex]
 
     for (let s = 0; s < steps; s++) {
+      const currentNode = this.nodes[player.position]
+      const options = currentNode.next
+      let chosenNextId: number
+
+      if (options.length > 1) {
+        if (player.isCpu) {
+          chosenNextId = Phaser.Utils.Array.GetRandom(options)
+        } else {
+          chosenNextId = await this.promptForBranch(player, options)
+        }
+      } else {
+        chosenNextId = options[0]
+      }
+
       const prev = player.position
-      player.position = (player.position + 1) % this.path.length
+      player.position = chosenNextId
       if (prev > 0 && player.position === 0) {
         player.coins += 5
         this.showFloatyText(player, '+5 Lap Coins!', '#ffcc66')
       }
       const {x, y} = this.getTileXY(player.position)
+      
+      // Move Particles (Dust/Smoke)
+      if (!isAutoSimMode()) {
+        const dust = this.add.particles(token.x, token.y, TEXTURE_KEYS.particleSquare, {
+          speed: 20, scale: { start: 0.4, end: 0 },
+          alpha: { start: 0.5, end: 0 },
+          lifespan: 300, blendMode: 'ADD', quantity: 1
+        })
+        this.time.delayedCall(200, () => dust.destroy())
+      }
+
       await new Promise<void>(res => {
         this.tweens.add({
           targets: token,
           x: x + off.x,
           y: y + off.y,
           duration: isAutoSimMode() ? 28 : 180,
-          ease: 'Back.easeOut',
+          ease: 'Cubic.easeOut',
           onComplete: () => res()
         })
       })
     }
 
     this.cameras.main.shake(100, 0.005)
+    
+    // Squash and stretch tile
+    const tileImg = this.children.list.find(c => c instanceof Phaser.GameObjects.Image && c.x === token.x - off.x && c.y === token.y - off.y) as Phaser.GameObjects.Image
+    if (tileImg) {
+      this.tweens.add({
+        targets: tileImg,
+        scaleX: 1.2, scaleY: 0.8,
+        duration: 100, yoyo: true,
+        ease: 'Bounce.easeOut'
+      })
+    }
+
     this.tweens.add({
       targets: token,
-      scaleX: 1.4, scaleY: 0.7,
+      scaleX: 1.6, scaleY: 0.6,
       duration: isAutoSimMode() ? 16 : 80,
-      yoyo: true
+      yoyo: true,
+      onComplete: () => {
+        token.setScale(1)
+        this.landOnTile(playerIndex)
+      }
     })
+  }
 
-    await new Promise<void>(res => this.time.delayedCall(this.d(300), res))
-    this.landOnTile(playerIndex)
+  private async useItem(playerIndex: number, inventoryIndex: number) {
+    const player = this.state.players[playerIndex]
+    const itemType = player.inventory[inventoryIndex]
+    const item = ITEMS[itemType]
+
+    this.statusText.setText(`🎒 ${player.name} used ${item.name}!`)
+    this.showFloatyText(player, `Used ${item.emoji}`, '#ffffff')
+    player.inventory.splice(inventoryIndex, 1)
+    this.closeItemMenu()
+
+    switch (itemType) {
+      case 'dash':
+        player.dashActive = true
+        break
+      case 'swap': {
+        const others = this.state.players.filter((_, i) => i !== playerIndex)
+        const target = Phaser.Utils.Array.GetRandom(others)
+        const temp = player.position
+        player.position = target.position
+        target.position = temp
+        this.updatePlayerTokens()
+        this.showFloatyText(target, '🔄 SWAPPED!', '#ff88ff')
+        break
+      }
+      case 'warp':
+        player.position = Phaser.Math.Between(0, BOARD_NODES.length - 1)
+        this.updatePlayerTokens()
+        break
+      case 'shield':
+        player.shieldActive = true
+        break
+      case 'double_score':
+        player.doubleScoreActive = true
+        break
+      case 'poison_dart': {
+        const targetIdx = (playerIndex + 1) % this.state.players.length
+        const target = this.state.players[targetIdx]
+        target.coins = Math.max(0, target.coins - 8)
+        this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
+        break
+      }
+      case 'golden_key':
+        player.forcedMoveValue = 5
+        this.showFloatyText(player, '🔑 Next roll: 5', '#ffee44')
+        break
+    }
+
+    await new Promise(r => this.time.delayedCall(this.d(800), r))
   }
 
   landOnTile(playerIndex: number) {
     const player = this.state.players[playerIndex]
     const tileIndex = player.position
     const type = this.getTileTypeAt(tileIndex)
+    const token = this.playerTokens[playerIndex]
 
     this.statusText.setText(`${player.emoji} ${player.name} landed on ${TILE_LABELS[type]} ${type.toUpperCase()}!`)
 
+    // Landing Shockwave
+    const ripple = this.add.circle(token.x, token.y, 10, 0xffffff, 0.4).setDepth(-1)
+    this.tweens.add({
+      targets: ripple,
+      radius: 80, alpha: 0,
+      duration: 500,
+      onComplete: () => ripple.destroy()
+    })
+    this.cameras.main.shake(150, 0.002)
+
+    // Check for collision (Battle)
+    const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
+    if (otherOnTile) {
+      this.statusText.setText('⚔️ ENCOUNTER!')
+      
+      const vsContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setDepth(200)
+      const vsBg = this.add.rectangle(0, 0, 1200, 200, 0x000000, 0.7)
+      const vsText = this.add.text(0, 0, '⚔️ ENCOUNTER ⚔️', {
+        fontSize: '110px', fontFamily: 'Arial Black', color: '#ff4444', stroke: '#ffffff', strokeThickness: 12
+      }).setOrigin(0.5)
+      
+      vsContainer.add([vsBg, vsText])
+      vsContainer.setScale(3).setAlpha(0)
+      
+      this.tweens.add({
+        targets: vsContainer,
+        scaleX: 1, scaleY: 1, alpha: 1,
+        duration: 300,
+        ease: 'Expo.easeOut',
+        onComplete: () => {
+          this.cameras.main.flash(200, 255, 0, 0)
+          this.time.delayedCall(600, () => {
+            this.tweens.add({ targets: vsContainer, x: -1500, duration: 300, ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
+            this.scene.launch('BattleScene', {
+              state: this.state,
+              attackerIndex: playerIndex,
+              defenderIndex: this.state.players.indexOf(otherOnTile),
+              onComplete: (result: BattleResult) => {
+                this.scene.stop('BattleScene')
+                this.scene.resume()
+                
+                const attacker = this.state.players[playerIndex]
+                const defender = otherOnTile
+                
+                if (result.winnerIndex === playerIndex) {
+                  attacker.score += result.scoreLost
+                  attacker.coins += result.coinsLost
+                  defender.score = Math.max(0, defender.score - result.scoreLost)
+                  defender.coins = Math.max(0, defender.coins - result.coinsLost)
+                  this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
+                  this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
+                } else {
+                  this.showFloatyText(defender, 'Safe!', '#44ccff')
+                }
+
+                this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex))
+              }
+            })
+            this.scene.pause()
+          })
+        }
+      })
+      return
+    }
+
+    this.handleTileEffect(playerIndex, type, tileIndex)
+  }
+
+  private handleTileEffect(playerIndex: number, type: TileType, tileIndex: number) {
+    const player = this.state.players[playerIndex]
     this.time.delayedCall(this.d(700), () => {
       switch (type) {
         case 'start':
@@ -461,8 +788,24 @@ export class BoardScene extends Phaser.Scene {
         case 'bonus':
           player.score += 5
           player.coins += 4
-          this.showFloatyText(player, '+5 pts +4 coins!', '#FFD700')
+          this.showImpactText(this.scale.width / 2, this.scale.height / 2, '⭐ NICE! ⭐', '#FFD700')
+          this.showFloatyText(player, '⭐ NICE! +5 pts +4 coins!', '#FFD700')
+          this.cameras.main.flash(400, 255, 215, 0, false)
           showConfetti(this)
+          this.endTurn()
+          break
+        case 'penalty':
+          if (player.shieldActive) {
+            player.shieldActive = false
+            this.showFloatyText(player, '🛡️ Shield Block!', '#44ccff')
+          } else {
+            player.score = Math.max(0, player.score - 4)
+            player.coins = Math.max(0, player.coins - 5)
+            this.showImpactText(this.scale.width / 2, this.scale.height / 2, '💀 OUCH! 💀', '#ff4444')
+            this.showFloatyText(player, '💀 OUCH! -4 pts -5 coins!', '#ff4444')
+            this.cameras.main.flash(400, 200, 0, 0, false)
+            this.cameras.main.shake(400, 0.02)
+          }
           this.endTurn()
           break
         case 'vocab':
@@ -480,7 +823,12 @@ export class BoardScene extends Phaser.Scene {
                 const streakBonusCoins = player.answerStreak % QUESTION_STREAK_THRESHOLD === 0
                   ? QUESTION_STREAK_BONUS_COINS
                   : 0
-                const scoreGain = QUESTION_BASE_POINTS + result.timeBonus
+                const scoreGainRaw = QUESTION_BASE_POINTS + result.timeBonus
+                let scoreGain = scoreGainRaw
+                if (player.doubleScoreActive) {
+                  scoreGain *= 2
+                  player.doubleScoreActive = false
+                }
                 const coinGain = QUESTION_BASE_COINS + Math.floor(result.timeBonus / 2) + streakBonusCoins
                 player.score += scoreGain
                 player.coins += coinGain
@@ -489,6 +837,7 @@ export class BoardScene extends Phaser.Scene {
                 }
 
                 const parts = [`+${scoreGain} pts +${coinGain} coins!`]
+                if (scoreGain > scoreGainRaw) parts.push('📈 Double!')
                 if (streakBonusCoins > 0) parts.push('🧠 Streak bonus!')
                 if (result.speedSurge) parts.push('💨 Surge ready!')
                 this.showFloatyText(player, parts.join(' '), '#44ff88')
@@ -538,6 +887,9 @@ export class BoardScene extends Phaser.Scene {
           break
         case 'brick':
           this.handleBrickCollect(player)
+          break
+        case 'item_shop':
+          this.handleItemShop(player)
           break
         default:
           this.endTurn()
@@ -600,8 +952,18 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(800), () => this.endTurn())
       return
     }
+
     const owned = this.countOwnedShops(ownerId)
     const rent = SHOP_RENT_COINS + Math.max(0, owned - 1) * SHOP_PORTFOLIO_RENT_STEP
+
+    if (player.shieldActive) {
+      player.shieldActive = false
+      this.statusText.setText(`🏪 Shielded from rent!`)
+      this.showFloatyText(player, '🛡️ Shielded!', '#44ccff')
+      this.time.delayedCall(this.d(1200), () => this.endTurn())
+      return
+    }
+
     const pay = Math.min(player.coins, rent)
     player.coins -= pay
     owner.coins += pay
@@ -657,6 +1019,10 @@ export class BoardScene extends Phaser.Scene {
       {
         color: '#ff4444',
         apply: () => {
+          if (player.shieldActive) {
+            player.shieldActive = false
+            return '🛡️ Shielded from the penalty!'
+          }
           player.score = Math.max(0, player.score - 5)
           return '😱 Oops! -5 score.'
         }
@@ -722,7 +1088,7 @@ export class BoardScene extends Phaser.Scene {
     this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
-  handleSwap(player: Player, playerIndex: number) {
+  async handleSwap(player: Player, playerIndex: number) {
     const others = this.state.players.filter((_, i) => i !== playerIndex)
     if (others.length === 0) {
       this.statusText.setText('🔄 No one to swap with in a solo game.')
@@ -747,7 +1113,9 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({ targets: this.playerTokens[targetIndex], x: p2.x + o2.x, y: p2.y + o2.y, duration: swapDur })
 
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
-    this.time.delayedCall(this.d(1200), () => this.endTurn())
+    
+    await new Promise(r => this.time.delayedCall(swapDur + 200, r))
+    this.landOnTile(playerIndex)
   }
 
   endTurn() {
@@ -757,7 +1125,9 @@ export class BoardScene extends Phaser.Scene {
 
     this.state.turn++
     const totalTurns = this.state.players.length * this.roundsPerGame
-    if (this.state.turn >= totalTurns) {
+    const normaWinner = this.state.players.find(p => p.trophies >= 5)
+    
+    if (normaWinner || this.state.turn >= totalTurns) {
       this.time.delayedCall(this.d(500), () => {
         this.scene.start('ResultsScene', { state: this.state })
       })
@@ -769,5 +1139,125 @@ export class BoardScene extends Phaser.Scene {
       this.state.round++
     }
     this.updateStatus()
+  }
+
+  handleItemShop(player: Player) {
+    const available = Object.values(ITEMS)
+    const item = Phaser.Utils.Array.GetRandom(available)
+    if (player.coins >= item.cost) {
+      player.coins -= item.cost
+      player.inventory.push(item.type)
+      this.statusText.setText(`🛍️ ${player.name} bought ${item.name}!`)
+      this.showFloatyText(player, `-${item.cost} 🪙 · ${item.emoji} ${item.name}`, '#44ccff')
+    } else {
+      player.coins += 1
+      this.statusText.setText(`🛍️ Need more coins! ${item.name} costs ${item.cost}.`)
+      this.showFloatyText(player, '+1 pity coin', '#aaccff')
+    }
+    this.time.delayedCall(this.d(1200), () => this.endTurn())
+  }
+
+  private toggleItemMenu() {
+    if (this.rolling) return
+    if (this.itemMenu) {
+      this.closeItemMenu()
+    } else {
+      this.openItemMenu()
+    }
+  }
+
+  private openItemMenu() {
+    const player = this.state.players[this.state.currentPlayer]
+    if (player.isCpu) return
+    if (player.inventory.length === 0) {
+      this.statusText.setText('🎒 Your backpack is empty!')
+      return
+    }
+
+    const w = this.scale.width
+    const h = this.scale.height
+    this.itemMenu = this.add.container(w / 2, h / 2).setDepth(100)
+    
+    const bg = this.add.rectangle(0, 0, 400, 300, 0x1a1a2e, 0.95).setStrokeStyle(3, 0x44ccff)
+    const title = this.add.text(0, -120, '🎒 YOUR ITEMS', { fontSize: '24px', fontFamily: 'Arial Black', color: '#44ccff' }).setOrigin(0.5)
+    this.itemMenu.add([bg, title])
+
+    player.inventory.forEach((type, i) => {
+      const item = ITEMS[type]
+      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, 0x223344, 0x334455, 340, 40)
+      btn.on('pointerdown', () => this.useItem(this.state.currentPlayer, i))
+      this.itemMenu?.add(btn)
+    })
+
+    const closeBtn = createButton(this, 0, 110, 'CLOSE', 0x555555, 0x333333, 100, 40)
+    closeBtn.on('pointerdown', () => this.closeItemMenu())
+    this.itemMenu.add(closeBtn)
+  }
+
+  private closeItemMenu() {
+    this.itemMenu?.destroy()
+    this.itemMenu = undefined
+  }
+
+  }
+
+  private async promptForBranch(player: Player, options: number[]): Promise<number> {
+    this.statusText.setText('🗺️ Choose your path!')
+    return new Promise<number>(resolve => {
+      const overlays: Phaser.GameObjects.GameObject[] = []
+      options.forEach(nodeId => {
+        const { x, y } = this.getTileXY(nodeId)
+        const highlight = this.add.circle(x, y, TILE_SIZE * 0.5, 0x44ccff, 0.4).setDepth(20).setInteractive({ useHandCursor: true })
+        const arrow = this.add.text(x, y, '➤', { fontSize: '42px', color: '#ffffff', stroke: '#000000', strokeThickness: 4 }).setOrigin(0.5).setDepth(21)
+        
+        const cur = this.nodes[player.position]
+        const targetNode = this.nodes[nodeId]
+        const angle = Phaser.Math.Angle.Between(cur.col, cur.row, targetNode.col, targetNode.row)
+        arrow.setRotation(angle)
+
+        this.tweens.add({
+          targets: [highlight, arrow],
+          scaleX: 1.2, scaleY: 1.2,
+          duration: 400,
+          yoyo: true,
+          repeat: -1
+        })
+
+        highlight.on('pointerdown', () => {
+          overlays.forEach(o => o.destroy())
+          resolve(nodeId)
+        })
+        overlays.push(highlight, arrow)
+      })
+    })
+  private createPauseButton() {
+    const btn = createButton(this, 50, 50, '⏸️', 0x223344, 0x334455, 60, 60)
+    btn.on('pointerdown', () => this.pauseGame())
+  }
+
+  private pauseGame() {
+    if (this.scene.isActive('PauseScene')) return
+    this.scene.pause()
+    this.scene.launch('PauseScene')
+  }
+
+  private updatePlayerTokens() {
+    this.state.players.forEach((player, i) => {
+      const token = this.playerTokens[i]
+      const { x, y } = this.getTileXY(player.position)
+      const off = this.getPlayerOffset(i)
+      this.tweens.add({
+        targets: token,
+        x: x + off.x,
+        y: y + off.y,
+        duration: 600,
+        ease: 'Cubic.easeInOut'
+      })
+    })
+  }
+
+  private getPlayerOffset(index: number) {
+    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
+    return offsets[index % 4]
   }
 }

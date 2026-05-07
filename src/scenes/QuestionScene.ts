@@ -45,18 +45,31 @@ export class QuestionScene extends Phaser.Scene {
     const q: QuestionData = Phaser.Utils.Array.GetRandom(questions)
     const player = state.players[playerIndex]
 
-    // Dark overlay
-    this.add.rectangle(0, 0, w, h, 0x000000, 0.75).setOrigin(0)
-
-    // Panel
-    const panelW = 900
-    const panelH = 500
-    const panel = this.add.rectangle(w / 2, h / 2, panelW, panelH, 0x1e2050)
-    panel.setStrokeStyle(5, type === 'vocab' ? 0x4488ff : 0xff8844)
-
-    // Panel entrance
-    panel.setScale(0.1)
-    this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 300, ease: 'Back.easeOut' })
+    // Deep environment wash
+    this.add.rectangle(0, 0, w, h, 0x050510, 0.85).setOrigin(0)
+    
+    // Glassmorphic Question Panel
+    const panelW = 920
+    const panelH = 520
+    const panelContainer = this.add.container(w / 2, h / 2)
+    
+    const panelBg = this.add.rectangle(0, 0, panelW, panelH, 0x0a1528, 0.8)
+    const borderColor = type === 'vocab' ? 0x4488ff : 0xff8844
+    panelBg.setStrokeStyle(4, borderColor, 0.6)
+    
+    const accentGlow = this.add.rectangle(0, -panelH / 2 + 2, panelW - 4, 4, borderColor, 0.8)
+    
+    panelContainer.add([panelBg, accentGlow])
+    panelContainer.setScale(0.8)
+    panelContainer.setAlpha(0)
+    
+    this.tweens.add({
+      targets: panelContainer,
+      scaleX: 1, scaleY: 1,
+      alpha: 1,
+      duration: isAutoSimMode() ? 40 : 400,
+      ease: 'Cubic.easeOut'
+    })
 
     // Header
     const headerColor = type === 'vocab' ? '#4488ff' : '#ff8844'
@@ -163,7 +176,16 @@ export class QuestionScene extends Phaser.Scene {
       callback: () => {
         secondsLeft--
         countdownText.setText(String(secondsLeft))
-        if (secondsLeft <= 5) countdownText.setColor('#ff3333')
+        if (secondsLeft <= 5) {
+          countdownText.setColor('#ff3333')
+          this.tweens.add({
+            targets: countdownText,
+            scaleX: 1.4, scaleY: 1.4,
+            duration: 100, yoyo: true,
+            ease: 'Bounce.easeInOut'
+          })
+          this.cameras.main.shake(100, 0.005)
+        }
         else if (secondsLeft <= 10) countdownText.setColor('#ff8800')
       }
     })
@@ -219,46 +241,33 @@ export class QuestionScene extends Phaser.Scene {
     if (correct) {
       showConfetti(this)
       this.cameras.main.flash(400, 100, 255, 100)
-      const msg = this.add.text(w / 2, h / 2 - 240, `✅ CORRECT! +${10 + timeBonus} Points!`, {
-        fontSize: '36px',
-        fontFamily: 'Arial Black',
-        color: '#44ff88',
-        stroke: '#004400',
-        strokeThickness: 5
-      }).setOrigin(0.5).setScale(0.1)
-      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 400, ease: 'Back.easeOut' })
+      
+      const banner = this.add.container(w / 2, h / 2).setDepth(200)
+      const bg = this.add.rectangle(0, 0, w, 140, 0x00ff88, 0.6)
+      const txt = this.add.text(0, 0, '✅ CORRECT!', {
+        fontSize: '84px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#004400', strokeThickness: 10
+      }).setOrigin(0.5)
+      banner.add([bg, txt]).setScale(3).setAlpha(0)
+      this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
+
       if (timeBonus > 0) {
-        this.time.delayedCall(this.d(120), () => {
-          this.add.text(w / 2, h / 2 - 198, `⚡ Fast-answer bonus +${timeBonus}`, {
-            fontSize: '20px',
-            fontFamily: 'Arial Black',
-            color: '#88ddff',
-            stroke: '#102844',
-            strokeThickness: 4
-          }).setOrigin(0.5)
-        })
-      }
-      if (speedSurge) {
-        this.time.delayedCall(this.d(220), () => {
-          this.add.text(w / 2, h / 2 - 166, '💨 Speed Surge earned! Next roll gets +1 move.', {
-            fontSize: '18px',
-            fontFamily: 'Arial Black',
-            color: '#aaddee',
-            stroke: '#203344',
-            strokeThickness: 4
-          }).setOrigin(0.5)
+        this.time.delayedCall(this.d(400), () => {
+          this.add.text(w / 2, h / 2 + 100, `⚡ SPEED BONUS +${timeBonus}`, {
+            fontSize: '28px', fontFamily: 'Arial Black', color: '#88ddff', stroke: '#102844', strokeThickness: 4
+          }).setOrigin(0.5).setDepth(201)
         })
       }
     } else {
       this.cameras.main.shake(300, 0.01)
-      const msg = this.add.text(w / 2, h / 2 - 240, '❌ INCORRECT!', {
-        fontSize: '36px',
-        fontFamily: 'Arial Black',
-        color: '#ff4444',
-        stroke: '#440000',
-        strokeThickness: 5
-      }).setOrigin(0.5).setScale(0.1)
-      this.tweens.add({ targets: msg, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 400, ease: 'Back.easeOut' })
+      this.cameras.main.flash(300, 255, 0, 0, true)
+      
+      const banner = this.add.container(w / 2, h / 2).setDepth(200)
+      const bg = this.add.rectangle(0, 0, w, 140, 0xff0000, 0.6)
+      const txt = this.add.text(0, 0, '❌ WRONG', {
+        fontSize: '84px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#440000', strokeThickness: 10
+      }).setOrigin(0.5)
+      banner.add([bg, txt]).setScale(3).setAlpha(0)
+      this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
     }
 
     if (explanation) {

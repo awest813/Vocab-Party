@@ -157,18 +157,100 @@
       ],
       "correct": 1,
       "explanation": "Double negatives cancel each other out. Use 'anything' with 'didn't'."
-    },
-    {
-      "question": "Which homophone correctly completes: 'I did not ___ the answer.'?",
-      "answers": ["no", "know", "now", "knoe"],
+    },    {
+      "question": "Which sentence uses the correct relative pronoun?",
+      "answers": [
+        "The car who I bought is fast.",
+        "The car that I bought is fast.",
+        "The car whom I bought is fast.",
+        "The car which whom I bought is fast."
+      ],
       "correct": 1,
-      "explanation": "'Know' means to be aware of something; 'no' is a negative response."
+      "explanation": "Use 'that' or 'which' for objects/animals; 'who' is for people."
     },
     {
-      "question": "What punctuation ends an interrogative sentence?",
-      "answers": ["Period (.)", "Exclamation mark (!)", "Comma (,)", "Question mark (?)"],
-      "correct": 3,
-      "explanation": "An interrogative sentence asks a question and ends with a question mark."
+      "question": "What is the superlative form of 'good'?",
+      "answers": ["Gooder", "Better", "Best", "Bestest"],
+      "correct": 2,
+      "explanation": "The forms are good (positive), better (comparative), and best (superlative)."
+    },
+    {
+      "question": "Which sentence uses a colon correctly?",
+      "answers": [
+        "I need: eggs, milk, and bread.",
+        "I need three items: eggs, milk, and bread.",
+        "I need three: items eggs milk and bread.",
+        "I: need eggs milk and bread."
+      ],
+      "correct": 1,
+      "explanation": "Use a colon after a complete sentence to introduce a list."
+    },
+    {
+      "question": "Which is an example of an oxymoron?",
+      "answers": ["Pretty ugly", "Very fast", "Blue sky", "Big house"],
+      "correct": 0,
+      "explanation": "An oxymoron combines two contradictory terms, like 'pretty ugly'."
+    },
+    {
+      "question": "Which sentence is in the past perfect tense?",
+      "answers": [
+        "I ate the apple.",
+        "I have eaten the apple.",
+        "I had eaten the apple.",
+        "I will have eaten the apple."
+      ],
+      "correct": 2,
+      "explanation": "Past perfect uses 'had' + past participle."
+    },
+    {
+      "question": "What is the purpose of an interjection?",
+      "answers": [
+        "To join two sentences",
+        "To show strong emotion or surprise",
+        "To describe a noun",
+        "To name a person"
+      ],
+      "correct": 1,
+      "explanation": "Interjections (like 'Wow!' or 'Oops!') express sudden emotion."
+    },
+    {
+      "question": "Which sentence uses 'further' correctly?",
+      "answers": [
+        "I can't walk any further.",
+        "We need further investigation.",
+        "He ran further than me.",
+        "The store is further away."
+      ],
+      "correct": 1,
+      "explanation": "'Farther' refers to physical distance; 'further' refers to figurative depth or extent."
+    },
+    {
+      "question": "What is a gerund?",
+      "answers": [
+        "A verb used as an adjective",
+        "A verb ending in -ing used as a noun",
+        "A type of punctuation",
+        "A past tense verb"
+      ],
+      "correct": 1,
+      "explanation": "A gerund is a verb form ending in -ing that functions as a noun (e.g., 'Swimming is fun')."
+    },
+    {
+      "question": "Which sentence uses the correct conditional mood?",
+      "answers": [
+        "If I was you, I would go.",
+        "If I were you, I would go.",
+        "If I am you, I will go.",
+        "If I be you, I would go."
+      ],
+      "correct": 1,
+      "explanation": "The subjunctive mood 'were' is used for hypothetical or contrary-to-fact statements."
+    },
+    {
+      "question": "Which word is an abstract noun?",
+      "answers": ["Chair", "Liberty", "Mountain", "Computer"],
+      "correct": 1,
+      "explanation": "An abstract noun refers to an idea, quality, or state rather than a physical object."
     }
   ],
   "minigame_comma": [
@@ -355,6 +437,36 @@
       "sentence": "Friendship is one of life's greatest gifts.",
       "choices": ["Noun", "Verb", "Adjective", "Adverb"],
       "correct": 0
+    },
+    {
+      "word": "ALTHOUGH",
+      "sentence": "Although it was cold, we went swimming.",
+      "choices": ["Noun", "Verb", "Conjunction", "Adverb"],
+      "correct": 2
+    },
+    {
+      "word": "EVERYONE",
+      "sentence": "Everyone enjoyed the party immensely.",
+      "choices": ["Noun", "Pronoun", "Adjective", "Verb"],
+      "correct": 1
+    },
+    {
+      "word": "SUDDENLY",
+      "sentence": "Suddenly, a bright light appeared in the sky.",
+      "choices": ["Adjective", "Verb", "Adverb", "Noun"],
+      "correct": 2
+    },
+    {
+      "word": "MYSTERY",
+      "sentence": "The mystery remained unsolved for years.",
+      "choices": ["Noun", "Verb", "Adjective", "Pronoun"],
+      "correct": 0
+    },
+    {
+      "word": "MAGNIFICENT",
+      "sentence": "The magnificent castle stood on the hill.",
+      "choices": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct": 2
     }
   ],
   "minigame_sentence_fix": [
@@ -455,6 +567,56 @@
         "While I was in my pajamas, I saw a squirrel climbing a tree.",
         "Climbing a tree, my pajamas saw a squirrel.",
         "A squirrel climbing a tree wore my pajamas."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses 'whom' correctly as an object?",
+      "choices": [
+        "Who did you see at the party?",
+        "Whom did you see at the party?",
+        "Whom is going to the party?",
+        "Who's party are you going to?"
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses the correct verb form?",
+      "choices": [
+        "I have never saw that movie.",
+        "I have never seen that movie.",
+        "I never have see that movie.",
+        "I never sawed that movie."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence is correctly capitalized?",
+      "choices": [
+        "the president of the United States lives in the white house.",
+        "The President of the United States lives in the White House.",
+        "The president of the united states lives in the White house.",
+        "the President of the united states lives in the white House."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which is an example of a run-on sentence?",
+      "choices": [
+        "I like to code it is fun.",
+        "I like to code, and it is fun.",
+        "I like to code; it is fun.",
+        "Because I like to code, it is fun."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'fewer' correctly?",
+      "choices": [
+        "I have fewer water than you.",
+        "I have fewer apples than you.",
+        "I have fewer milk than you.",
+        "I have fewer sugar than you."
       ],
       "correct_index": 1
     }

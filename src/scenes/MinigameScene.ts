@@ -86,8 +86,7 @@ export class MinigameScene extends Phaser.Scene {
 
     if (cpuMode) {
       const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math, cpuLevel)
-      const n = state.players.length
-      const winnerId = n > 0 && currentPlayerWins ? state.currentPlayer : -1
+      const winnerId = state.players.length > 0 && currentPlayerWins ? state.currentPlayer : -1
       const wait = scaleAutoSimDelay(Math.max(400, totalDelayMs))
       this.time.delayedCall(Math.max(24, wait), () => onComplete(winnerId))
       return
@@ -96,8 +95,11 @@ export class MinigameScene extends Phaser.Scene {
     const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix']
     const chosen = Phaser.Utils.Array.GetRandom(games) as string
 
-    // Announcement screen
-    this.add.rectangle(0, 0, w, h, 0x000000, 0.8).setOrigin(0)
+    // Cinematic Backdrop
+    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
+    const ambient = this.add.graphics()
+    ambient.fillGradientStyle(0x1a1a3a, 0x1a1a3a, 0x050510, 0x050510, 0.4)
+    ambient.fillRect(0, 0, w, h)
 
     const names: Record<string, string> = {
       'context-clue': '🔍 CONTEXT CLUE CLASH',
@@ -107,31 +109,40 @@ export class MinigameScene extends Phaser.Scene {
       'sentence-fix': '✨ SENTENCE FIX SHOWDOWN'
     }
 
-    const announce = this.add.text(w / 2, h / 2 - 100, '🕹️ MINIGAME TIME!', {
-      fontSize: '56px',
-      fontFamily: 'Arial Black',
-      color: '#FFD700',
-      stroke: '#884400',
-      strokeThickness: 8
-    }).setOrigin(0.5).setScale(0)
+    // Glassmorphic Announcement Panel
+    const announcePanel = this.add.container(w / 2, h / 2)
+    const panelBg = this.add.rectangle(0, 0, 800, 300, 0x0a1528, 0.85)
+    panelBg.setStrokeStyle(4, 0xffd700, 0.5)
+    
+    const glow = this.add.rectangle(0, -148, 796, 4, 0xffd700, 0.8)
 
-    this.tweens.add({ targets: announce, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeOut' })
+    const title = this.add.text(0, -70, '🕹️ MINIGAME TIME!', {
+      fontSize: '62px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#ffaa00', strokeThickness: 10
+    }).setOrigin(0.5)
 
-    const nameText = this.add.text(w / 2, h / 2, names[chosen], {
-      fontSize: '38px',
-      fontFamily: 'Arial Black',
-      color: '#ff88ff',
-      stroke: '#440044',
-      strokeThickness: 6
+    const subTitle = this.add.text(0, 20, names[chosen], {
+      fontSize: '42px', fontFamily: 'Arial Black', color: '#ff88ff', stroke: '#440044', strokeThickness: 6
     }).setOrigin(0.5).setAlpha(0)
 
-    this.tweens.add({ targets: nameText, alpha: 1, y: h / 2 + 10, duration: 400, delay: 600 })
+    announcePanel.add([panelBg, glow, title, subTitle])
+    announcePanel.setScale(0.8)
+    announcePanel.setAlpha(0)
+
+    this.tweens.add({
+      targets: announcePanel,
+      scaleX: 1, scaleY: 1, alpha: 1,
+      duration: 500, ease: 'Cubic.easeOut'
+    })
+
+    this.tweens.add({
+      targets: subTitle,
+      alpha: 1, y: 40,
+      duration: 400, delay: 600
+    })
 
     let count = 3
-    const countText = this.add.text(w / 2, h / 2 + 120, '', {
-      fontSize: '80px',
-      fontFamily: 'Arial Black',
-      color: '#ffffff'
+    const countText = this.add.text(w / 2, h / 2 + 180, '', {
+      fontSize: '92px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)
 
     const doCount = () => {
@@ -142,13 +153,14 @@ export class MinigameScene extends Phaser.Scene {
         count--
         this.time.delayedCall(1000, doCount)
       } else {
-        countText.setText('GO!')
-        countText.setScale(2)
-        this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: 300 })
+        countText.setText('READY... GO!')
+        countText.setColor('#44ff88')
+        countText.setScale(1.5)
+        this.cameras.main.flash(400, 255, 255, 255)
         this.time.delayedCall(600, () => this.launchMinigame(chosen, state, onComplete))
       }
     }
-    this.time.delayedCall(1200, doCount)
+    this.time.delayedCall(1500, doCount)
   }
 
   launchMinigame(type: string, state: GameState, onComplete: (winnerId: number) => void) {
@@ -157,7 +169,11 @@ export class MinigameScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.add.rectangle(0, 0, w, h, 0x0d1b2a).setOrigin(0)
+    // Cinematic Gameplay Backdrop
+    this.add.rectangle(0, 0, w, h, 0x0a1020).setOrigin(0)
+    const g = this.add.graphics()
+    g.fillGradientStyle(0x1a2a4a, 0x1a2a4a, 0x050510, 0x050510, 0.3)
+    g.fillRect(0, 0, w, h)
 
     switch (type) {
       case 'context-clue': this.playContextClue(state, onComplete); break
@@ -184,18 +200,25 @@ export class MinigameScene extends Phaser.Scene {
       ? (Phaser.Utils.Array.GetRandom(questions) as ContextClueQuestion)
       : fallbackContext
 
-    this.add.text(w / 2, 60, '🔍 CONTEXT CLUE CLASH', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 6
+    // Glassmorphic Question Card
+    const card = this.add.container(w / 2, 240)
+    const cardBg = this.add.rectangle(0, 0, 1060, 140, 0x1a2a4a, 0.6)
+    cardBg.setStrokeStyle(2, 0x4488ff, 0.4)
+    
+    const qLabel = this.add.text(w / 2, 60, '🔍 CONTEXT CLUE CLASH', {
+      fontSize: '36px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, 130, 'Fill in the blank using context clues!', {
-      fontSize: '22px', fontFamily: 'Arial', color: '#aaccff'
+    const qSub = this.add.text(w / 2, 105, 'Fill in the blank using context clues!', {
+      fontSize: '20px', fontFamily: 'Arial', color: '#aaccff'
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, 240, q.sentence, {
-      fontSize: '26px', fontFamily: 'Arial', color: '#ffffff',
+    const qSentence = this.add.text(0, 0, q.sentence, {
+      fontSize: '28px', fontFamily: 'Arial', color: '#ffffff',
       wordWrap: { width: 1000 }, align: 'center', lineSpacing: 10
     }).setOrigin(0.5)
+    
+    card.add([cardBg, qSentence])
 
     let done = false
 

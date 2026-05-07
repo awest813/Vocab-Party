@@ -13,26 +13,47 @@ export function playCoinBurst(scene: Phaser.Scene, x: number, y: number): void {
     })
   }
 
-  const n = 7
+  const n = 8
+  const borderColor = 0xffd700
+  
+  // Sparkle Emitter (Particle effect)
+  const particles = scene.add.particles(0, 0, TEXTURE_KEYS.particleYellow, {
+    x, y,
+    speed: { min: 80, max: 220 },
+    scale: { start: 0.8, end: 0 },
+    alpha: { start: 1, end: 0 },
+    lifespan: 600,
+    blendMode: 'ADD',
+    quantity: 12,
+    emitting: false
+  })
+  particles.explode(12)
+  scene.time.delayedCall(800, () => particles.destroy())
+
   for (let i = 0; i < n; i++) {
     const spr = scene.add.sprite(
-      x + Phaser.Math.Between(-36, 36),
-      y + Phaser.Math.Between(-8, 8),
+      x + Phaser.Math.Between(-20, 20),
+      y + Phaser.Math.Between(-5, 5),
       TEXTURE_KEYS.coin
     )
     spr.setDepth(25)
-    spr.setScale(2.2)
+    spr.setScale(2.5)
     spr.play('ext_coin_spin')
+
+    const angle = Phaser.Math.FloatBetween(-Math.PI * 0.8, -Math.PI * 0.2)
+    const dist = Phaser.Math.Between(80, 150)
+    const tx = x + Math.cos(angle) * dist
+    const ty = y + Math.sin(angle) * dist
 
     scene.tweens.add({
       targets: spr,
-      y: y - Phaser.Math.Between(50, 110),
-      x: x + Phaser.Math.Between(-70, 70),
+      x: tx,
+      y: ty,
       alpha: 0,
-      scale: 1.2,
-      duration: 900,
-      delay: i * 55,
-      ease: 'Quad.easeOut',
+      scale: 1.0,
+      duration: 1000,
+      delay: i * 40,
+      ease: 'Cubic.easeOut',
       onComplete: () => spr.destroy()
     })
   }

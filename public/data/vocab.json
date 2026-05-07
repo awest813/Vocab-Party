@@ -149,6 +149,66 @@
       "answers": ["In a quiet, hesitant way", "In a forceful and clear manner", "In a confused way", "In a lazy manner"],
       "correct": 1,
       "explanation": "Emphatically means in a forceful way that leaves no doubt."
+    },
+    {
+      "question": "What does 'precarious' mean?",
+      "answers": ["Safe and secure", "Not securely held; dangerously likely to fall", "Extremely expensive", "Very bright"],
+      "correct": 1,
+      "explanation": "Precarious means dependent on chance; uncertain or not securely held."
+    },
+    {
+      "question": "What is the meaning of 'superfluous'?",
+      "answers": ["Necessary", "Unnecessary; more than enough", "Highly intelligent", "Very fast"],
+      "correct": 1,
+      "explanation": "Superfluous means exceeding what is sufficient or necessary."
+    },
+    {
+      "question": "What does 'aesthetic' relate to?",
+      "answers": ["Physical health", "Beauty or the appreciation of beauty", "Mathematical logic", "Ancient history"],
+      "correct": 1,
+      "explanation": "Aesthetic relates to beauty or the appreciation of beauty."
+    },
+    {
+      "question": "What does 'ephemeral' mean?",
+      "answers": ["Lasting for a very short time", "Eternal", "Deeply religious", "Extremely heavy"],
+      "correct": 0,
+      "explanation": "Ephemeral means lasting for a very short time."
+    },
+    {
+      "question": "What is 'altruism'?",
+      "answers": ["Selfishness", "Disinterested and selfless concern for others", "A type of musical instrument", "A scientific theory"],
+      "correct": 1,
+      "explanation": "Altruism is the practice of objective and selfless concern for the well-being of others."
+    },
+    {
+      "question": "What does 'capricious' describe?",
+      "answers": ["Stable and predictable", "Sudden changes of mood or behavior", "Extremely loud", "Very slow"],
+      "correct": 1,
+      "explanation": "Capricious describes sudden and unaccountable changes of mood or behavior."
+    },
+    {
+      "question": "What is 'pragmatic'?",
+      "answers": ["Idealistic", "Dealing with things sensibly and realistically", "Very emotional", "Ancient"],
+      "correct": 1,
+      "explanation": "Pragmatic means dealing with things sensibly and realistically in a way that is based on practical rather than theoretical considerations."
+    },
+    {
+      "question": "What does 'ubiquitous' mean?",
+      "answers": ["Rare and hard to find", "Present, appearing, or found everywhere", "Very quiet", "Extremely large"],
+      "correct": 1,
+      "explanation": "Ubiquitous means present, appearing, or found everywhere."
+    },
+    {
+      "question": "What is a 'paradigm'?",
+      "answers": ["A small coin", "A typical example or pattern of something", "A type of bird", "A musical composition"],
+      "correct": 1,
+      "explanation": "A paradigm is a typical example or pattern of something; a model."
+    },
+    {
+      "question": "What does 'formidable' mean?",
+      "answers": ["Easy to overcome", "Inspiring fear or respect through being large or powerful", "Very friendly", "Extremely small"],
+      "correct": 1,
+      "explanation": "Formidable means inspiring fear or respect through being impressively large, powerful, intense, or capable."
     }
   ],
   "minigame_context_clues": [
@@ -223,6 +283,36 @@
       "word": "delicious",
       "choices": ["terrible", "plain", "delicious", "frozen"],
       "correct": 2
+    },
+    {
+      "sentence": "The night sky was so _____ that we could see thousands of stars and the Milky Way.",
+      "word": "clear",
+      "choices": ["cloudy", "bright", "clear", "dark"],
+      "correct": 2
+    },
+    {
+      "sentence": "The athlete showed great _____ by training every single day for the Olympics.",
+      "word": "discipline",
+      "choices": ["luck", "discipline", "speed", "strength"],
+      "correct": 1
+    },
+    {
+      "sentence": "Because the instructions were _____, nobody knew how to assemble the furniture.",
+      "word": "vague",
+      "choices": ["clear", "short", "vague", "helpful"],
+      "correct": 2
+    },
+    {
+      "sentence": "The artist used _____ colors to make the painting stand out in the gallery.",
+      "word": "vibrant",
+      "choices": ["dull", "dark", "vibrant", "plain"],
+      "correct": 2
+    },
+    {
+      "sentence": "After the long hike, the cold water from the stream was incredibly _____.",
+      "word": "refreshing",
+      "choices": ["refreshing", "salty", "bitter", "hot"],
+      "correct": 0
     }
   ],
   "minigame_synonyms": [
@@ -237,6 +327,11 @@
     { "word": "timid", "choices": ["shy", "bold", "clever", "tall"], "correct": 0 },
     { "word": "gloomy", "choices": ["cheerful", "dark and sad", "tiny", "sweet"], "correct": 1 },
     { "word": "sparse", "choices": ["crowded", "thinly scattered", "shiny", "round"], "correct": 1 },
-    { "word": "meticulous", "choices": ["careless", "very careful", "sleepy", "cheap"], "correct": 1 }
+    { "word": "meticulous", "choices": ["careless", "very careful", "sleepy", "cheap"], "correct": 1 },
+    { "word": "obstinate", "choices": ["stubborn", "flexible", "quiet", "fast"], "correct": 0 },
+    { "word": "vivid", "choices": ["clear", "dull", "noisy", "short"], "correct": 0 },
+    { "word": "lethargic", "choices": ["energetic", "tired", "angry", "bright"], "correct": 1 },
+    { "word": "diligent", "choices": ["lazy", "hardworking", "noisy", "calm"], "correct": 1 },
+    { "word": "concise", "choices": ["brief", "wordy", "loud", "slow"], "correct": 0 }
   ]
 }

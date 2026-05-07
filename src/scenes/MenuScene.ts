@@ -20,92 +20,133 @@ export class MenuScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    // Layered gradient background
-    this.add.rectangle(0, 0, w, h, 0x0d0d1f).setOrigin(0)
-    this.add.rectangle(0, h * 0.55, w, h * 0.45, 0x11112a).setOrigin(0)
+    // Deep space gradient
+    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
+    
+    // Ambient fog/glow (Flat for compatibility)
+    this.add.rectangle(0, 0, w, h, 0x1a1a2e, 0.4).setOrigin(0)
 
-    addStarfieldBackdrop(this, 0.42)
-    this.createStars()
+    addStarfieldBackdrop(this, 0.5)
+    this.createParallaxStars()
 
-    // Decorative glow behind title
-    const glow = this.add.ellipse(w / 2, 155, 700, 160, 0xffd700, 0.07)
-    this.tweens.add({ targets: glow, scaleX: 1.1, scaleY: 1.2, duration: 1800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
-
-    // Title
-    const title = this.add.text(w / 2, 145, '🎉 VOCAB PARTY! 🎉', {
-      fontSize: '72px',
+    // Cinematic Title
+    const titleContainer = this.add.container(w / 2, 160)
+    
+    const titleGlow = this.add.ellipse(0, 0, 800, 200, 0xffd700, 0.05)
+    
+    const title = this.add.text(0, 0, 'VOCAB PARTY', {
+      fontSize: '92px',
+      fontFamily: 'Arial Black, Arial',
+      color: '#ffffff',
+      stroke: '#FFD700',
+      strokeThickness: 12
+    }).setOrigin(0.5)
+    
+    const titleOverlay = this.add.text(0, 0, 'VOCAB PARTY', {
+      fontSize: '92px',
       fontFamily: 'Arial Black, Arial',
       color: '#FFD700',
-      stroke: '#8B4500',
-      strokeThickness: 8
-    }).setOrigin(0.5)
+    }).setOrigin(0.5).setAlpha(0.8)
+
+    titleContainer.add([titleGlow, title, titleOverlay])
+    
+    // Prestige Badge
+    const badge = this.add.container(w / 2 + 320, 100)
+    const bBg = this.add.polygon(0, 0, [0, -20, 100, -20, 120, 0, 100, 20, 0, 20], 0xffd700, 0.8)
+    const bText = this.add.text(55, 0, 'PRESTIGE', { fontSize: '14px', fontFamily: 'Arial Black', color: '#000000' }).setOrigin(0.5)
+    badge.add([bBg, bText]).setAngle(-15)
+    this.tweens.add({ targets: badge, angle: -10, duration: 2000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
 
     this.tweens.add({
-      targets: title,
-      y: 155,
-      scaleX: 1.035,
-      scaleY: 1.035,
-      duration: 1200,
+      targets: titleContainer,
+      y: 175,
+      scaleX: 1.02,
+      scaleY: 1.02,
+      duration: 2000,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
     })
 
-    // Subtitle
-    this.add.text(w / 2, 228, 'A Vocabulary & Grammar Party Game', {
-      fontSize: '26px',
-      fontFamily: 'Arial',
-      color: '#aaddff',
-      stroke: '#001133',
-      strokeThickness: 3
-    }).setOrigin(0.5)
-
-    // Divider line
-    const divider = this.add.graphics()
-    divider.lineStyle(2, 0x334466, 0.8)
-    divider.lineBetween(w / 2 - 280, 258, w / 2 + 280, 258)
-
-    // Tile legend strip
-    this.drawTileLegend(w, 295)
-
-    // Second divider
-    const divider2 = this.add.graphics()
-    divider2.lineStyle(2, 0x334466, 0.8)
-    divider2.lineBetween(w / 2 - 280, 340, w / 2 + 280, 340)
-
-    // Buttons
-    const startBtn = createButton(this, w / 2, 415, '▶  START GAME', 0x22bb55, 0x1a8844, 340, 64)
-    startBtn.on('pointerdown', () => {
-      this.cameras.main.flash(300, 255, 255, 255)
-      this.time.delayedCall(300, () => this.scene.start('SetupScene'))
+    this.tweens.add({
+      targets: titleOverlay,
+      alpha: 0.4,
+      duration: 1500,
+      yoyo: true,
+      repeat: -1
     })
+
+    // Subtitle
+    this.add.text(w / 2, 260, 'THE ULTIMATE COMPETITIVE LEARNING EXPERIENCE', {
+      fontSize: '22px',
+      fontFamily: 'Arial Black',
+      color: '#aaddff',
+      letterSpacing: 4
+    }).setOrigin(0.5).setAlpha(0.7)
+
+    // Main Actions
+    const startGlow = this.add.ellipse(w / 2, 420, 450, 120, 0x22bb55, 0.15).setDepth(0)
+    this.tweens.add({ targets: startGlow, alpha: 0.05, scaleX: 1.1, scaleY: 1.1, duration: 1000, yoyo: true, repeat: -1 })
+
+    const startBtn = createButton(this, w / 2, 420, '▶  ENTER PARTY', 0x22bb55, 0x1a8844, 400, 72)
+    startBtn.on('pointerdown', () => {
+      this.cameras.main.flash(500, 255, 255, 255)
+      this.time.delayedCall(500, () => this.scene.start('SetupScene'))
+    })
+
+    const howBtn = createButton(this, w / 2, 510, '❓  HOW TO PLAY', 0x5566ff, 0x3344cc, 400, 60)
+    howBtn.on('pointerdown', () => this.showHowToPlay())
 
     if (isAutoSimMode()) {
       this.scene.start('SetupScene')
     }
 
-    const howBtn = createButton(this, w / 2, 498, '❓  HOW TO PLAY', 0x5566ff, 0x3344cc, 340, 56)
-    howBtn.on('pointerdown', () => this.showHowToPlay())
-
-    // Info footer
-    this.add.text(w / 2, 572, '1–4 Players  •  Turn-Based  •  Keyboard: R / Space to roll', {
-      fontSize: '18px',
-      fontFamily: 'Arial',
-      color: '#556677'
+    // Version/Footer
+    this.add.text(w / 2, h - 30, 'v2.0 PRESTIGE EDITION  •  PHASER 3 ENGINE', {
+      fontSize: '14px',
+      fontFamily: 'Arial Black',
+      color: '#445577'
     }).setOrigin(0.5)
 
-    // Floating emoji row
-    const floatEmojis = ['🎲', '📚', '⭐', '🏆', '🎊', '📝', '🌟', '🎯']
-    floatEmojis.forEach((e, i) => {
-      const ex = this.add.text(80 + i * 160, h - 52, e, { fontSize: '32px' }).setOrigin(0.5)
+    // Floating particles
+    for (let i = 0; i < 20; i++) {
+      const p = this.add.text(Phaser.Math.Between(0, w), Phaser.Math.Between(h - 100, h), '✨', { fontSize: '16px' })
       this.tweens.add({
-        targets: ex,
-        y: h - 65,
-        duration: 1100 + i * 110,
-        yoyo: true,
+        targets: p,
+        y: '-=200',
+        alpha: 0,
+        duration: Phaser.Math.Between(2000, 5000),
         repeat: -1,
-        ease: 'Sine.easeInOut'
+        delay: Phaser.Math.Between(0, 5000)
       })
+    }
+  }
+
+  createParallaxStars() {
+    const w = this.scale.width
+    const h = this.scale.height
+    
+    const layers = [
+      { count: 100, size: [1, 2], speed: 0.05, alpha: 0.3 },
+      { count: 50, size: [2, 3], speed: 0.1, alpha: 0.6 },
+      { count: 20, size: [3, 5], speed: 0.2, alpha: 0.9 }
+    ]
+
+    layers.forEach(layer => {
+      for (let i = 0; i < layer.count; i++) {
+        const x = Phaser.Math.Between(0, w)
+        const y = Phaser.Math.Between(0, h)
+        const s = Phaser.Math.FloatBetween(layer.size[0], layer.size[1])
+        const star = this.add.circle(x, y, s, 0xffffff, layer.alpha)
+        
+        this.tweens.add({
+          targets: star,
+          x: `+=${w}`,
+          duration: (w / layer.speed) * 10,
+          repeat: -1,
+          onRepeat: () => star.setX(-10)
+        })
+      }
     })
   }
 
@@ -129,32 +170,7 @@ export class MenuScene extends Phaser.Scene {
     })
   }
 
-  createStars() {
-    const w = this.scale.width
-    const h = this.scale.height
-    const useTex = this.textures.exists(TEXTURE_KEYS.starSmall)
-    const count = useTex ? 42 : 70
-    for (let i = 0; i < count; i++) {
-      const x = Phaser.Math.Between(0, w)
-      const y = Phaser.Math.Between(0, h)
-      const star = useTex
-        ? this.add.image(x, y, TEXTURE_KEYS.starSmall).setDisplaySize(
-            Phaser.Math.Between(10, 22),
-            Phaser.Math.Between(10, 22)
-          )
-        : this.add.circle(x, y, Phaser.Math.FloatBetween(0.8, 2.8), 0xffffff, Phaser.Math.FloatBetween(0.2, 0.9))
-      star.setAlpha(Phaser.Math.FloatBetween(0.25, 0.85))
-      this.tweens.add({
-        targets: star,
-        alpha: Phaser.Math.FloatBetween(0.08, 0.45),
-        duration: Phaser.Math.Between(700, 2800),
-        yoyo: true,
-        repeat: -1,
-        delay: Phaser.Math.Between(0, 2200),
-        ease: 'Sine.easeInOut'
-      })
-    }
-  }
+
 
   showHowToPlay() {
     const w = this.scale.width
