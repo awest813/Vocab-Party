@@ -1199,8 +1199,6 @@ export class BoardScene extends Phaser.Scene {
     this.itemMenu = undefined
   }
 
-  }
-
   private async promptForBranch(player: Player, options: number[]): Promise<number> {
     this.statusText.setText('🗺️ Choose your path!')
     return new Promise<number>(resolve => {
@@ -1230,6 +1228,8 @@ export class BoardScene extends Phaser.Scene {
         overlays.push(highlight, arrow)
       })
     })
+  }
+
   private createPauseButton() {
     const btn = createButton(this, 50, 50, '⏸️', 0x223344, 0x334455, 60, 60)
     btn.on('pointerdown', () => this.pauseGame())

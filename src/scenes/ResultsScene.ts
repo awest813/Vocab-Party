@@ -204,6 +204,8 @@ export class ResultsScene extends Phaser.Scene {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('MenuScene'))
     })
+  }
+
   private createFirework(x: number, y: number) {
     const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff]
     const color = Phaser.Utils.Array.GetRandom(colors)
