@@ -132,7 +132,7 @@ export class SetupScene extends Phaser.Scene {
       this.cpuModeByRow = ['normal', 'normal', 'normal', 'normal']
       for (let i = 0; i < MAX_PLAYERS; i++) this.refreshCpuToggle(i)
       this.refreshRows()
-      this.time.delayedCall(80, () => this.startGameWithRounds(1))
+      this.time.delayedCall(80, () => this.startGameWithRounds(5))
     }
 
     // Keyboard input
@@ -141,6 +141,11 @@ export class SetupScene extends Phaser.Scene {
     // Tap away to deselect
     this.input.on('pointerdown', (_ptr: Phaser.Input.Pointer, objs: Phaser.GameObjects.GameObject[]) => {
       if (objs.length === 0) this.setActiveRow(-1)
+    })
+
+    // Cleanup keyboard handler on shutdown
+    this.events.once('shutdown', () => {
+      this.input.keyboard?.off('keydown')
     })
   }
 

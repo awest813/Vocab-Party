@@ -125,6 +125,8 @@ export class PlayerHUD {
           case 'warp': return '🌀';
           case 'shield': return '🛡️';
           case 'double_score': return '📈';
+          case 'poison_dart': return '🎯';
+          case 'golden_key': return '🔑';
           default: return '';
         }
       }).join('')

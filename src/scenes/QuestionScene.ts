@@ -33,6 +33,8 @@ export class QuestionScene extends Phaser.Scene {
     return scaleAutoSimDelay(ms)
   }
 
+  private answerContainers: Phaser.GameObjects.Container[] = []
+
   create(data: QuestionSceneData) {
     const w = this.scale.width
     const h = this.scale.height
@@ -114,6 +116,14 @@ export class QuestionScene extends Phaser.Scene {
       const correct = i === q.correct
       const timeBonus = correct ? Math.max(1, Math.ceil(secondsLeft / 3)) : 0
       const speedSurge = correct && secondsLeft >= 10
+      // Highlight correct (green) and picked wrong (red) buttons
+      this.answerContainers.forEach((c, idx) => {
+        const bg = c.getAt(0) as Phaser.GameObjects.Rectangle
+        if (!bg) return
+        if (idx === q.correct) bg.setFillStyle(0x22aa44)
+        else if (idx === i && !correct) bg.setFillStyle(0xcc2222)
+        else bg.setAlpha(0.4)
+      })
       this.handleAnswer(correct, timeBonus, speedSurge, btn, onComplete, q.explanation)
     }
 
@@ -140,6 +150,8 @@ export class QuestionScene extends Phaser.Scene {
       const by = h / 2 + 40 + row * 90
       const btn = createButton(this, bx, by, `${labels[i]}: ${ans}`, answerColors[i], answerColors[i] - 0x222222, 380, 64)
       btn.setAlpha(0)
+      btn.setName(`btn_${i}`)
+      this.answerContainers.push(btn)
       this.tweens.add({
         targets: btn,
         alpha: 1,
@@ -241,7 +253,28 @@ export class QuestionScene extends Phaser.Scene {
     if (correct) {
       showConfetti(this)
       this.cameras.main.flash(400, 100, 255, 100)
-      
+
+      if (speedSurge) {
+        // Speed surge particle burst
+        for (let i = 0; i < 16; i++) {
+          const angle = (i / 16) * Math.PI * 2
+          this.time.delayedCall(i * 20, () => {
+            const bolt = this.add.text(w / 2 + Math.cos(angle) * 30, h / 2 + Math.sin(angle) * 30, '⚡', {
+              fontSize: '24px'
+            }).setOrigin(0.5).setAlpha(1)
+            this.tweens.add({
+              targets: bolt,
+              x: bolt.x + Math.cos(angle) * 120,
+              y: bolt.y + Math.sin(angle) * 120,
+              alpha: 0,
+              duration: 400,
+              ease: 'Expo.easeOut',
+              onComplete: () => bolt.destroy()
+            })
+          })
+        }
+      }
+
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 140, 0x00ff88, 0.6)
       const txt = this.add.text(0, 0, '✅ CORRECT!', {

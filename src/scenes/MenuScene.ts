@@ -150,28 +150,6 @@ export class MenuScene extends Phaser.Scene {
     })
   }
 
-  drawTileLegend(w: number, y: number) {
-    const count = TILE_LEGEND.length
-    const itemW = 140
-    const startX = w / 2 - ((count - 1) * itemW) / 2
-
-    TILE_LEGEND.forEach((tile, i) => {
-      const x = startX + i * itemW
-
-      const bg = this.add.rectangle(x, y + 18, 120, 38, tile.color, 0.25)
-      bg.setStrokeStyle(1.5, tile.color, 0.7)
-
-      this.add.text(x - 28, y + 18, tile.emoji, { fontSize: '20px' }).setOrigin(0.5)
-      this.add.text(x + 14, y + 18, tile.label, {
-        fontSize: '14px',
-        fontFamily: 'Arial Black',
-        color: '#ddddff'
-      }).setOrigin(0, 0.5)
-    })
-  }
-
-
-
   showHowToPlay() {
     const w = this.scale.width
     const h = this.scale.height

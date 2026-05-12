@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import { GameState, Player } from '../systems/GameState'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
+import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { cpuBattleChoice } from '../systems/CpuPolicy'
 
 interface BattleSceneData {
   state: GameState
@@ -24,8 +26,13 @@ export class BattleScene extends Phaser.Scene {
   private subStatusText!: Phaser.GameObjects.Text
   private attackerContainer!: Phaser.GameObjects.Container
   private defenderContainer!: Phaser.GameObjects.Container
+  private defenderTimerEvent: Phaser.Time.TimerEvent | null = null
+  private defenderTimerBar: Phaser.GameObjects.Rectangle | null = null
+  private choiceMade = false
 
   constructor() { super('BattleScene') }
+
+  private d(ms: number) { return scaleAutoSimDelay(ms) }
 
   create(data: BattleSceneData) {
     this.battleData = data
@@ -115,21 +122,52 @@ export class BattleScene extends Phaser.Scene {
     this.statusText.setText(`${defender.name}'s Choice!`)
 
     if (defender.isCpu) {
-      // CPU logic: Defend if high DEF, else Evade if high EVD, else random
-      const choice = (defender.def > defender.evd) ? 'defend' : (defender.evd > defender.def ? 'evade' : (Math.random() > 0.5 ? 'defend' : 'evade'))
+      const choice = cpuBattleChoice(defender.atk, defender.def, defender.evd, defender.cpuLevel)
       this.time.delayedCall(1000, () => this.resolveDefender(choice))
     } else {
-      const defBtn = createButton(this, this.scale.width / 2 + 250 - 60, this.scale.height / 2 + 160, '🛡️ DEFEND', 0x4444ff, 0x000088, 120, 50)
-      const evaBtn = createButton(this, this.scale.width / 2 + 250 + 60, this.scale.height / 2 + 160, '💨 EVADE', 0x44ff44, 0x008800, 120, 50)
+      const w = this.scale.width
+      const by = this.scale.height / 2 + 160
+      const bx = w / 2 + 250
 
-      defBtn.on('pointerdown', () => {
-        defBtn.destroy(); evaBtn.destroy()
-        this.resolveDefender('defend')
+      this.add.text(bx, by - 50, 'Choose quickly!', {
+        fontSize: '16px', fontFamily: 'Arial', color: '#ffcc44'
+      }).setOrigin(0.5).setName('timerLabel')
+
+      // Timer bar
+      this.add.rectangle(bx, by + 35, 180, 12, 0x333355).setStrokeStyle(1, 0xffffff, 0.3)
+      this.defenderTimerBar = this.add.rectangle(bx - 90, by + 35, 180, 10, 0x44ff88).setOrigin(0, 0.5)
+      this.tweens.add({
+        targets: this.defenderTimerBar,
+        width: 0,
+        duration: this.d(8000),
+        ease: 'Linear'
       })
-      evaBtn.on('pointerdown', () => {
-        defBtn.destroy(); evaBtn.destroy()
-        this.resolveDefender('evade')
+
+      this.defenderTimerEvent = this.time.delayedCall(this.d(8000), () => {
+        if (!this.choiceMade) {
+          this.choiceMade = true
+          defBtn?.destroy()
+          evaBtn?.destroy()
+          this.statusText.setText('⏱️ Time ran out! Auto-defending!')
+          this.time.delayedCall(this.d(800), () => this.resolveDefender('defend'))
+        }
       })
+
+      const defBtn = createButton(this, bx - 70, by, '🛡️ DEFEND', 0x4444ff, 0x000088, 140, 50)
+      const evaBtn = createButton(this, bx + 70, by, '💨 EVADE', 0x44ff44, 0x008800, 140, 50)
+
+      const pick = (choice: 'defend' | 'evade') => {
+        if (this.choiceMade) return
+        this.choiceMade = true
+        this.defenderTimerEvent?.remove()
+        this.tweens.killTweensOf(this.defenderTimerBar)
+        this.defenderTimerBar?.destroy()
+        defBtn.destroy(); evaBtn.destroy()
+        this.resolveDefender(choice)
+      }
+
+      defBtn.on('pointerdown', () => pick('defend'))
+      evaBtn.on('pointerdown', () => pick('evade'))
     }
   }
 
@@ -209,6 +247,12 @@ export class BattleScene extends Phaser.Scene {
       this.cameras.main.shake(300, 0.02)
       this.cameras.main.flash(200, 255, 0, 0, true)
       
+      // Crown on attacker (winner)
+      const crown = this.add.text(this.attackerContainer.x, this.attackerContainer.y - 140, '👑', {
+        fontSize: '48px'
+      }).setOrigin(0.5).setAlpha(0).setScale(2)
+      this.tweens.add({ targets: crown, alpha: 1, scaleX: 1, scaleY: 1, duration: 300, ease: 'Back.easeOut' })
+
       const scoreLost = dmg * 3
       const coinsLost = dmg * 2
       
@@ -225,7 +269,28 @@ export class BattleScene extends Phaser.Scene {
         })
       })
     } else {
-      this.statusText.setText(`✨ MISS! ${defender.name} dodged!`)
+      this.statusText.setText(`✨ ${defender.name} dodged!`)
+      // Dazzle burst around defender
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2
+        const dist = 80
+        this.time.delayedCall(i * 30, () => {
+          const star = this.add.text(
+            this.defenderContainer.x + Math.cos(angle) * 40,
+            this.defenderContainer.y + Math.sin(angle) * 40,
+            '✨', { fontSize: '28px' }
+          ).setOrigin(0.5).setAlpha(1)
+          this.tweens.add({
+            targets: star,
+            x: star.x + Math.cos(angle) * dist,
+            y: star.y + Math.sin(angle) * dist,
+            alpha: 0,
+            duration: 500,
+            ease: 'Cubic.easeOut',
+            onComplete: () => star.destroy()
+          })
+        })
+      }
       showConfetti(this)
       this.time.delayedCall(2000, () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)

@@ -35,10 +35,7 @@ export class PauseScene extends Phaser.Scene {
     })
 
     const helpBtn = createButton(this, 0, 120, 'HOW TO PLAY', 0x4488ff, 0x224488, 300, 50)
-    helpBtn.on('pointerdown', () => {
-      // Launch tutorial or show help
-      alert('Roll the dice, move to tiles, answer questions, and collect Stars to win!')
-    })
+    helpBtn.on('pointerdown', () => this.showHelp(panel, helpBtn, resumeBtn, quitBtn))
 
     panel.add([bg, title, resumeBtn, quitBtn, helpBtn])
     panel.setScale(0.8).setAlpha(0)
@@ -54,5 +51,45 @@ export class PauseScene extends Phaser.Scene {
       this.scene.resume('BoardScene')
       this.scene.stop()
     })
+  }
+
+  private showHelp(panel: Phaser.GameObjects.Container, ...hide: Phaser.GameObjects.Container[]) {
+    hide.forEach(o => o.setVisible(false))
+    const w = this.scale.width
+    const h = this.scale.height
+
+    const rules = [
+      '🎲 Roll the dice to move around the board',
+      '📖 Land on tiles to answer vocab/grammar questions',
+      '⭐ Collect Stars (cost: 20 coins) to earn trophies',
+      '🛡️ Use items: Dash, Swap, Warp, Shield, Double Score, Poison Dart, Golden Key',
+      '🏪 Buy shops to collect rent from passing players',
+      '⚔️ Battle happens when two players land on the same tile',
+      '🎯 First to 5 trophies wins! Most points breaks ties',
+    ]
+
+    const helpPanel = this.add.container(w / 2, h / 2)
+    const bg = this.add.rectangle(0, 0, 600, 380, 0x141430, 0.95)
+    bg.setStrokeStyle(3, 0x6688cc, 0.8)
+
+    const title = this.add.text(0, -150, '📖 HOW TO PLAY', {
+      fontSize: '28px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 4
+    }).setOrigin(0.5)
+
+    const texts = rules.map((rule, i) =>
+      this.add.text(0, -100 + i * 36, rule, {
+        fontSize: '16px', fontFamily: 'Arial', color: '#aabbdd'
+      }).setOrigin(0.5)
+    )
+
+    const closeBtn = createButton(this, 0, 155, '✕ CLOSE', 0xdd3333, 0xaa2222, 160, 44)
+    closeBtn.on('pointerdown', () => {
+      helpPanel.destroy(true)
+      hide.forEach(o => o.setVisible(true))
+    })
+
+    helpPanel.add([bg, title, ...texts, closeBtn])
+    helpPanel.setScale(0.85)
+    this.tweens.add({ targets: helpPanel, scaleX: 1, scaleY: 1, duration: 200, ease: 'Back.easeOut' })
   }
 }

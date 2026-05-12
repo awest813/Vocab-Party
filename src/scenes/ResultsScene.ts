@@ -98,12 +98,12 @@ export class ResultsScene extends Phaser.Scene {
     const podiumColors = [0xFFD700, 0xC0C0C0, 0xCD7F32, 0x888888]
     const podiumH = [200, 160, 120, 80]
     const playerCount = sorted.length
-    const podiumSpacing = playerCount === 4 ? 220 : 240
+    const pSpacing = playerCount === 4 ? 220 : 260
     const podiumX = [
       w / 2,
-      w / 2 - podiumSpacing,
-      w / 2 + podiumSpacing,
-      w / 2 - podiumSpacing * 1.5
+      w / 2 - pSpacing,
+      w / 2 + pSpacing,
+      w / 2 - pSpacing * 2.2,
     ]
     const podiumBase = h - 120
 
@@ -112,48 +112,68 @@ export class ResultsScene extends Phaser.Scene {
       const ph = podiumH[rank]
       const pColor = podiumColors[rank]
 
-      // Podium with glow
       const podium = this.add.rectangle(x, podiumBase, 140, ph, pColor, 0.9)
       podium.setStrokeStyle(3, 0xffffff, 0.4)
       podium.setOrigin(0.5, 1)
-      podium.setAlpha(0)
+      podium.setScale(0, 1)
       
-      const podiumGlow = this.add.ellipse(x, podiumBase, 200, 40, pColor, 0.2).setOrigin(0.5, 1).setDepth(-1)
+      const podiumGlow = this.add.ellipse(x, podiumBase, 200, 40, pColor, 0.2).setOrigin(0.5, 1).setDepth(-1).setAlpha(0)
 
       this.tweens.add({
-        targets: [podium, podiumGlow],
+        targets: podium,
+        scaleY: 1,
+        duration: isAutoSimMode() ? 30 : 350,
+        delay: isAutoSimMode() ? rank * 10 : rank * 180,
+        ease: 'Back.easeOut'
+      })
+      this.tweens.add({
+        targets: podiumGlow,
         alpha: 1,
-        duration: isAutoSimMode() ? 40 : 400,
-        delay: isAutoSimMode() ? rank * 12 : rank * 200
+        duration: isAutoSimMode() ? 30 : 300,
+        delay: isAutoSimMode() ? rank * 10 : rank * 180
       })
 
       const cardY = podiumBase - ph - 90
       const card = this.add.rectangle(x, cardY, 160, 160, 0x0d0d1f, 0.8)
       card.setStrokeStyle(4, pColor, 0.8)
-      card.setAlpha(0)
-      
+      card.setScale(0)
+
       this.tweens.add({
         targets: card,
-        alpha: 1,
-        duration: isAutoSimMode() ? 40 : 400,
-        delay: isAutoSimMode() ? rank * 12 + 12 : rank * 200 + 200
+        scaleX: 1, scaleY: 1,
+        duration: isAutoSimMode() ? 30 : 350,
+        delay: isAutoSimMode() ? rank * 12 + 12 : rank * 200 + 250,
+        ease: 'Back.easeOut'
       })
 
       const emoji = this.add.text(x, cardY - 40, player.emoji, { fontSize: '48px' }).setOrigin(0.5).setAlpha(0)
       const nameT = this.add.text(x, cardY + 15, player.name, {
         fontSize: '20px', fontFamily: 'Arial Black', color: '#ffffff'
       }).setOrigin(0.5).setAlpha(0)
-      const scoreT = this.add.text(x, cardY + 45, `${player.score} pts · 🌟${player.trophies}`, {
+      const scoreT = this.add.text(x, cardY + 45, `${player.score} pts  🌟${player.trophies}`, {
         fontSize: '18px', fontFamily: 'Arial Black', color: '#FFD700'
       }).setOrigin(0.5).setAlpha(0)
+      const brickT = player.bricksCollected > 0
+        ? this.add.text(x, cardY + 68, `🧱 x${player.bricksCollected}`, {
+            fontSize: '14px', fontFamily: 'Arial', color: '#aa8866'
+          }).setOrigin(0.5).setAlpha(0)
+        : null
       const medal = this.add.text(x, cardY - 95, medals[rank], { fontSize: '42px' }).setOrigin(0.5).setAlpha(0)
 
       this.tweens.add({
-        targets: [emoji, nameT, scoreT, medal],
+        targets: [emoji, nameT, scoreT, medal].filter(Boolean),
         alpha: 1,
-        duration: isAutoSimMode() ? 30 : 300,
-        delay: isAutoSimMode() ? rank * 12 + 24 : rank * 200 + 400
+        duration: isAutoSimMode() ? 20 : 250,
+        delay: isAutoSimMode() ? rank * 12 + 24 : rank * 200 + 500
       })
+      if (brickT) {
+        this.tweens.add({
+          targets: brickT,
+          alpha: 1,
+          duration: 200,
+          delay: isAutoSimMode() ? rank * 12 + 36 : rank * 200 + 700
+        })
+      }
 
       if (rank === 0 && !isAutoSimMode()) {
         this.tweens.add({
@@ -182,6 +202,15 @@ export class ResultsScene extends Phaser.Scene {
       }).setOrigin(0.5).setScale(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, duration: isAutoSimMode() ? 40 : 500, ease: 'Back.easeOut' })
 
+      // Stats footer
+      const totalRounds = state.round
+      const totalBricks = state.players.reduce((s, p) => s + p.bricksCollected, 0)
+      const totalStars = state.players.reduce((s, p) => s + p.trophies, 0)
+      const statsLine = this.add.text(w / 2, 170, `${totalRounds} rounds  ·  ${totalStars} stars earned  ·  ${totalBricks} bricks collected`, {
+        fontSize: '16px', fontFamily: 'Arial', color: '#8899aa'
+      }).setOrigin(0.5).setAlpha(0)
+      this.tweens.add({ targets: statsLine, alpha: 1, duration: 400, delay: 600 })
+
       if (!isAutoSimMode()) {
         for (let t = 0; t < 12; t++) {
           this.time.delayedCall(t * 300, () => {
@@ -193,13 +222,13 @@ export class ResultsScene extends Phaser.Scene {
       }
     })
 
-    const playAgainBtn = createButton(this, w / 2 - 150, h - 60, '🔄 PLAY AGAIN', 0x22bb55, 0x1a8844)
+    const playAgainBtn = createButton(this, w / 2 - 180, h - 60, '🔄 PLAY AGAIN', 0x22bb55, 0x1a8844)
     playAgainBtn.on('pointerdown', () => {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('SetupScene'))
     })
 
-    const menuBtn = createButton(this, w / 2 + 150, h - 60, '🏠 MAIN MENU', 0x5566ff, 0x3344cc)
+    const menuBtn = createButton(this, w / 2 + 180, h - 60, '🏠 MAIN MENU', 0x5566ff, 0x3344cc)
     menuBtn.on('pointerdown', () => {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('MenuScene'))
