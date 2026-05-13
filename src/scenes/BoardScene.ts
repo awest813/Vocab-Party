@@ -1010,13 +1010,72 @@ export class BoardScene extends Phaser.Scene {
       player.score += 12
       this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
       this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
-      showConfetti(this)
+      this.starPurchaseSplash(player)
     } else {
       player.coins += 2
       this.statusText.setText(`🌟 Save up! Stars cost ${STAR_COST_COINS} coins.`)
       this.showFloatyText(player, '+2 pity coins', '#aaccff')
     }
     this.time.delayedCall(this.d(1200), () => this.endTurn())
+  }
+
+  private starPurchaseSplash(player: Player) {
+    const w = this.scale.width
+    const h = this.scale.height
+    const container = this.add.container(w / 2, h / 2).setDepth(300)
+
+    const overlay = this.add.rectangle(0, 0, w, h, 0x000000, 0.4).setAlpha(0)
+    const star = this.add.text(0, -60, '⭐', { fontSize: '120px' }).setOrigin(0.5).setScale(0)
+    const title = this.add.text(0, 60, 'STAR!', {
+      fontSize: '72px', fontFamily: 'Arial Black', color: '#FFD700',
+      stroke: '#884400', strokeThickness: 8
+    }).setOrigin(0.5).setScale(0).setAlpha(0)
+
+    const name = this.add.text(0, 120, `${player.emoji} ${player.name}`, {
+      fontSize: '28px', fontFamily: 'Arial Black', color: '#ffffff'
+    }).setOrigin(0.5).setAlpha(0)
+
+    container.add([overlay, star, title, name])
+    this.tweens.add({ targets: overlay, alpha: 1, duration: 150 })
+    this.tweens.add({ targets: star, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeOut' })
+    this.tweens.add({
+      targets: star, angle: 360, duration: 800, ease: 'Cubic.easeOut',
+      onComplete: () => {
+        this.tweens.add({ targets: star, scaleX: 1.3, scaleY: 1.3, duration: 300, yoyo: true })
+      }
+    })
+    this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, alpha: 1, duration: 400, delay: 400, ease: 'Back.easeOut' })
+    this.tweens.add({ targets: name, alpha: 1, duration: 300, delay: 700 })
+    this.cameras.main.flash(500, 255, 215, 0, true)
+
+    // Golden sparkle burst
+    if (!isAutoSimMode()) {
+      for (let i = 0; i < 20; i++) {
+        this.time.delayedCall(i * 60, () => {
+          const spark = this.add.text(
+            Phaser.Math.Between(100, w - 100),
+            Phaser.Math.Between(100, h - 100),
+            Phaser.Utils.Array.GetRandom(['✨', '⭐', '🌟']),
+            { fontSize: `${Phaser.Math.Between(18, 32)}px` }
+          ).setOrigin(0.5).setDepth(301).setAlpha(0)
+          this.tweens.add({
+            targets: spark, alpha: 1, y: spark.y - 60, scale: { from: 0.3, to: 1.2 },
+            duration: 600, ease: 'Cubic.easeOut',
+            onComplete: () => this.tweens.add({
+              targets: spark, alpha: 0, y: spark.y - 40, duration: 300,
+              onComplete: () => spark.destroy()
+            })
+          })
+        })
+      }
+    }
+
+    this.time.delayedCall(this.d(2000), () => {
+      this.tweens.add({
+        targets: container, alpha: 0, duration: 300,
+        onComplete: () => container.destroy(true)
+      })
+    })
   }
 
   handleBrickCollect(player: Player) {
@@ -1167,6 +1226,13 @@ export class BoardScene extends Phaser.Scene {
     this.state.currentPlayer = (this.state.currentPlayer + 1) % this.state.players.length
     if (this.state.currentPlayer === 0) {
       this.state.round++
+      const roundsLeft = this.roundsPerGame - this.state.round
+      if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
+        const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
+        this.cameras.main.shake(300, 0.008)
+        this.cameras.main.flash(400, 255, 100, 0, true)
+        this.showAnnouncement(warning, '#ff8800')
+      }
     }
     this.updateStatus()
   }

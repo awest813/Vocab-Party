@@ -46,6 +46,41 @@ export class BattleScene extends Phaser.Scene {
     const attacker = data.state.players[data.attackerIndex]
     const defender = data.state.players[data.defenderIndex]
 
+    // VS Splash
+    const vsContainer = this.add.container(w / 2, h / 2).setDepth(100)
+    const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
+    const vsText = this.add.text(0, -20, '⚔️ VS ⚔️', {
+      fontSize: '100px', fontFamily: 'Arial Black', color: '#ff4444',
+      stroke: '#000000', strokeThickness: 12
+    }).setOrigin(0.5).setScale(3).setAlpha(0)
+
+    const atkLabel = this.add.text(-200, 60, `${attacker.emoji} ${attacker.name}`, {
+      fontSize: '24px', fontFamily: 'Arial Black', color: '#ff8888'
+    }).setOrigin(0.5).setAlpha(0)
+
+    const defLabel = this.add.text(200, 60, `${defender.emoji} ${defender.name}`, {
+      fontSize: '24px', fontFamily: 'Arial Black', color: '#8888ff'
+    }).setOrigin(0.5).setAlpha(0)
+
+    vsContainer.add([vsBg, vsText, atkLabel, defLabel])
+    this.tweens.add({ targets: vsBg, alpha: 1, duration: 150 })
+    this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: 500, ease: 'Back.easeOut' })
+    this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: 400, delay: 300 })
+    this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: 400, delay: 400 })
+    this.cameras.main.flash(400, 255, 0, 0, true)
+
+    this.time.delayedCall(1500, () => {
+      this.tweens.add({ targets: vsContainer, alpha: 0, duration: 300,
+        onComplete: () => vsContainer.destroy(true)
+      })
+      this.realStart(attacker, defender)
+    })
+  }
+
+  private realStart(attacker: Player, defender: Player) {
+    const w = this.scale.width
+    const h = this.scale.height
+
     this.statusText = this.add.text(w / 2, 100, '⚔️ BATTLE START!', {
       fontSize: '48px', fontFamily: 'Arial Black', color: '#ff4444', stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)

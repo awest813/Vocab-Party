@@ -50,6 +50,7 @@ interface SentenceFixQuestion {
 
 export class MinigameScene extends Phaser.Scene {
   private choiceKeyCleanup?: () => void
+  private minigameData!: MinigameSceneData
 
   constructor() { super('MinigameScene') }
 
@@ -94,6 +95,36 @@ export class MinigameScene extends Phaser.Scene {
 
     const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix']
     const chosen = Phaser.Utils.Array.GetRandom(games) as string
+
+    // Splash overlay
+    const splashContainer = this.add.container(w / 2, h / 2).setDepth(200)
+    const splashBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
+    const splashTitle = this.add.text(0, -30, '🕹️ MINIGAME!', {
+      fontSize: '80px', fontFamily: 'Arial Black', color: '#ffffff',
+      stroke: '#ff44aa', strokeThickness: 12
+    }).setOrigin(0.5).setScale(0)
+    const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs The World!`, {
+      fontSize: '22px', fontFamily: 'Arial', color: '#ff88cc'
+    }).setOrigin(0.5).setAlpha(0)
+
+    splashContainer.add([splashBg, splashTitle, splashBy])
+    this.tweens.add({ targets: splashBg, alpha: 1, duration: 200 })
+    this.tweens.add({ targets: splashTitle, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeOut' })
+    this.tweens.add({ targets: splashBy, alpha: 1, duration: 300, delay: 400 })
+    this.cameras.main.flash(400, 255, 68, 170, true)
+
+    this.time.delayedCall(1500, () => {
+      this.tweens.add({ targets: splashContainer, alpha: 0, duration: 200,
+        onComplete: () => splashContainer.destroy(true)
+      })
+      this.startMinigame(chosen)
+    })
+  }
+
+  private startMinigame(chosen: string) {
+    const w = this.scale.width
+    const h = this.scale.height
+    const { state, onComplete } = this.minigameData
 
     // Cinematic Backdrop
     this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
