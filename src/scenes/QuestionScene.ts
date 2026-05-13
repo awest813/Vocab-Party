@@ -36,6 +36,9 @@ export class QuestionScene extends Phaser.Scene {
   private answerContainers: Phaser.GameObjects.Container[] = []
 
   create(data: QuestionSceneData) {
+    // Reset from previous scene
+    this.answerContainers = []
+
     const w = this.scale.width
     const h = this.scale.height
     const { type, playerIndex, state, onComplete, cpuResolve } = data
@@ -84,10 +87,17 @@ export class QuestionScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5).setAlpha(0)
 
-    this.add.text(w / 2, h / 2 - 170, `${player.emoji} ${player.name}'s Turn`, {
+    this.add.text(w / 2, h / 2 - 170, `${player.emoji} ${player.name}'s Turn  ·  Score: ${player.score}`, {
       fontSize: '20px',
       fontFamily: 'Arial',
       color: '#aaaacc'
+    }).setOrigin(0.5)
+
+    // Keyboard hint
+    this.add.text(w / 2, h / 2 - 140, 'Keys: 1–4 or A–D', {
+      fontSize: '14px',
+      fontFamily: 'Arial',
+      color: '#667788'
     }).setOrigin(0.5)
 
     this.tweens.add({ targets: header, alpha: 1, duration: isAutoSimMode() ? 30 : 300, delay: isAutoSimMode() ? 0 : 200 })
@@ -161,12 +171,6 @@ export class QuestionScene extends Phaser.Scene {
 
       btn.on('pointerdown', () => pickAnswer(i, btn))
     })
-
-    this.add.text(w / 2, h / 2 + 188, 'Keys: 1–4 or A–D', {
-      fontSize: '14px',
-      fontFamily: 'Arial',
-      color: '#7788aa'
-    }).setOrigin(0.5)
 
     // Timer bar
     this.add.rectangle(w / 2, h / 2 + 225, 800, 16, 0x333355)
@@ -293,6 +297,11 @@ export class QuestionScene extends Phaser.Scene {
           }).setOrigin(0.5).setDepth(201)
         })
       }
+      this.time.delayedCall(this.d(600), () => {
+        this.add.text(w / 2, h / 2 + 160, `📈 +${10 + timeBonus} pts`, {
+          fontSize: '22px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 4
+        }).setOrigin(0.5).setDepth(201)
+      })
     } else {
       this.cameras.main.shake(300, 0.01)
       this.cameras.main.flash(300, 255, 0, 0, true)

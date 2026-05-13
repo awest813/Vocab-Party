@@ -110,6 +110,20 @@ export class MenuScene extends Phaser.Scene {
       color: '#445577'
     }).setOrigin(0.5)
 
+    // Keyboard shortcuts
+    this.input.keyboard?.on('keydown-ESC', () => {
+      this.showHowToPlay()
+    })
+    this.input.keyboard?.on('keydown-ENTER', () => {
+      this.cameras.main.fadeOut(400, 0, 0, 0)
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+        this.scene.start('SetupScene')
+      })
+    })
+
+    // Fade in on enter
+    this.cameras.main.fadeIn(400, 5, 5, 16)
+
     // Floating particles
     for (let i = 0; i < 20; i++) {
       const p = this.add.text(Phaser.Math.Between(0, w), Phaser.Math.Between(h - 100, h), '✨', { fontSize: '16px' })
@@ -229,6 +243,7 @@ export class MenuScene extends Phaser.Scene {
     const destroy = () => container.destroy(true)
     closeBtn.on('pointerdown', destroy)
     overlay.on('pointerdown', destroy)
+    this.input.keyboard?.once('keydown-ESC', destroy)
 
     panel.setScale(0.85)
     this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: 250, ease: 'Back.easeOut' })

@@ -98,8 +98,8 @@ export class SetupScene extends Phaser.Scene {
     lenPanel.add([classicBtn, fullMapBtn])
 
     // Name rows header
-    this.add.text(w / 2, 318, 'Names: click to type · Tab/Enter to cycle · CPU: click to cycle off → Easy → Normal → Hard', {
-      fontSize: '16px',
+    this.add.text(w / 2, 318, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
+      fontSize: '15px',
       fontFamily: 'Arial',
       color: '#667788'
     }).setOrigin(0.5)
@@ -137,6 +137,10 @@ export class SetupScene extends Phaser.Scene {
 
     // Keyboard input
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))
+
+    // Enter to start, Escape to go back
+    this.input.keyboard?.on('keydown-ENTER', () => { if (this.activeRow < 0) this.startGame() })
+    this.input.keyboard?.on('keydown-ESC', () => this.scene.start('MenuScene'))
 
     // Tap away to deselect
     this.input.on('pointerdown', (_ptr: Phaser.Input.Pointer, objs: Phaser.GameObjects.GameObject[]) => {
