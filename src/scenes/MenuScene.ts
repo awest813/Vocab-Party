@@ -50,10 +50,10 @@ export class MenuScene extends Phaser.Scene {
 
     titleContainer.add([titleGlow, title, titleOverlay])
     
-    // Prestige Badge
+    // Edition Badge
     const badge = this.add.container(w / 2 + 320, 100)
     const bBg = this.add.polygon(0, 0, [0, -20, 100, -20, 120, 0, 100, 20, 0, 20], 0xffd700, 0.8)
-    const bText = this.add.text(55, 0, 'PRESTIGE', { fontSize: '14px', fontFamily: 'Arial Black', color: '#000000' }).setOrigin(0.5)
+    const bText = this.add.text(55, 0, 'THE PARTY', { fontSize: '12px', fontFamily: 'Arial Black', color: '#000000' }).setOrigin(0.5)
     badge.add([bBg, bText]).setAngle(-15)
     this.tweens.add({ targets: badge, angle: -10, duration: 2000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
 
@@ -102,7 +102,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
     // Version/Footer
-    this.add.text(w / 2, h - 30, 'v2.0 PRESTIGE EDITION  •  PHASER 3 ENGINE', {
+    this.add.text(w / 2, h - 30, 'v2.0  •  PHASER 3 ENGINE', {
       fontSize: '14px',
       fontFamily: 'Arial Black',
       color: '#445577'

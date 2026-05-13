@@ -9,7 +9,7 @@ import { showConfetti } from '../ui/Confetti'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
-import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar } from '../systems/CpuPolicy'
+import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { MinigameScene } from './MinigameScene'
@@ -54,9 +54,6 @@ const QUESTION_BASE_POINTS = 10
 const QUESTION_BASE_COINS = 3
 const QUESTION_STREAK_THRESHOLD = 3
 const QUESTION_STREAK_BONUS_COINS = 4
-
-const PLAYER_NAMES = ['Alex', 'Blake', 'Casey', 'Dana']
-const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
 
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
@@ -142,8 +139,8 @@ export class BoardScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    const names = data?.playerNames ?? PLAYER_NAMES
-    const emojis = data?.playerEmojis ?? PLAYER_EMOJIS
+    const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
+    const emojis = data?.playerEmojis ?? ['🔴', '🔵', '🟢', '🟡']
     this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
     const cpuFlags = data?.playerCpu ?? names.map(() => false)
     const cpuLevels = data?.playerCpuLevels
@@ -573,7 +570,8 @@ export class BoardScene extends Phaser.Scene {
 
       if (options.length > 1) {
         if (player.isCpu) {
-          chosenNextId = Phaser.Utils.Array.GetRandom(options)
+          const idx = cpuChooseBranch(player.position, options, TILE_TYPES, player.coins, player.trophies, player.cpuLevel)
+          chosenNextId = options[idx]
         } else {
           chosenNextId = await this.promptForBranch(player, options)
         }
@@ -801,7 +799,7 @@ export class BoardScene extends Phaser.Scene {
             type,
             playerIndex,
             state: this.state,
-            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel) } : {}),
+            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel, this.state.round) } : {}),
             onComplete: (result: QuestionResolution) => {
               this.scene.stop('QuestionScene')
               this.scene.resume()

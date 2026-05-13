@@ -30,6 +30,8 @@ type CpuLevelProfile = {
   starBuyThreshold: number
   /** Items the CPU will try to buy in priority order at an item shop */
   preferredItems: string[]
+  /** Bonus correct chance added per round (scales difficulty as game progresses) */
+  roundBonus: number
 }
 
 const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
@@ -45,7 +47,8 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     minigameThinkDelayMsMax: 560,
     shopBuyChance: 0.3,
     starBuyThreshold: 0.3,
-    preferredItems: ['shield', 'dash', 'double_score', 'warp', 'poison_dart', 'swap', 'golden_key']
+    preferredItems: ['shield', 'dash', 'double_score', 'warp', 'poison_dart', 'swap', 'golden_key'],
+    roundBonus: 0.01
   },
   normal: {
     boardQuestionCorrectChance: 0.52,
@@ -59,7 +62,8 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     minigameThinkDelayMsMax: 480,
     shopBuyChance: 0.6,
     starBuyThreshold: 0.5,
-    preferredItems: ['shield', 'double_score', 'dash', 'golden_key', 'poison_dart', 'swap', 'warp']
+    preferredItems: ['shield', 'double_score', 'dash', 'golden_key', 'poison_dart', 'swap', 'warp'],
+    roundBonus: 0.015
   },
   hard: {
     boardQuestionCorrectChance: 0.72,
@@ -73,7 +77,8 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     minigameThinkDelayMsMax: 380,
     shopBuyChance: 0.85,
     starBuyThreshold: 0.8,
-    preferredItems: ['golden_key', 'double_score', 'shield', 'dash', 'poison_dart', 'swap', 'warp']
+    preferredItems: ['golden_key', 'double_score', 'shield', 'dash', 'poison_dart', 'swap', 'warp'],
+    roundBonus: 0.02
   }
 }
 
@@ -81,16 +86,26 @@ export function cpuPolicyForLevel(level: CpuLevel | undefined): CpuLevelProfile 
   return CPU_BY_LEVEL[level ?? DEFAULT_CPU_LEVEL]
 }
 
+/**
+ * Returns the effective question correct chance for a CPU at a given round.
+ * Caps at 0.95 to keep some challenge.
+ */
+export function cpuEffectiveChance(level: CpuLevel | undefined, round: number): number {
+  const base = cpuPolicyForLevel(level).boardQuestionCorrectChance
+  const bonus = cpuPolicyForLevel(level).roundBonus * (round - 1)
+  return Math.min(0.95, base + bonus)
+}
+
 export type CpuPhaserMath = {
   Between: (min: number, max: number) => number
   FloatBetween: (min: number, max: number) => number
 }
 
-export function cpuBoardQuestionResolve(math: CpuPhaserMath, level?: CpuLevel) {
+export function cpuBoardQuestionResolve(math: CpuPhaserMath, level?: CpuLevel, round?: number) {
   const p = cpuPolicyForLevel(level)
   return {
     delayMs: math.Between(p.boardQuestionDelayMsMin, p.boardQuestionDelayMsMax),
-    correctChance: p.boardQuestionCorrectChance
+    correctChance: round != null ? cpuEffectiveChance(level, round) : p.boardQuestionCorrectChance
   }
 }
 
@@ -142,14 +157,21 @@ export function cpuChooseItem(
 ): number {
   if (inventory.length === 0) return -1
 
-  const p = cpuPolicyForLevel(level)
-  const hasStarTileAhead = hasTileTypeAhead(position, 'star', 6)
   const lowOnCoins = coins < 8
   const behind = rankAmongPlayers > 1 || isLastPlace
 
-  // Golden Key: use if star tile is ahead (guarantees reaching it)
+  // Star positions on board: tiles 6, 22, 39. Max roll = 3 (4 with speed boost).
+  // Golden Key: use if star is within reach (3 steps ahead, wrapping)
+  const starPositions = [6, 22, 39]
+  const maxSteps = 4
+  const hasStarAhead = starPositions.some(si => {
+    const dist = si > position ? si - position : 44 - position + si
+    return dist > 0 && dist <= maxSteps
+  })
+
+  // Golden Key: use if star tile is within reach
   const gkIdx = inventory.indexOf('golden_key')
-  if (gkIdx >= 0 && hasStarTileAhead) return gkIdx
+  if (gkIdx >= 0 && hasStarAhead) return gkIdx
 
   // Shield: use when low on coins (protect from rent/penalties)
   const shieldIdx = inventory.indexOf('shield')
@@ -170,14 +192,11 @@ export function cpuChooseItem(
 
   // Warp: use when far from star
   const warpIdx = inventory.indexOf('warp')
-  if (warpIdx >= 0 && !hasStarTileAhead && Math.random() < 0.3) return warpIdx
+  if (warpIdx >= 0 && !hasStarAhead && Math.random() < 0.3) return warpIdx
 
   // Poison Dart: use when there's a leader to catch
   const pdIdx = inventory.indexOf('poison_dart')
   if (pdIdx >= 0 && behind && Math.random() < 0.5) return pdIdx
-
-  // Random first item as fallback (only on hard)
-  if (p.boardQuestionCorrectChance > 0.6 && Math.random() < 0.15) return 0
 
   return -1
 }
@@ -211,8 +230,52 @@ export function cpuShouldBuyShop(coins: number, level?: CpuLevel): boolean {
 export function cpuShouldBuyStar(coins: number, trophies: number, level?: CpuLevel): boolean {
   const p = cpuPolicyForLevel(level)
   if (coins < 20) return false
-  // Star buy threshold: higher = more likely to buy immediately
-  return Math.random() < p.starBuyThreshold + (trophies >= 4 ? 0.2 : 0)
+  // Buy immediately if ahead or near win; otherwise probabilistic
+  return Math.random() < p.starBuyThreshold || trophies >= 4
+}
+
+/**
+ * CPU chooses the best path when a branch is encountered.
+ * tileTypes: the 44-element TILE_TYPES array from BoardScene.
+ * Returns the index into `options` to take.
+ */
+export function cpuChooseBranch(
+  position: number,
+  options: number[],
+  tileTypes: string[],
+  coins: number,
+  trophies: number,
+  level?: CpuLevel
+): number {
+  const p = cpuPolicyForLevel(level)
+  const tileCount = tileTypes.length
+
+  const scored = options.map(id => {
+    const dist = (id > position) ? id - position : tileCount - position + id
+    const type = tileTypes[id % tileCount] ?? 'vocab'
+    let score = 0
+    if (type === 'star') score = 100 - dist
+    else if (type === 'shop' && coins >= 8) score = 90 - dist
+    else if (type === 'item_shop') score = 80 - dist
+    else if (type === 'bonus') score = 70 - dist
+    else if (type === 'minigame') score = 60 - dist
+    else if (type === 'vocab' || type === 'grammar') score = 50 - dist
+    else if (type === 'mystery') score = 40 - dist
+    else if (type === 'brick') score = 35 - dist
+    else if (type === 'penalty' || type === 'brick') score = -50 + dist
+    else score = 30
+    return { id, score, dist }
+  })
+
+  // Hard CPU takes best path; easy/normal adds randomness
+  if (p.boardQuestionCorrectChance < 0.5) {
+    // Easy: mostly random, slight preference
+    if (Math.random() < 0.3) {
+      return Math.floor(Math.random() * options.length)
+    }
+  }
+  scored.sort((a, b) => b.score - a.score)
+  return options.indexOf(scored[0].id)
 }
 
 /**

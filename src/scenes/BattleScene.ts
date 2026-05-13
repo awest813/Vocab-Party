@@ -77,7 +77,7 @@ export class BattleScene extends Phaser.Scene {
     
     const emoji = this.add.text(0, -45, player.emoji, { fontSize: '72px' }).setOrigin(0.5)
     
-    const stats = this.add.text(0, 45, `⚔️ ${player.atk}  🛡️ ${player.def}  💨 ${player.evd}`, {
+    const stats = this.add.text(0, 45, `⚔️ +${Math.max(1, player.atk)}  🛡️ +${Math.max(1, player.def)}  💨 +${Math.max(1, player.evd)}`, {
       fontSize: '20px', fontFamily: 'Arial Black', color: '#8899aa', align: 'center'
     }).setOrigin(0.5)
 

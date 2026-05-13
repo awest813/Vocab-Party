@@ -207,6 +207,12 @@ export class QuestionScene extends Phaser.Scene {
       width: 0,
       duration: isAutoSimMode() ? 900 : 15000,
       ease: 'Linear',
+      onUpdate: () => {
+        const pct = timerBar.width / 800
+        if (pct <= 0.33) timerBar.setFillStyle(0xff3333)
+        else if (pct <= 0.66) timerBar.setFillStyle(0xff8800)
+        else timerBar.setFillStyle(0x44ff88)
+      },
       onComplete: () => {
         countdownTimer.remove()
         if (!answered) {
@@ -215,9 +221,6 @@ export class QuestionScene extends Phaser.Scene {
         }
       }
     })
-
-    this.time.delayedCall(this.d(10000), () => { if (!answered) timerBar.setFillStyle(0xff8800) })
-    this.time.delayedCall(this.d(13000), () => { if (!answered) timerBar.setFillStyle(0xff3333) })
 
     if (cpuResolve) {
       this.time.delayedCall(this.d(cpuResolve.delayMs), () => {
