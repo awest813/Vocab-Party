@@ -90,8 +90,10 @@ export class MenuScene extends Phaser.Scene {
 
     const startBtn = createButton(this, w / 2, 420, '▶  ENTER PARTY', 0x22bb55, 0x1a8844, 400, 72)
     startBtn.on('pointerdown', () => {
-      this.cameras.main.flash(500, 255, 255, 255)
-      this.time.delayedCall(500, () => this.scene.start('SetupScene'))
+      this.cameras.main.fadeOut(400, 0, 0, 0)
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+        this.scene.start('SetupScene')
+      })
     })
 
     const howBtn = createButton(this, w / 2, 510, '❓  HOW TO PLAY', 0x5566ff, 0x3344cc, 400, 60)

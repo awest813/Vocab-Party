@@ -14,15 +14,6 @@ export const BUNDLED_GAME_ASSETS = {
     'assets/quaternius/rpg-characters/player_rogue.png',
     'assets/quaternius/rpg-characters/player_ranger.png',
   ],
-  kenneyDiceFaces: [
-    'assets/kenney/boardgame/dice/dieWhite1.png',
-    'assets/kenney/boardgame/dice/dieWhite2.png',
-    'assets/kenney/boardgame/dice/dieWhite3.png',
-    'assets/kenney/boardgame/dice/dieWhite4.png',
-    'assets/kenney/boardgame/dice/dieWhite5.png',
-    'assets/kenney/boardgame/dice/dieWhite6.png',
-  ],
-  kenneyTile: (type: string) => `assets/kenney/tiles/tile_${type}.png`,
 } as const
 
 /**

@@ -307,15 +307,43 @@ export class BoardScene extends Phaser.Scene {
 
       img.on('pointerover', () => {
         img.setAlpha(0.8)
+        img.setScale(img.displayWidth / img.width * 1.1, img.displayHeight / img.height * 1.1)
+        this.tweens.add({
+          targets: img,
+          scaleX: img.displayWidth / img.width * 1.12,
+          scaleY: img.displayHeight / img.height * 1.12,
+          duration: 100,
+          ease: 'Sine.easeOut'
+        })
         this.tileHintText?.setText(this.describeTile(i, type))
       })
       img.on('pointerout', () => {
         img.setAlpha(1)
+        img.setScale(img.displayWidth / img.width, img.displayHeight / img.height)
+        this.tweens.add({
+          targets: img,
+          scaleX: (TILE_SIZE - 4) / img.width,
+          scaleY: (TILE_SIZE - 4) / img.height,
+          duration: 100,
+          ease: 'Sine.easeOut'
+        })
         this.tileHintText?.setText('Hover a tile to inspect its effect.')
       })
 
       const label = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1).setScale(0)
       this.tweens.add({ targets: label, scaleX: 1, scaleY: 1, duration: 400, delay: i * 20 + 200, ease: 'Back.easeOut' })
+
+      // Shop ownership indicator dot
+      if (type === 'shop' && this.shopOwners[i] !== undefined) {
+        const owner = this.state.players.find(p => p.id === this.shopOwners[i])
+        if (owner) {
+          const ownerIdx = this.state.players.indexOf(owner)
+          const ownerColor = PLAYER_COLORS[ownerIdx % PLAYER_COLORS.length]
+          const dot = this.add.circle(x + TILE_SIZE / 2 - 8, y - TILE_SIZE / 2 + 8, 4, ownerColor, 1)
+          dot.setDepth(2)
+          dot.setStrokeStyle(1.5, 0xffffff, 0.6)
+        }
+      }
 
       this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
         fontSize: '9px',
@@ -354,8 +382,13 @@ export class BoardScene extends Phaser.Scene {
     const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
     const offset = offsets[index]
     const container = this.add.container(x + offset.x, y + offset.y)
-    const sprite = this.add.image(0, 0, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(28, 28)
-    const label = this.add.text(0, 0, player.emoji, { fontSize: '12px' }).setOrigin(0.5)
+
+    // Drop shadow
+    const shadow = this.add.ellipse(2, 4, 32, 12, 0x000000, 0.25)
+    container.add(shadow)
+
+    const sprite = this.add.image(0, 0, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(32, 32)
+    const label = this.add.text(0, 0, player.emoji, { fontSize: '14px' }).setOrigin(0.5)
     container.add([sprite, label])
     container.setDepth(10)
     return container

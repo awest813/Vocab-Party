@@ -356,17 +356,19 @@ export class SetupScene extends Phaser.Scene {
     const emojis = PLAYER_EMOJIS.slice(0, this.playerCount)
     const flashMs = isAutoSimMode() ? 0 : 300
     const delayMs = isAutoSimMode() ? 0 : 300
-    if (flashMs > 0) this.cameras.main.flash(flashMs, 255, 255, 255)
-    const slice = this.cpuModeByRow.slice(0, this.playerCount)
-    const playerCpu = slice.map(m => m !== 'off')
-    const playerCpuLevels = slice.map(m => (m === 'off' ? DEFAULT_CPU_LEVEL : m))
-    this.time.delayedCall(delayMs, () => {
-      this.scene.start('BoardScene', {
-        playerNames: names,
-        playerEmojis: emojis,
-        roundsPerGame,
-        playerCpu,
-        playerCpuLevels
+    if (flashMs > 0) this.cameras.main.fadeOut(flashMs, 0, 0, 0)
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      const slice = this.cpuModeByRow.slice(0, this.playerCount)
+      const playerCpu = slice.map(m => m !== 'off')
+      const playerCpuLevels = slice.map(m => (m === 'off' ? DEFAULT_CPU_LEVEL : m))
+      this.time.delayedCall(delayMs, () => {
+        this.scene.start('BoardScene', {
+          playerNames: names,
+          playerEmojis: emojis,
+          roundsPerGame,
+          playerCpu,
+          playerCpuLevels
+        })
       })
     })
   }

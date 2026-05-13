@@ -51,32 +51,50 @@ export function generateGameTextures(scene: Phaser.Scene): void {
 // Player token textures  (32 × 32)
 // ---------------------------------------------------------------------------
 export function generatePlayerTextures(scene: Phaser.Scene): void {
-  const SIZE = 32
-  const RADIUS = SIZE / 2 - 2
+  const SIZE = 40
+  const RADIUS = SIZE / 2 - 3
 
   PLAYER_COLORS.forEach((color, i) => {
     const key = PLAYER_TEXTURE_KEYS[i]
-    if (scene.textures.exists(key)) return   // already generated
+    if (scene.textures.exists(key)) return
 
     const g = scene.add.graphics()
 
-    // Soft shadow ring
-    g.fillStyle(0x000000, 0.25)
+    // Outer glow ring
+    g.fillStyle(0xffffff, 0.15)
+    g.fillCircle(SIZE / 2, SIZE / 2, RADIUS + 3)
+
+    // Soft shadow
+    g.fillStyle(0x000000, 0.3)
     g.fillCircle(SIZE / 2 + 1, SIZE / 2 + 2, RADIUS)
 
     // Main body
     g.fillStyle(color, 1)
     g.fillCircle(SIZE / 2, SIZE / 2, RADIUS)
 
-    // Inner highlight (top-left quadrant)
-    g.fillStyle(0xffffff, 0.35)
-    g.fillCircle(SIZE / 2 - 5, SIZE / 2 - 5, 7)
+    // Darker bottom edge for 3D effect
+    const darker = Phaser.Display.Color.IntegerToColor(color)
+    darker.darken(30)
+    g.fillStyle(darker.color, 0.5)
+    g.fillCircle(SIZE / 2, SIZE / 2 + 2, RADIUS - 3)
 
-    // White border
-    g.lineStyle(2, 0xffffff, 1)
+    // Inner highlight (top-left quadrant)
+    g.fillStyle(0xffffff, 0.45)
+    g.fillCircle(SIZE / 2 - 5, SIZE / 2 - 5, 8)
+
+    // Small center sparkle
+    g.fillStyle(0xffffff, 0.6)
+    g.fillCircle(SIZE / 2 - 2, SIZE / 2 - 4, 2.5)
+
+    // White ring border
+    g.lineStyle(2.5, 0xffffff, 0.9)
     g.strokeCircle(SIZE / 2, SIZE / 2, RADIUS)
 
-    g.generateTexture(key, SIZE, SIZE)
+    // Inner thin ring
+    g.lineStyle(1, color, 0.4)
+    g.strokeCircle(SIZE / 2, SIZE / 2, RADIUS - 4)
+
+    g.generateTexture(key, SIZE + 4, SIZE + 4)
     g.destroy()
   })
 }
@@ -331,14 +349,36 @@ export function generateDiceTextures(scene: Phaser.Scene): void {
     g.fillStyle(0xffffff, 1)
     g.fillRoundedRect(1, 1, SIZE - 4, SIZE - 4, CORNER)
 
+    // 3D edge shading (darker bottom-right gradient)
+    g.fillStyle(0xe0e0e0, 0.6)
+    g.fillRoundedRect(4, 4, SIZE - 10, SIZE - 10, CORNER - 2)
+    g.fillStyle(0xcccccc, 0.3)
+    g.fillRoundedRect(8, 8, SIZE - 18, SIZE - 18, CORNER - 3)
+
+    // Gloss highlight (top-left)
+    g.fillStyle(0xffffff, 0.3)
+    g.beginPath()
+    g.moveTo(4, 4)
+    g.lineTo(SIZE - 6, 4)
+    g.lineTo(4, SIZE * 0.35)
+    g.closePath()
+    g.fillPath()
+
     // Border
     g.lineStyle(1.5, 0xaaaaaa, 0.8)
     g.strokeRoundedRect(1, 1, SIZE - 4, SIZE - 4, CORNER)
 
-    // Pips
-    g.fillStyle(0x222233, 1)
+    // Pips with 3D effect
     DICE_DOT_POSITIONS[face - 1].forEach(({ x, y }) => {
+      // Pip shadow
+      g.fillStyle(0x000000, 0.15)
+      g.fillCircle(x + 0.5, y + 1, 3.8)
+      // Pip body
+      g.fillStyle(0x222233, 1)
       g.fillCircle(x, y, 3.5)
+      // Pip highlight
+      g.fillStyle(0x555577, 0.5)
+      g.fillCircle(x - 1, y - 1, 1.8)
     })
 
     g.generateTexture(key, SIZE + 2, SIZE + 2)
