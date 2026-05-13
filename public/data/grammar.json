@@ -251,6 +251,126 @@
       "answers": ["Chair", "Liberty", "Mountain", "Computer"],
       "correct": 1,
       "explanation": "An abstract noun refers to an idea, quality, or state rather than a physical object."
+    },
+    {
+      "question": "Which sentence contains a participle phrase?",
+      "answers": ["I like swimming.", "Swimming in the lake, she felt free.", "She swims daily.", "She is a swimmer."],
+      "correct": 1,
+      "explanation": "A participle phrase begins with a participle and functions as an adjective."
+    },
+    {
+      "question": "Which is a complex sentence?",
+      "answers": ["I went home.", "I went home, and I ate dinner.", "I went home because I was tired.", "I went home and ate dinner."],
+      "correct": 2,
+      "explanation": "A complex sentence has one independent clause and at least one dependent clause."
+    },
+    {
+      "question": "Which sentence uses 'than' correctly?",
+      "answers": ["She is taller then me.", "She is taller than me.", "She is taller that me.", "She is taller this me."],
+      "correct": 1,
+      "explanation": "'Than' is used for comparisons; 'then' refers to time."
+    },
+    {
+      "question": "What type of noun is 'team'?",
+      "answers": ["Proper noun", "Collective noun", "Abstract noun", "Compound noun"],
+      "correct": 1,
+      "explanation": "A collective noun names a group of individuals (team, jury, audience)."
+    },
+    {
+      "question": "Which sentence uses a dash correctly?",
+      "answers": ["The answer - is simple - really.", "The answer is - simple - really.", "The answer is simple - really!", "The - answer is simple really."],
+      "correct": 2,
+      "explanation": "A dash (—) sets off a dramatic pause or emphasis within a sentence."
+    },
+    {
+      "question": "What is the predicate nominative in: 'She is a teacher'?",
+      "answers": ["She", "is", "teacher", "a"],
+      "correct": 2,
+      "explanation": "A predicate nominative follows a linking verb and renames the subject."
+    },
+    {
+      "question": "Which is a transitive verb?",
+      "answers": ["She sleeps.", "He laughed.", "She kicked the ball.", "The sun shines."],
+      "correct": 2,
+      "explanation": "A transitive verb needs a direct object to complete its meaning."
+    },
+    {
+      "question": "Which sentence correctly uses 'whom'?",
+      "answers": ["Whom called you?", "To whom did you speak?", "Whom is coming?", "Whom did that?"],
+      "correct": 1,
+      "explanation": "'Whom' is used as an object (after prepositions, or as direct/indirect object)."
+    },
+    {
+      "question": "What is a dependent clause?",
+      "answers": ["A complete sentence", "A clause that cannot stand alone", "A clause with no verb", "A type of phrase"],
+      "correct": 1,
+      "explanation": "A dependent clause has a subject and verb but cannot stand alone as a sentence."
+    },
+    {
+      "question": "Which word is a coordinating conjunction?",
+      "answers": ["Because", "For", "Although", "Unless"],
+      "correct": 1,
+      "explanation": "Coordinating conjunctions: for, and, nor, but, or, yet, so (FANBOYS)."
+    },
+    {
+      "question": "Which sentence uses an ellipsis correctly?",
+      "answers": ["I was thinking... maybe... we could go...", "I was... thinking maybe we could go...", "I... was thinking maybe we could go.", "I was thinking maybe we... could go... to the park"],
+      "correct": 1,
+      "explanation": "An ellipsis (...) shows a pause or incomplete thought."
+    },
+    {
+      "question": "What is the present perfect tense of 'eat'?",
+      "answers": ["I ate", "I have eaten", "I had eaten", "I will have eaten"],
+      "correct": 1,
+      "explanation": "Present perfect: 'have/has' + past participle."
+    },
+    {
+      "question": "Which sentence has a dangling modifier?",
+      "answers": ["Walking the dog, I saw a bird.", "Walking the dog, the bird was seen.", "Walking the dog, a bird appeared.", "Walking the dog, a bird saw me."],
+      "correct": 1,
+      "explanation": "A dangling modifier has no clear subject in the sentence."
+    },
+    {
+      "question": "What is an appositive?",
+      "answers": ["A word that shows action", "A noun phrase that renames an adjacent noun", "A type of verb", "A punctuation mark"],
+      "correct": 1,
+      "explanation": "An appositive renames or explains a nearby noun or pronoun."
+    },
+    {
+      "question": "Which sentence correctly uses 'effect'?",
+      "answers": ["The weather will effect our plans.", "The effect of the storm was devastating.", "I want to effect change.", "Effect means to influence."],
+      "correct": 1,
+      "explanation": "'Effect' (noun) is a result; 'affect' (verb) means to influence."
+    },
+    {
+      "question": "Which is a compound-complex sentence?",
+      "answers": ["I went home.", "Because I was tired, I went home.", "I went home, but she stayed.", "Because I was tired, I went home, but she stayed."],
+      "correct": 3,
+      "explanation": "A compound-complex sentence has two independent clauses and at least one dependent clause."
+    },
+    {
+      "question": "What is the function of an adjective clause?",
+      "answers": ["To replace a noun", "To modify a noun or pronoun", "To show action", "To connect ideas"],
+      "correct": 1,
+      "explanation": "An adjective clause modifies a noun or pronoun and usually begins with a relative pronoun."
+    },
+    {
+      "question": "Which sentence uses correct capitalization?",
+      "answers": ["My Aunt and I went to the Grand canyon.", "My aunt and I went to the Grand Canyon.", "My Aunt and I went to the grand canyon.", "my aunt and I went to the Grand Canyon."],
+      "correct": 1,
+      "explanation": "Titles are not capitalized unless used as names; proper nouns are capitalized."
+    },
+    {
+      "question": "What does 'irony' refer to in writing?",
+      "answers": ["A coincidence", "The expression of meaning through opposite language", "A type of simile", "A repeated sound"],
+      "correct": 1,
+      "explanation": "Irony is the expression of one's meaning by using language that normally signifies the opposite."
+    },
+    {
+      "question": "Which sentence uses the subjunctive mood?",
+      "answers": ["I wish I was taller.", "I wish I were taller.", "I am tall.", "I will be taller."],
+      "correct": 1,
+      "explanation": "The subjunctive mood expresses wishes, hypotheticals, and contrary-to-fact conditions."
     }
   ],
   "minigame_comma": [
