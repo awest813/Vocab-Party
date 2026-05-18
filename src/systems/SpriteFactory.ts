@@ -34,24 +34,11 @@ const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
   [{ x: 14, y: 12 }, { x: 34, y: 12 }, { x: 14, y: 24 }, { x: 34, y: 24 }, { x: 14, y: 36 }, { x: 34, y: 36 }],
 ]
 
-/**
- * Generates all game sprite textures procedurally and stores them in Phaser's
- * TextureManager under stable key names.  Once real artwork is available,
- * replace individual entries in PreloadScene with `this.load.image(key, path)`
- * and remove the corresponding call here — the rest of the game code stays
- * unchanged because it references only the key strings.
- */
-export function generateGameTextures(scene: Phaser.Scene): void {
-  generatePlayerTextures(scene)
-  generateTileTextures(scene)
-  generateDiceTextures(scene)
-}
-
 // ---------------------------------------------------------------------------
-// Player token textures  (32 × 32)
+// Player token textures  (48 × 48) — chibi-style with face
 // ---------------------------------------------------------------------------
 export function generatePlayerTextures(scene: Phaser.Scene): void {
-  const SIZE = 40
+  const SIZE = 48
   const RADIUS = SIZE / 2 - 3
 
   PLAYER_COLORS.forEach((color, i) => {
@@ -59,40 +46,67 @@ export function generatePlayerTextures(scene: Phaser.Scene): void {
     if (scene.textures.exists(key)) return
 
     const g = scene.add.graphics()
+    const cx = SIZE / 2
+    const cy = SIZE / 2
 
     // Outer glow ring
     g.fillStyle(0xffffff, 0.15)
-    g.fillCircle(SIZE / 2, SIZE / 2, RADIUS + 3)
+    g.fillCircle(cx, cy, RADIUS + 4)
 
-    // Soft shadow
-    g.fillStyle(0x000000, 0.3)
-    g.fillCircle(SIZE / 2 + 1, SIZE / 2 + 2, RADIUS)
+    // Soft shadow offset
+    g.fillStyle(0x000000, 0.25)
+    g.fillCircle(cx + 1, cy + 2, RADIUS)
 
     // Main body
     g.fillStyle(color, 1)
-    g.fillCircle(SIZE / 2, SIZE / 2, RADIUS)
+    g.fillCircle(cx, cy, RADIUS)
 
-    // Darker bottom edge for 3D effect
+    // Darker bottom edge for 3D depth
     const darker = Phaser.Display.Color.IntegerToColor(color)
-    darker.darken(30)
+    darker.darken(25)
     g.fillStyle(darker.color, 0.5)
-    g.fillCircle(SIZE / 2, SIZE / 2 + 2, RADIUS - 3)
+    g.fillCircle(cx, cy + 3, RADIUS - 3)
 
-    // Inner highlight (top-left quadrant)
-    g.fillStyle(0xffffff, 0.45)
-    g.fillCircle(SIZE / 2 - 5, SIZE / 2 - 5, 8)
-
-    // Small center sparkle
-    g.fillStyle(0xffffff, 0.6)
-    g.fillCircle(SIZE / 2 - 2, SIZE / 2 - 4, 2.5)
+    // Inner highlight (top-left)
+    g.fillStyle(0xffffff, 0.4)
+    g.fillCircle(cx - 6, cy - 6, 9)
 
     // White ring border
-    g.lineStyle(2.5, 0xffffff, 0.9)
-    g.strokeCircle(SIZE / 2, SIZE / 2, RADIUS)
+    g.lineStyle(3, 0xffffff, 0.9)
+    g.strokeCircle(cx, cy, RADIUS)
+    g.lineStyle(1, color, 0.3)
+    g.strokeCircle(cx, cy, RADIUS - 4)
 
-    // Inner thin ring
-    g.lineStyle(1, color, 0.4)
-    g.strokeCircle(SIZE / 2, SIZE / 2, RADIUS - 4)
+    // --- Chibi face ---
+    // Eyes
+    g.fillStyle(0xffffff, 0.9)
+    g.fillCircle(cx - 7, cy - 2, 4.5)
+    g.fillCircle(cx + 7, cy - 2, 4.5)
+    // Pupils
+    g.fillStyle(0x000000, 0.85)
+    g.fillCircle(cx - 7, cy - 2, 2.5)
+    g.fillCircle(cx + 7, cy - 2, 2.5)
+    // Eye shine
+    g.fillStyle(0xffffff, 0.9)
+    g.fillCircle(cx - 9, cy - 4, 1.2)
+    g.fillCircle(cx + 5, cy - 4, 1.2)
+
+    // Mouth (small smile arc)
+    g.lineStyle(2, 0x000000, 0.6)
+    g.beginPath()
+    g.arc(cx, cy + 4, 5, 0.2, Math.PI - 0.2, false)
+    g.strokePath()
+
+    // Blush dots
+    g.fillStyle(0xff8888, 0.3)
+    g.fillCircle(cx - 11, cy + 3, 3)
+    g.fillCircle(cx + 11, cy + 3, 3)
+
+    // Small crown/party hat on top
+    g.fillStyle(0xffd700, 0.9)
+    g.fillTriangle(cx - 8, cy - RADIUS + 2, cx + 8, cy - RADIUS + 2, cx, cy - RADIUS - 8)
+    g.fillStyle(0xff6666, 0.9)
+    g.fillCircle(cx, cy - RADIUS - 8, 3)
 
     g.generateTexture(key, SIZE + 4, SIZE + 4)
     g.destroy()
@@ -273,8 +287,8 @@ function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number,
 }
 
 export function generateTileTextures(scene: Phaser.Scene): void {
-  const SIZE = 52
-  const CORNER = 8
+  const SIZE = 64
+  const CORNER = 10
 
   Object.entries(TILE_COLORS).forEach(([type, color]) => {
     const key = TILE_TEXTURE_KEY(type)
@@ -282,46 +296,63 @@ export function generateTileTextures(scene: Phaser.Scene): void {
 
     const g = scene.add.graphics()
     const darker = Phaser.Display.Color.IntegerToColor(color)
-    darker.darken(28)
+    darker.darken(30)
     const darkInt = darker.color
+    const lighter = Phaser.Display.Color.IntegerToColor(color)
+    lighter.lighten(20)
+    const lightInt = lighter.color
 
-    // Soft outer shadow (must stay within SIZE x SIZE)
-    g.fillStyle(0x000000, 0.18)
-    g.fillRoundedRect(2, 2, SIZE - 4, SIZE - 4, CORNER)
+    // Soft outer shadow
+    g.fillStyle(0x000000, 0.2)
+    g.fillRoundedRect(3, 3, SIZE - 6, SIZE - 4, CORNER)
 
-    // Base 3D Body
+    // Deep 3D base body
     g.fillStyle(darkInt, 1)
-    g.fillRoundedRect(0, 4, SIZE, SIZE - 4, CORNER)
-    
-    // Top Face
+    g.fillRoundedRect(0, 6, SIZE, SIZE - 6, CORNER)
+
+    // Mid-tone edge bevel
+    g.fillStyle(darker.color, 0.6)
+    g.fillRoundedRect(1, 3, SIZE - 2, SIZE - 6, CORNER - 1)
+
+    // Top face
     g.fillStyle(color, 1)
-    g.fillRoundedRect(0, 0, SIZE, SIZE - 4, CORNER)
+    g.fillRoundedRect(0, 0, SIZE, SIZE - 6, CORNER)
 
-    // Inner Glow / Bevel
-    g.lineStyle(2, 0xffffff, 0.3)
-    g.strokeRoundedRect(2, 2, SIZE - 4, SIZE - 8, CORNER - 1)
+    // Subdued background pattern (faint diamond texture)
+    g.lineStyle(0.5, 0xffffff, 0.06)
+    for (let i = 0; i < SIZE; i += 8) {
+      g.strokeLineShape(new Phaser.Geom.Line(i, 0, i + 6, SIZE))
+      g.strokeLineShape(new Phaser.Geom.Line(i, SIZE, i + 6, 0))
+    }
 
-    // Glossy Overlay
-    g.fillStyle(0xffffff, 0.15)
+    // Glossy overlay (top-left bevel shine)
+    g.fillStyle(0xffffff, 0.12)
     g.beginPath()
     g.moveTo(2, 2)
     g.lineTo(SIZE - 2, 2)
-    g.lineTo(SIZE - 2, SIZE * 0.35)
-    g.lineTo(2, SIZE * 0.45)
+    g.lineTo(SIZE - 2, SIZE * 0.3)
+    g.lineTo(2, SIZE * 0.4)
     g.closePath()
     g.fillPath()
 
-    drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
+    drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 3)
 
-    // Specular shine
-    g.fillStyle(0xffffff, 0.2)
-    g.fillEllipse(SIZE * 0.35, SIZE * 0.28, SIZE * 0.42, SIZE * 0.22)
+    // Specular shine ellipse
+    g.fillStyle(0xffffff, 0.18)
+    g.fillEllipse(SIZE * 0.35, SIZE * 0.25, SIZE * 0.4, SIZE * 0.18)
 
-    // Rim light
-    g.lineStyle(2.5, 0xffffff, 0.55)
+    // Outer rim light
+    g.lineStyle(3, 0xffffff, 0.5)
     g.strokeRoundedRect(1.5, 1.5, SIZE - 3, SIZE - 3, CORNER - 1)
-    g.lineStyle(1, 0x000000, 0.15)
-    g.strokeRoundedRect(2.5, 2.5, SIZE - 5, SIZE - 5, CORNER - 2)
+    g.lineStyle(1, 0x000000, 0.12)
+    g.strokeRoundedRect(3, 3, SIZE - 6, SIZE - 6, CORNER - 2)
+
+    // Bottom edge shadow line
+    g.lineStyle(2, darkInt, 0.3)
+    g.beginPath()
+    g.moveTo(4, SIZE - 4)
+    g.lineTo(SIZE - 4, SIZE - 4)
+    g.strokePath()
 
     g.generateTexture(key, SIZE + 2, SIZE + 2)
     g.destroy()
@@ -329,11 +360,13 @@ export function generateTileTextures(scene: Phaser.Scene): void {
 }
 
 // ---------------------------------------------------------------------------
-// Dice face textures  (48 × 48)
+// Dice face textures  (52 × 52) — vibrant colored dice with white pips
 // ---------------------------------------------------------------------------
 export function generateDiceTextures(scene: Phaser.Scene): void {
-  const SIZE = 48
-  const CORNER = 9
+  const SIZE = 52
+  const CORNER = 10
+  const DIE_COLOR = 0xee4466
+  const DIE_DARK = 0xaa2233
 
   for (let face = 1; face <= 6; face++) {
     const key = DICE_TEXTURE_KEYS[face - 1]
@@ -342,21 +375,23 @@ export function generateDiceTextures(scene: Phaser.Scene): void {
     const g = scene.add.graphics()
 
     // Drop shadow
-    g.fillStyle(0x000000, 0.2)
-    g.fillRoundedRect(3, 4, SIZE - 4, SIZE - 4, CORNER)
+    g.fillStyle(0x000000, 0.25)
+    g.fillRoundedRect(4, 5, SIZE - 6, SIZE - 6, CORNER)
 
-    // White die face
-    g.fillStyle(0xffffff, 1)
+    // Darker 3D base
+    g.fillStyle(DIE_DARK, 1)
+    g.fillRoundedRect(1, 3, SIZE - 4, SIZE - 4, CORNER)
+
+    // Main die body
+    g.fillStyle(DIE_COLOR, 1)
     g.fillRoundedRect(1, 1, SIZE - 4, SIZE - 4, CORNER)
 
-    // 3D edge shading (darker bottom-right gradient)
-    g.fillStyle(0xe0e0e0, 0.6)
+    // 3D edge shading
+    g.fillStyle(DIE_DARK, 0.3)
     g.fillRoundedRect(4, 4, SIZE - 10, SIZE - 10, CORNER - 2)
-    g.fillStyle(0xcccccc, 0.3)
-    g.fillRoundedRect(8, 8, SIZE - 18, SIZE - 18, CORNER - 3)
 
-    // Gloss highlight (top-left)
-    g.fillStyle(0xffffff, 0.3)
+    // Gloss highlight
+    g.fillStyle(0xffffff, 0.25)
     g.beginPath()
     g.moveTo(4, 4)
     g.lineTo(SIZE - 6, 4)
@@ -365,20 +400,20 @@ export function generateDiceTextures(scene: Phaser.Scene): void {
     g.fillPath()
 
     // Border
-    g.lineStyle(1.5, 0xaaaaaa, 0.8)
+    g.lineStyle(2, 0xffccdd, 0.6)
     g.strokeRoundedRect(1, 1, SIZE - 4, SIZE - 4, CORNER)
 
-    // Pips with 3D effect
+    // White pips with 3D effect
     DICE_DOT_POSITIONS[face - 1].forEach(({ x, y }) => {
       // Pip shadow
-      g.fillStyle(0x000000, 0.15)
-      g.fillCircle(x + 0.5, y + 1, 3.8)
-      // Pip body
-      g.fillStyle(0x222233, 1)
-      g.fillCircle(x, y, 3.5)
+      g.fillStyle(DIE_DARK, 0.3)
+      g.fillCircle(x + 1, y + 1, 4.5)
+      // Pip body (white)
+      g.fillStyle(0xffffff, 0.95)
+      g.fillCircle(x, y, 4)
       // Pip highlight
-      g.fillStyle(0x555577, 0.5)
-      g.fillCircle(x - 1, y - 1, 1.8)
+      g.fillStyle(0xffffff, 0.5)
+      g.fillCircle(x - 1, y - 1, 2)
     })
 
     g.generateTexture(key, SIZE + 2, SIZE + 2)

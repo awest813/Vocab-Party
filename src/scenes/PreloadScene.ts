@@ -1,13 +1,9 @@
 import Phaser from 'phaser'
 import { EXTERNAL_ASSETS, TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import {
-  PLAYER_TEXTURE_KEYS,
-  TILE_TEXTURE_KEY,
-  BOARD_TILE_TYPES,
   generateDiceTextures,
   generatePlayerTextures,
   generateTileTextures,
-  DICE_TEXTURE_KEYS,
 } from '../systems/SpriteFactory'
 
 export class PreloadScene extends Phaser.Scene {
@@ -23,7 +19,7 @@ export class PreloadScene extends Phaser.Scene {
     // Animated title
     const titleText = this.add.text(w / 2, h / 2 - 80, 'VOCAB PARTY', {
       fontSize: '52px',
-      fontFamily: 'Arial Black, Arial',
+      fontFamily: 'Fredoka, Arial Black, Arial',
       color: '#ffffff',
       stroke: '#3333aa',
       strokeThickness: 8
@@ -38,7 +34,7 @@ export class PreloadScene extends Phaser.Scene {
 
     const statusText = this.add.text(w / 2, h / 2 + 60, 'Loading assets...', {
       fontSize: '16px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#6688aa'
     }).setOrigin(0.5)
 
@@ -74,6 +70,18 @@ export class PreloadScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     })
+    // Kenney game icons
+    this.load.image(TEXTURE_KEYS.kenneyStar, EXTERNAL_ASSETS.kenneyStar)
+    this.load.image(TEXTURE_KEYS.kenneyTrophy, EXTERNAL_ASSETS.kenneyTrophy)
+    this.load.image(TEXTURE_KEYS.kenneyCart, EXTERNAL_ASSETS.kenneyCart)
+    this.load.image(TEXTURE_KEYS.kenneyGamepad, EXTERNAL_ASSETS.kenneyGamepad)
+    this.load.image(TEXTURE_KEYS.kenneyQuestion, EXTERNAL_ASSETS.kenneyQuestion)
+    this.load.image(TEXTURE_KEYS.kenneyHome, EXTERNAL_ASSETS.kenneyHome)
+    this.load.image(TEXTURE_KEYS.kenneyReturn, EXTERNAL_ASSETS.kenneyReturn)
+    // Kenney card backs
+    this.load.image(TEXTURE_KEYS.kenneyCardRed, EXTERNAL_ASSETS.kenneyCardRed)
+    this.load.image(TEXTURE_KEYS.kenneyCardBlue, EXTERNAL_ASSETS.kenneyCardBlue)
+    this.load.image(TEXTURE_KEYS.kenneyCardGreen, EXTERNAL_ASSETS.kenneyCardGreen)
   }
 
   create() {

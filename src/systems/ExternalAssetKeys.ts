@@ -7,14 +7,6 @@
  * - Board tiles are 64×64 composites (card backs + icons) generated from the above.
  * License copies: public/assets/kenney/*.txt, public/assets/quaternius/*.txt
  */
-export const BUNDLED_GAME_ASSETS = {
-  quaterniusPlayers: [
-    'assets/quaternius/rpg-characters/player_warrior.png',
-    'assets/quaternius/rpg-characters/player_wizard.png',
-    'assets/quaternius/rpg-characters/player_rogue.png',
-    'assets/quaternius/rpg-characters/player_ranger.png',
-  ],
-} as const
 
 /**
  * Bundled copies of assets from https://github.com/samme/phaser3-examples-assets
@@ -29,6 +21,18 @@ export const EXTERNAL_ASSETS = {
   gem: 'assets/phaser-examples/sprites/gem.png',
   coinSheet: 'assets/phaser-examples/sprites/coin-16x16x4.png',
   starSmall: 'assets/phaser-examples/demoscene/star.png',
+  // Kenney game icons
+  kenneyStar: 'assets/kenney/game-icons/star.png',
+  kenneyTrophy: 'assets/kenney/game-icons/trophy.png',
+  kenneyCart: 'assets/kenney/game-icons/cart.png',
+  kenneyGamepad: 'assets/kenney/game-icons/gamepad.png',
+  kenneyQuestion: 'assets/kenney/game-icons/question.png',
+  kenneyHome: 'assets/kenney/game-icons/home.png',
+  kenneyReturn: 'assets/kenney/game-icons/return.png',
+  // Kenney card backs
+  kenneyCardRed: 'assets/kenney/boardgame/cards/cardBack_red2.png',
+  kenneyCardBlue: 'assets/kenney/boardgame/cards/cardBack_blue2.png',
+  kenneyCardGreen: 'assets/kenney/boardgame/cards/cardBack_green2.png',
 } as const
 
 export const TEXTURE_KEYS = {
@@ -40,4 +44,16 @@ export const TEXTURE_KEYS = {
   gem: 'ext_gem',
   coin: 'ext_coin',
   starSmall: 'ext_star_small',
+  // Kenney game icons
+  kenneyStar: 'kenney_star',
+  kenneyTrophy: 'kenney_trophy',
+  kenneyCart: 'kenney_cart',
+  kenneyGamepad: 'kenney_gamepad',
+  kenneyQuestion: 'kenney_question',
+  kenneyHome: 'kenney_home',
+  kenneyReturn: 'kenney_return',
+  // Kenney card backs
+  kenneyCardRed: 'kenney_card_red',
+  kenneyCardBlue: 'kenney_card_blue',
+  kenneyCardGreen: 'kenney_card_green',
 } as const

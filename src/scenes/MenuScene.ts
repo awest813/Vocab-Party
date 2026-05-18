@@ -1,7 +1,6 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { addStarfieldBackdrop } from '../ui/Starfield'
-import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode } from '../systems/gameFlags'
 
 const TILE_LEGEND = [
@@ -14,6 +13,7 @@ const TILE_LEGEND = [
 ]
 
 export class MenuScene extends Phaser.Scene {
+  private howToPlayOpen = false
   constructor() { super('MenuScene') }
 
   create() {
@@ -36,7 +36,7 @@ export class MenuScene extends Phaser.Scene {
     
     const title = this.add.text(0, 0, 'VOCAB PARTY', {
       fontSize: '92px',
-      fontFamily: 'Arial Black, Arial',
+      fontFamily: 'Fredoka, Arial Black, Arial',
       color: '#ffffff',
       stroke: '#FFD700',
       strokeThickness: 12
@@ -44,7 +44,7 @@ export class MenuScene extends Phaser.Scene {
     
     const titleOverlay = this.add.text(0, 0, 'VOCAB PARTY', {
       fontSize: '92px',
-      fontFamily: 'Arial Black, Arial',
+      fontFamily: 'Fredoka, Arial Black, Arial',
       color: '#FFD700',
     }).setOrigin(0.5).setAlpha(0.8)
 
@@ -53,7 +53,7 @@ export class MenuScene extends Phaser.Scene {
     // Edition Badge
     const badge = this.add.container(w / 2 + 320, 100)
     const bBg = this.add.polygon(0, 0, [0, -20, 100, -20, 120, 0, 100, 20, 0, 20], 0xffd700, 0.8)
-    const bText = this.add.text(55, 0, 'THE PARTY', { fontSize: '12px', fontFamily: 'Arial Black', color: '#000000' }).setOrigin(0.5)
+    const bText = this.add.text(55, 0, 'THE PARTY', { fontSize: '12px', fontFamily: 'Fredoka, Arial Black', color: '#000000' }).setOrigin(0.5)
     badge.add([bBg, bText]).setAngle(-15)
     this.tweens.add({ targets: badge, angle: -10, duration: 2000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
 
@@ -79,7 +79,7 @@ export class MenuScene extends Phaser.Scene {
     // Subtitle
     this.add.text(w / 2, 260, 'THE ULTIMATE COMPETITIVE LEARNING EXPERIENCE', {
       fontSize: '22px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#aaddff',
       letterSpacing: 4
     }).setOrigin(0.5).setAlpha(0.7)
@@ -106,7 +106,7 @@ export class MenuScene extends Phaser.Scene {
     // Version/Footer
     this.add.text(w / 2, h - 30, 'v2.0  •  PHASER 3 ENGINE', {
       fontSize: '14px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#445577'
     }).setOrigin(0.5)
 
@@ -167,6 +167,8 @@ export class MenuScene extends Phaser.Scene {
   }
 
   showHowToPlay() {
+    if (this.howToPlayOpen) return
+    this.howToPlayOpen = true
     const w = this.scale.width
     const h = this.scale.height
 
@@ -179,7 +181,7 @@ export class MenuScene extends Phaser.Scene {
     // Title
     const titleText = this.add.text(w / 2, h / 2 - 220, '🎲 HOW TO PLAY', {
       fontSize: '32px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#FFD700',
       stroke: '#664400',
       strokeThickness: 5
@@ -188,7 +190,7 @@ export class MenuScene extends Phaser.Scene {
     // Instructions
     const instrText = this.add.text(w / 2, h / 2 - 172, 'Take turns rolling the dice and moving around the board.', {
       fontSize: '17px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#aabbdd',
       align: 'center'
     }).setOrigin(0.5)
@@ -220,17 +222,17 @@ export class MenuScene extends Phaser.Scene {
       bg.setStrokeStyle(1.5, item.color, 0.6)
       const emojiT = this.add.text(x + 10, y + itemH / 2, item.emoji, { fontSize: '24px' }).setOrigin(0, 0.5)
       const labelT = this.add.text(x + 46, y + itemH / 2 - 9, item.label, {
-        fontSize: '15px', fontFamily: 'Arial Black', color: '#eeeeff'
+        fontSize: '15px', fontFamily: 'Fredoka, Arial Black', color: '#eeeeff'
       }).setOrigin(0, 0.5)
       const descT = this.add.text(x + 46, y + itemH / 2 + 10, item.desc, {
-        fontSize: '12px', fontFamily: 'Arial', color: '#9999bb'
+        fontSize: '12px', fontFamily: 'Fredoka, Arial', color: '#9999bb'
       }).setOrigin(0, 0.5)
       tileObjects.push(bg, emojiT, labelT, descT)
     })
 
     const winText = this.add.text(w / 2, h / 2 + 190, '🏆  Most points wins (round count is set in setup; solo play is supported).', {
       fontSize: '18px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#FFD700',
       stroke: '#443300',
       strokeThickness: 3
@@ -240,7 +242,7 @@ export class MenuScene extends Phaser.Scene {
 
     container.add([overlay, panel, titleText, instrText, ...tileObjects, winText, closeBtn])
 
-    const destroy = () => container.destroy(true)
+    const destroy = () => { this.howToPlayOpen = false; container.destroy(true) }
     closeBtn.on('pointerdown', destroy)
     overlay.on('pointerdown', destroy)
     this.input.keyboard?.once('keydown-ESC', destroy)

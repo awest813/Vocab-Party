@@ -36,6 +36,9 @@ export class BattleScene extends Phaser.Scene {
 
   create(data: BattleSceneData) {
     this.battleData = data
+    this.choiceMade = false
+    this.defenderTimerEvent = null
+    this.defenderTimerBar = null
     const w = this.scale.width
     const h = this.scale.height
 
@@ -50,16 +53,16 @@ export class BattleScene extends Phaser.Scene {
     const vsContainer = this.add.container(w / 2, h / 2).setDepth(100)
     const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
     const vsText = this.add.text(0, -20, '⚔️ VS ⚔️', {
-      fontSize: '100px', fontFamily: 'Arial Black', color: '#ff4444',
+      fontSize: '100px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444',
       stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setScale(3).setAlpha(0)
 
     const atkLabel = this.add.text(-200, 60, `${attacker.emoji} ${attacker.name}`, {
-      fontSize: '24px', fontFamily: 'Arial Black', color: '#ff8888'
+      fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#ff8888'
     }).setOrigin(0.5).setAlpha(0)
 
     const defLabel = this.add.text(200, 60, `${defender.emoji} ${defender.name}`, {
-      fontSize: '24px', fontFamily: 'Arial Black', color: '#8888ff'
+      fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#8888ff'
     }).setOrigin(0.5).setAlpha(0)
 
     vsContainer.add([vsBg, vsText, atkLabel, defLabel])
@@ -82,11 +85,11 @@ export class BattleScene extends Phaser.Scene {
     const h = this.scale.height
 
     this.statusText = this.add.text(w / 2, 100, '⚔️ BATTLE START!', {
-      fontSize: '48px', fontFamily: 'Arial Black', color: '#ff4444', stroke: '#000000', strokeThickness: 8
+      fontSize: '48px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444', stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)
 
     this.subStatusText = this.add.text(w / 2, 160, `${attacker.name} is attacking ${defender.name}!`, {
-      fontSize: '24px', fontFamily: 'Arial', color: '#ffffff'
+      fontSize: '24px', fontFamily: 'Fredoka, Arial', color: '#ffffff'
     }).setOrigin(0.5)
 
     this.attackerContainer = this.createPlayerSide(attacker, w / 2 - 250, h / 2, true)
@@ -107,17 +110,17 @@ export class BattleScene extends Phaser.Scene {
     const glow = this.add.rectangle(0, -128, 216, 4, color, 0.8)
 
     const name = this.add.text(0, -100, player.name.toUpperCase(), { 
-      fontSize: '22px', fontFamily: 'Arial Black', color: '#ffffff', letterSpacing: 2
+      fontSize: '22px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', letterSpacing: 2
     }).setOrigin(0.5)
     
     const emoji = this.add.text(0, -45, player.emoji, { fontSize: '72px' }).setOrigin(0.5)
     
     const stats = this.add.text(0, 45, `⚔️ +${Math.max(1, player.atk)}  🛡️ +${Math.max(1, player.def)}  💨 +${Math.max(1, player.evd)}`, {
-      fontSize: '20px', fontFamily: 'Arial Black', color: '#8899aa', align: 'center'
+      fontSize: '20px', fontFamily: 'Fredoka, Arial Black', color: '#8899aa', align: 'center'
     }).setOrigin(0.5)
 
     const rollText = this.add.text(0, 110, '?', { 
-      fontSize: '56px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6 
+      fontSize: '56px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6 
     }).setOrigin(0.5)
     rollText.setName('rollText')
 
@@ -165,7 +168,7 @@ export class BattleScene extends Phaser.Scene {
       const bx = w / 2 + 250
 
       this.add.text(bx, by - 50, 'Choose quickly!', {
-        fontSize: '16px', fontFamily: 'Arial', color: '#ffcc44'
+        fontSize: '16px', fontFamily: 'Fredoka, Arial', color: '#ffcc44'
       }).setOrigin(0.5).setName('timerLabel')
 
       // Timer bar

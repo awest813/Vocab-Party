@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState, ITEMS, ItemType } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
 import { createButton } from '../ui/Button'
@@ -12,9 +12,8 @@ import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../sys
 import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
-import { MinigameScene } from './MinigameScene'
-import { BattleResult } from './BattleScene'
 import type { QuestionResolution } from './QuestionScene'
+import type { BattleResult } from './BattleScene'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
@@ -168,7 +167,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.statusText = this.add.text(w / 2 - 160, h - 56, '', {
       fontSize: '20px',
-      fontFamily: 'Arial Black, Arial',
+      fontFamily: 'Fredoka, Arial Black, Arial',
       color: '#ffffff',
       stroke: '#000033',
       strokeThickness: 4
@@ -178,7 +177,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#aaddff',
       stroke: '#000033',
       strokeThickness: 4
@@ -275,6 +274,15 @@ export class BoardScene extends Phaser.Scene {
     const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, 0x0d0d1f)
     felt.setStrokeStyle(1, 0x334466, 0.5).setDepth(-1)
 
+    // Decorative corner icons
+    if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
+      const cornerIcons = [TEXTURE_KEYS.kenneyGamepad, TEXTURE_KEYS.kenneyStar, TEXTURE_KEYS.kenneyQuestion, TEXTURE_KEYS.kenneyCart]
+      const corners = [[fx + 4, fy + 4], [fx + frameW - 4, fy + 4], [fx + 4, fy + frameH - 4], [fx + frameW - 4, fy + frameH - 4]]
+      corners.forEach(([cx, cy], i) => {
+        this.add.image(cx, cy, cornerIcons[i % cornerIcons.length]).setDisplaySize(18, 18).setOrigin(0, 0).setDepth(0).setAlpha(0.4)
+      })
+    }
+
     const nodeSet = new Set(this.nodes.map(p => `${p.col},${p.row}`))
     for (let row = 0; row < BOARD_ROWS; row++) {
       for (let col = 0; col < BOARD_COLS; col++) {
@@ -353,18 +361,23 @@ export class BoardScene extends Phaser.Scene {
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
     const cy = this.boardOriginY + BOARD_ROWS * TILE_SIZE / 2
-    const titlePanel = this.add.rectangle(cx, cy, 220, 88, 0x0a1520, 0.88)
+    const titlePanel = this.add.rectangle(cx, cy, 240, 100, 0x0a1520, 0.88)
     titlePanel.setStrokeStyle(2, 0x335577, 0.9).setDepth(2)
-    this.add.text(cx, cy - 18, '🎉 VOCAB', {
-      fontSize: '26px',
-      fontFamily: 'Arial Black',
+
+    if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
+      this.add.image(cx - 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
+      this.add.image(cx + 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
+    }
+    this.add.text(cx, cy - 18, 'VOCAB', {
+      fontSize: '28px',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#e8f4ff',
       stroke: '#102040',
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(3)
     this.add.text(cx, cy + 18, 'PARTY', {
-      fontSize: '26px',
-      fontFamily: 'Arial Black',
+      fontSize: '28px',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#FFD700',
       stroke: '#553300',
       strokeThickness: 4
@@ -372,7 +385,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
       fontSize: '14px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#bbd7ff'
     }).setOrigin(0.5, 0).setDepth(3)
   }
@@ -404,7 +417,7 @@ export class BoardScene extends Phaser.Scene {
 
   private showImpactText(x: number, y: number, text: string, color: string = '#ffffff') {
     const txt = this.add.text(x, y, text, {
-      fontSize: '82px', fontFamily: 'Arial Black', color, stroke: '#000000', strokeThickness: 12
+      fontSize: '82px', fontFamily: 'Fredoka, Arial Black', color, stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setDepth(300).setScale(0)
 
     this.tweens.add({
@@ -427,7 +440,7 @@ export class BoardScene extends Phaser.Scene {
     const banner = this.add.container(w + 600, h / 2).setDepth(200)
     const bg = this.add.rectangle(0, 0, w * 2, 120, 0x000000, 0.7)
     const text = this.add.text(0, 0, msg, {
-      fontSize: '64px', fontFamily: 'Arial Black', color, stroke: '#000000', strokeThickness: 10
+      fontSize: '64px', fontFamily: 'Fredoka, Arial Black', color, stroke: '#000000', strokeThickness: 10
     }).setOrigin(0.5)
     
     banner.add([bg, text])
@@ -542,7 +555,7 @@ export class BoardScene extends Phaser.Scene {
       delay: isAutoSimMode() ? 12 : 80,
       repeat: 14,
       callback: () => {
-        const face = Phaser.Math.Between(1, 3)
+        const face = Phaser.Math.Between(1, 6)
         this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face - 1])
         this.diceSprite.setScale(1.2 + Math.random() * 0.3)
         this.diceSprite.setAngle(Math.random() * 20 - 10)
@@ -743,7 +756,7 @@ export class BoardScene extends Phaser.Scene {
       const vsContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setDepth(200)
       const vsBg = this.add.rectangle(0, 0, 1200, 200, 0x000000, 0.7)
       const vsText = this.add.text(0, 0, '⚔️ ENCOUNTER ⚔️', {
-        fontSize: '110px', fontFamily: 'Arial Black', color: '#ff4444', stroke: '#ffffff', strokeThickness: 12
+        fontSize: '110px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444', stroke: '#ffffff', strokeThickness: 12
       }).setOrigin(0.5)
       
       vsContainer.add([vsBg, vsText])
@@ -776,6 +789,8 @@ export class BoardScene extends Phaser.Scene {
                   defender.coins = Math.max(0, defender.coins - result.coinsLost)
                   this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
                   this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
+                  this.showDamageNumber(defender, -result.scoreLost, 'pts')
+                  if (result.coinsLost > 0) this.showDamageNumber(defender, -result.coinsLost, '🪙')
                 } else {
                   this.showFloatyText(defender, 'Safe!', '#44ccff')
                 }
@@ -808,7 +823,10 @@ export class BoardScene extends Phaser.Scene {
           player.coins += 4
           this.showImpactText(this.scale.width / 2, this.scale.height / 2, '⭐ NICE! ⭐', '#FFD700')
           this.showFloatyText(player, '⭐ NICE! +5 pts +4 coins!', '#FFD700')
+          this.showDamageNumber(player, 5, 'pts')
+          this.showDamageNumber(player, 4, '🪙')
           this.cameras.main.flash(400, 255, 215, 0, false)
+          this.cameras.main.shake(200, 0.005)
           showConfetti(this)
           this.endTurn()
           break
@@ -821,6 +839,8 @@ export class BoardScene extends Phaser.Scene {
             player.coins = Math.max(0, player.coins - 5)
             this.showImpactText(this.scale.width / 2, this.scale.height / 2, '💀 OUCH! 💀', '#ff4444')
             this.showFloatyText(player, '💀 OUCH! -4 pts -5 coins!', '#ff4444')
+            this.showDamageNumber(player, -4, 'pts')
+            this.showDamageNumber(player, -5, '🪙', true)
             this.cameras.main.flash(400, 200, 0, 0, false)
             this.cameras.main.shake(400, 0.02)
           }
@@ -920,7 +940,7 @@ export class BoardScene extends Phaser.Scene {
     const tokenPos = this.playerTokens[playerIndex]
     const txt = this.add.text(tokenPos.x, tokenPos.y - 20, msg, {
       fontSize: '24px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color,
       stroke: '#000000',
       strokeThickness: 4
@@ -935,6 +955,51 @@ export class BoardScene extends Phaser.Scene {
       duration: isAutoSimMode() ? 80 : 1200,
       onComplete: () => txt.destroy()
     })
+  }
+
+  private _shakeTokenContainer: Phaser.GameObjects.Container | null = null
+
+  showDamageNumber(player: Player, amount: number, label: string = '', noShake = false) {
+    const playerIndex = this.state.players.indexOf(player)
+    const tokenPos = this.playerTokens[playerIndex]
+    const icon = label || (amount > 0 ? '+' : '')
+    const txt = this.add.text(tokenPos.x, tokenPos.y - 40, `${icon}${amount}`, {
+      fontSize: '56px',
+      fontFamily: 'Fredoka, Arial Black',
+      color: amount > 0 ? '#44ff88' : '#ff4444',
+      stroke: '#000000',
+      strokeThickness: 6
+    }).setOrigin(0.5).setDepth(25).setScale(0)
+
+    this.tweens.add({
+      targets: txt,
+      scaleX: 1, scaleY: 1,
+      duration: 200,
+      ease: 'Back.easeOut',
+      onComplete: () => {
+        this.tweens.add({
+          targets: txt,
+          y: tokenPos.y - 120,
+          alpha: 0,
+          duration: 800,
+          delay: 300,
+          onComplete: () => txt.destroy()
+        })
+      }
+    })
+
+    // Only shake once per batch (same container) — prevents double-shake conflict
+    if (amount < 0 && !noShake && this._shakeTokenContainer !== tokenPos) {
+      this._shakeTokenContainer = tokenPos
+      this.tweens.add({
+        targets: tokenPos,
+        x: tokenPos.x + 4,
+        duration: 40,
+        yoyo: true,
+        repeat: 3,
+        onComplete: () => { this._shakeTokenContainer = null }
+      })
+    }
   }
 
   handleShop(player: Player, playerIndex: number, tileIndex: number) {
@@ -1010,6 +1075,7 @@ export class BoardScene extends Phaser.Scene {
       player.score += 12
       this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
       this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
+      this.showDamageNumber(player, 12, 'pts')
       this.starPurchaseSplash(player)
     } else {
       player.coins += 2
@@ -1027,12 +1093,12 @@ export class BoardScene extends Phaser.Scene {
     const overlay = this.add.rectangle(0, 0, w, h, 0x000000, 0.4).setAlpha(0)
     const star = this.add.text(0, -60, '⭐', { fontSize: '120px' }).setOrigin(0.5).setScale(0)
     const title = this.add.text(0, 60, 'STAR!', {
-      fontSize: '72px', fontFamily: 'Arial Black', color: '#FFD700',
+      fontSize: '72px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700',
       stroke: '#884400', strokeThickness: 8
     }).setOrigin(0.5).setScale(0).setAlpha(0)
 
     const name = this.add.text(0, 120, `${player.emoji} ${player.name}`, {
-      fontSize: '28px', fontFamily: 'Arial Black', color: '#ffffff'
+      fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff'
     }).setOrigin(0.5).setAlpha(0)
 
     container.add([overlay, star, title, name])
@@ -1047,6 +1113,7 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, alpha: 1, duration: 400, delay: 400, ease: 'Back.easeOut' })
     this.tweens.add({ targets: name, alpha: 1, duration: 300, delay: 700 })
     this.cameras.main.flash(500, 255, 215, 0, true)
+    this.cameras.main.shake(300, 0.008)
 
     // Golden sparkle burst
     if (!isAutoSimMode()) {
@@ -1087,6 +1154,7 @@ export class BoardScene extends Phaser.Scene {
       player.score += BUILD_BONUS_SCORE
       msg = `Build bonus! +${BUILD_BONUS_SCORE} pts`
       this.statusText.setText(`🧱 ${player.name} built a set!`)
+      this.showDamageNumber(player, BUILD_BONUS_SCORE, 'pts')
       showConfetti(this)
     } else {
       this.statusText.setText(`🧱 Brick ${n} collected!`)
@@ -1284,7 +1352,7 @@ export class BoardScene extends Phaser.Scene {
     this.itemMenu = this.add.container(w / 2, h / 2).setDepth(100)
     
     const bg = this.add.rectangle(0, 0, 400, 300, 0x1a1a2e, 0.95).setStrokeStyle(3, 0x44ccff)
-    const title = this.add.text(0, -120, '🎒 YOUR ITEMS', { fontSize: '24px', fontFamily: 'Arial Black', color: '#44ccff' }).setOrigin(0.5)
+    const title = this.add.text(0, -120, '🎒 YOUR ITEMS', { fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#44ccff' }).setOrigin(0.5)
     this.itemMenu.add([bg, title])
 
     player.inventory.forEach((type, i) => {

@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 export class PauseScene extends Phaser.Scene {
   constructor() {
@@ -11,15 +12,19 @@ export class PauseScene extends Phaser.Scene {
     const h = this.scale.height
 
     // Semi-transparent backdrop
-    this.add.rectangle(0, 0, w, h, 0x050510, 0.7).setOrigin(0)
+    this.add.rectangle(0, 0, w, h, 0x000000, 0.6).setOrigin(0)
     
-    // Glassmorphic Panel
+    // Glassmorphic Panel with Kenney card back
     const panel = this.add.container(w / 2, h / 2)
-    const bg = this.add.rectangle(0, 0, 400, 320, 0x1a2a4a, 0.85)
-    bg.setStrokeStyle(4, 0x4488ff, 0.6)
+    const cardTex = TEXTURE_KEYS.kenneyCardBlue
+    const hasCard = this.textures.exists(cardTex)
+    const bg = hasCard
+      ? this.add.image(0, 0, cardTex).setDisplaySize(400, 320).setAlpha(0.85)
+      : this.add.rectangle(0, 0, 400, 320, 0x1a2a4a, 0.85)
+    if (!hasCard) (bg as Phaser.GameObjects.Rectangle).setStrokeStyle(4, 0x4488ff, 0.6)
     
     const title = this.add.text(0, -110, '⏸️ PAUSED', {
-      fontSize: '42px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6
+      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5)
 
     const resumeBtn = createButton(this, 0, -20, 'RESUME', 0x22bb55, 0x1a8844, 300, 50)
@@ -73,12 +78,12 @@ export class PauseScene extends Phaser.Scene {
     bg.setStrokeStyle(3, 0x6688cc, 0.8)
 
     const title = this.add.text(0, -150, '📖 HOW TO PLAY', {
-      fontSize: '28px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 4
+      fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 4
     }).setOrigin(0.5)
 
     const texts = rules.map((rule, i) =>
       this.add.text(0, -100 + i * 36, rule, {
-        fontSize: '16px', fontFamily: 'Arial', color: '#aabbdd'
+        fontSize: '16px', fontFamily: 'Fredoka, Arial', color: '#aabbdd'
       }).setOrigin(0.5)
     )
 

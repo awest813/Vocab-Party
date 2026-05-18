@@ -93,6 +93,7 @@ export class MinigameScene extends Phaser.Scene {
   }
 
   create(data: MinigameSceneData) {
+    this.minigameData = data
     const w = this.scale.width
     const h = this.scale.height
     const { state, onComplete, cpuMode, cpuLevel } = data
@@ -112,11 +113,11 @@ export class MinigameScene extends Phaser.Scene {
     const splashContainer = this.add.container(w / 2, h / 2).setDepth(200)
     const splashBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
     const splashTitle = this.add.text(0, -30, '🕹️ MINIGAME!', {
-      fontSize: '80px', fontFamily: 'Arial Black', color: '#ffffff',
+      fontSize: '80px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
       stroke: '#ff44aa', strokeThickness: 12
     }).setOrigin(0.5).setScale(0)
     const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs The World!`, {
-      fontSize: '22px', fontFamily: 'Arial', color: '#ff88cc'
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ff88cc'
     }).setOrigin(0.5).setAlpha(0)
 
     splashContainer.add([splashBg, splashTitle, splashBy])
@@ -162,11 +163,11 @@ export class MinigameScene extends Phaser.Scene {
     const glow = this.add.rectangle(0, -148, 796, 4, 0xffd700, 0.8)
 
     const title = this.add.text(0, -70, '🕹️ MINIGAME TIME!', {
-      fontSize: '62px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#ffaa00', strokeThickness: 10
+      fontSize: '62px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#ffaa00', strokeThickness: 10
     }).setOrigin(0.5)
 
     const subTitle = this.add.text(0, 20, names[chosen], {
-      fontSize: '42px', fontFamily: 'Arial Black', color: '#ff88ff', stroke: '#440044', strokeThickness: 6
+      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ff88ff', stroke: '#440044', strokeThickness: 6
     }).setOrigin(0.5).setAlpha(0)
 
     announcePanel.add([panelBg, glow, title, subTitle])
@@ -187,7 +188,7 @@ export class MinigameScene extends Phaser.Scene {
 
     let count = 3
     const countText = this.add.text(w / 2, h / 2 + 180, '', {
-      fontSize: '92px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 8
+      fontSize: '92px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)
 
     const doCount = () => {
@@ -253,15 +254,15 @@ export class MinigameScene extends Phaser.Scene {
     cardBg.setStrokeStyle(2, 0x4488ff, 0.4)
     
     const qLabel = this.add.text(w / 2, 60, '🔍 CONTEXT CLUE CLASH', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5)
 
     const qSub = this.add.text(w / 2, 105, 'Fill in the blank using context clues!', {
-      fontSize: '20px', fontFamily: 'Arial', color: '#aaccff'
+      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
     }).setOrigin(0.5)
 
     const qSentence = this.add.text(0, 0, q.sentence, {
-      fontSize: '28px', fontFamily: 'Arial', color: '#ffffff',
+      fontSize: '28px', fontFamily: 'Fredoka, Arial', color: '#ffffff',
       wordWrap: { width: 1000 }, align: 'center', lineSpacing: 10
     }).setOrigin(0.5)
     
@@ -279,7 +280,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
-          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
@@ -287,7 +288,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong! Try again...', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -311,7 +312,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
@@ -323,7 +324,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -353,11 +354,11 @@ export class MinigameScene extends Phaser.Scene {
       : fallbackComma
 
     this.add.text(w / 2, 60, '😱 COMMA CRISIS', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#ff8844', stroke: '#442200', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#ff8844', stroke: '#442200', strokeThickness: 6
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 130, 'Choose the sentence with correct comma placement!', {
-      fontSize: '22px', fontFamily: 'Arial', color: '#ffccaa'
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ffccaa'
     }).setOrigin(0.5)
 
     let done = false
@@ -372,7 +373,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
-          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
@@ -380,7 +381,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -400,7 +401,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#aa8866'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa8866'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff8844).setOrigin(0, 0.5)
@@ -412,7 +413,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -437,21 +438,21 @@ export class MinigameScene extends Phaser.Scene {
       : fallbackPos
 
     this.add.text(w / 2, 60, '🗣️ PARTS OF SPEECH PANIC', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#ff44ff', stroke: '#440044', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#ff44ff', stroke: '#440044', strokeThickness: 6
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 130, 'What part of speech is the highlighted word?', {
-      fontSize: '22px', fontFamily: 'Arial', color: '#ffaaff'
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ffaaff'
     }).setOrigin(0.5)
 
     const wordDisplay = this.add.text(w / 2, 220, q.word, {
-      fontSize: '80px', fontFamily: 'Arial Black', color: '#FFD700',
+      fontSize: '80px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700',
       stroke: '#664400', strokeThickness: 8
     }).setOrigin(0.5)
     this.tweens.add({ targets: wordDisplay, scaleX: 1.1, scaleY: 1.1, duration: 600, yoyo: true, repeat: -1 })
 
     this.add.text(w / 2, 310, `"${q.sentence}"`, {
-      fontSize: '22px', fontFamily: 'Arial', color: '#ccccff',
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ccccff',
       wordWrap: { width: 900 }, align: 'center', fontStyle: 'italic'
     }).setOrigin(0.5)
 
@@ -468,7 +469,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
-          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
@@ -476,7 +477,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -499,7 +500,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#aa88cc'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa88cc'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff44ff).setOrigin(0, 0.5)
@@ -511,7 +512,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -535,15 +536,15 @@ export class MinigameScene extends Phaser.Scene {
       : fallbackSynonym
 
     this.add.text(w / 2, 60, '⚡ SYNONYM BLITZ', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#66ddff', stroke: '#003344', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#66ddff', stroke: '#003344', strokeThickness: 6
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 130, 'Tap the word that means almost the same thing!', {
-      fontSize: '22px', fontFamily: 'Arial', color: '#aeeeff'
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#aeeeff'
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 240, q.word.toUpperCase(), {
-      fontSize: '72px', fontFamily: 'Arial Black', color: '#ffffff',
+      fontSize: '72px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
       stroke: '#224466', strokeThickness: 8
     }).setOrigin(0.5)
 
@@ -559,7 +560,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
-          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
@@ -567,7 +568,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -591,7 +592,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ddff).setOrigin(0, 0.5)
@@ -603,7 +604,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -632,11 +633,11 @@ export class MinigameScene extends Phaser.Scene {
       : fallbackSentenceFix
 
     this.add.text(w / 2, 55, '✨ SENTENCE FIX SHOWDOWN', {
-      fontSize: '34px', fontFamily: 'Arial Black', color: '#88ffcc', stroke: '#114433', strokeThickness: 6
+      fontSize: '34px', fontFamily: 'Fredoka, Arial Black', color: '#88ffcc', stroke: '#114433', strokeThickness: 6
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 118, q.prompt, {
-      fontSize: '22px', fontFamily: 'Arial', color: '#ccffee',
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ccffee',
       wordWrap: { width: 980 }, align: 'center'
     }).setOrigin(0.5)
 
@@ -652,7 +653,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
-          fontSize: '32px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
@@ -660,7 +661,7 @@ export class MinigameScene extends Phaser.Scene {
         if (btnBg) btnBg.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -680,7 +681,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 46, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#66aa99'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#66aa99'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x66ffcc).setOrigin(0, 0.5)
@@ -692,7 +693,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 78, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -711,15 +712,15 @@ export class MinigameScene extends Phaser.Scene {
       : fallback
 
     const header = this.add.text(w / 2, 80, '🔄 ANTONYM ATTACK', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5)
 
     const subHeader = this.add.text(w / 2, 125, 'Pick the OPPOSITE of the word below!', {
-      fontSize: '20px', fontFamily: 'Arial', color: '#aaccff'
+      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 190, q.word, {
-      fontSize: '56px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#884488', strokeThickness: 8
+      fontSize: '56px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#884488', strokeThickness: 8
     }).setOrigin(0.5)
 
     let done = false
@@ -733,7 +734,7 @@ export class MinigameScene extends Phaser.Scene {
         if (bg2) bg2.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Opposites attract!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
       } else {
@@ -741,7 +742,7 @@ export class MinigameScene extends Phaser.Scene {
         if (bg2) bg2.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong! Try again!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -765,7 +766,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
@@ -777,7 +778,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }
@@ -796,15 +797,15 @@ export class MinigameScene extends Phaser.Scene {
       : fallback
 
     const header = this.add.text(w / 2, 80, '🔊 HOMOPHONE HUNT', {
-      fontSize: '36px', fontFamily: 'Arial Black', color: '#44ddff', stroke: '#004466', strokeThickness: 6
+      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#44ddff', stroke: '#004466', strokeThickness: 6
     }).setOrigin(0.5)
 
     const subHeader = this.add.text(w / 2, 125, 'Choose the correct word to complete the sentence!', {
-      fontSize: '20px', fontFamily: 'Arial', color: '#aaccff'
+      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
     }).setOrigin(0.5)
 
     this.add.text(w / 2, 200, q.prompt, {
-      fontSize: '32px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#004466', strokeThickness: 6
+      fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#004466', strokeThickness: 6
     }).setOrigin(0.5)
 
     let done = false
@@ -818,7 +819,7 @@ export class MinigameScene extends Phaser.Scene {
         if (bg2) bg2.setFillStyle(0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Perfect homophone!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
       } else {
@@ -826,7 +827,7 @@ export class MinigameScene extends Phaser.Scene {
         if (bg2) bg2.setFillStyle(0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong homophone! Try again!', {
-          fontSize: '28px', fontFamily: 'Arial Black', color: '#ff4444'
+          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
         done = false
       }
@@ -850,7 +851,7 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Arial', color: '#6688aa'
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
     const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
@@ -862,7 +863,7 @@ export class MinigameScene extends Phaser.Scene {
           done = true
           this.clearChoiceKeys()
           this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#ffcc44'
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
           }).setOrigin(0.5)
           this.time.delayedCall(1500, () => onComplete(-1))
         }

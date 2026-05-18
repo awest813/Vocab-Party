@@ -1,6 +1,5 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
-import { CPU_LEVEL_LABEL } from '../systems/CpuPolicy'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 const PLAYER_COLORS = ['#ff6666', '#6688ff', '#66dd66', '#ffdd44']
@@ -43,7 +42,7 @@ export class PlayerHUD {
         : `${player.emoji} ${player.name}`
       const nameText = this.scene.add.text(-panelW / 2 + 10, -32, nameLine, {
         fontSize: '18px',
-        fontFamily: 'Arial Black',
+        fontFamily: 'Fredoka, Arial Black',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3
@@ -51,20 +50,20 @@ export class PlayerHUD {
 
       const scoreText = this.scene.add.text(-panelW / 2 + 10, -4, `${player.score} pts`, {
         fontSize: '20px',
-        fontFamily: 'Arial Black',
+        fontFamily: 'Fredoka, Arial Black',
         color: '#FFD700'
       }).setOrigin(0, 0.5)
       this.lastScores[i] = player.score
 
       const metaText = this.scene.add.text(-panelW / 2 + 10, 24, `🪙${player.coins}  🌟${player.trophies}`, {
         fontSize: '14px',
-        fontFamily: 'Arial Black',
+        fontFamily: 'Fredoka, Arial Black',
         color: '#ccddee'
       }).setOrigin(0, 0.5)
 
       const rankText = this.scene.add.text(panelW / 2 - 10, -panelH / 2 + 10, '', {
         fontSize: '12px',
-        fontFamily: 'Arial Black',
+        fontFamily: 'Fredoka, Arial Black',
         color: '#ffffff',
         align: 'right'
       }).setOrigin(1, 0)

@@ -7,6 +7,4 @@ export function rollBlockDie(): number {
   return rollDice(3)
 }
 
-export function rollTwoDice(): [number, number] {
-  return [rollDice(), rollDice()]
-}
+

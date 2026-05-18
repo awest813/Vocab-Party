@@ -14,8 +14,7 @@ export function playCoinBurst(scene: Phaser.Scene, x: number, y: number): void {
   }
 
   const n = 8
-  const borderColor = 0xffd700
-  
+
   // Sparkle Emitter (Particle effect)
   const particles = scene.add.particles(0, 0, TEXTURE_KEYS.particleYellow, {
     x, y,

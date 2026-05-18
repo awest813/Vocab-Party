@@ -202,21 +202,6 @@ export function cpuChooseItem(
 }
 
 /**
- * Check if a tile type appears within `range` steps ahead of `position`.
- */
-function hasTileTypeAhead(position: number, type: string, range: number, tileTypes?: string[]): boolean {
-  // This is a board-agnostic version; the caller must provide tileTypes
-  // We just check if the position + range crosses the star tile index
-  // Star tiles are at indices: 6, 22, 39 in the board layout (approximately)
-  const starIndices = [6, 22, 39]
-  for (const si of starIndices) {
-    const dist = si > position ? si - position : 44 - position + si
-    if (dist > 0 && dist <= range) return true
-  }
-  return false
-}
-
-/**
  * CPU decides whether to buy a shop when landing on one.
  */
 export function cpuShouldBuyShop(coins: number, level?: CpuLevel): boolean {

@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import type { GameState } from '../systems/GameState'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 
 interface QuestionData {
@@ -53,14 +54,18 @@ export class QuestionScene extends Phaser.Scene {
     // Deep environment wash
     this.add.rectangle(0, 0, w, h, 0x050510, 0.85).setOrigin(0)
     
-    // Glassmorphic Question Panel
+    // Glassmorphic Question Panel with Kenney card back
     const panelW = 920
     const panelH = 520
     const panelContainer = this.add.container(w / 2, h / 2)
     
-    const panelBg = this.add.rectangle(0, 0, panelW, panelH, 0x0a1528, 0.8)
     const borderColor = type === 'vocab' ? 0x4488ff : 0xff8844
-    panelBg.setStrokeStyle(4, borderColor, 0.6)
+    const cardTex = type === 'vocab' ? TEXTURE_KEYS.kenneyCardBlue : TEXTURE_KEYS.kenneyCardRed
+    const hasCard = this.textures.exists(cardTex)
+    const panelBg = hasCard
+      ? this.add.image(0, 0, cardTex).setDisplaySize(panelW, panelH).setAlpha(0.8)
+      : this.add.rectangle(0, 0, panelW, panelH, 0x0a1528, 0.8)
+    if (!hasCard) (panelBg as Phaser.GameObjects.Rectangle).setStrokeStyle(4, borderColor, 0.6)
     
     const accentGlow = this.add.rectangle(0, -panelH / 2 + 2, panelW - 4, 4, borderColor, 0.8)
     
@@ -81,7 +86,7 @@ export class QuestionScene extends Phaser.Scene {
     const headerLabel = type === 'vocab' ? '📖 VOCABULARY QUESTION' : '✏️ GRAMMAR QUESTION'
     const header = this.add.text(w / 2, h / 2 - 210, headerLabel, {
       fontSize: '28px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: headerColor,
       stroke: '#000000',
       strokeThickness: 4
@@ -89,14 +94,14 @@ export class QuestionScene extends Phaser.Scene {
 
     this.add.text(w / 2, h / 2 - 170, `${player.emoji} ${player.name}'s Turn  ·  Score: ${player.score}`, {
       fontSize: '20px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#aaaacc'
     }).setOrigin(0.5)
 
     // Keyboard hint
     this.add.text(w / 2, h / 2 - 140, 'Keys: 1–4 or A–D', {
       fontSize: '14px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#667788'
     }).setOrigin(0.5)
 
@@ -105,7 +110,7 @@ export class QuestionScene extends Phaser.Scene {
     // Question text
     const qText = this.add.text(w / 2, h / 2 - 100, q.question, {
       fontSize: '24px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#ffffff',
       wordWrap: { width: 820 },
       align: 'center'
@@ -180,7 +185,7 @@ export class QuestionScene extends Phaser.Scene {
 
     const countdownText = this.add.text(w / 2 + 430, h / 2 + 225, '15', {
       fontSize: '22px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#44ff88',
       stroke: '#002200',
       strokeThickness: 3
@@ -285,7 +290,7 @@ export class QuestionScene extends Phaser.Scene {
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 140, 0x00ff88, 0.6)
       const txt = this.add.text(0, 0, '✅ CORRECT!', {
-        fontSize: '84px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#004400', strokeThickness: 10
+        fontSize: '84px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#004400', strokeThickness: 10
       }).setOrigin(0.5)
       banner.add([bg, txt]).setScale(3).setAlpha(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
@@ -293,13 +298,13 @@ export class QuestionScene extends Phaser.Scene {
       if (timeBonus > 0) {
         this.time.delayedCall(this.d(400), () => {
           this.add.text(w / 2, h / 2 + 100, `⚡ SPEED BONUS +${timeBonus}`, {
-            fontSize: '28px', fontFamily: 'Arial Black', color: '#88ddff', stroke: '#102844', strokeThickness: 4
+            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#88ddff', stroke: '#102844', strokeThickness: 4
           }).setOrigin(0.5).setDepth(201)
         })
       }
       this.time.delayedCall(this.d(600), () => {
         this.add.text(w / 2, h / 2 + 160, `📈 +${10 + timeBonus} pts`, {
-          fontSize: '22px', fontFamily: 'Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 4
+          fontSize: '22px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 4
         }).setOrigin(0.5).setDepth(201)
       })
     } else {
@@ -309,7 +314,7 @@ export class QuestionScene extends Phaser.Scene {
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 140, 0xff0000, 0.6)
       const txt = this.add.text(0, 0, '❌ WRONG', {
-        fontSize: '84px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#440000', strokeThickness: 10
+        fontSize: '84px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#440000', strokeThickness: 10
       }).setOrigin(0.5)
       banner.add([bg, txt]).setScale(3).setAlpha(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
@@ -319,7 +324,7 @@ export class QuestionScene extends Phaser.Scene {
       this.time.delayedCall(this.d(300), () => {
         this.add.text(w / 2, h / 2 + 230, `💡 ${explanation}`, {
           fontSize: '18px',
-          fontFamily: 'Arial',
+          fontFamily: 'Fredoka, Arial',
           color: '#ffffaa',
           wordWrap: { width: 820 },
           align: 'center'

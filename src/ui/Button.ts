@@ -22,7 +22,7 @@ export function createButton(
 
   const text = scene.add.text(0, 0, label, {
     fontSize: '22px',
-    fontFamily: 'Arial Black, Arial',
+    fontFamily: 'Fredoka, Arial Black, Arial',
     color: '#ffffff',
     stroke: '#000000',
     strokeThickness: 4

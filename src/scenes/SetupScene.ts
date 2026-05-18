@@ -39,6 +39,9 @@ export class SetupScene extends Phaser.Scene {
   private plusBtn!: Phaser.GameObjects.Container
   private startBtn!: Phaser.GameObjects.Container
   private rowContainers: Phaser.GameObjects.Container[] = []
+  private cursorTimers: Phaser.Time.TimerEvent[] = []
+  private enterHandler?: () => void
+  private escHandler?: () => void
 
   constructor() { super('SetupScene') }
 
@@ -62,7 +65,7 @@ export class SetupScene extends Phaser.Scene {
     const hBg = this.add.rectangle(0, 0, 1100, 100, 0x0a1528, 0.7)
     hBg.setStrokeStyle(2, 0x4488ff, 0.3)
     const titleText = this.add.text(0, -10, '🚀 EXPEDITION SETUP', {
-      fontSize: '48px', fontFamily: 'Arial Black', color: '#ffffff', stroke: '#4488ff', strokeThickness: 8
+      fontSize: '48px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#4488ff', strokeThickness: 8
     }).setOrigin(0.5)
     headerPanel.add([hBg, titleText])
 
@@ -72,13 +75,13 @@ export class SetupScene extends Phaser.Scene {
     const cpBg = this.add.rectangle(0, 0, 400, 80, 0x1a2a4a, 0.8)
     cpBg.setStrokeStyle(3, 0xffd700, 0.5)
     
-    const countLabel = this.add.text(0, -25, 'PLAYER COUNT', { fontSize: '14px', fontFamily: 'Arial Black', color: '#ffd700' }).setOrigin(0.5)
+    const countLabel = this.add.text(0, -25, 'PLAYER COUNT', { fontSize: '14px', fontFamily: 'Fredoka, Arial Black', color: '#ffd700' }).setOrigin(0.5)
     
     this.minusBtn = createButton(this, -120, 10, '−', 0x554488, 0x332266, 60, 44)
     this.minusBtn.on('pointerdown', () => this.changeCount(-1))
  
     this.countText = this.add.text(0, 10, String(this.playerCount), {
-      fontSize: '42px', fontFamily: 'Arial Black', color: '#ffffff'
+      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff'
     }).setOrigin(0.5)
  
     this.plusBtn = createButton(this, 120, 10, '+', 0x554488, 0x332266, 60, 44)
@@ -100,7 +103,7 @@ export class SetupScene extends Phaser.Scene {
     // Name rows header
     this.add.text(w / 2, 318, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
       fontSize: '15px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#667788'
     }).setOrigin(0.5)
 
@@ -140,16 +143,24 @@ export class SetupScene extends Phaser.Scene {
 
     // Enter to start, Escape to go back
     this.input.keyboard?.on('keydown-ENTER', () => { if (this.activeRow < 0) this.startGame() })
-    this.input.keyboard?.on('keydown-ESC', () => this.scene.start('MenuScene'))
+    // Enter to start, Escape to deselect or go back
+    this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.activeRow >= 0) this.setActiveRow(-1)
+      else this.scene.start('MenuScene')
+    })
 
     // Tap away to deselect
     this.input.on('pointerdown', (_ptr: Phaser.Input.Pointer, objs: Phaser.GameObjects.GameObject[]) => {
       if (objs.length === 0) this.setActiveRow(-1)
     })
 
-    // Cleanup keyboard handler on shutdown
+    // Cleanup on shutdown
     this.events.once('shutdown', () => {
       this.input.keyboard?.off('keydown')
+      this.input.keyboard?.off('keydown-ENTER')
+      this.input.keyboard?.off('keydown-ESC')
+      this.cursorTimers.forEach(t => t.destroy())
+      this.cursorTimers = []
     })
   }
 
@@ -197,13 +208,13 @@ export class SetupScene extends Phaser.Scene {
     // Player label
     const label = this.add.text(w / 2 - 222, rowY, `${PLAYER_EMOJIS[index]} Player ${index + 1}`, {
       fontSize: '20px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: PLAYER_COLORS[index]
     }).setOrigin(0, 0.5)
 
     const cpuToggle = this.add.text(w / 2 - 88, rowY, '(CPU)', {
       fontSize: '15px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#6699aa'
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
@@ -226,14 +237,14 @@ export class SetupScene extends Phaser.Scene {
     // Name display text
     const nameText = this.add.text(inputX - inputW / 2 + 14, rowY, DEFAULT_NAMES[index], {
       fontSize: '22px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#ffffff'
     }).setOrigin(0, 0.5)
 
     // Cursor
     const cursor = this.add.text(inputX - inputW / 2 + 14, rowY, '', {
       fontSize: '22px',
-      fontFamily: 'Arial',
+      fontFamily: 'Fredoka, Arial',
       color: '#88aaff'
     }).setOrigin(0, 0.5).setVisible(false)
 
@@ -250,7 +261,7 @@ export class SetupScene extends Phaser.Scene {
     this.rows.push(row)
 
     // Cursor blink
-    this.time.addEvent({
+    const cursorTimer = this.time.addEvent({
       delay: 500,
       loop: true,
       callback: () => {
@@ -258,6 +269,7 @@ export class SetupScene extends Phaser.Scene {
         else cursor.setVisible(false)
       }
     })
+    this.cursorTimers.push(cursorTimer)
   }
 
   refreshCpuToggle(index: number) {
@@ -344,13 +356,8 @@ export class SetupScene extends Phaser.Scene {
   }
 
   startGame() {
-    console.log('SetupScene: Start Game clicked')
-    try {
-      const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
-      this.startGameWithRounds(roundsPerGame)
-    } catch (e) {
-      console.error('SetupScene: Error starting game', e)
-    }
+    const roundsPerGame = this.fullMapMode ? BOARD_PATH_LENGTH : CLASSIC_ROUNDS
+    this.startGameWithRounds(roundsPerGame)
   }
 
   private startGameWithRounds(roundsPerGame: number) {

@@ -86,7 +86,7 @@ export class ResultsScene extends Phaser.Scene {
 
     const title = this.add.text(w / 2, 52, '🏆 FINAL RESULTS 🏆', {
       fontSize: '52px',
-      fontFamily: 'Arial Black',
+      fontFamily: 'Fredoka, Arial Black',
       color: '#FFD700',
       stroke: '#884400',
       strokeThickness: 8
@@ -148,14 +148,14 @@ export class ResultsScene extends Phaser.Scene {
 
       const emoji = this.add.text(x, cardY - 40, player.emoji, { fontSize: '48px' }).setOrigin(0.5).setAlpha(0)
       const nameT = this.add.text(x, cardY + 15, player.name, {
-        fontSize: '20px', fontFamily: 'Arial Black', color: '#ffffff'
+        fontSize: '20px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff'
       }).setOrigin(0.5).setAlpha(0)
       const scoreT = this.add.text(x, cardY + 45, `${player.score} pts  🌟${player.trophies}`, {
-        fontSize: '18px', fontFamily: 'Arial Black', color: '#FFD700'
+        fontSize: '18px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700'
       }).setOrigin(0.5).setAlpha(0)
       const brickT = player.bricksCollected > 0
         ? this.add.text(x, cardY + 68, `🧱 x${player.bricksCollected}`, {
-            fontSize: '14px', fontFamily: 'Arial', color: '#aa8866'
+            fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa8866'
           }).setOrigin(0.5).setAlpha(0)
         : null
       const medal = this.add.text(x, cardY - 95, medals[rank], { fontSize: '42px' }).setOrigin(0.5).setAlpha(0)
@@ -187,7 +187,7 @@ export class ResultsScene extends Phaser.Scene {
       }
 
       this.add.text(x, podiumBase - ph / 2, String(rank + 1), {
-        fontSize: '32px', fontFamily: 'Arial Black', color: '#000000'
+        fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#000000'
       }).setAlpha(0.2).setOrigin(0.5)
     })
 
@@ -195,7 +195,7 @@ export class ResultsScene extends Phaser.Scene {
       showConfetti(this)
       const banner = this.add.text(w / 2, 130, `🎉 ${sorted[0].name} WINS! 🎉`, {
         fontSize: '38px',
-        fontFamily: 'Arial Black',
+        fontFamily: 'Fredoka, Arial Black',
         color: '#FFD700',
         stroke: '#884400',
         strokeThickness: 7
@@ -207,7 +207,7 @@ export class ResultsScene extends Phaser.Scene {
       const totalBricks = state.players.reduce((s, p) => s + p.bricksCollected, 0)
       const totalStars = state.players.reduce((s, p) => s + p.trophies, 0)
       const statsLine = this.add.text(w / 2, 170, `${totalRounds} rounds  ·  ${totalStars} stars earned  ·  ${totalBricks} bricks collected`, {
-        fontSize: '16px', fontFamily: 'Arial', color: '#8899aa'
+        fontSize: '16px', fontFamily: 'Fredoka, Arial', color: '#8899aa'
       }).setOrigin(0.5).setAlpha(0)
       this.tweens.add({ targets: statsLine, alpha: 1, duration: 400, delay: 600 })
 
