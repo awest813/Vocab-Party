@@ -44,6 +44,16 @@ export const EXTERNAL_ASSETS = {
   kenneyCardRed: 'assets/kenney/boardgame/cards/cardBack_red2.png',
   kenneyCardBlue: 'assets/kenney/boardgame/cards/cardBack_blue2.png',
   kenneyCardGreen: 'assets/kenney/boardgame/cards/cardBack_green2.png',
+  // Character sprites (MIT — photonstorm/phaser3-examples)
+  charPhaserDude: 'assets/phaser-examples/sprites/phaser-dude.png',
+  charMushroom: 'assets/phaser-examples/sprites/mushroom.png',
+  charBunny: 'assets/phaser-examples/sprites/bunny.png',
+  charMaster: 'assets/phaser-examples/sprites/master.png',
+  // Quaternius LowPoly RPG class portraits (CC0)
+  charRanger: 'assets/quaternius/rpg-characters/player_ranger.png',
+  charRogue: 'assets/quaternius/rpg-characters/player_rogue.png',
+  charWarrior: 'assets/quaternius/rpg-characters/player_warrior.png',
+  charWizard: 'assets/quaternius/rpg-characters/player_wizard.png',
 } as const
 
 export const TEXTURE_KEYS = {
@@ -78,4 +88,13 @@ export const TEXTURE_KEYS = {
   kenneyCardRed: 'kenney_card_red',
   kenneyCardBlue: 'kenney_card_blue',
   kenneyCardGreen: 'kenney_card_green',
+  // Character sprites
+  charPhaserDude: 'char_phaser_dude',
+  charMushroom: 'char_mushroom',
+  charBunny: 'char_bunny',
+  charMaster: 'char_master',
+  charRanger: 'char_ranger',
+  charRogue: 'char_rogue',
+  charWarrior: 'char_warrior',
+  charWizard: 'char_wizard',
 } as const

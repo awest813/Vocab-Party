@@ -93,6 +93,15 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.kenneyCardRed, EXTERNAL_ASSETS.kenneyCardRed)
     this.load.image(TEXTURE_KEYS.kenneyCardBlue, EXTERNAL_ASSETS.kenneyCardBlue)
     this.load.image(TEXTURE_KEYS.kenneyCardGreen, EXTERNAL_ASSETS.kenneyCardGreen)
+    // Character sprites
+    this.load.image(TEXTURE_KEYS.charPhaserDude, EXTERNAL_ASSETS.charPhaserDude)
+    this.load.image(TEXTURE_KEYS.charMushroom, EXTERNAL_ASSETS.charMushroom)
+    this.load.image(TEXTURE_KEYS.charBunny, EXTERNAL_ASSETS.charBunny)
+    this.load.image(TEXTURE_KEYS.charMaster, EXTERNAL_ASSETS.charMaster)
+    this.load.image(TEXTURE_KEYS.charRanger, EXTERNAL_ASSETS.charRanger)
+    this.load.image(TEXTURE_KEYS.charRogue, EXTERNAL_ASSETS.charRogue)
+    this.load.image(TEXTURE_KEYS.charWarrior, EXTERNAL_ASSETS.charWarrior)
+    this.load.image(TEXTURE_KEYS.charWizard, EXTERNAL_ASSETS.charWizard)
   }
 
   create() {
