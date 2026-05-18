@@ -4,6 +4,7 @@ import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { cpuBattleChoice } from '../systems/CpuPolicy'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 interface BattleSceneData {
   state: GameState
@@ -284,6 +285,26 @@ export class BattleScene extends Phaser.Scene {
       this.statusText.setText(`💥 ${dmg} CRITICAL HIT!`)
       this.cameras.main.shake(300, 0.02)
       this.cameras.main.flash(200, 255, 0, 0, true)
+
+      const fx = this.defenderContainer.x
+      const fy = this.defenderContainer.y
+      const flameKey = this.textures.exists(TEXTURE_KEYS.flame1)
+        ? TEXTURE_KEYS.flame1
+        : (this.textures.exists(TEXTURE_KEYS.muzzleflash) ? TEXTURE_KEYS.muzzleflash : null)
+      if (flameKey) {
+        const burst = this.add.particles(fx, fy, flameKey, {
+          speed: { min: 80, max: 240 },
+          angle: { min: 0, max: 360 },
+          lifespan: { min: 350, max: 700 },
+          scale: { start: 0.7, end: 0.05 },
+          alpha: { start: 0.9, end: 0 },
+          blendMode: Phaser.BlendModes.ADD,
+          emitting: false
+        })
+        burst.setDepth(50)
+        burst.explode(24)
+        this.time.delayedCall(1200, () => burst.destroy())
+      }
       
       // Crown on attacker (winner)
       const crown = this.add.text(this.attackerContainer.x, this.attackerContainer.y - 140, '👑', {

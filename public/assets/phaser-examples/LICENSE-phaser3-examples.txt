@@ -1,0 +1,7 @@
+The bitmap assets under this directory (particles, sprites, skies, demoscene)
+were mirrored from the photonstorm/phaser3-examples repository:
+
+    https://github.com/photonstorm/phaser3-examples
+
+The phaser3-examples repository is distributed under the MIT License, which
+also covers these asset files. See the upstream LICENSE for the full text.

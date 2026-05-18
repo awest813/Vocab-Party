@@ -1,11 +1,36 @@
 import Phaser from 'phaser'
 
 // Texture key constants — swap any key's source in PreloadScene for a real PNG asset
-export const PLAYER_TEXTURE_KEYS = ['player_0', 'player_1', 'player_2', 'player_3'] as const
+export const PLAYER_TEXTURE_KEYS = [
+  'player_0', 'player_1', 'player_2', 'player_3',
+  'player_4', 'player_5', 'player_6', 'player_7'
+] as const
 export const DICE_TEXTURE_KEYS = ['dice_1', 'dice_2', 'dice_3', 'dice_4', 'dice_5', 'dice_6'] as const
 export const TILE_TEXTURE_KEY = (type: string) => `tile_${type}`
 
-const PLAYER_COLORS = [0xff4444, 0x4488ff, 0x44dd44, 0xffcc00]
+export type CharacterClass =
+  | 'party' | 'wizard' | 'knight' | 'ninja'
+  | 'ranger' | 'pirate' | 'robot' | 'princess'
+
+interface CharacterDef {
+  cls: CharacterClass
+  /** Body fill color */
+  color: number
+  /** Display name for UI */
+  name: string
+}
+
+/** Indexed by player slot. First 4 are the in-game defaults; 4–7 are showcase variants. */
+export const CHARACTER_DEFS: CharacterDef[] = [
+  { cls: 'party',    color: 0xff4444, name: 'Party Red'    },
+  { cls: 'wizard',   color: 0x4488ff, name: 'Blue Wizard'  },
+  { cls: 'knight',   color: 0x44dd44, name: 'Green Knight' },
+  { cls: 'pirate',   color: 0xffcc00, name: 'Gold Pirate'  },
+  { cls: 'ninja',    color: 0x333344, name: 'Shadow Ninja' },
+  { cls: 'ranger',   color: 0x99aa55, name: 'Forest Ranger'},
+  { cls: 'robot',    color: 0xb0b8c4, name: 'Steel Robot'  },
+  { cls: 'princess', color: 0xff88cc, name: 'Pink Princess'},
+]
 
 const TILE_COLORS: Record<string, number> = {
   vocab:    0x4488ff,
@@ -35,81 +60,231 @@ const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Player token textures  (48 × 48) — chibi-style with face
+// Player / character token textures (48 × 48) — chibi body + class accessory
 // ---------------------------------------------------------------------------
-export function generatePlayerTextures(scene: Phaser.Scene): void {
-  const SIZE = 48
-  const RADIUS = SIZE / 2 - 3
 
-  PLAYER_COLORS.forEach((color, i) => {
-    const key = PLAYER_TEXTURE_KEYS[i]
-    if (scene.textures.exists(key)) return
+const SIZE = 48
+const RADIUS = SIZE / 2 - 3
+const CX = SIZE / 2
+const CY = SIZE / 2
 
-    const g = scene.add.graphics()
-    const cx = SIZE / 2
-    const cy = SIZE / 2
+function drawChibiBody(g: Phaser.GameObjects.Graphics, color: number): void {
+  // Outer glow ring
+  g.fillStyle(0xffffff, 0.15)
+  g.fillCircle(CX, CY, RADIUS + 4)
 
-    // Outer glow ring
-    g.fillStyle(0xffffff, 0.15)
-    g.fillCircle(cx, cy, RADIUS + 4)
+  // Soft shadow offset
+  g.fillStyle(0x000000, 0.25)
+  g.fillCircle(CX + 1, CY + 2, RADIUS)
 
-    // Soft shadow offset
-    g.fillStyle(0x000000, 0.25)
-    g.fillCircle(cx + 1, cy + 2, RADIUS)
+  // Main body
+  g.fillStyle(color, 1)
+  g.fillCircle(CX, CY, RADIUS)
 
-    // Main body
-    g.fillStyle(color, 1)
-    g.fillCircle(cx, cy, RADIUS)
+  // Darker bottom edge for 3D depth
+  const darker = Phaser.Display.Color.IntegerToColor(color)
+  darker.darken(25)
+  g.fillStyle(darker.color, 0.5)
+  g.fillCircle(CX, CY + 3, RADIUS - 3)
 
-    // Darker bottom edge for 3D depth
-    const darker = Phaser.Display.Color.IntegerToColor(color)
-    darker.darken(25)
-    g.fillStyle(darker.color, 0.5)
-    g.fillCircle(cx, cy + 3, RADIUS - 3)
+  // Inner highlight (top-left)
+  g.fillStyle(0xffffff, 0.4)
+  g.fillCircle(CX - 6, CY - 6, 9)
 
-    // Inner highlight (top-left)
-    g.fillStyle(0xffffff, 0.4)
-    g.fillCircle(cx - 6, cy - 6, 9)
+  // White ring border
+  g.lineStyle(3, 0xffffff, 0.9)
+  g.strokeCircle(CX, CY, RADIUS)
+  g.lineStyle(1, color, 0.3)
+  g.strokeCircle(CX, CY, RADIUS - 4)
+}
 
-    // White ring border
-    g.lineStyle(3, 0xffffff, 0.9)
-    g.strokeCircle(cx, cy, RADIUS)
-    g.lineStyle(1, color, 0.3)
-    g.strokeCircle(cx, cy, RADIUS - 4)
+function drawChibiFace(
+  g: Phaser.GameObjects.Graphics,
+  opts: { eyeColor?: number; mouth?: 'smile' | 'flat' | 'grin'; blush?: boolean } = {}
+): void {
+  const { eyeColor = 0x000000, mouth = 'smile', blush = true } = opts
+  // Eyes (whites)
+  g.fillStyle(0xffffff, 0.9)
+  g.fillCircle(CX - 7, CY - 2, 4.5)
+  g.fillCircle(CX + 7, CY - 2, 4.5)
+  // Pupils
+  g.fillStyle(eyeColor, 0.9)
+  g.fillCircle(CX - 7, CY - 2, 2.5)
+  g.fillCircle(CX + 7, CY - 2, 2.5)
+  // Eye shine
+  g.fillStyle(0xffffff, 0.9)
+  g.fillCircle(CX - 9, CY - 4, 1.2)
+  g.fillCircle(CX + 5, CY - 4, 1.2)
 
-    // --- Chibi face ---
-    // Eyes
-    g.fillStyle(0xffffff, 0.9)
-    g.fillCircle(cx - 7, cy - 2, 4.5)
-    g.fillCircle(cx + 7, cy - 2, 4.5)
-    // Pupils
-    g.fillStyle(0x000000, 0.85)
-    g.fillCircle(cx - 7, cy - 2, 2.5)
-    g.fillCircle(cx + 7, cy - 2, 2.5)
-    // Eye shine
-    g.fillStyle(0xffffff, 0.9)
-    g.fillCircle(cx - 9, cy - 4, 1.2)
-    g.fillCircle(cx + 5, cy - 4, 1.2)
+  // Mouth
+  g.lineStyle(2, 0x000000, 0.6)
+  g.beginPath()
+  if (mouth === 'smile') {
+    g.arc(CX, CY + 4, 5, 0.2, Math.PI - 0.2, false)
+  } else if (mouth === 'grin') {
+    g.arc(CX, CY + 3, 6, 0, Math.PI, false)
+  } else {
+    g.moveTo(CX - 4, CY + 6)
+    g.lineTo(CX + 4, CY + 6)
+  }
+  g.strokePath()
 
-    // Mouth (small smile arc)
-    g.lineStyle(2, 0x000000, 0.6)
-    g.beginPath()
-    g.arc(cx, cy + 4, 5, 0.2, Math.PI - 0.2, false)
-    g.strokePath()
-
-    // Blush dots
+  if (blush) {
     g.fillStyle(0xff8888, 0.3)
-    g.fillCircle(cx - 11, cy + 3, 3)
-    g.fillCircle(cx + 11, cy + 3, 3)
+    g.fillCircle(CX - 11, CY + 3, 3)
+    g.fillCircle(CX + 11, CY + 3, 3)
+  }
+}
 
-    // Small crown/party hat on top
-    g.fillStyle(0xffd700, 0.9)
-    g.fillTriangle(cx - 8, cy - RADIUS + 2, cx + 8, cy - RADIUS + 2, cx, cy - RADIUS - 8)
-    g.fillStyle(0xff6666, 0.9)
-    g.fillCircle(cx, cy - RADIUS - 8, 3)
+// ---- Class-specific accessories ---------------------------------------------
 
-    g.generateTexture(key, SIZE + 4, SIZE + 4)
-    g.destroy()
+function drawPartyHat(g: Phaser.GameObjects.Graphics): void {
+  g.fillStyle(0xffd700, 0.95)
+  g.fillTriangle(CX - 8, CY - RADIUS + 2, CX + 8, CY - RADIUS + 2, CX, CY - RADIUS - 8)
+  g.fillStyle(0xff6666, 0.9)
+  g.fillCircle(CX, CY - RADIUS - 8, 3)
+}
+
+function drawWizardHat(g: Phaser.GameObjects.Graphics): void {
+  // Wide brim
+  g.fillStyle(0x1a1a55, 0.95)
+  g.fillEllipse(CX, CY - RADIUS + 2, 30, 7)
+  // Tall cone
+  g.fillTriangle(CX - 10, CY - RADIUS + 1, CX + 10, CY - RADIUS + 1, CX + 3, CY - RADIUS - 14)
+  // Star on hat
+  g.fillStyle(0xffee66, 0.95)
+  g.fillCircle(CX - 1, CY - RADIUS - 4, 2.2)
+}
+
+function drawKnightHelm(g: Phaser.GameObjects.Graphics): void {
+  // Helmet dome
+  g.fillStyle(0xc0c8d0, 1)
+  g.fillCircle(CX, CY - RADIUS + 4, 12)
+  g.fillRect(CX - 12, CY - RADIUS + 2, 24, 6)
+  // Plume
+  g.fillStyle(0xcc2244, 0.95)
+  g.fillTriangle(CX - 3, CY - RADIUS - 4, CX + 3, CY - RADIUS - 4, CX, CY - RADIUS - 12)
+  // Visor slit
+  g.fillStyle(0x000000, 0.5)
+  g.fillRect(CX - 8, CY - RADIUS + 5, 16, 2)
+}
+
+function drawNinjaMask(g: Phaser.GameObjects.Graphics): void {
+  // Black headband across eyes
+  g.fillStyle(0x111111, 0.95)
+  g.fillRect(CX - RADIUS + 2, CY - 6, (RADIUS - 2) * 2, 9)
+  // Tails of headband
+  g.fillTriangle(CX + RADIUS - 4, CY - 6, CX + RADIUS + 4, CY - 12, CX + RADIUS + 2, CY + 1)
+  // Red dot on forehead
+  g.fillStyle(0xcc2222, 0.9)
+  g.fillCircle(CX, CY - 12, 2.5)
+}
+
+function drawPirateHat(g: Phaser.GameObjects.Graphics): void {
+  // Bicorn hat
+  g.fillStyle(0x222233, 1)
+  g.beginPath()
+  g.moveTo(CX - 16, CY - RADIUS + 2)
+  g.lineTo(CX + 16, CY - RADIUS + 2)
+  g.lineTo(CX + 12, CY - RADIUS - 8)
+  g.lineTo(CX, CY - RADIUS - 4)
+  g.lineTo(CX - 12, CY - RADIUS - 8)
+  g.closePath()
+  g.fillPath()
+  // Skull emblem
+  g.fillStyle(0xffffff, 0.9)
+  g.fillCircle(CX, CY - RADIUS - 2, 3)
+  g.fillStyle(0x000000, 1)
+  g.fillCircle(CX - 1, CY - RADIUS - 2, 0.8)
+  g.fillCircle(CX + 1, CY - RADIUS - 2, 0.8)
+  // Eyepatch
+  g.fillStyle(0x000000, 0.9)
+  g.fillCircle(CX - 7, CY - 2, 4)
+  g.lineStyle(1.5, 0x000000, 0.9)
+  g.strokeLineShape(new Phaser.Geom.Line(CX - 12, CY - 5, CX - 2, CY - 7))
+}
+
+function drawRangerHood(g: Phaser.GameObjects.Graphics, color: number): void {
+  const darker = Phaser.Display.Color.IntegerToColor(color)
+  darker.darken(35)
+  // Hood cowl
+  g.fillStyle(darker.color, 1)
+  g.fillCircle(CX, CY - RADIUS + 4, RADIUS - 1)
+  // Cut-out for face (re-draws body color over hood lower half)
+  g.fillStyle(color, 1)
+  g.fillCircle(CX, CY + 2, RADIUS - 5)
+  // Feather on side
+  g.fillStyle(0xddcc66, 0.95)
+  g.fillTriangle(CX + RADIUS - 6, CY - RADIUS - 2, CX + RADIUS + 4, CY - RADIUS - 8, CX + RADIUS + 2, CY - RADIUS + 2)
+}
+
+function drawRobotAntenna(g: Phaser.GameObjects.Graphics): void {
+  // Metallic top plate
+  g.fillStyle(0x6a7280, 1)
+  g.fillRect(CX - 12, CY - RADIUS, 24, 5)
+  // Bolts
+  g.fillStyle(0x333844, 1)
+  g.fillCircle(CX - 9, CY - RADIUS + 2, 1.2)
+  g.fillCircle(CX + 9, CY - RADIUS + 2, 1.2)
+  // Antenna rod
+  g.lineStyle(2, 0x444c58, 1)
+  g.strokeLineShape(new Phaser.Geom.Line(CX, CY - RADIUS, CX, CY - RADIUS - 10))
+  // Glowing bulb
+  g.fillStyle(0xff3344, 0.95)
+  g.fillCircle(CX, CY - RADIUS - 11, 3)
+  g.fillStyle(0xffffff, 0.6)
+  g.fillCircle(CX - 1, CY - RADIUS - 12, 1)
+}
+
+function drawPrincessTiara(g: Phaser.GameObjects.Graphics): void {
+  // Tiara band
+  g.fillStyle(0xffd700, 1)
+  g.fillRoundedRect(CX - 12, CY - RADIUS - 1, 24, 5, 2)
+  // Center gem
+  g.fillStyle(0xff44aa, 0.95)
+  g.fillTriangle(CX - 4, CY - RADIUS - 1, CX + 4, CY - RADIUS - 1, CX, CY - RADIUS - 9)
+  // Side gems
+  g.fillStyle(0x66ddff, 0.9)
+  g.fillCircle(CX - 8, CY - RADIUS - 1, 1.6)
+  g.fillCircle(CX + 8, CY - RADIUS - 1, 1.6)
+  // Highlight
+  g.fillStyle(0xffffff, 0.6)
+  g.fillCircle(CX, CY - RADIUS - 5, 1)
+}
+
+function drawAccessoryForClass(g: Phaser.GameObjects.Graphics, cls: CharacterClass, color: number): void {
+  switch (cls) {
+    case 'party':    return drawPartyHat(g)
+    case 'wizard':   return drawWizardHat(g)
+    case 'knight':   return drawKnightHelm(g)
+    case 'ninja':    return drawNinjaMask(g)
+    case 'pirate':   return drawPirateHat(g)
+    case 'ranger':   return drawRangerHood(g, color)
+    case 'robot':    return drawRobotAntenna(g)
+    case 'princess': return drawPrincessTiara(g)
+  }
+}
+
+function generateCharacterTexture(scene: Phaser.Scene, key: string, def: CharacterDef): void {
+  if (scene.textures.exists(key)) return
+  const g = scene.add.graphics()
+
+  drawChibiBody(g, def.color)
+  drawChibiFace(g, {
+    eyeColor: def.cls === 'robot' ? 0xff3344 : 0x000000,
+    mouth: def.cls === 'pirate' ? 'grin' : 'smile',
+    blush: def.cls !== 'ninja' && def.cls !== 'robot'
+  })
+  drawAccessoryForClass(g, def.cls, def.color)
+
+  // Pad texture so accessories above the head aren't clipped
+  g.generateTexture(key, SIZE + 4, SIZE + 24)
+  g.destroy()
+}
+
+export function generatePlayerTextures(scene: Phaser.Scene): void {
+  CHARACTER_DEFS.forEach((def, i) => {
+    generateCharacterTexture(scene, PLAYER_TEXTURE_KEYS[i], def)
   })
 }
 

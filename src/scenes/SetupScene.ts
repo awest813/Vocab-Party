@@ -367,8 +367,7 @@ export class SetupScene extends Phaser.Scene {
     const emojis = PLAYER_EMOJIS.slice(0, this.playerCount)
     const flashMs = isAutoSimMode() ? 0 : 300
     const delayMs = isAutoSimMode() ? 0 : 300
-    if (flashMs > 0) this.cameras.main.fadeOut(flashMs, 0, 0, 0)
-    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+    const advance = () => {
       const slice = this.cpuModeByRow.slice(0, this.playerCount)
       const playerCpu = slice.map(m => m !== 'off')
       const playerCpuLevels = slice.map(m => (m === 'off' ? DEFAULT_CPU_LEVEL : m))
@@ -381,6 +380,12 @@ export class SetupScene extends Phaser.Scene {
           playerCpuLevels
         })
       })
-    })
+    }
+    if (flashMs > 0) {
+      this.cameras.main.fadeOut(flashMs, 0, 0, 0)
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, advance)
+    } else {
+      advance()
+    }
   }
 }

@@ -64,8 +64,19 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.particleRed, EXTERNAL_ASSETS.particleRed)
     this.load.image(TEXTURE_KEYS.particleBlue, EXTERNAL_ASSETS.particleBlue)
     this.load.image(TEXTURE_KEYS.particleSquare, EXTERNAL_ASSETS.particleSquare)
+    this.load.image(TEXTURE_KEYS.particleWhite, EXTERNAL_ASSETS.particleWhite)
+    this.load.image(TEXTURE_KEYS.particleGreen, EXTERNAL_ASSETS.particleGreen)
+    this.load.image(TEXTURE_KEYS.flame1, EXTERNAL_ASSETS.flame1)
+    this.load.image(TEXTURE_KEYS.flame2, EXTERNAL_ASSETS.flame2)
+    this.load.image(TEXTURE_KEYS.muzzleflash, EXTERNAL_ASSETS.muzzleflash)
     this.load.image(TEXTURE_KEYS.gem, EXTERNAL_ASSETS.gem)
+    this.load.image(TEXTURE_KEYS.diamond, EXTERNAL_ASSETS.diamond)
+    this.load.image(TEXTURE_KEYS.orbRed, EXTERNAL_ASSETS.orbRed)
+    this.load.image(TEXTURE_KEYS.orbBlue, EXTERNAL_ASSETS.orbBlue)
+    this.load.image(TEXTURE_KEYS.firstaid, EXTERNAL_ASSETS.firstaid)
     this.load.image(TEXTURE_KEYS.starSmall, EXTERNAL_ASSETS.starSmall)
+    this.load.image(TEXTURE_KEYS.skySpace3, EXTERNAL_ASSETS.skySpace3)
+    this.load.image(TEXTURE_KEYS.skyNebula, EXTERNAL_ASSETS.skyNebula)
     this.load.spritesheet(TEXTURE_KEYS.coin, EXTERNAL_ASSETS.coinSheet, {
       frameWidth: 16,
       frameHeight: 16
@@ -82,6 +93,15 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.kenneyCardRed, EXTERNAL_ASSETS.kenneyCardRed)
     this.load.image(TEXTURE_KEYS.kenneyCardBlue, EXTERNAL_ASSETS.kenneyCardBlue)
     this.load.image(TEXTURE_KEYS.kenneyCardGreen, EXTERNAL_ASSETS.kenneyCardGreen)
+    // Character sprites
+    this.load.image(TEXTURE_KEYS.charPhaserDude, EXTERNAL_ASSETS.charPhaserDude)
+    this.load.image(TEXTURE_KEYS.charMushroom, EXTERNAL_ASSETS.charMushroom)
+    this.load.image(TEXTURE_KEYS.charBunny, EXTERNAL_ASSETS.charBunny)
+    this.load.image(TEXTURE_KEYS.charMaster, EXTERNAL_ASSETS.charMaster)
+    this.load.image(TEXTURE_KEYS.charRanger, EXTERNAL_ASSETS.charRanger)
+    this.load.image(TEXTURE_KEYS.charRogue, EXTERNAL_ASSETS.charRogue)
+    this.load.image(TEXTURE_KEYS.charWarrior, EXTERNAL_ASSETS.charWarrior)
+    this.load.image(TEXTURE_KEYS.charWizard, EXTERNAL_ASSETS.charWizard)
   }
 
   create() {
