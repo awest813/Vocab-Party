@@ -14,5 +14,11 @@ export function addStarfieldBackdrop(scene: Phaser.Scene, alpha = 0.55): Phaser.
   img.setScale(scale)
   img.setAlpha(alpha)
   img.setDepth(-10)
+
+  if (scene.textures.exists(TEXTURE_KEYS.skyNebula)) {
+    const nebula = scene.add.image(w / 2, h / 2, TEXTURE_KEYS.skyNebula)
+    const ns = Math.max(w / nebula.width, h / nebula.height) * 1.05
+    nebula.setScale(ns).setAlpha(alpha * 0.35).setDepth(-9).setBlendMode(Phaser.BlendModes.ADD)
+  }
   return img
 }

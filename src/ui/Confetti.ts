@@ -8,6 +8,8 @@ function showParticleConfetti(scene: Phaser.Scene, cx: number, cy: number): bool
     TEXTURE_KEYS.particleYellow,
     TEXTURE_KEYS.particleRed,
     TEXTURE_KEYS.particleBlue,
+    TEXTURE_KEYS.particleGreen,
+    TEXTURE_KEYS.particleWhite,
     TEXTURE_KEYS.particleSquare
   ].filter((k) => scene.textures.exists(k))
 

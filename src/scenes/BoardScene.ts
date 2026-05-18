@@ -276,7 +276,11 @@ export class BoardScene extends Phaser.Scene {
 
     // Decorative corner icons
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
-      const cornerIcons = [TEXTURE_KEYS.kenneyGamepad, TEXTURE_KEYS.kenneyStar, TEXTURE_KEYS.kenneyQuestion, TEXTURE_KEYS.kenneyCart]
+      let cornerIcons: string[] = [TEXTURE_KEYS.diamond, TEXTURE_KEYS.orbBlue, TEXTURE_KEYS.firstaid, TEXTURE_KEYS.orbRed]
+        .filter((k) => this.textures.exists(k))
+      if (cornerIcons.length === 0) {
+        cornerIcons = [TEXTURE_KEYS.kenneyGamepad, TEXTURE_KEYS.kenneyStar, TEXTURE_KEYS.kenneyQuestion, TEXTURE_KEYS.kenneyCart]
+      }
       const corners = [[fx + 4, fy + 4], [fx + frameW - 4, fy + 4], [fx + 4, fy + frameH - 4], [fx + frameW - 4, fy + frameH - 4]]
       corners.forEach(([cx, cy], i) => {
         this.add.image(cx, cy, cornerIcons[i % cornerIcons.length]).setDisplaySize(18, 18).setOrigin(0, 0).setDepth(0).setAlpha(0.4)
