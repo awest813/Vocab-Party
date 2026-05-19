@@ -14,12 +14,16 @@ import { PauseScene } from './scenes/PauseScene'
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
-  width: 1280,
-  height: 720,
   backgroundColor: '#1a1a2e',
   scale: {
+    // FIT scales the 1280x720 design surface uniformly to fit any window aspect ratio,
+    // letterboxing on non-16:9. Game logic always uses 1280x720 internally so menus
+    // are deterministic regardless of window shape.
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 1280,
+    height: 720,
+    expandParent: true
   },
   physics: {
     default: 'arcade',
