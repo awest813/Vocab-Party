@@ -112,9 +112,11 @@ export class MenuScene extends Phaser.Scene {
 
     // Keyboard shortcuts
     this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.howToPlayOpen) return
       this.showHowToPlay()
     })
     this.input.keyboard?.on('keydown-ENTER', () => {
+      if (this.howToPlayOpen) return
       this.cameras.main.fadeOut(400, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         this.scene.start('SetupScene')
@@ -242,10 +244,16 @@ export class MenuScene extends Phaser.Scene {
 
     container.add([overlay, panel, titleText, instrText, ...tileObjects, winText, closeBtn])
 
-    const destroy = () => { this.howToPlayOpen = false; container.destroy(true) }
+    const onEsc = () => destroy()
+    const destroy = () => {
+      if (!this.howToPlayOpen) return
+      this.howToPlayOpen = false
+      this.input.keyboard?.off('keydown-ESC', onEsc)
+      container.destroy(true)
+    }
     closeBtn.on('pointerdown', destroy)
     overlay.on('pointerdown', destroy)
-    this.input.keyboard?.once('keydown-ESC', destroy)
+    this.input.keyboard?.on('keydown-ESC', onEsc)
 
     panel.setScale(0.85)
     this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: 250, ease: 'Back.easeOut' })

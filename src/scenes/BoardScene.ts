@@ -490,11 +490,11 @@ export class BoardScene extends Phaser.Scene {
     this.hud.update(this.state)
 
     if (p.isCpu && !this.rolling) {
-      this.rollBtn.setAlpha(0.42)
-      this.itemBtn.setAlpha(0.42)
+      ;(this.rollBtn as any).setEnabled?.(false)
+      ;(this.itemBtn as any).setEnabled?.(false)
     } else if (!this.rolling) {
-      this.rollBtn.setAlpha(1)
-      this.itemBtn.setAlpha(1)
+      ;(this.rollBtn as any).setEnabled?.(true)
+      ;(this.itemBtn as any).setEnabled?.(true)
     }
 
     this.turnGlowTween?.stop()

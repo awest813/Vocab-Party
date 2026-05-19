@@ -110,9 +110,12 @@ export class SetupScene extends Phaser.Scene {
     this.rows = []
     this.rowContainers = []
     this.cpuToggleTexts = []
-    const startY = 360
+    // Row band sits between the keyboard hint (~y=318) and the start button (~y=h-80).
+    // Spacing tuned so 4 rows + start button fit at the 1280x720 design surface without overlap.
+    const ROW_SPACING = 70
+    const startY = 362
     for (let i = 0; i < MAX_PLAYERS; i++) {
-      this.buildRow(i, startY)
+      this.buildRow(i, startY, ROW_SPACING)
       this.rowContainers[i].setAlpha(0).setX(this.rowContainers[i].x - 50)
       this.tweens.add({
         targets: this.rowContainers[i],
@@ -190,11 +193,11 @@ export class SetupScene extends Phaser.Scene {
     fullMapBtn.setAlpha(fullMap ? 1 : 0.55)
   }
 
-  buildRow(index: number, firstRowY: number) {
+  buildRow(index: number, firstRowY: number, spacing: number = 88) {
     const w = this.scale.width
-    const rowY = firstRowY + index * 88
+    const rowY = firstRowY + index * spacing
     const inputW = 380
-    const inputH = 54
+    const inputH = 48
     const inputX = w / 2 + 60
 
     const container = this.add.container(0, 0)

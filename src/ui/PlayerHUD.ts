@@ -11,7 +11,7 @@ export class PlayerHUD {
   private metaTexts: Phaser.GameObjects.Text[] = []
   private rankTexts: Phaser.GameObjects.Text[] = []
   private lastScores: number[] = []
-  private activeTweenTarget: number = -1
+  private lastActiveScale: number[] = []
 
   constructor(scene: Phaser.Scene, state: GameState) {
     this.scene = scene
@@ -99,7 +99,9 @@ export class PlayerHUD {
       const targetScale = isActive ? 1.08 : 1.0
       const targetAlpha = isActive ? 1 : 0.7
       
-      if (container.scaleX !== targetScale) {
+      if (this.lastActiveScale[i] !== targetScale) {
+        this.lastActiveScale[i] = targetScale
+        this.scene.tweens.killTweensOf(container)
         this.scene.tweens.add({
           targets: container,
           scaleX: targetScale,

@@ -122,12 +122,14 @@ export class QuestionScene extends Phaser.Scene {
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
     let countdownTimer: Phaser.Time.TimerEvent
+    let timerBarTween: Phaser.Tweens.Tween | undefined
     let secondsLeft = 15
 
     const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
       if (answered) return
       answered = true
       countdownTimer?.remove()
+      timerBarTween?.stop()
       const correct = i === q.correct
       const timeBonus = correct ? Math.max(1, Math.ceil(secondsLeft / 3)) : 0
       const speedSurge = correct && secondsLeft >= 10
@@ -211,7 +213,7 @@ export class QuestionScene extends Phaser.Scene {
       }
     })
 
-    const timerBarTween = this.tweens.add({
+    timerBarTween = this.tweens.add({
       targets: timerBar,
       width: 0,
       duration: isAutoSimMode() ? 900 : 15000,
