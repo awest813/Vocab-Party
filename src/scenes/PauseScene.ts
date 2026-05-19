@@ -3,6 +3,8 @@ import { createButton } from '../ui/Button'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 export class PauseScene extends Phaser.Scene {
+  private helpOpen = false
+  private closeHelp: (() => void) | null = null
   constructor() {
     super('PauseScene')
   }
@@ -51,14 +53,20 @@ export class PauseScene extends Phaser.Scene {
       duration: 300, ease: 'Back.easeOut'
     })
 
-    // ESC to resume
-    this.input.keyboard?.once('keydown-ESC', () => {
+    // ESC to resume (or close help if open)
+    this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.helpOpen) {
+        this.closeHelp?.()
+        return
+      }
       this.scene.resume('BoardScene')
       this.scene.stop()
     })
   }
 
   private showHelp(panel: Phaser.GameObjects.Container, ...hide: Phaser.GameObjects.Container[]) {
+    if (this.helpOpen) return
+    this.helpOpen = true
     hide.forEach(o => o.setVisible(false))
     const w = this.scale.width
     const h = this.scale.height
@@ -88,10 +96,15 @@ export class PauseScene extends Phaser.Scene {
     )
 
     const closeBtn = createButton(this, 0, 155, '✕ CLOSE', 0xdd3333, 0xaa2222, 160, 44)
-    closeBtn.on('pointerdown', () => {
+    const close = () => {
+      if (!this.helpOpen) return
+      this.helpOpen = false
+      this.closeHelp = null
       helpPanel.destroy(true)
       hide.forEach(o => o.setVisible(true))
-    })
+    }
+    this.closeHelp = close
+    closeBtn.on('pointerdown', close)
 
     helpPanel.add([bg, title, ...texts, closeBtn])
     helpPanel.setScale(0.85)

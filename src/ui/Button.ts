@@ -33,17 +33,36 @@ export function createButton(
   bg.on('pointerover', () => {
     bg.setFillStyle(hoverColor)
     bg.setStrokeStyle(3, 0x44ccff, 1)
+    scene.tweens.killTweensOf(container)
     scene.tweens.add({ targets: container, scaleX: 1.08, scaleY: 1.08, duration: 150, ease: 'Cubic.easeOut' })
   })
   bg.on('pointerout', () => {
     bg.setFillStyle(fillColor)
     bg.setStrokeStyle(3, 0xffffff, 0.4)
+    scene.tweens.killTweensOf(container)
     scene.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 150, ease: 'Cubic.easeOut' })
   })
   bg.on('pointerdown', () => {
+    scene.tweens.killTweensOf(container)
     scene.tweens.add({ targets: container, scaleX: 0.9, scaleY: 0.9, duration: 80, yoyo: true })
     container.emit('pointerdown')
   })
+
+  // Expose enable/disable helpers for proper "disabled" state (not just alpha).
+  ;(container as any).setEnabled = (enabled: boolean) => {
+    if (enabled) {
+      bg.setInteractive({ useHandCursor: true })
+      container.setAlpha(1)
+    } else {
+      bg.disableInteractive()
+      // Reset to base look in case we were hovered when disabled.
+      bg.setFillStyle(fillColor)
+      bg.setStrokeStyle(3, 0xffffff, 0.4)
+      scene.tweens.killTweensOf(container)
+      container.setScale(1)
+      container.setAlpha(0.42)
+    }
+  }
 
   return container
 }
