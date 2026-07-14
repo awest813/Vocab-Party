@@ -2,587 +2,2090 @@
   "questions": [
     {
       "question": "What does the word 'benevolent' mean?",
-      "answers": ["Kind and generous", "Angry and hostile", "Confused and lost", "Loud and boisterous"],
-      "correct": 0,
-      "explanation": "Benevolent means well-meaning and kindly."
+      "answers": [
+        "Loud and boisterous",
+        "Angry and hostile",
+        "Kind and generous",
+        "Confused and lost"
+      ],
+      "correct": 2,
+      "explanation": "Benevolent means well-meaning, kindly, and generous."
     },
     {
-      "question": "Choose the correct meaning of 'ambiguous'.",
-      "answers": ["Clear and obvious", "Open to more than one interpretation", "Completely false", "Extremely precise"],
-      "correct": 1,
-      "explanation": "Ambiguous means open to multiple interpretations."
+      "question": "What does 'ambiguous' mean?",
+      "answers": [
+        "Open to more than one interpretation",
+        "Completely false",
+        "Extremely precise",
+        "Clear and obvious"
+      ],
+      "correct": 0,
+      "explanation": "Ambiguous means unclear or open to more than one interpretation."
     },
     {
       "question": "What does 'persevere' mean?",
-      "answers": ["To give up quickly", "To continue despite difficulty", "To celebrate loudly", "To ignore problems"],
-      "correct": 1,
-      "explanation": "Persevere means to continue in spite of difficulty."
+      "answers": [
+        "To continue despite difficulty",
+        "To give up quickly",
+        "To ignore problems",
+        "To celebrate loudly"
+      ],
+      "correct": 0,
+      "explanation": "Persevere means to keep going in spite of difficulty or delay."
     },
     {
-      "question": "What is the meaning of 'hypothesis'?",
-      "answers": ["A proven fact", "A proposed explanation to test", "A type of experiment", "A conclusion"],
-      "correct": 1,
+      "question": "What is a 'hypothesis'?",
+      "answers": [
+        "A final conclusion",
+        "A finished experiment",
+        "A proven fact",
+        "A proposed explanation to test"
+      ],
+      "correct": 3,
       "explanation": "A hypothesis is a proposed explanation made as a starting point for investigation."
     },
     {
       "question": "What does 'eloquent' mean?",
-      "answers": ["Rude and harsh", "Fluent and persuasive in speech", "Silent and shy", "Confused and unclear"],
-      "correct": 1,
+      "answers": [
+        "Silent and shy",
+        "Rude and harsh",
+        "Fluent and persuasive in speech",
+        "Confused and unclear"
+      ],
+      "correct": 2,
       "explanation": "Eloquent means fluent or persuasive in speaking or writing."
     },
     {
-      "question": "What is the meaning of 'tenacious'?",
-      "answers": ["Easily giving up", "Holding firmly to a position", "Moving very quickly", "Being very quiet"],
-      "correct": 1,
-      "explanation": "Tenacious means holding fast; not giving up."
+      "question": "What does 'tenacious' mean?",
+      "answers": [
+        "Moving very quickly",
+        "Being very quiet",
+        "Easily giving up",
+        "Holding firmly; not quitting"
+      ],
+      "correct": 3,
+      "explanation": "Tenacious means holding fast and not giving up."
     },
     {
       "question": "What does 'melancholy' describe?",
-      "answers": ["Great happiness", "A pensive sadness", "Extreme anger", "Wild excitement"],
-      "correct": 1,
-      "explanation": "Melancholy describes a feeling of pensive sadness."
+      "answers": [
+        "A thoughtful sadness",
+        "Wild excitement",
+        "Extreme anger",
+        "Great happiness"
+      ],
+      "correct": 0,
+      "explanation": "Melancholy describes a feeling of pensive or thoughtful sadness."
     },
     {
       "question": "What does 'inquisitive' mean?",
-      "answers": ["Uninterested in learning", "Curious and eager to learn", "Afraid of new things", "Careful and cautious"],
-      "correct": 1,
-      "explanation": "Inquisitive means having a strong desire to learn or know things."
+      "answers": [
+        "Careful and cautious",
+        "Uninterested in learning",
+        "Afraid of new things",
+        "Curious and eager to know"
+      ],
+      "correct": 3,
+      "explanation": "Inquisitive means having or showing a strong desire to learn."
     },
     {
       "question": "What is a 'protagonist'?",
-      "answers": ["The villain of a story", "The main character of a story", "A minor character", "The narrator"],
-      "correct": 1,
+      "answers": [
+        "The main character of a story",
+        "A minor side character",
+        "The villain of a story",
+        "Always the narrator"
+      ],
+      "correct": 0,
       "explanation": "The protagonist is the main character in a story."
     },
     {
       "question": "What does 'vivid' mean in writing?",
-      "answers": ["Dull and boring", "Producing strong, clear images", "Short and simple", "Old and outdated"],
-      "correct": 1,
+      "answers": [
+        "Producing strong, clear images",
+        "Old and outdated",
+        "Short and simple",
+        "Dull and boring"
+      ],
+      "correct": 0,
       "explanation": "Vivid means producing powerful feelings or clear images in the mind."
     },
     {
       "question": "What does 'resilient' mean?",
-      "answers": ["Easily broken", "Quick to recover from hardship", "Slow to move", "Hard to see"],
-      "correct": 1,
+      "answers": [
+        "Hard to see",
+        "Easily broken",
+        "Quick to recover from hardship",
+        "Slow to move"
+      ],
+      "correct": 2,
       "explanation": "Resilient means able to recover quickly from difficulties."
     },
     {
-      "question": "What is the meaning of 'scrutinize'?",
-      "answers": ["To ignore completely", "To examine very carefully", "To celebrate noisily", "To move slowly"],
+      "question": "What does 'scrutinize' mean?",
+      "answers": [
+        "To move slowly",
+        "To examine very carefully",
+        "To celebrate noisily",
+        "To ignore completely"
+      ],
       "correct": 1,
       "explanation": "Scrutinize means to examine or inspect closely and thoroughly."
     },
     {
       "question": "What does 'collaborate' mean?",
-      "answers": ["To compete fiercely", "To work jointly with others", "To study alone", "To argue strongly"],
-      "correct": 1,
+      "answers": [
+        "To argue strongly",
+        "To study alone",
+        "To compete fiercely",
+        "To work jointly with others"
+      ],
+      "correct": 3,
       "explanation": "Collaborate means to work jointly on an activity or project."
     },
     {
-      "question": "Which word means 'to make something worse'?",
-      "answers": ["Alleviate", "Improve", "Exacerbate", "Simplify"],
-      "correct": 2,
+      "question": "Which word means 'to make a problem worse'?",
+      "answers": [
+        "Improve",
+        "Simplify",
+        "Alleviate",
+        "Exacerbate"
+      ],
+      "correct": 3,
       "explanation": "Exacerbate means to make a problem or bad situation worse."
     },
     {
       "question": "What does 'meticulous' mean?",
-      "answers": ["Careless and messy", "Showing great attention to detail", "Moving very fast", "Extremely loud"],
-      "correct": 1,
-      "explanation": "Meticulous means showing great attention to detail and precision."
+      "answers": [
+        "Showing great attention to detail",
+        "Extremely loud",
+        "Moving very fast",
+        "Careless and messy"
+      ],
+      "correct": 0,
+      "explanation": "Meticulous means showing great attention to detail; very careful and precise."
     },
     {
       "question": "What does 'tranquil' describe?",
-      "answers": ["Noisy and chaotic", "Free from disturbance; calm", "Bitterly cold", "Extremely busy"],
+      "answers": [
+        "Noisy and chaotic",
+        "Calm and peaceful",
+        "Bitterly cold",
+        "Extremely busy"
+      ],
       "correct": 1,
       "explanation": "Tranquil means free from disturbance — calm and peaceful."
     },
     {
       "question": "What does 'antagonist' mean in a story?",
-      "answers": ["The main hero", "A character who opposes the hero", "The story's narrator", "A helpful friend"],
-      "correct": 1,
+      "answers": [
+        "The main hero",
+        "A helpful friend",
+        "A character who opposes the hero",
+        "The story's narrator"
+      ],
+      "correct": 2,
       "explanation": "The antagonist is the character who opposes or works against the protagonist."
     },
     {
       "question": "What does 'diligent' mean?",
-      "answers": ["Lazy and careless", "Having or showing careful effort", "Loud and boisterous", "Sad and gloomy"],
-      "correct": 1,
-      "explanation": "Diligent means having or showing careful and persistent effort."
+      "answers": [
+        "Sad and gloomy",
+        "Lazy and careless",
+        "Showing careful, persistent effort",
+        "Loud and boisterous"
+      ],
+      "correct": 2,
+      "explanation": "Diligent means having or showing careful and persistent work or effort."
     },
     {
-      "question": "What is the meaning of 'unprecedented'?",
-      "answers": ["Common and expected", "Never done or known before", "Repeated many times", "Slightly unusual"],
-      "correct": 1,
+      "question": "What does 'unprecedented' mean?",
+      "answers": [
+        "Slightly unusual",
+        "Common and expected",
+        "Repeated many times",
+        "Never done or known before"
+      ],
+      "correct": 3,
       "explanation": "Unprecedented means never having happened or existed before."
     },
     {
       "question": "What does 'empathy' mean?",
-      "answers": ["Feeling superior to others", "Understanding another's feelings", "Disliking someone strongly", "Being very logical"],
+      "answers": [
+        "Being very logical",
+        "Understanding another's feelings",
+        "Disliking someone strongly",
+        "Feeling superior to others"
+      ],
       "correct": 1,
       "explanation": "Empathy is the ability to understand and share the feelings of another."
     },
     {
       "question": "What does 'skeptical' mean?",
-      "answers": ["Fully trusting", "Doubtful or questioning", "Extremely happy", "Very tired"],
-      "correct": 1,
+      "answers": [
+        "Fully trusting",
+        "Extremely happy",
+        "Doubtful or questioning",
+        "Very tired"
+      ],
+      "correct": 2,
       "explanation": "Skeptical means not easily convinced; having doubts."
     },
     {
       "question": "What is an 'inference'?",
-      "answers": ["A direct statement of fact", "A conclusion reached by reasoning", "An exact quotation", "A summary"],
-      "correct": 1,
-      "explanation": "An inference is a conclusion or opinion formed from evidence and reasoning."
+      "answers": [
+        "A conclusion reached by reasoning",
+        "A direct statement of fact",
+        "A short summary",
+        "An exact quotation"
+      ],
+      "correct": 0,
+      "explanation": "An inference is a conclusion formed from evidence and reasoning."
     },
     {
       "question": "What does 'concise' mean?",
-      "answers": ["Long and detailed", "Giving much information in few words", "Confusing and unclear", "Emotional and dramatic"],
+      "answers": [
+        "Emotional and dramatic",
+        "Clear information in few words",
+        "Confusing and unclear",
+        "Long and detailed"
+      ],
       "correct": 1,
       "explanation": "Concise means giving a lot of information clearly and in few words."
     },
     {
       "question": "What does 'inevitable' mean?",
-      "answers": ["Easy to prevent", "Certain to happen; unavoidable", "Hard to understand", "Unlikely to occur"],
-      "correct": 1,
+      "answers": [
+        "Hard to understand",
+        "Easy to prevent",
+        "Unlikely to occur",
+        "Certain to happen; unavoidable"
+      ],
+      "correct": 3,
       "explanation": "Inevitable means certain to happen and impossible to avoid."
     },
     {
       "question": "What does 'emphatically' mean?",
-      "answers": ["In a quiet, hesitant way", "In a forceful and clear manner", "In a confused way", "In a lazy manner"],
-      "correct": 1,
+      "answers": [
+        "In a confused way",
+        "In a quiet, hesitant way",
+        "In a forceful, clear manner",
+        "In a lazy manner"
+      ],
+      "correct": 2,
       "explanation": "Emphatically means in a forceful way that leaves no doubt."
     },
     {
       "question": "What does 'precarious' mean?",
-      "answers": ["Safe and secure", "Not securely held; dangerously likely to fall", "Extremely expensive", "Very bright"],
+      "answers": [
+        "Very bright",
+        "Uncertain or dangerously unstable",
+        "Extremely expensive",
+        "Safe and secure"
+      ],
       "correct": 1,
-      "explanation": "Precarious means dependent on chance; uncertain or not securely held."
+      "explanation": "Precarious means not securely held; uncertain or dangerously likely to fail."
     },
     {
-      "question": "What is the meaning of 'superfluous'?",
-      "answers": ["Necessary", "Unnecessary; more than enough", "Highly intelligent", "Very fast"],
+      "question": "What does 'superfluous' mean?",
+      "answers": [
+        "Necessary",
+        "Unnecessary; more than enough",
+        "Very fast",
+        "Highly intelligent"
+      ],
       "correct": 1,
-      "explanation": "Superfluous means exceeding what is sufficient or necessary."
+      "explanation": "Superfluous means more than is needed; unnecessary."
     },
     {
       "question": "What does 'aesthetic' relate to?",
-      "answers": ["Physical health", "Beauty or the appreciation of beauty", "Mathematical logic", "Ancient history"],
+      "answers": [
+        "Physical health",
+        "Beauty or appreciation of beauty",
+        "Mathematical logic",
+        "Ancient history"
+      ],
       "correct": 1,
       "explanation": "Aesthetic relates to beauty or the appreciation of beauty."
     },
     {
       "question": "What does 'ephemeral' mean?",
-      "answers": ["Lasting for a very short time", "Eternal", "Deeply religious", "Extremely heavy"],
-      "correct": 0,
+      "answers": [
+        "Deeply religious",
+        "Lasting forever",
+        "Extremely heavy",
+        "Lasting a very short time"
+      ],
+      "correct": 3,
       "explanation": "Ephemeral means lasting for a very short time."
     },
     {
       "question": "What is 'altruism'?",
-      "answers": ["Selfishness", "Disinterested and selfless concern for others", "A type of musical instrument", "A scientific theory"],
-      "correct": 1,
-      "explanation": "Altruism is the practice of objective and selfless concern for the well-being of others."
+      "answers": [
+        "Selfless concern for others",
+        "Selfishness",
+        "A musical instrument",
+        "A scientific theory"
+      ],
+      "correct": 0,
+      "explanation": "Altruism is selfless concern for the well-being of others."
     },
     {
       "question": "What does 'capricious' describe?",
-      "answers": ["Stable and predictable", "Sudden changes of mood or behavior", "Extremely loud", "Very slow"],
+      "answers": [
+        "Very slow",
+        "Sudden mood or behavior changes",
+        "Extremely loud",
+        "Stable and predictable"
+      ],
       "correct": 1,
-      "explanation": "Capricious describes sudden and unaccountable changes of mood or behavior."
+      "explanation": "Capricious describes sudden, unpredictable changes of mood or behavior."
     },
     {
-      "question": "What is 'pragmatic'?",
-      "answers": ["Idealistic", "Dealing with things sensibly and realistically", "Very emotional", "Ancient"],
-      "correct": 1,
-      "explanation": "Pragmatic means dealing with things sensibly and realistically in a way that is based on practical rather than theoretical considerations."
+      "question": "What does 'pragmatic' mean?",
+      "answers": [
+        "Idealistic",
+        "Very emotional",
+        "Practical and realistic",
+        "Ancient"
+      ],
+      "correct": 2,
+      "explanation": "Pragmatic means dealing with things sensibly and realistically."
     },
     {
       "question": "What does 'ubiquitous' mean?",
-      "answers": ["Rare and hard to find", "Present, appearing, or found everywhere", "Very quiet", "Extremely large"],
+      "answers": [
+        "Extremely large",
+        "Found everywhere",
+        "Rare and hard to find",
+        "Very quiet"
+      ],
       "correct": 1,
       "explanation": "Ubiquitous means present, appearing, or found everywhere."
     },
     {
       "question": "What is a 'paradigm'?",
-      "answers": ["A small coin", "A typical example or pattern of something", "A type of bird", "A musical composition"],
-      "correct": 1,
-      "explanation": "A paradigm is a typical example or pattern of something; a model."
+      "answers": [
+        "A typical example or pattern",
+        "A musical piece",
+        "A small coin",
+        "A type of bird"
+      ],
+      "correct": 0,
+      "explanation": "A paradigm is a typical example, pattern, or model of something."
     },
     {
       "question": "What does 'formidable' mean?",
-      "answers": ["Easy to overcome", "Inspiring fear or respect through being large or powerful", "Very friendly", "Extremely small"],
-      "correct": 1,
-      "explanation": "Formidable means inspiring fear or respect through being impressively large, powerful, intense, or capable."
+      "answers": [
+        "Impressive and intimidating",
+        "Very friendly",
+        "Easy to overcome",
+        "Extremely small"
+      ],
+      "correct": 0,
+      "explanation": "Formidable means inspiring fear or respect through being powerful or capable."
     },
     {
       "question": "What does 'reticent' mean?",
-      "answers": ["Eager to speak", "Reluctant to reveal one's thoughts", "Extremely angry", "Very loud"],
-      "correct": 1,
-      "explanation": "Reticent means not revealing one's thoughts readily."
-    },
-    {
-      "question": "What is the meaning of 'benevolent'?",
-      "answers": ["Cruel and mean", "Well-meaning and kindly", "Indifferent", "Energetic"],
-      "correct": 1,
-      "explanation": "Benevolent means well-meaning, kindly, and generous."
+      "answers": [
+        "Reluctant to share thoughts",
+        "Very loud",
+        "Eager to speak",
+        "Extremely angry"
+      ],
+      "correct": 0,
+      "explanation": "Reticent means not revealing one's thoughts or feelings readily."
     },
     {
       "question": "What does 'gregarious' mean?",
-      "answers": ["Shy and withdrawn", "Fond of company; sociable", "Hostile", "Lazy"],
-      "correct": 1,
+      "answers": [
+        "Shy and withdrawn",
+        "Hostile",
+        "Fond of company; sociable",
+        "Lazy"
+      ],
+      "correct": 2,
       "explanation": "Gregarious means fond of company; sociable."
     },
     {
       "question": "What does 'conundrum' mean?",
-      "answers": ["A simple answer", "A confusing and difficult problem", "A celebration", "A type of food"],
+      "answers": [
+        "A celebration",
+        "A confusing, difficult problem",
+        "A type of food",
+        "A simple answer"
+      ],
       "correct": 1,
       "explanation": "A conundrum is a confusing and difficult problem or question."
     },
     {
-      "question": "What does 'pragmatic' refer to?",
-      "answers": ["Idealistic visions", "Dealing with things realistically", "Emotional decisions", "Ancient traditions"],
-      "correct": 1,
-      "explanation": "Pragmatic means dealing with things sensibly and realistically."
-    },
-    {
       "question": "What does 'lucid' describe?",
-      "answers": ["Confusing and unclear", "Expressed clearly; easy to understand", "Very sad", "Extremely fast"],
+      "answers": [
+        "Confusing and unclear",
+        "Clear and easy to understand",
+        "Very sad",
+        "Extremely fast"
+      ],
       "correct": 1,
-      "explanation": "Lucid means expressed clearly and easy to understand."
+      "explanation": "Lucid means expressed clearly; easy to understand."
     },
     {
       "question": "What does 'nostalgic' mean?",
-      "answers": ["Looking forward excitedly", "A sentimental longing for the past", "Feeling angry", "Being tired"],
-      "correct": 1,
+      "answers": [
+        "Looking forward excitedly",
+        "Feeling angry",
+        "Being tired",
+        "A sentimental longing for the past"
+      ],
+      "correct": 3,
       "explanation": "Nostalgic means feeling a sentimental longing for the past."
     },
     {
       "question": "What is a 'euphemism'?",
-      "answers": ["A direct insult", "A mild expression substituted for a harsh one", "A type of poem", "A scientific term"],
-      "correct": 1,
-      "explanation": "A euphemism is a mild or indirect word substituted for one considered too harsh."
-    },
-    {
-      "question": "What does 'ambiguous' mean?",
-      "answers": ["Perfectly clear", "Open to more than one interpretation", "Very fast", "Extremely long"],
-      "correct": 1,
-      "explanation": "Ambiguous means unclear or open to more than one interpretation."
+      "answers": [
+        "A direct insult",
+        "A type of poem",
+        "A milder word for something harsh",
+        "A scientific term"
+      ],
+      "correct": 2,
+      "explanation": "A euphemism is a mild or indirect word used in place of one that seems harsh."
     },
     {
       "question": "What does 'deteriorate' mean?",
-      "answers": ["To improve rapidly", "To become progressively worse", "To stay the same", "To celebrate"],
-      "correct": 1,
+      "answers": [
+        "To celebrate",
+        "To stay the same",
+        "To improve rapidly",
+        "To become progressively worse"
+      ],
+      "correct": 3,
       "explanation": "Deteriorate means to become progressively worse over time."
     },
     {
       "question": "What is an 'anecdote'?",
-      "answers": ["A formal report", "A short amusing story about a real incident", "A scientific fact", "A legal document"],
-      "correct": 1,
-      "explanation": "An anecdote is a short amusing or interesting story about a real person or incident."
+      "answers": [
+        "A legal document",
+        "A scientific fact",
+        "A formal report",
+        "A short story about a real incident"
+      ],
+      "correct": 3,
+      "explanation": "An anecdote is a short, interesting story about a real person or incident."
     },
     {
-      "question": "What does 'surpassed' mean?",
-      "answers": ["Failed at", "Excelled beyond expectations", "Ignored completely", "Arrived late"],
-      "correct": 1,
-      "explanation": "Surpassed means to have exceeded or gone beyond an expectation."
+      "question": "What does 'surpass' mean?",
+      "answers": [
+        "To ignore completely",
+        "To arrive late",
+        "To fail at",
+        "To go beyond; exceed"
+      ],
+      "correct": 3,
+      "explanation": "Surpass means to exceed or go beyond someone or something."
     },
     {
       "question": "What does 'profound' mean?",
-      "answers": ["Very shallow", "Of great depth; deeply meaningful", "Extremely short", "Completely silent"],
-      "correct": 1,
-      "explanation": "Profound means of great depth, intensity, or deeply meaningful."
+      "answers": [
+        "Very shallow",
+        "Extremely short",
+        "Completely silent",
+        "Deeply meaningful or intense"
+      ],
+      "correct": 3,
+      "explanation": "Profound means of great depth, intensity, or significance."
     },
     {
       "question": "What does 'intricate' mean?",
-      "answers": ["Simple and plain", "Very complex and detailed", "Large in size", "Easy to understand"],
+      "answers": [
+        "Large in size",
+        "Very complex and detailed",
+        "Easy to understand",
+        "Simple and plain"
+      ],
       "correct": 1,
       "explanation": "Intricate means very complicated or detailed."
     },
     {
       "question": "What does 'abstract' mean?",
-      "answers": ["Tangible and physical", "Relating to ideas rather than physical reality", "Extremely loud", "Very bright"],
+      "answers": [
+        "Tangible and physical",
+        "About ideas, not physical things",
+        "Very bright",
+        "Extremely loud"
+      ],
       "correct": 1,
       "explanation": "Abstract refers to ideas and concepts rather than physical objects."
     },
     {
       "question": "What is a 'prediction'?",
-      "answers": ["A statement about the past", "A statement about what will happen in the future", "A type of question", "A factual report"],
-      "correct": 1,
-      "explanation": "A prediction is a statement about what will happen in the future based on evidence."
+      "answers": [
+        "A factual report",
+        "A statement about the past",
+        "A type of question",
+        "A statement about what will happen"
+      ],
+      "correct": 3,
+      "explanation": "A prediction is a statement about what will happen in the future."
     },
     {
       "question": "What does 'contradict' mean?",
-      "answers": ["To agree with", "To say the opposite of a statement", "To ignore completely", "To explain in detail"],
+      "answers": [
+        "To agree with",
+        "To say the opposite of",
+        "To ignore completely",
+        "To explain in detail"
+      ],
       "correct": 1,
-      "explanation": "Contradict means to be in conflict with or say the opposite of."
+      "explanation": "Contradict means to assert the opposite of a statement."
     },
     {
       "question": "What does 'substantial' mean?",
-      "answers": ["Very small", "Of considerable importance or size", "Insignificant", "Temporary"],
-      "correct": 1,
+      "answers": [
+        "Very small",
+        "Insignificant",
+        "Of considerable size or importance",
+        "Temporary"
+      ],
+      "correct": 2,
       "explanation": "Substantial means of considerable importance, size, or worth."
     },
     {
       "question": "What does 'perceive' mean?",
-      "answers": ["To ignore", "To become aware of through the senses", "To destroy", "To create"],
-      "correct": 1,
+      "answers": [
+        "To create",
+        "To destroy",
+        "To become aware of through the senses",
+        "To ignore"
+      ],
+      "correct": 2,
       "explanation": "Perceive means to become aware of something through the senses or mind."
     },
     {
       "question": "What does 'fluctuate' mean?",
-      "answers": ["To remain constant", "To rise and fall irregularly", "To increase steadily", "To decrease slowly"],
-      "correct": 1,
+      "answers": [
+        "To rise and fall irregularly",
+        "To increase steadily",
+        "To decrease slowly",
+        "To remain constant"
+      ],
+      "correct": 0,
       "explanation": "Fluctuate means to rise and fall irregularly in number or amount."
     },
     {
-      "question": "What is the meaning of 'demonstrate'?",
-      "answers": ["To hide", "To clearly show or prove", "To question", "To destroy"],
-      "correct": 1,
+      "question": "What does 'demonstrate' mean?",
+      "answers": [
+        "To question",
+        "To hide",
+        "To destroy",
+        "To clearly show or prove"
+      ],
+      "correct": 3,
       "explanation": "Demonstrate means to clearly show, prove, or display."
     },
     {
       "question": "What does 'frugal' mean?",
-      "answers": ["Wasteful with money", "Sparing or economical with money or food", "Very generous", "Extremely rich"],
-      "correct": 1,
-      "explanation": "Frugal means sparing or economical with regard to money or food."
+      "answers": [
+        "Very generous",
+        "Extremely rich",
+        "Economical; careful with resources",
+        "Wasteful with money"
+      ],
+      "correct": 2,
+      "explanation": "Frugal means sparing or economical with money or resources."
     },
     {
       "question": "What does 'innovation' mean?",
-      "answers": ["A copy of something", "A new method, idea, or product", "An old tradition", "A simple task"],
-      "correct": 1,
+      "answers": [
+        "A new method, idea, or product",
+        "An old tradition",
+        "A simple task",
+        "A copy of something"
+      ],
+      "correct": 0,
       "explanation": "Innovation is a new method, idea, or product."
     },
     {
       "question": "What does 'apprehensive' mean?",
-      "answers": ["Confident and calm", "Anxious about something that may happen", "Very sleepy", "Extremely happy"],
-      "correct": 1,
-      "explanation": "Apprehensive means anxious or fearful that something bad may happen."
+      "answers": [
+        "Very sleepy",
+        "Extremely happy",
+        "Anxious that something bad may happen",
+        "Confident and calm"
+      ],
+      "correct": 2,
+      "explanation": "Apprehensive means anxious or fearful that something bad or unpleasant may happen."
     },
     {
       "question": "What does 'sustainable' mean?",
-      "answers": ["Unable to continue", "Able to be maintained over time", "Extremely fast", "Very expensive"],
+      "answers": [
+        "Extremely fast",
+        "Able to be maintained over time",
+        "Very expensive",
+        "Unable to continue"
+      ],
       "correct": 1,
-      "explanation": "Sustainable means able to be maintained or continued over time."
+      "explanation": "Sustainable means able to be maintained or continued over a long period."
     },
     {
       "question": "What is a 'metaphor'?",
-      "answers": ["A literal comparison using 'like' or 'as'", "A figure of speech comparing two unlike things directly", "A type of poem", "A factual statement"],
-      "correct": 1,
+      "answers": [
+        "A comparison using 'like' or 'as'",
+        "A factual statement",
+        "A type of poem",
+        "A direct comparison without 'like' or 'as'"
+      ],
+      "correct": 3,
       "explanation": "A metaphor compares two unlike things without using 'like' or 'as'."
     },
     {
       "question": "What does 'consequence' mean?",
-      "answers": ["A cause of something", "A result or effect of an action", "A coincidence", "An intention"],
+      "answers": [
+        "A cause of something",
+        "A result or effect of an action",
+        "An intention",
+        "A coincidence"
+      ],
       "correct": 1,
       "explanation": "A consequence is a result or effect of an action or condition."
     },
     {
       "question": "What does 'vulnerable' mean?",
-      "answers": ["Fully protected", "Susceptible to harm or damage", "Extremely strong", "Completely hidden"],
-      "correct": 1,
+      "answers": [
+        "Susceptible to harm or damage",
+        "Extremely strong",
+        "Fully protected",
+        "Completely hidden"
+      ],
+      "correct": 0,
       "explanation": "Vulnerable means susceptible to physical or emotional harm."
     },
     {
       "question": "What does 'plausible' mean?",
-      "answers": ["Completely false", "Seeming reasonable or probable", "Impossible to believe", "Very confusing"],
-      "correct": 1,
+      "answers": [
+        "Completely false",
+        "Impossible to believe",
+        "Seeming reasonable or probable",
+        "Very confusing"
+      ],
+      "correct": 2,
       "explanation": "Plausible means seeming reasonable or probable."
     },
     {
       "question": "What does 'candid' mean?",
-      "answers": ["Deceitful", "Truthful and straightforward", "Confusing", "Very quiet"],
-      "correct": 1,
+      "answers": [
+        "Confusing",
+        "Deceitful",
+        "Truthful and straightforward",
+        "Very quiet"
+      ],
+      "correct": 2,
       "explanation": "Candid means truthful and straightforward; frank."
     },
     {
       "question": "What does 'impartial' mean?",
-      "answers": ["Strongly biased", "Treating all parties fairly and equally", "Uninterested", "Very emotional"],
-      "correct": 1,
-      "explanation": "Impartial means treating all rivals or disputants equally; fair."
+      "answers": [
+        "Uninterested",
+        "Very emotional",
+        "Strongly biased",
+        "Treating all sides fairly"
+      ],
+      "correct": 3,
+      "explanation": "Impartial means treating all sides equally; fair and unbiased."
     },
     {
-      "question": "What is the meaning of 'hypothetical'?",
-      "answers": ["Based on facts", "Based on an assumed idea used for argument", "Completely proven", "Very simple"],
-      "correct": 1,
-      "explanation": "Hypothetical means based on or serving as a hypothesis or assumption."
+      "question": "What does 'hypothetical' mean?",
+      "answers": [
+        "Very simple",
+        "Based on proven facts",
+        "Based on an assumed idea",
+        "Completely proven"
+      ],
+      "correct": 2,
+      "explanation": "Hypothetical means based on a hypothesis or assumption, not necessarily reality."
     },
     {
       "question": "What does 'reluctant' mean?",
-      "answers": ["Eager and willing", "Unwilling and hesitant", "Very fast", "Extremely loud"],
+      "answers": [
+        "Very fast",
+        "Unwilling and hesitant",
+        "Extremely loud",
+        "Eager and willing"
+      ],
       "correct": 1,
       "explanation": "Reluctant means unwilling and hesitant to do something."
     },
     {
-      "question": "What does 'vividly' describe?",
-      "answers": ["In a dull, boring way", "In a way that produces clear mental images", "At a very slow speed", "In complete silence"],
+      "question": "What does 'obscure' mean?",
+      "answers": [
+        "Very expensive",
+        "Well-known and famous",
+        "Extremely bright",
+        "Unclear or hard to understand"
+      ],
+      "correct": 3,
+      "explanation": "Obscure means not discovered or known about; unclear or hard to understand."
+    },
+    {
+      "question": "What does 'compel' mean?",
+      "answers": [
+        "To force or strongly urge",
+        "To gently suggest",
+        "To postpone",
+        "To ignore"
+      ],
+      "correct": 0,
+      "explanation": "Compel means to force or oblige someone to do something."
+    },
+    {
+      "question": "What does 'adversary' mean?",
+      "answers": [
+        "A close friend",
+        "An opponent or enemy",
+        "A teammate",
+        "A teacher"
+      ],
       "correct": 1,
-      "explanation": "Vividly means in a way that produces powerful, clear images in the mind."
+      "explanation": "An adversary is one's opponent in a contest, conflict, or dispute."
+    },
+    {
+      "question": "What does 'elaborate' mean as a verb?",
+      "answers": [
+        "To erase completely",
+        "To shorten drastically",
+        "To memorize",
+        "To add more detail"
+      ],
+      "correct": 3,
+      "explanation": "To elaborate means to develop or present something in further detail."
+    },
+    {
+      "question": "What does 'ominous' mean?",
+      "answers": [
+        "Suggesting something bad will happen",
+        "Promising good news",
+        "Very humorous",
+        "Completely silent"
+      ],
+      "correct": 0,
+      "explanation": "Ominous means giving the impression that something bad or unpleasant is going to happen."
+    },
+    {
+      "question": "What does 'adhere' mean?",
+      "answers": [
+        "To float away",
+        "To invent",
+        "To break apart",
+        "To stick firmly; to follow closely"
+      ],
+      "correct": 3,
+      "explanation": "Adhere means to stick fast to a surface or to believe in and follow a practice."
+    },
+    {
+      "question": "What does 'genuine' mean?",
+      "answers": [
+        "Slightly damaged",
+        "Extremely rare",
+        "Fake or imitation",
+        "Truly what it is said to be"
+      ],
+      "correct": 3,
+      "explanation": "Genuine means authentic; truly what something is said to be."
+    },
+    {
+      "question": "What does 'hostile' mean?",
+      "answers": [
+        "Unfriendly or antagonistic",
+        "Warm and welcoming",
+        "Confused",
+        "Quiet and shy"
+      ],
+      "correct": 0,
+      "explanation": "Hostile means unfriendly, antagonistic, or opposed."
+    },
+    {
+      "question": "What does 'diminish' mean?",
+      "answers": [
+        "To celebrate",
+        "To stay the same",
+        "To make or become smaller",
+        "To grow larger"
+      ],
+      "correct": 2,
+      "explanation": "Diminish means to make or become less; to decrease."
+    },
+    {
+      "question": "What does 'credible' mean?",
+      "answers": [
+        "Overly dramatic",
+        "Able to be believed; convincing",
+        "Impossible to believe",
+        "Completely proven false"
+      ],
+      "correct": 1,
+      "explanation": "Credible means able to be believed or convincing."
+    },
+    {
+      "question": "What does 'depict' mean?",
+      "answers": [
+        "To hide from view",
+        "To represent or show in words or images",
+        "To destroy",
+        "To measure"
+      ],
+      "correct": 1,
+      "explanation": "Depict means to represent or show something in a picture, story, or description."
+    },
+    {
+      "question": "What does 'scarce' mean?",
+      "answers": [
+        "In short supply; hard to find",
+        "Very common",
+        "Available in large amounts",
+        "Extremely cheap"
+      ],
+      "correct": 0,
+      "explanation": "Scarce means insufficient for the demand; rare or hard to find."
+    },
+    {
+      "question": "What does 'assert' mean?",
+      "answers": [
+        "To apologize",
+        "To state something confidently",
+        "To withdraw",
+        "To ask a question"
+      ],
+      "correct": 1,
+      "explanation": "Assert means to state a fact or belief confidently and forcefully."
+    },
+    {
+      "question": "What does 'coherent' mean?",
+      "answers": [
+        "Extremely short",
+        "Random and jumbled",
+        "Overly emotional",
+        "Logical and consistent"
+      ],
+      "correct": 3,
+      "explanation": "Coherent means logical and consistent; easy to understand as a whole."
+    },
+    {
+      "question": "What does 'divert' mean?",
+      "answers": [
+        "To turn aside or distract",
+        "To focus attention",
+        "To increase speed",
+        "To finalize"
+      ],
+      "correct": 0,
+      "explanation": "Divert means to cause something to change course or to distract attention."
+    },
+    {
+      "question": "What does 'imply' mean?",
+      "answers": [
+        "To state directly",
+        "To suggest without saying directly",
+        "To shout loudly",
+        "To prove with data"
+      ],
+      "correct": 1,
+      "explanation": "Imply means to strongly suggest something without stating it outright."
+    },
+    {
+      "question": "What does 'legitimate' mean?",
+      "answers": [
+        "Lawful; valid and acceptable",
+        "Highly unusual",
+        "Temporary only",
+        "Illegal or fake"
+      ],
+      "correct": 0,
+      "explanation": "Legitimate means conforming to the law or to rules; valid and justifiable."
+    },
+    {
+      "question": "What does 'navigate' mean?",
+      "answers": [
+        "To find a way through",
+        "To get completely lost",
+        "To destroy a path",
+        "To ignore directions"
+      ],
+      "correct": 0,
+      "explanation": "Navigate means to plan and direct a route or to find one's way through something."
+    },
+    {
+      "question": "What does 'reinforce' mean?",
+      "answers": [
+        "To erase",
+        "To strengthen or support",
+        "To weaken",
+        "To postpone"
+      ],
+      "correct": 1,
+      "explanation": "Reinforce means to strengthen or support, especially with additional material or evidence."
+    },
+    {
+      "question": "What does 'subtle' mean?",
+      "answers": [
+        "Completely false",
+        "Delicate or not immediately obvious",
+        "Obvious and loud",
+        "Extremely large"
+      ],
+      "correct": 1,
+      "explanation": "Subtle means delicate, precise, or so slight as to be difficult to detect."
+    },
+    {
+      "question": "What does 'validate' mean?",
+      "answers": [
+        "To hide evidence",
+        "To reject as false",
+        "To check or prove as accurate",
+        "To invent a story"
+      ],
+      "correct": 2,
+      "explanation": "Validate means to check or prove the accuracy or value of something."
+    },
+    {
+      "question": "What does 'adapt' mean?",
+      "answers": [
+        "To copy blindly",
+        "To refuse change",
+        "To stay exactly the same",
+        "To adjust to new conditions"
+      ],
+      "correct": 3,
+      "explanation": "Adapt means to make suitable for a new use or purpose; to adjust."
+    },
+    {
+      "question": "What does 'bias' mean?",
+      "answers": [
+        "A proven fact",
+        "A prejudice for or against something",
+        "A random guess",
+        "Complete fairness"
+      ],
+      "correct": 1,
+      "explanation": "Bias is a prejudice in favor of or against a person, group, or idea."
+    },
+    {
+      "question": "What does 'clarify' mean?",
+      "answers": [
+        "To make more confusing",
+        "To argue",
+        "To shorten drastically",
+        "To make clearer and easier to understand"
+      ],
+      "correct": 3,
+      "explanation": "Clarify means to make a statement or situation less confused and more understandable."
+    },
+    {
+      "question": "What does 'diverse' mean?",
+      "answers": [
+        "Showing a great deal of variety",
+        "Completely empty",
+        "All the same",
+        "Extremely small"
+      ],
+      "correct": 0,
+      "explanation": "Diverse means showing a great deal of variety; very different."
+    },
+    {
+      "question": "What does 'evaluate' mean?",
+      "answers": [
+        "To judge or determine the value of",
+        "To memorize",
+        "To invent",
+        "To ignore information"
+      ],
+      "correct": 0,
+      "explanation": "Evaluate means to form an idea of the amount, number, or value of; to assess."
+    },
+    {
+      "question": "What does 'justify' mean?",
+      "answers": [
+        "To hide a reason",
+        "To accuse unfairly",
+        "To postpone",
+        "To show something is right or reasonable"
+      ],
+      "correct": 3,
+      "explanation": "Justify means to show or prove that something is right, reasonable, or necessary."
+    },
+    {
+      "question": "What does 'perspective' mean?",
+      "answers": [
+        "A type of poem",
+        "A measurement tool",
+        "A single proven fact",
+        "A particular way of viewing something"
+      ],
+      "correct": 3,
+      "explanation": "Perspective is a particular attitude or way of regarding something; a point of view."
+    },
+    {
+      "question": "What does 'significant' mean?",
+      "answers": [
+        "Completely invisible",
+        "Unimportant",
+        "Extremely temporary",
+        "Important or noteworthy"
+      ],
+      "correct": 3,
+      "explanation": "Significant means sufficiently great or important to be worthy of attention."
+    },
+    {
+      "question": "What does 'analyze' mean?",
+      "answers": [
+        "To glance quickly",
+        "To discard",
+        "To examine in detail",
+        "To memorize blindly"
+      ],
+      "correct": 2,
+      "explanation": "Analyze means to examine something methodically in detail."
     }
   ],
   "minigame_context_clues": [
     {
       "sentence": "The scientist made an important _____ that changed how we understand the universe.",
       "word": "discovery",
-      "choices": ["discovery", "confusion", "mistake", "question"],
-      "correct": 0
+      "choices": [
+        "mistake",
+        "question",
+        "discovery",
+        "confusion"
+      ],
+      "correct": 2
     },
     {
-      "sentence": "She was so _____ that she finished the race even though her legs were exhausted.",
+      "sentence": "She was so _____ that she finished the race even though her legs ached.",
       "word": "determined",
-      "choices": ["lazy", "determined", "confused", "sad"],
+      "choices": [
+        "lazy",
+        "determined",
+        "confused",
+        "distracted"
+      ],
       "correct": 1
     },
     {
-      "sentence": "The _____ forest was home to hundreds of species of plants and animals.",
+      "sentence": "The _____ rainforest sheltered hundreds of plant and animal species.",
       "word": "diverse",
-      "choices": ["empty", "cold", "diverse", "ancient"],
+      "choices": [
+        "silent",
+        "empty",
+        "diverse",
+        "identical"
+      ],
       "correct": 2
     },
     {
-      "sentence": "He spoke in a _____ voice so as not to wake the sleeping baby.",
-      "word": "quiet",
-      "choices": ["loud", "angry", "quiet", "confused"],
-      "correct": 2
-    },
-    {
-      "sentence": "The old bridge was _____, so engineers warned people not to cross it.",
-      "word": "unstable",
-      "choices": ["beautiful", "unstable", "colorful", "popular"],
-      "correct": 1
-    },
-    {
-      "sentence": "After days of hard work, the team felt _____ when they finally finished the project.",
-      "word": "relieved",
-      "choices": ["relieved", "bored", "angry", "nervous"],
+      "sentence": "He spoke in a _____ voice so he would not wake the sleeping baby.",
+      "word": "hushed",
+      "choices": [
+        "hushed",
+        "confused",
+        "angry",
+        "booming"
+      ],
       "correct": 0
     },
     {
-      "sentence": "The puppy wagged its tail and licked everyone it met — it was incredibly _____.",
-      "word": "friendly",
-      "choices": ["fierce", "tired", "friendly", "shy"],
-      "correct": 2
+      "sentence": "The old bridge looked _____, so engineers warned people not to cross it.",
+      "word": "unstable",
+      "choices": [
+        "unstable",
+        "colorful",
+        "popular",
+        "sturdy"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "After days of hard work, the team felt _____ when they finally finished.",
+      "word": "relieved",
+      "choices": [
+        "furious",
+        "relieved",
+        "jealous",
+        "bored"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The puppy wagged its tail and greeted everyone — it was incredibly _____.",
+      "word": "affectionate",
+      "choices": [
+        "hostile",
+        "affectionate",
+        "exhausted",
+        "fierce"
+      ],
+      "correct": 1
     },
     {
       "sentence": "The hikers followed the _____ trail, carefully marked with bright orange signs.",
       "word": "designated",
-      "choices": ["dangerous", "narrow", "designated", "unknown"],
+      "choices": [
+        "random",
+        "secret",
+        "designated",
+        "forbidden"
+      ],
       "correct": 2
     },
     {
-      "sentence": "The teacher used many examples and diagrams to help the students _____ the concept.",
-      "word": "understand",
-      "choices": ["forget", "memorize", "ignore", "understand"],
-      "correct": 3
+      "sentence": "The teacher used diagrams and examples to help students _____ the concept.",
+      "word": "grasp",
+      "choices": [
+        "ignore",
+        "grasp",
+        "forget",
+        "memorize"
+      ],
+      "correct": 1
     },
     {
       "sentence": "After the storm, the town was in complete _____, with downed trees and flooded streets.",
       "word": "chaos",
-      "choices": ["chaos", "silence", "joy", "celebration"],
-      "correct": 0
+      "choices": [
+        "order",
+        "silence",
+        "celebration",
+        "chaos"
+      ],
+      "correct": 3
     },
     {
       "sentence": "The kind stranger offered to _____ the lost tourist to the nearest bus stop.",
-      "word": "guide",
-      "choices": ["chase", "guide", "ignore", "stop"],
+      "word": "escort",
+      "choices": [
+        "abandon",
+        "escort",
+        "block",
+        "chase"
+      ],
       "correct": 1
     },
     {
       "sentence": "The chef prepared a _____ meal using only fresh, local ingredients.",
-      "word": "delicious",
-      "choices": ["terrible", "plain", "delicious", "frozen"],
-      "correct": 2
+      "word": "savory",
+      "choices": [
+        "bland",
+        "inedible",
+        "frozen",
+        "savory"
+      ],
+      "correct": 3
     },
     {
-      "sentence": "The night sky was so _____ that we could see thousands of stars and the Milky Way.",
-      "word": "clear",
-      "choices": ["cloudy", "bright", "clear", "dark"],
-      "correct": 2
+      "sentence": "The night sky was so _____ that we could see thousands of stars.",
+      "word": "cloudless",
+      "choices": [
+        "foggy",
+        "crowded",
+        "murky",
+        "cloudless"
+      ],
+      "correct": 3
     },
     {
-      "sentence": "The athlete showed great _____ by training every single day for the Olympics.",
+      "sentence": "The athlete showed great _____ by training every day for the Olympics.",
       "word": "discipline",
-      "choices": ["luck", "discipline", "speed", "strength"],
-      "correct": 1
+      "choices": [
+        "luck",
+        "excuse",
+        "impulse",
+        "discipline"
+      ],
+      "correct": 3
     },
     {
       "sentence": "Because the instructions were _____, nobody knew how to assemble the furniture.",
       "word": "vague",
-      "choices": ["clear", "short", "vague", "helpful"],
-      "correct": 2
+      "choices": [
+        "vague",
+        "precise",
+        "helpful",
+        "brief"
+      ],
+      "correct": 0
     },
     {
-      "sentence": "The artist used _____ colors to make the painting stand out in the gallery.",
+      "sentence": "The artist used _____ colors that made the painting stand out in the gallery.",
       "word": "vibrant",
-      "choices": ["dull", "dark", "vibrant", "plain"],
+      "choices": [
+        "vibrant",
+        "faded",
+        "dull",
+        "muted"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "After the long hike, the cold stream water felt incredibly _____.",
+      "word": "refreshing",
+      "choices": [
+        "bitter",
+        "refreshing",
+        "salty",
+        "stagnant"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "Her argument was so _____ that even skeptics began to agree.",
+      "word": "persuasive",
+      "choices": [
+        "quiet",
+        "persuasive",
+        "random",
+        "sloppy"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The museum exhibit was _____ — every display held a surprising detail.",
+      "word": "fascinating",
+      "choices": [
+        "boring",
+        "broken",
+        "empty",
+        "fascinating"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "We had to _____ our plans when the sudden rain flooded the field.",
+      "word": "abandon",
+      "choices": [
+        "abandon",
+        "ignore",
+        "repeat",
+        "celebrate"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "The detective searched for any _____ that might explain the mystery.",
+      "word": "clue",
+      "choices": [
+        "rumor",
+        "distraction",
+        "clue",
+        "decoration"
+      ],
       "correct": 2
     },
     {
-      "sentence": "After the long hike, the cold water from the stream was incredibly _____.",
-      "word": "refreshing",
-      "choices": ["refreshing", "salty", "bitter", "hot"],
+      "sentence": "Although the hike was exhausting, the mountain view was _____.",
+      "word": "spectacular",
+      "choices": [
+        "ordinary",
+        "invisible",
+        "spectacular",
+        "disappointing"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "Please _____ your sources so readers know where the facts came from.",
+      "word": "cite",
+      "choices": [
+        "erase",
+        "hide",
+        "cite",
+        "invent"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "The new rule will _____ students from bringing phones into the exam room.",
+      "word": "prohibit",
+      "choices": [
+        "prohibit",
+        "reward",
+        "encourage",
+        "require"
+      ],
       "correct": 0
     }
   ],
   "minigame_synonyms": [
-    { "word": "rapid", "choices": ["fast", "slow", "heavy", "quiet"], "correct": 0 },
-    { "word": "brave", "choices": ["cowardly", "fearless", "lazy", "noisy"], "correct": 1 },
-    { "word": "ancient", "choices": ["modern", "very old", "tiny", "loud"], "correct": 1 },
-    { "word": "fragile", "choices": ["strong", "easily broken", "colorful", "quick"], "correct": 1 },
-    { "word": "enormous", "choices": ["small", "huge", "quiet", "bitter"], "correct": 1 },
-    { "word": "silent", "choices": ["noisy", "without sound", "angry", "bright"], "correct": 1 },
-    { "word": "generous", "choices": ["selfish", "giving freely", "sleepy", "sharp"], "correct": 1 },
-    { "word": "furious", "choices": ["calm", "extremely angry", "hungry", "polite"], "correct": 1 },
-    { "word": "timid", "choices": ["shy", "bold", "clever", "tall"], "correct": 0 },
-    { "word": "gloomy", "choices": ["cheerful", "dark and sad", "tiny", "sweet"], "correct": 1 },
-    { "word": "sparse", "choices": ["crowded", "thinly scattered", "shiny", "round"], "correct": 1 },
-    { "word": "meticulous", "choices": ["careless", "very careful", "sleepy", "cheap"], "correct": 1 },
-    { "word": "obstinate", "choices": ["stubborn", "flexible", "quiet", "fast"], "correct": 0 },
-    { "word": "vivid", "choices": ["clear", "dull", "noisy", "short"], "correct": 0 },
-    { "word": "lethargic", "choices": ["energetic", "tired", "angry", "bright"], "correct": 1 },
-    { "word": "diligent", "choices": ["lazy", "hardworking", "noisy", "calm"], "correct": 1 },
-    { "word": "concise", "choices": ["brief", "wordy", "loud", "slow"], "correct": 0 }
+    {
+      "word": "rapid",
+      "choices": [
+        "fast",
+        "heavy",
+        "slow",
+        "quiet"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "brave",
+      "choices": [
+        "cowardly",
+        "lazy",
+        "noisy",
+        "fearless"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "ancient",
+      "choices": [
+        "loud",
+        "very old",
+        "tiny",
+        "modern"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "fragile",
+      "choices": [
+        "quick",
+        "colorful",
+        "easily broken",
+        "strong"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "enormous",
+      "choices": [
+        "huge",
+        "small",
+        "quiet",
+        "bitter"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "silent",
+      "choices": [
+        "noisy",
+        "angry",
+        "without sound",
+        "bright"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "generous",
+      "choices": [
+        "giving freely",
+        "sleepy",
+        "sharp",
+        "selfish"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "furious",
+      "choices": [
+        "hungry",
+        "extremely angry",
+        "polite",
+        "calm"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "timid",
+      "choices": [
+        "bold",
+        "tall",
+        "shy",
+        "clever"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "gloomy",
+      "choices": [
+        "sweet",
+        "dark and sad",
+        "cheerful",
+        "tiny"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "sparse",
+      "choices": [
+        "round",
+        "crowded",
+        "thinly scattered",
+        "shiny"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "meticulous",
+      "choices": [
+        "careless",
+        "very careful",
+        "sleepy",
+        "cheap"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "obstinate",
+      "choices": [
+        "quiet",
+        "fast",
+        "flexible",
+        "stubborn"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "vivid",
+      "choices": [
+        "noisy",
+        "brightly clear",
+        "short",
+        "dull"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "lethargic",
+      "choices": [
+        "sluggish",
+        "bright",
+        "energetic",
+        "angry"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "diligent",
+      "choices": [
+        "hardworking",
+        "calm",
+        "lazy",
+        "noisy"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "concise",
+      "choices": [
+        "loud",
+        "slow",
+        "wordy",
+        "brief"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "scarce",
+      "choices": [
+        "heavy",
+        "rare",
+        "plentiful",
+        "bright"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "hostile",
+      "choices": [
+        "sleepy",
+        "friendly",
+        "unfriendly",
+        "tiny"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "compel",
+      "choices": [
+        "suggest",
+        "delay",
+        "ignore",
+        "force"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "obscure",
+      "choices": [
+        "shiny",
+        "unclear",
+        "loud",
+        "famous"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "genuine",
+      "choices": [
+        "authentic",
+        "broken",
+        "cheap",
+        "fake"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "diminish",
+      "choices": [
+        "increase",
+        "decrease",
+        "freeze",
+        "celebrate"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "assert",
+      "choices": [
+        "deny",
+        "whisper",
+        "ask",
+        "state firmly"
+      ],
+      "correct": 3
+    }
   ],
   "minigame_antonyms": [
-    { "word": "hot", "choices": ["warm", "cold", "mild", "cool"], "correct": 1 },
-    { "word": "brave", "choices": ["bold", "cowardly", "strong", "fast"], "correct": 1 },
-    { "word": "friendly", "choices": ["kind", "generous", "hostile", "polite"], "correct": 2 },
-    { "word": "expand", "choices": ["grow", "increase", "contract", "spread"], "correct": 2 },
-    { "word": "wealthy", "choices": ["rich", "poor", "famous", "lucky"], "correct": 1 },
-    { "word": "ancient", "choices": ["old", "modern", "historic", "wise"], "correct": 1 },
-    { "word": "ascend", "choices": ["rise", "climb", "descend", "float"], "correct": 2 },
-    { "word": "permanent", "choices": ["lasting", "temporary", "solid", "strong"], "correct": 1 },
-    { "word": "optimistic", "choices": ["hopeful", "cheerful", "pessimistic", "joyful"], "correct": 2 },
-    { "word": "chaotic", "choices": ["wild", "organized", "crazy", "loud"], "correct": 1 },
-    { "word": "generous", "choices": ["giving", "selfish", "kind", "rich"], "correct": 1 },
-    { "word": "rigid", "choices": ["hard", "stiff", "flexible", "strong"], "correct": 2 },
-    { "word": "frequent", "choices": ["common", "rare", "often", "usual"], "correct": 1 },
-    { "word": "artificial", "choices": ["fake", "synthetic", "natural", "plastic"], "correct": 2 },
-    { "word": "triumph", "choices": ["victory", "defeat", "success", "prize"], "correct": 1 },
-    { "word": "vivid", "choices": ["bright", "clear", "dull", "colorful"], "correct": 2 },
-    { "word": "encourage", "choices": ["support", "inspire", "discourage", "motivate"], "correct": 2 },
-    { "word": "abundant", "choices": ["plentiful", "scarce", "ample", "rich"], "correct": 1 },
-    { "word": "reluctant", "choices": ["hesitant", "eager", "slow", "shy"], "correct": 1 },
-    { "word": "humble", "choices": ["modest", "proud", "quiet", "gentle"], "correct": 1 },
-    { "word": "harmony", "choices": ["peace", "discord", "balance", "unity"], "correct": 1 },
-    { "word": "shallow", "choices": ["surface", "deep", "wide", "narrow"], "correct": 1 }
+    {
+      "word": "hot",
+      "choices": [
+        "boiling",
+        "warm",
+        "toasty",
+        "cold"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "brave",
+      "choices": [
+        "strong",
+        "fast",
+        "cowardly",
+        "bold"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "friendly",
+      "choices": [
+        "generous",
+        "hostile",
+        "polite",
+        "kind"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "expand",
+      "choices": [
+        "contract",
+        "increase",
+        "grow",
+        "spread"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "wealthy",
+      "choices": [
+        "lucky",
+        "poor",
+        "famous",
+        "rich"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "ancient",
+      "choices": [
+        "old",
+        "modern",
+        "historic",
+        "wise"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "ascend",
+      "choices": [
+        "climb",
+        "rise",
+        "float",
+        "descend"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "permanent",
+      "choices": [
+        "solid",
+        "lasting",
+        "strong",
+        "temporary"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "optimistic",
+      "choices": [
+        "hopeful",
+        "pessimistic",
+        "joyful",
+        "cheerful"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "chaotic",
+      "choices": [
+        "organized",
+        "crazy",
+        "loud",
+        "wild"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "generous",
+      "choices": [
+        "rich",
+        "selfish",
+        "kind",
+        "giving"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "rigid",
+      "choices": [
+        "stiff",
+        "flexible",
+        "hard",
+        "strong"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "frequent",
+      "choices": [
+        "usual",
+        "rare",
+        "often",
+        "common"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "artificial",
+      "choices": [
+        "synthetic",
+        "fake",
+        "plastic",
+        "natural"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "triumph",
+      "choices": [
+        "prize",
+        "defeat",
+        "victory",
+        "success"
+      ],
+      "correct": 1
+    },
+    {
+      "word": "vivid",
+      "choices": [
+        "dull",
+        "colorful",
+        "bright",
+        "clear"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "encourage",
+      "choices": [
+        "discourage",
+        "inspire",
+        "support",
+        "motivate"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "abundant",
+      "choices": [
+        "plentiful",
+        "rich",
+        "scarce",
+        "ample"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "reluctant",
+      "choices": [
+        "slow",
+        "shy",
+        "hesitant",
+        "eager"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "humble",
+      "choices": [
+        "quiet",
+        "modest",
+        "gentle",
+        "proud"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "harmony",
+      "choices": [
+        "unity",
+        "balance",
+        "discord",
+        "peace"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "shallow",
+      "choices": [
+        "narrow",
+        "wide",
+        "deep",
+        "surface"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "scarce",
+      "choices": [
+        "thin",
+        "limited",
+        "rare",
+        "plentiful"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "hostile",
+      "choices": [
+        "fierce",
+        "cold",
+        "friendly",
+        "angry"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "obscure",
+      "choices": [
+        "vague",
+        "hidden",
+        "dim",
+        "clear"
+      ],
+      "correct": 3
+    },
+    {
+      "word": "compel",
+      "choices": [
+        "push",
+        "allow",
+        "force",
+        "require"
+      ],
+      "correct": 1
+    }
   ],
   "minigame_homophones": [
-    { "prompt": "_____ going to the store later.", "choices": ["They're", "Their", "There", "Thier"], "correct": 0 },
-    { "prompt": "Put the book over _____ on the shelf.", "choices": ["they're", "their", "there", "thier"], "correct": 2 },
-    { "prompt": "The dog wagged _____ tail happily.", "choices": ["its", "it's", "its'", "its's"], "correct": 0 },
-    { "prompt": "_____ a beautiful day outside!", "choices": ["Its", "It's", "Its'", "Its's"], "correct": 1 },
-    { "prompt": "I need _____ buy some groceries.", "choices": ["too", "to", "two", "tow"], "correct": 1 },
-    { "prompt": "She ate _____ many cookies.", "choices": ["too", "to", "two", "tow"], "correct": 0 },
-    { "prompt": "There were _____ birds on the fence.", "choices": ["too", "to", "two", "tow"], "correct": 2 },
-    { "prompt": "The _____ affected the town greatly.", "choices": ["rain", "reign", "rein", "rane"], "correct": 0 },
-    { "prompt": "The king's _____ lasted for decades.", "choices": ["rain", "reign", "rein", "rane"], "correct": 1 },
-    { "prompt": "Can you _____ the bell?", "choices": ["here", "hear", "hair", "hare"], "correct": 1 },
-    { "prompt": "Come over _____ right now!", "choices": ["here", "hear", "hair", "hare"], "correct": 0 },
-    { "prompt": "The _____ of the mountain was covered in snow.", "choices": ["peak", "peek", "pique", "peck"], "correct": 0 },
-    { "prompt": "She took a quick _____ through the window.", "choices": ["peak", "peek", "pique", "peck"], "correct": 1 },
-    { "prompt": "The _____ blew the leaves across the yard.", "choices": ["winds", "winds", "wines", "wands"], "correct": 0 },
-    { "prompt": "He needed to _____ his watch.", "choices": ["wind", "wined", "whined", "wond"], "correct": 0 },
-    { "prompt": "She _____ the race by a wide margin.", "choices": ["one", "won", "wan", "wun"], "correct": 1 },
-    { "prompt": "I have _____ dollar left.", "choices": ["won", "one", "wan", "own"], "correct": 1 },
-    { "prompt": "Please _____ the door behind you.", "choices": ["close", "clothes", "cloze", "claws"], "correct": 0 },
-    { "prompt": "The _____ you wear should be warm.", "choices": ["close", "clothes", "cloze", "claws"], "correct": 1 },
-    { "prompt": "The cat cleaned its _____ with its tongue.", "choices": ["paws", "pause", "pours", "pores"], "correct": 0 },
-    { "prompt": "Press _____ to continue the game.", "choices": ["paws", "pause", "pours", "pores"], "correct": 1 }
+    {
+      "prompt": "_____ going to the store later.",
+      "choices": [
+        "Their",
+        "They're",
+        "Thier",
+        "There"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "Put the book over _____ on the shelf.",
+      "choices": [
+        "their",
+        "thier",
+        "there",
+        "they're"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "The dog wagged _____ tail happily.",
+      "choices": [
+        "its",
+        "its'",
+        "it's",
+        "its's"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "_____ a beautiful day outside!",
+      "choices": [
+        "Its'",
+        "Its",
+        "Its's",
+        "It's"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "I need _____ buy some groceries.",
+      "choices": [
+        "tow",
+        "to",
+        "two",
+        "too"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "She ate _____ many cookies.",
+      "choices": [
+        "tow",
+        "too",
+        "two",
+        "to"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "There were _____ birds on the fence.",
+      "choices": [
+        "tow",
+        "two",
+        "too",
+        "to"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "The _____ soaked the town overnight.",
+      "choices": [
+        "rein",
+        "reign",
+        "rane",
+        "rain"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "The king's _____ lasted for decades.",
+      "choices": [
+        "rane",
+        "rein",
+        "reign",
+        "rain"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Can you _____ the bell?",
+      "choices": [
+        "hear",
+        "hare",
+        "hair",
+        "here"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Come over _____ right now!",
+      "choices": [
+        "here",
+        "hair",
+        "hare",
+        "hear"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The _____ of the mountain was covered in snow.",
+      "choices": [
+        "pique",
+        "peck",
+        "peek",
+        "peak"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "She took a quick _____ through the window.",
+      "choices": [
+        "peek",
+        "peck",
+        "pique",
+        "peak"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "A strong _____ blew the leaves across the yard.",
+      "choices": [
+        "whined",
+        "wind",
+        "wined",
+        "wand"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "He needed to _____ his watch.",
+      "choices": [
+        "wined",
+        "wond",
+        "wind",
+        "whined"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "She _____ the race by a wide margin.",
+      "choices": [
+        "one",
+        "wun",
+        "wan",
+        "won"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "I have _____ dollar left.",
+      "choices": [
+        "wan",
+        "won",
+        "one",
+        "own"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Please _____ the door behind you.",
+      "choices": [
+        "close",
+        "clothes",
+        "cloze",
+        "claws"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The _____ you wear should be warm.",
+      "choices": [
+        "clothes",
+        "claws",
+        "cloze",
+        "close"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The cat cleaned its _____ with its tongue.",
+      "choices": [
+        "pause",
+        "pores",
+        "pours",
+        "paws"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Press _____ to continue the game.",
+      "choices": [
+        "paws",
+        "pores",
+        "pause",
+        "pours"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "I can _____ the ocean from my window.",
+      "choices": [
+        "cee",
+        "si",
+        "see",
+        "sea"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "We sailed across the _____ at dawn.",
+      "choices": [
+        "si",
+        "cee",
+        "sea",
+        "see"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Please _____ your name on the form.",
+      "choices": [
+        "right",
+        "wright",
+        "rite",
+        "write"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Turn _____ at the next corner.",
+      "choices": [
+        "write",
+        "rite",
+        "right",
+        "wright"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "The _____ shone brightly after the storm.",
+      "choices": [
+        "sun",
+        "soon",
+        "son",
+        "sin"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Their _____ just started high school.",
+      "choices": [
+        "son",
+        "sin",
+        "soon",
+        "sun"
+      ],
+      "correct": 0
+    }
   ]
 }
