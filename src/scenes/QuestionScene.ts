@@ -50,7 +50,16 @@ export class QuestionScene extends Phaser.Scene {
       ? this.cache.json.get('vocab').questions
       : this.cache.json.get('grammar').questions
 
-    const q: QuestionData = Phaser.Utils.Array.GetRandom(questions)
+    const raw: QuestionData = Phaser.Utils.Array.GetRandom(questions)
+    // Shuffle answer order each time so players (and CPUs) can't learn a key pattern.
+    const order = raw.answers.map((_, i) => i)
+    Phaser.Utils.Array.Shuffle(order)
+    const q: QuestionData = {
+      question: raw.question,
+      answers: order.map(i => raw.answers[i]),
+      correct: order.indexOf(raw.correct),
+      explanation: raw.explanation,
+    }
     const player = state.players[playerIndex]
 
     // Deep environment wash
