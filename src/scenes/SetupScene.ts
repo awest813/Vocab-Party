@@ -4,6 +4,7 @@ import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, PLAYER_HEX, hexColor } from '../ui/Theme'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
+import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode } from '../systems/gameFlags'
@@ -200,10 +201,17 @@ export class SetupScene extends Phaser.Scene {
     const container = this.add.container(0, 0)
     this.rowContainers.push(container)
 
-    // Color swatch
+    // Color swatch / character token preview
     const swatchColor = parseInt(PLAYER_COLORS[index].replace('#', ''), 16)
-    const swatch = this.add.circle(w / 2 - 310, rowY, 12, swatchColor)
-    swatch.setStrokeStyle(2, 0xffffff, 0.7)
+    const tokenKey = PLAYER_TEXTURE_KEYS[index]
+    let swatch: Phaser.GameObjects.GameObject
+    if (this.textures.exists(tokenKey)) {
+      swatch = this.add.image(w / 2 - 310, rowY, tokenKey).setDisplaySize(36, 40)
+    } else {
+      const circle = this.add.circle(w / 2 - 310, rowY, 12, swatchColor)
+      circle.setStrokeStyle(2, 0xffffff, 0.7)
+      swatch = circle
+    }
 
     const label = this.add.text(w / 2 - 288, rowY, `P${index + 1}`, {
       fontSize: '20px',

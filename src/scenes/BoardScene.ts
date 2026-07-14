@@ -277,9 +277,26 @@ export class BoardScene extends Phaser.Scene {
         if (nodeSet.has(`${col},${row}`)) continue
         const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
         const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
-        this.add.rectangle(x, y, TILE_SIZE - 6, TILE_SIZE - 6, 0x07160f, 0.92).setDepth(-1)
+        const cell = this.add.graphics().setDepth(-1)
+        cell.fillStyle(0x0a1c14, 0.88)
+        cell.fillRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
+        cell.lineStyle(1, 0x1a3a28, 0.35)
+        cell.strokeRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
       }
     }
+
+    // Path underlay glow connecting tiles
+    const pathGlow = this.add.graphics().setDepth(-1)
+    pathGlow.lineStyle(10, COLORS.teal, 0.08)
+    this.nodes.forEach((node, i) => {
+      if (i === 0) return
+      const prev = this.nodes[i - 1]
+      const x1 = this.boardOriginX + prev.col * TILE_SIZE + TILE_SIZE / 2
+      const y1 = this.boardOriginY + prev.row * TILE_SIZE + TILE_SIZE / 2
+      const x2 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
+      const y2 = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
+      pathGlow.lineBetween(x1, y1, x2, y2)
+    })
 
     this.nodes.forEach((node, i) => {
       const type = this.getTileTypeAt(i)
@@ -287,64 +304,60 @@ export class BoardScene extends Phaser.Scene {
       const y = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
 
       const img = this.add.image(x, y, TILE_TEXTURE_KEY(type))
-      img.setDisplaySize(TILE_SIZE - 4, TILE_SIZE - 4)
+      img.setDisplaySize(TILE_SIZE - 2, TILE_SIZE - 2)
       img.setDepth(0)
       img.setInteractive()
       img.setScale(0)
 
       this.tweens.add({
         targets: img,
-        scaleX: (TILE_SIZE - 4) / img.width,
-        scaleY: (TILE_SIZE - 4) / img.height,
+        scaleX: (TILE_SIZE - 2) / img.width,
+        scaleY: (TILE_SIZE - 2) / img.height,
         duration: 400,
-        delay: i * 20,
-        ease: 'Back.easeOut'
+        delay: i * 18,
+        ease: 'Back.easeOut',
       })
 
       img.on('pointerover', () => {
-        img.setAlpha(0.8)
-        img.setScale(img.displayWidth / img.width * 1.1, img.displayHeight / img.height * 1.1)
         this.tweens.add({
           targets: img,
-          scaleX: img.displayWidth / img.width * 1.12,
-          scaleY: img.displayHeight / img.height * 1.12,
+          scaleX: (TILE_SIZE - 2) / img.width * 1.1,
+          scaleY: (TILE_SIZE - 2) / img.height * 1.1,
           duration: 100,
-          ease: 'Sine.easeOut'
+          ease: 'Sine.easeOut',
         })
         this.tileHintText?.setText(this.describeTile(i, type))
       })
       img.on('pointerout', () => {
-        img.setAlpha(1)
-        img.setScale(img.displayWidth / img.width, img.displayHeight / img.height)
         this.tweens.add({
           targets: img,
-          scaleX: (TILE_SIZE - 4) / img.width,
-          scaleY: (TILE_SIZE - 4) / img.height,
+          scaleX: (TILE_SIZE - 2) / img.width,
+          scaleY: (TILE_SIZE - 2) / img.height,
           duration: 100,
-          ease: 'Sine.easeOut'
+          ease: 'Sine.easeOut',
         })
         this.tileHintText?.setText('Hover a tile to inspect its effect.')
       })
 
-      const label = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1).setScale(0)
-      this.tweens.add({ targets: label, scaleX: 1, scaleY: 1, duration: 400, delay: i * 20 + 200, ease: 'Back.easeOut' })
+      // Tiny index badge (readable, not competing with motif)
+      this.add.text(x - TILE_SIZE / 2 + 7, y - TILE_SIZE / 2 + 5, String(i), {
+        fontSize: '9px',
+        fontFamily: FONT.display,
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
+      }).setAlpha(0.55).setDepth(1)
 
-      // Shop ownership indicator dot
       if (type === 'shop' && this.shopOwners[i] !== undefined) {
         const owner = this.state.players.find(p => p.id === this.shopOwners[i])
         if (owner) {
           const ownerIdx = this.state.players.indexOf(owner)
           const ownerColor = PLAYER_COLORS[ownerIdx % PLAYER_COLORS.length]
-          const dot = this.add.circle(x + TILE_SIZE / 2 - 8, y - TILE_SIZE / 2 + 8, 4, ownerColor, 1)
+          const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
           dot.setDepth(2)
-          dot.setStrokeStyle(1.5, 0xffffff, 0.6)
+          dot.setStrokeStyle(1.5, 0xffffff, 0.75)
         }
       }
-
-      this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
-        fontSize: '9px',
-        color: '#ffffff'
-      }).setAlpha(0.7).setDepth(1)
     })
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
@@ -384,19 +397,35 @@ export class BoardScene extends Phaser.Scene {
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
-    const {x, y} = this.getTileXY(0)
-    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
-    const offset = offsets[index]
+    const { x, y } = this.getTileXY(0)
+    const offsets = [{ x: -12, y: -12 }, { x: 12, y: -12 }, { x: -12, y: 12 }, { x: 12, y: 12 }]
+    const offset = offsets[index] ?? { x: 0, y: 0 }
     const container = this.add.container(x + offset.x, y + offset.y)
 
-    // Drop shadow
-    const shadow = this.add.ellipse(2, 4, 32, 12, 0x000000, 0.25)
-    container.add(shadow)
+    const color = PLAYER_COLORS[index % PLAYER_COLORS.length]
+    const ring = this.add.graphics()
+    ring.fillStyle(0x000000, 0.2)
+    ring.fillEllipse(1, 18, 34, 10)
+    ring.lineStyle(3, color, 0.95)
+    ring.strokeCircle(0, -2, 18)
+    ring.lineStyle(1.5, 0xffffff, 0.55)
+    ring.strokeCircle(0, -2, 15)
 
-    const sprite = this.add.image(0, 0, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(32, 32)
-    const label = this.add.text(0, 0, player.emoji, { fontSize: '14px' }).setOrigin(0.5)
-    container.add([sprite, label])
-    container.setDepth(10)
+    const sprite = this.add.image(0, -4, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(48, 62)
+
+    container.add([ring, sprite])
+    container.setDepth(DEPTH.tokens)
+
+    // Idle bob
+    this.tweens.add({
+      targets: sprite,
+      y: -7,
+      duration: 900 + index * 120,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    })
+
     return container
   }
 

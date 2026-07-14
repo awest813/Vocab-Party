@@ -40,6 +40,13 @@ export const EXTERNAL_ASSETS = {
   kenneyQuestion: 'assets/kenney/game-icons/question.png',
   kenneyHome: 'assets/kenney/game-icons/home.png',
   kenneyReturn: 'assets/kenney/game-icons/return.png',
+  // Kenney dice faces
+  kenneyDie1: 'assets/kenney/boardgame/dice/dieWhite1.png',
+  kenneyDie2: 'assets/kenney/boardgame/dice/dieWhite2.png',
+  kenneyDie3: 'assets/kenney/boardgame/dice/dieWhite3.png',
+  kenneyDie4: 'assets/kenney/boardgame/dice/dieWhite4.png',
+  kenneyDie5: 'assets/kenney/boardgame/dice/dieWhite5.png',
+  kenneyDie6: 'assets/kenney/boardgame/dice/dieWhite6.png',
   // Kenney card backs
   kenneyCardRed: 'assets/kenney/boardgame/cards/cardBack_red2.png',
   kenneyCardBlue: 'assets/kenney/boardgame/cards/cardBack_blue2.png',
@@ -84,6 +91,13 @@ export const TEXTURE_KEYS = {
   kenneyQuestion: 'kenney_question',
   kenneyHome: 'kenney_home',
   kenneyReturn: 'kenney_return',
+  // Kenney dice
+  kenneyDie1: 'kenney_die_1',
+  kenneyDie2: 'kenney_die_2',
+  kenneyDie3: 'kenney_die_3',
+  kenneyDie4: 'kenney_die_4',
+  kenneyDie5: 'kenney_die_5',
+  kenneyDie6: 'kenney_die_6',
   // Kenney card backs
   kenneyCardRed: 'kenney_card_red',
   kenneyCardBlue: 'kenney_card_blue',
