@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonFill } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, PLAYER_HEX, hexColor } from '../ui/Theme'
@@ -8,6 +8,8 @@ import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers } from '../systems/gameFlags'
+import { isTouchPreferred } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 1
@@ -44,8 +46,6 @@ export class SetupScene extends Phaser.Scene {
   private startBtn!: Phaser.GameObjects.Container
   private rowContainers: Phaser.GameObjects.Container[] = []
   private cursorTimers: Phaser.Time.TimerEvent[] = []
-  private enterHandler?: () => void
-  private escHandler?: () => void
 
   constructor() { super('SetupScene') }
 
@@ -56,8 +56,9 @@ export class SetupScene extends Phaser.Scene {
     paintStage(this)
     addStarfieldBackdrop(this, 0.4)
     addAmbientMotes(this, 18)
+    Sfx.startMusic()
 
-    const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, 0x223048, 140, 48)
+    const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 48)
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
 
     const headerPanel = this.add.container(w / 2, 78)
@@ -94,7 +95,7 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.gold),
     }).setOrigin(0.5)
 
-    this.minusBtn = createButton(this, -120, 12, '−', COLORS.skyDeep, 0x1e5a96, 60, 44)
+    this.minusBtn = createButton(this, -120, 12, '−', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
     this.minusBtn.on('pointerdown', () => this.changeCount(-1))
 
     this.countText = this.add.text(0, 12, String(this.playerCount), {
@@ -103,7 +104,7 @@ export class SetupScene extends Phaser.Scene {
       color: '#ffffff',
     }).setOrigin(0.5)
 
-    this.plusBtn = createButton(this, 120, 12, '+', COLORS.skyDeep, 0x1e5a96, 60, 44)
+    this.plusBtn = createButton(this, 120, 12, '+', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
 
     countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
@@ -111,19 +112,23 @@ export class SetupScene extends Phaser.Scene {
     const lengthY = 268
     const lenPanel = this.add.container(w / 2, lengthY)
 
-    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, 0x3d8fff, 0x2a6fd4, 360, 50)
-    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, 0x2a3548, 0x223048, 360, 50)
+    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, COLORS.skyBtn, COLORS.skyBtnDeep, 360, 50)
+    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, COLORS.chrome, COLORS.chromeDeep, 360, 50)
     classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
     fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
     this.setFullMapMode(false, classicBtn, fullMapBtn)
     lenPanel.add([classicBtn, fullMapBtn])
 
-    this.add.text(w / 2, 312, 'Click name to type  ·  Tab to cycle  ·  Click HUMAN/CPU to change  ·  Enter to start', {
+    this.add.text(w / 2, 312, isTouchPreferred(this.sys.game)
+      ? 'Tap a name to edit  ·  Tap HUMAN/CPU to cycle  ·  Tap START'
+      : 'Click name to type  ·  Tab to cycle  ·  Click HUMAN/CPU to change  ·  Enter to start', {
       fontSize: '14px',
       fontFamily: FONT.body,
-      color: '#9eb6cc',
-      stroke: '#0a1520',
+      color: hexColor(COLORS.mist),
+      stroke: hexColor(COLORS.ink),
       strokeThickness: 2,
+      align: 'center',
+      wordWrap: { width: 1000 },
     }).setOrigin(0.5)
 
     this.rows = []
@@ -146,7 +151,7 @@ export class SetupScene extends Phaser.Scene {
     }
     this.refreshRows()
  
-    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', 0x2ad46a, 0x1fad55, 400, 64)
+    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', COLORS.party, COLORS.partyDeep, 400, 64)
     this.startBtn.on('pointerdown', () => this.startGame())
 
     if (isAutoSimMode()) {
@@ -183,12 +188,8 @@ export class SetupScene extends Phaser.Scene {
 
   setFullMapMode(fullMap: boolean, classicBtn: Phaser.GameObjects.Container, fullMapBtn: Phaser.GameObjects.Container) {
     this.fullMapMode = fullMap
-    const setFill = (btn: Phaser.GameObjects.Container, color: number) => {
-      const fn = (btn as any).setFillColor as ((c: number) => void) | undefined
-      fn?.(color)
-    }
-    setFill(classicBtn, fullMap ? 0x2a3548 : 0x3d8fff)
-    setFill(fullMapBtn, fullMap ? 0x2ad46a : 0x2a3548)
+    setButtonFill(classicBtn, fullMap ? COLORS.chrome : COLORS.skyBtn)
+    setButtonFill(fullMapBtn, fullMap ? COLORS.party : COLORS.chrome)
     classicBtn.setAlpha(1)
     fullMapBtn.setAlpha(1)
   }
@@ -226,8 +227,8 @@ export class SetupScene extends Phaser.Scene {
     const cpuToggle = this.add.text(w / 2 - 220, rowY, 'HUMAN', {
       fontSize: '14px',
       fontFamily: FONT.display,
-      color: '#9eb6cc',
-      backgroundColor: '#1a2438',
+      color: hexColor(COLORS.mist),
+      backgroundColor: hexColor(COLORS.bgPanelAlt),
       padding: { left: 8, right: 8, top: 4, bottom: 4 },
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
@@ -242,7 +243,7 @@ export class SetupScene extends Phaser.Scene {
     this.cpuToggleTexts.push(cpuToggle)
 
     const bg = this.add.rectangle(inputX, rowY, inputW, inputH, COLORS.bgPanel)
-    bg.setStrokeStyle(2, 0x3a4f6a)
+    bg.setStrokeStyle(2, COLORS.mute)
     bg.setInteractive()
     bg.on('pointerdown', () => this.setActiveRow(index))
 
@@ -288,8 +289,8 @@ export class SetupScene extends Phaser.Scene {
     const mode = this.cpuModeByRow[index]
     if (mode === 'off') {
       t.setText('HUMAN')
-      t.setColor('#9eb6cc')
-      t.setBackgroundColor('#1a2438')
+      t.setColor(hexColor(COLORS.mist))
+      t.setBackgroundColor(hexColor(COLORS.bgPanelAlt))
     } else {
       t.setText(`CPU · ${CPU_LEVEL_LABEL[mode].toUpperCase()}`)
       t.setColor(mode === 'hard' ? '#ffe0a8' : '#b6f0d0')
@@ -330,7 +331,7 @@ export class SetupScene extends Phaser.Scene {
     this.rows.forEach((row, i) => {
       const isActive = i === index && i < this.playerCount
       row.active = isActive
-      row.bg.setStrokeStyle(2, isActive ? COLORS.sky : 0x3a4f6a)
+      row.bg.setStrokeStyle(2, isActive ? COLORS.sky : COLORS.mute)
       row.bg.setFillStyle(isActive ? COLORS.bgPanelAlt : COLORS.bgPanel)
       if (!isActive) row.cursor.setVisible(false)
     })

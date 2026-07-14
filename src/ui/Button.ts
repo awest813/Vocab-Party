@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { COLORS, FONT } from './Theme'
+import { Sfx } from '../systems/Sfx'
 
 export interface ButtonOptions {
   width?: number
@@ -12,6 +13,7 @@ export interface ButtonOptions {
 
 /**
  * Arcade-style beveled button with hover lift and press squash.
+ * Expanded hit padding improves touch targets on small screens.
  */
 export function createButton(
   scene: Phaser.Scene,
@@ -26,6 +28,8 @@ export function createButton(
   const container = scene.add.container(x, y)
   const radius = Math.min(14, height / 2 - 2)
   const bevel = Math.max(4, Math.round(height * 0.12))
+  // Larger invisible hit area helps touch targets on small screens.
+  const hitPad = Math.max(8, Math.round((72 - height) / 2))
   let currentFill = fillColor
   let currentHover = hoverColor
 
@@ -58,7 +62,16 @@ export function createButton(
   draw(currentFill)
 
   const hit = scene.add.rectangle(0, 0, width, height, 0x000000, 0.001)
-  hit.setInteractive({ useHandCursor: true })
+  hit.setInteractive({
+    useHandCursor: true,
+    hitArea: new Phaser.Geom.Rectangle(
+      -width / 2 - hitPad,
+      -height / 2 - hitPad,
+      width + hitPad * 2,
+      height + hitPad * 2
+    ),
+    hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+  })
 
   const text = scene.add.text(0, -bevel / 2, label, {
     fontSize: height >= 64 ? '24px' : height >= 52 ? '20px' : '18px',
@@ -78,6 +91,19 @@ export function createButton(
     text.setY(-bevel / 2)
   }
 
+  const enableHit = () => {
+    hit.setInteractive({
+      useHandCursor: true,
+      hitArea: new Phaser.Geom.Rectangle(
+        -width / 2 - hitPad,
+        -height / 2 - hitPad,
+        width + hitPad * 2,
+        height + hitPad * 2
+      ),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+    })
+  }
+
   hit.on('pointerover', () => {
     if (!enabled) return
     hovered = true
@@ -89,6 +115,7 @@ export function createButton(
       duration: 140,
       ease: 'Cubic.easeOut',
     })
+    Sfx.uiHover()
   })
 
   hit.on('pointerout', () => {
@@ -106,6 +133,7 @@ export function createButton(
 
   hit.on('pointerdown', () => {
     if (!enabled) return
+    Sfx.uiClick()
     draw(currentHover, true)
     text.setY(bevel * 0.15)
     scene.tweens.killTweensOf(container)
@@ -124,7 +152,7 @@ export function createButton(
   ;(container as any).setEnabled = (on: boolean) => {
     enabled = on
     if (on) {
-      hit.setInteractive({ useHandCursor: true })
+      enableHit()
       container.setAlpha(1)
       applyIdle()
     } else {
@@ -155,4 +183,16 @@ export function createButton(
 export function setButtonFill(btn: Phaser.GameObjects.Container, color: number): void {
   const fn = (btn as any).setFillColor as ((c: number) => void) | undefined
   fn?.(color)
+}
+
+/** Enable/disable a button created by `createButton`. */
+export function setButtonEnabled(btn: Phaser.GameObjects.Container, on: boolean): void {
+  const fn = (btn as any).setEnabled as ((on: boolean) => void) | undefined
+  fn?.(on)
+}
+
+/** Update label text on a button created by `createButton`. */
+export function setButtonLabel(btn: Phaser.GameObjects.Container, label: string): void {
+  const fn = (btn as any).setLabel as ((next: string) => void) | undefined
+  fn?.(label)
 }

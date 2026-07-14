@@ -3,7 +3,7 @@ import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState, ITEMS } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonEnabled } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
@@ -27,6 +27,8 @@ import {
 } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import type { BattleResult } from './BattleScene'
 
@@ -175,6 +177,9 @@ export class BoardScene extends Phaser.Scene {
     this.hud = new PlayerHUD(this, this.state)
     this.createPauseButton()
     this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
+    Sfx.startMusic()
+
+    const touch = isTouchPreferred(this.sys.game)
 
     // Bottom control panel
     const chrome = this.add.graphics().setDepth(DEPTH.chrome - 5)
@@ -203,13 +208,21 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4,
     }).setOrigin(1, 0).setDepth(DEPTH.hud)
 
-    this.rollBtn = createButton(this, w - 110, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 180, 56)
+    this.rollBtn = createButton(this, w - 118, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 196, 64)
     this.rollBtn.setDepth(DEPTH.chrome)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
-    this.itemBtn = createButton(this, w - 300, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 160, 56)
+    this.itemBtn = createButton(this, w - 330, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 176, 64)
     this.itemBtn.setDepth(DEPTH.chrome)
     this.itemBtn.on('pointerdown', () => this.toggleItemMenu())
+
+    this.add.text(24, h - 28, touch
+      ? 'Tap ROLL · Tap tile to inspect · pause (II)'
+      : 'Space / R = Roll · Esc = Pause · Hover or tap tiles', {
+      fontSize: '13px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
+    }).setOrigin(0, 0.5).setDepth(DEPTH.chrome)
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
@@ -363,7 +376,11 @@ export class BoardScene extends Phaser.Scene {
           duration: 100,
           ease: 'Sine.easeOut',
         })
-        this.tileHintText?.setText('Hover a tile to inspect its effect.')
+        this.tileHintText?.setText(this.tileInspectHint())
+      })
+      img.on('pointerdown', () => {
+        this.tileHintText?.setText(this.describeTile(i, type))
+        Sfx.uiHover()
       })
 
       // Tiny index badge (readable, not competing with motif)
@@ -414,13 +431,19 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
 
-    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
+    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, this.tileInspectHint(), {
       fontSize: '15px',
       fontFamily: FONT.body,
       color: '#d7e8ff',
       stroke: '#0a1520',
       strokeThickness: 3,
     }).setOrigin(0.5, 0).setDepth(3)
+  }
+
+  private tileInspectHint() {
+    return isTouchPreferred(this.sys.game)
+      ? 'Tap a tile to inspect its effect.'
+      : 'Hover or tap a tile to inspect its effect.'
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
@@ -554,11 +577,11 @@ export class BoardScene extends Phaser.Scene {
     this.hud.update(this.state)
 
     if (p.isCpu && !this.rolling) {
-      ;(this.rollBtn as any).setEnabled?.(false)
-      ;(this.itemBtn as any).setEnabled?.(false)
+      setButtonEnabled(this.rollBtn, false)
+      setButtonEnabled(this.itemBtn, false)
     } else if (!this.rolling) {
-      ;(this.rollBtn as any).setEnabled?.(true)
-      ;(this.itemBtn as any).setEnabled?.(true)
+      setButtonEnabled(this.rollBtn, true)
+      setButtonEnabled(this.itemBtn, true)
     }
 
     this.turnGlowTween?.stop()
@@ -613,6 +636,7 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn.setAlpha(0.5)
     this.itemBtn.setAlpha(0.5)
     this.closeItemMenu()
+    Sfx.roll()
 
     const player = this.state.players[this.state.currentPlayer]
 
@@ -638,7 +662,7 @@ export class BoardScene extends Phaser.Scene {
           this.time.delayedCall(100, () => spark.destroy())
         }
 
-        this.cameras.main.shake(50, 0.003)
+        if (!shouldReduceMotion()) this.cameras.main.shake(50, 0.003)
       }
     })
 
@@ -745,7 +769,7 @@ export class BoardScene extends Phaser.Scene {
       })
     }
 
-    this.cameras.main.shake(100, 0.005)
+    if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
     
     // Squash and stretch tile
     const tileImg = this.children.list.find(c => c instanceof Phaser.GameObjects.Image && c.x === token.x - off.x && c.y === token.y - off.y) as Phaser.GameObjects.Image
@@ -777,6 +801,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.statusText.setText(`🎒 ${player.name} used ${item.name}!`)
     this.showFloatyText(player, `Used ${item.emoji}`, '#ffffff')
+    Sfx.item()
     player.inventory.splice(inventoryIndex, 1)
     this.closeItemMenu()
 
@@ -851,7 +876,7 @@ export class BoardScene extends Phaser.Scene {
       duration: 500,
       onComplete: () => ripple.destroy()
     })
-    this.cameras.main.shake(150, 0.002)
+    if (!shouldReduceMotion()) this.cameras.main.shake(150, 0.002)
 
     // Check for collision (Battle)
     const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
@@ -931,7 +956,7 @@ export class BoardScene extends Phaser.Scene {
           this.showDamageNumber(player, 5, 'pts')
           this.showDamageNumber(player, 4, '🪙')
           this.cameras.main.flash(400, 255, 215, 0, false)
-          this.cameras.main.shake(200, 0.005)
+          if (!shouldReduceMotion()) this.cameras.main.shake(200, 0.005)
           showConfetti(this)
           this.endTurn()
           break
@@ -947,7 +972,7 @@ export class BoardScene extends Phaser.Scene {
             this.showDamageNumber(player, -4, 'pts')
             this.showDamageNumber(player, -5, '🪙', true)
             this.cameras.main.flash(400, 200, 0, 0, false)
-            this.cameras.main.shake(400, 0.02)
+            if (!shouldReduceMotion()) this.cameras.main.shake(400, 0.02)
           }
           this.endTurn()
           break
@@ -1051,6 +1076,7 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(20)
     if (msg.includes('+')) {
+      Sfx.coin()
       playCoinBurst(this, tokenPos.x, tokenPos.y - 8)
     }
     this.tweens.add({
@@ -1203,6 +1229,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private starPurchaseSplash(player: Player) {
+    Sfx.star()
     const w = this.scale.width
     const h = this.scale.height
     const container = this.add.container(w / 2, h / 2).setDepth(300)
@@ -1230,7 +1257,7 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, alpha: 1, duration: 400, delay: 400, ease: 'Back.easeOut' })
     this.tweens.add({ targets: name, alpha: 1, duration: 300, delay: 700 })
     this.cameras.main.flash(500, 255, 215, 0, true)
-    this.cameras.main.shake(300, 0.008)
+    if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
 
     // Golden sparkle burst
     if (!isAutoSimMode()) {
@@ -1414,7 +1441,7 @@ export class BoardScene extends Phaser.Scene {
       const roundsLeft = this.roundsPerGame - this.state.round
       if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
         const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
-        this.cameras.main.shake(300, 0.008)
+        if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
         this.cameras.main.flash(400, 255, 100, 0, true)
         this.showAnnouncement(warning, '#ff8800')
       }
@@ -1490,7 +1517,7 @@ export class BoardScene extends Phaser.Scene {
 
     player.inventory.forEach((type, i) => {
       const item = ITEMS[type]
-      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, COLORS.bgPanelAlt, 0x223048, 340, 40)
+      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, COLORS.bgPanelAlt, COLORS.chromeDeep, 340, 40)
       btn.on('pointerdown', () => this.useItem(this.state.currentPlayer, i))
       this.itemMenu?.add(btn)
     })
@@ -1537,13 +1564,14 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private createPauseButton() {
-    const btn = createButton(this, 50, 50, 'II', COLORS.bgPanelAlt, 0x223048, 56, 56)
+    const btn = createButton(this, 56, 52, 'II', COLORS.bgPanelAlt, COLORS.chromeDeep, 72, 64)
     btn.setDepth(DEPTH.hud)
     btn.on('pointerdown', () => this.pauseGame())
   }
 
   private pauseGame() {
     if (this.scene.isActive('PauseScene')) return
+    Sfx.pause()
     this.scene.pause()
     this.scene.launch('PauseScene')
   }

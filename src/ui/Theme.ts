@@ -19,10 +19,19 @@ export const COLORS = {
   tealDeep: 0x1a8f86,
   sky: 0x5eb7ff,
   skyDeep: 0x2a6fb0,
+  skyBtn: 0x3d8fff,
+  skyBtnDeep: 0x2a6fd4,
   coral: 0xff6b6b,
   mint: 0x44dd88,
+  /** Primary CTA / start-tile green used on menus and board. */
+  party: 0x2ad46a,
+  partyDeep: 0x1fad55,
   danger: 0xe84a4a,
+  dangerDeep: 0xb83232,
   warning: 0xff9f1c,
+  /** Inactive / muted chrome buttons */
+  chrome: 0x2a3548,
+  chromeDeep: 0x223048,
 
   // Neutrals
   ink: 0x0a101c,

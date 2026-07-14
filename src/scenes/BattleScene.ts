@@ -7,6 +7,8 @@ import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { cpuBattleChoice } from '../systems/CpuPolicy'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 interface BattleSceneData {
   state: GameState
@@ -48,6 +50,7 @@ export class BattleScene extends Phaser.Scene {
     // Backdrop
     paintStage(this, { topColor: 0x14080c, bottomColor: 0x2a1018, midAlpha: 0.55 })
     this.add.rectangle(0, 0, w, h, 0x070b14, 0.35).setOrigin(0)
+    Sfx.battle()
 
     const attacker = data.state.players[data.attackerIndex]
     const defender = data.state.players[data.defenderIndex]
@@ -73,7 +76,7 @@ export class BattleScene extends Phaser.Scene {
     this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: this.d(500), ease: 'Back.easeOut' })
     this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: this.d(400), delay: this.d(300) })
     this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: this.d(400), delay: this.d(400) })
-    this.cameras.main.flash(this.d(400), 255, 0, 0, true)
+    if (!shouldReduceMotion()) this.cameras.main.flash(this.d(400), 255, 0, 0, true)
 
     this.time.delayedCall(this.d(1500), () => {
       this.tweens.add({ targets: vsContainer, alpha: 0, duration: this.d(300),
@@ -191,9 +194,18 @@ export class BattleScene extends Phaser.Scene {
         ease: 'Linear'
       })
 
+      const defBtn = createButton(this, bx - 70, by, 'DEFEND', COLORS.skyDeep, COLORS.skyBtnDeep, 140, 50)
+      const evaBtn = createButton(this, bx + 70, by, 'EVADE', COLORS.party, COLORS.partyDeep, 140, 50)
+
+      const onKey = (ev: KeyboardEvent) => {
+        if (ev.code === 'Digit1' || ev.code === 'KeyA' || ev.code === 'Numpad1') pick('defend')
+        if (ev.code === 'Digit2' || ev.code === 'KeyB' || ev.code === 'Numpad2') pick('evade')
+      }
+
       this.defenderTimerEvent = this.time.delayedCall(this.d(8000), () => {
         if (!this.choiceMade) {
           this.choiceMade = true
+          this.input.keyboard?.off('keydown', onKey)
           defBtn?.destroy()
           evaBtn?.destroy()
           this.statusText.setText('⏱️ Time ran out! Auto-defending!')
@@ -201,18 +213,21 @@ export class BattleScene extends Phaser.Scene {
         }
       })
 
-      const defBtn = createButton(this, bx - 70, by, 'DEFEND', COLORS.skyDeep, 0x1e5a96, 140, 50)
-      const evaBtn = createButton(this, bx + 70, by, 'EVADE', COLORS.mint, 0x2aa866, 140, 50)
-
       const pick = (choice: 'defend' | 'evade') => {
         if (this.choiceMade) return
         this.choiceMade = true
         this.defenderTimerEvent?.remove()
         this.tweens.killTweensOf(this.defenderTimerBar)
         this.defenderTimerBar?.destroy()
+        this.input.keyboard?.off('keydown', onKey)
         defBtn.destroy(); evaBtn.destroy()
         this.resolveDefender(choice)
       }
+
+      this.input.keyboard?.on('keydown', onKey)
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+        this.input.keyboard?.off('keydown', onKey)
+      })
 
       defBtn.on('pointerdown', () => pick('defend'))
       evaBtn.on('pointerdown', () => pick('evade'))
@@ -276,7 +291,7 @@ export class BattleScene extends Phaser.Scene {
       defender.shieldActive = false
       dmg = 0
       this.statusText.setText('🛡️ SHIELD BLOCKED!')
-      this.cameras.main.flash(400, 68, 204, 255) // Blue shield flash
+      if (!shouldReduceMotion()) this.cameras.main.flash(400, 68, 204, 255) // Blue shield flash
       this.time.delayedCall(this.d(2000), () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
@@ -292,8 +307,10 @@ export class BattleScene extends Phaser.Scene {
 
     if (dmg > 0) {
       this.statusText.setText(`💥 ${dmg} CRITICAL HIT!`)
-      this.cameras.main.shake(300, 0.02)
-      this.cameras.main.flash(200, 255, 0, 0, true)
+      if (!shouldReduceMotion()) {
+        this.cameras.main.shake(300, 0.02)
+        this.cameras.main.flash(200, 255, 0, 0, true)
+      }
 
       const fx = this.defenderContainer.x
       const fy = this.defenderContainer.y

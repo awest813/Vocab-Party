@@ -1,11 +1,13 @@
 import Phaser from 'phaser'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonFill } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { createDimmer, createPanel } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import type { GameState } from '../systems/GameState'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 interface QuestionData {
   question: string
@@ -108,7 +110,7 @@ export class QuestionScene extends Phaser.Scene {
       color: hexColor(COLORS.mist),
     }).setOrigin(0.5).setDepth(45)
 
-    this.add.text(w / 2, h / 2 - 140, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h / 2 - 140, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -142,10 +144,8 @@ export class QuestionScene extends Phaser.Scene {
       const speedSurge = correct && secondsLeft >= 10
       // Highlight correct (green) and picked wrong (red) buttons
       this.answerContainers.forEach((c, idx) => {
-        const setFill = (c as any).setFillColor as ((color: number) => void) | undefined
-        if (!setFill) return
-        if (idx === q.correct) setFill(COLORS.mint)
-        else if (idx === i && !correct) setFill(COLORS.danger)
+        if (idx === q.correct) setButtonFill(c, COLORS.mint)
+        else if (idx === i && !correct) setButtonFill(c, COLORS.danger)
         else c.setAlpha(0.4)
       })
       this.handleAnswer(correct, timeBonus, speedSurge, btn, onComplete, q.explanation)
@@ -218,7 +218,7 @@ export class QuestionScene extends Phaser.Scene {
             duration: 100, yoyo: true,
             ease: 'Bounce.easeInOut'
           })
-          this.cameras.main.shake(100, 0.005)
+          if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
         }
         else if (secondsLeft <= 10) countdownText.setColor('#ff8800')
       }
@@ -276,8 +276,9 @@ export class QuestionScene extends Phaser.Scene {
     const h = this.scale.height
 
     if (correct) {
+      Sfx.correct()
       showConfetti(this)
-      this.cameras.main.flash(400, 100, 255, 100)
+      if (!shouldReduceMotion()) this.cameras.main.flash(400, 100, 255, 100)
 
       if (speedSurge) {
         // Speed surge particle burst
@@ -321,8 +322,11 @@ export class QuestionScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(201)
       })
     } else {
-      this.cameras.main.shake(300, 0.01)
-      this.cameras.main.flash(300, 255, 0, 0, true)
+      Sfx.wrong()
+      if (!shouldReduceMotion()) {
+        this.cameras.main.shake(300, 0.01)
+        this.cameras.main.flash(300, 255, 0, 0, true)
+      }
       
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 140, COLORS.danger, 0.55)

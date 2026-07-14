@@ -1,12 +1,16 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
 import { createDimmer, createPanel } from '../ui/Panel'
-import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { COLORS } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { openHowToPlay } from '../ui/HowToPlay'
+import { openSettingsPanel } from '../ui/SettingsPanel'
+import { Sfx } from '../systems/Sfx'
 
 export class PauseScene extends Phaser.Scene {
-  private helpOpen = false
-  private closeHelp: (() => void) | null = null
+  private modalOpen = false
+  private closeModal: (() => void) | null = null
+
   constructor() {
     super('PauseScene')
   }
@@ -15,13 +19,14 @@ export class PauseScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
+    Sfx.pause()
     createDimmer(this, 0.62)
 
     const panel = createPanel(this, {
       x: w / 2,
       y: h / 2,
       width: 420,
-      height: 340,
+      height: 400,
       border: COLORS.sky,
       borderAlpha: 0.5,
       headerColor: COLORS.skyDeep,
@@ -40,84 +45,60 @@ export class PauseScene extends Phaser.Scene {
       )
     }
 
-    const resumeBtn = createButton(this, 0, -30, 'RESUME', COLORS.mint, 0x2aa866, 300, 52)
-    resumeBtn.on('pointerdown', () => {
+    const resume = () => {
+      if (this.modalOpen) return
       this.scene.resume('BoardScene')
       this.scene.stop()
+    }
+
+    const resumeBtn = createButton(this, 0, -70, 'RESUME', COLORS.party, COLORS.partyDeep, 300, 52)
+    resumeBtn.on('pointerdown', resume)
+
+    const settingsBtn = createButton(this, 0, -5, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 300, 50)
+    settingsBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      this.modalOpen = true
+      panel.setVisible(false)
+      this.closeModal = openSettingsPanel(this, {
+        onClose: () => {
+          this.modalOpen = false
+          this.closeModal = null
+          panel.setVisible(true)
+        },
+      })
     })
 
-    const quitBtn = createButton(this, 0, 40, 'QUIT TO MENU', COLORS.danger, 0xb83232, 300, 52)
+    const helpBtn = createButton(this, 0, 55, 'HOW TO PLAY', COLORS.skyDeep, COLORS.skyBtnDeep, 300, 50)
+    helpBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      this.modalOpen = true
+      panel.setVisible(false)
+      this.closeModal = openHowToPlay(this, {
+        mode: 'rules',
+        onClose: () => {
+          this.modalOpen = false
+          this.closeModal = null
+          panel.setVisible(true)
+        },
+      })
+    })
+
+    const quitBtn = createButton(this, 0, 120, 'QUIT TO MENU', COLORS.danger, COLORS.dangerDeep, 300, 50)
     quitBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      Sfx.stopMusic()
       this.scene.stop('BoardScene')
       this.scene.start('MenuScene')
     })
 
-    const helpBtn = createButton(this, 0, 110, 'HOW TO PLAY', COLORS.skyDeep, 0x1e5a96, 300, 52)
-    helpBtn.on('pointerdown', () => this.showHelp(resumeBtn, quitBtn, helpBtn))
-
-    panel.add([resumeBtn, quitBtn, helpBtn])
+    panel.add([resumeBtn, settingsBtn, helpBtn, quitBtn])
 
     this.input.keyboard?.on('keydown-ESC', () => {
-      if (this.helpOpen) {
-        this.closeHelp?.()
+      if (this.modalOpen) {
+        this.closeModal?.()
         return
       }
-      this.scene.resume('BoardScene')
-      this.scene.stop()
+      resume()
     })
-  }
-
-  private showHelp(...hide: Phaser.GameObjects.Container[]) {
-    if (this.helpOpen) return
-    this.helpOpen = true
-    hide.forEach(o => o.setVisible(false))
-    const w = this.scale.width
-    const h = this.scale.height
-
-    const rules = [
-      'Roll the dice to move around the board',
-      'Land on tiles to answer vocab/grammar questions',
-      'Collect Stars (20 coins) to earn trophies',
-      'Use items: Dash, Swap, Warp, Shield, and more',
-      'Buy shops to collect rent from passing players',
-      'Battle when two players land on the same tile',
-      'First to 5 trophies wins — points break ties',
-    ]
-
-    const helpPanel = createPanel(this, {
-      x: w / 2,
-      y: h / 2,
-      width: 640,
-      height: 400,
-      border: COLORS.gold,
-      borderAlpha: 0.45,
-      headerColor: COLORS.goldDeep,
-      headerHeight: 48,
-      title: 'HOW TO PLAY',
-      titleColor: hexColor(COLORS.gold),
-      depth: 70,
-      animateIn: true,
-    })
-
-    const texts = rules.map((rule, i) =>
-      this.add.text(0, -130 + i * 36, `•  ${rule}`, {
-        fontSize: '16px',
-        fontFamily: FONT.body,
-        color: hexColor(COLORS.mist),
-      }).setOrigin(0.5)
-    )
-
-    const closeBtn = createButton(this, 0, 162, 'CLOSE', COLORS.danger, 0xb83232, 180, 46)
-    const close = () => {
-      if (!this.helpOpen) return
-      this.helpOpen = false
-      this.closeHelp = null
-      helpPanel.destroy(true)
-      hide.forEach(o => o.setVisible(true))
-    }
-    this.closeHelp = close
-    closeBtn.on('pointerdown', close)
-
-    helpPanel.add([...texts, closeBtn])
   }
 }

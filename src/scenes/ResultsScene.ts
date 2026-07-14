@@ -8,6 +8,7 @@ import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
+import { Sfx } from '../systems/Sfx'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -160,6 +161,7 @@ export class ResultsScene extends Phaser.Scene {
     })
 
     this.time.delayedCall(this.d(1100), () => {
+      Sfx.win()
       showConfetti(this)
       const banner = this.add.text(w / 2, 118, `${sorted[0].emoji} ${sorted[0].name} WINS!`, {
         fontSize: '36px',
@@ -198,7 +200,7 @@ export class ResultsScene extends Phaser.Scene {
       }
     })
 
-    const playAgainBtn = createButton(this, w / 2 - 180, h - 52, 'PLAY AGAIN', COLORS.mint, 0x2aa866, 280, 56)
+    const playAgainBtn = createButton(this, w / 2 - 180, h - 52, 'PLAY AGAIN', COLORS.party, COLORS.partyDeep, 280, 56)
     playAgainBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(280, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
@@ -206,12 +208,19 @@ export class ResultsScene extends Phaser.Scene {
       })
     })
 
-    const menuBtn = createButton(this, w / 2 + 180, h - 52, 'MAIN MENU', COLORS.skyDeep, 0x1e5a96, 280, 56)
+    const menuBtn = createButton(this, w / 2 + 180, h - 52, 'MAIN MENU', COLORS.skyDeep, COLORS.skyBtnDeep, 280, 56)
     menuBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(280, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         this.scene.start('MenuScene')
       })
+    })
+
+    this.input.keyboard?.on('keydown-ENTER', () => {
+      this.scene.start('SetupScene')
+    })
+    this.input.keyboard?.on('keydown-ESC', () => {
+      this.scene.start('MenuScene')
     })
   }
 

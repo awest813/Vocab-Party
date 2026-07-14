@@ -1,10 +1,13 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonEnabled } from '../ui/Button'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
+import { COLORS } from '../ui/Theme'
 
 interface MinigameSceneData {
   state: GameState
@@ -70,13 +73,13 @@ type MinigameId =
   | 'homophone-hunt'
 
 const MINIGAME_META: Record<MinigameId, { title: string; accent: number; tip: string }> = {
-  'context-clue': { title: '🔍 CONTEXT CLUE CLASH', accent: 0x3d8fff, tip: 'Fill in the blank using context clues!' },
-  'comma-crisis': { title: '😱 COMMA CRISIS', accent: 0xff9f1c, tip: 'Pick the sentence with correct commas.' },
-  'parts-of-speech': { title: '🗣️ PARTS OF SPEECH', accent: 0xff44aa, tip: 'What part of speech is the highlighted word?' },
-  'synonym-blitz': { title: '⚡ SYNONYM BLITZ', accent: 0x44ddff, tip: 'Pick the word that means almost the same thing!' },
-  'sentence-fix': { title: '✨ SENTENCE FIX', accent: 0x2ad46a, tip: 'Choose the best-written sentence.' },
-  'antonym-attack': { title: '🔄 ANTONYM ATTACK', accent: 0xc084fc, tip: 'Pick the OPPOSITE of the word below!' },
-  'homophone-hunt': { title: '🔊 HOMOPHONE HUNT', accent: 0x44ccff, tip: 'Choose the correct word for the blank.' },
+  'context-clue': { title: '🔍 CONTEXT CLUE CLASH', accent: COLORS.skyBtn, tip: 'Fill in the blank using context clues!' },
+  'comma-crisis': { title: '😱 COMMA CRISIS', accent: COLORS.warning, tip: 'Pick the sentence with correct commas.' },
+  'parts-of-speech': { title: '🗣️ PARTS OF SPEECH', accent: 0xff5cad, tip: 'What part of speech is the highlighted word?' },
+  'synonym-blitz': { title: '⚡ SYNONYM BLITZ', accent: COLORS.sky, tip: 'Pick the word that means almost the same thing!' },
+  'sentence-fix': { title: '✨ SENTENCE FIX', accent: COLORS.party, tip: 'Choose the best-written sentence.' },
+  'antonym-attack': { title: '🔄 ANTONYM ATTACK', accent: 0xb45cff, tip: 'Pick the OPPOSITE of the word below!' },
+  'homophone-hunt': { title: '🔊 HOMOPHONE HUNT', accent: COLORS.teal, tip: 'Choose the correct word for the blank.' },
 }
 
 const ALL_MINIGAMES: MinigameId[] = [
@@ -197,6 +200,8 @@ export class MinigameScene extends Phaser.Scene {
     const player = state.players[state.currentPlayer]
 
     this.paintBackdrop()
+
+    Sfx.splash()
 
     const panel = this.add.container(w / 2, h / 2 - 20)
     const bg = this.add.rectangle(0, 0, 820, 280, 0x0a1528, 0.9)
@@ -330,17 +335,19 @@ export class MinigameScene extends Phaser.Scene {
 
       if (correct) {
         if (bg) bg.setFillStyle(0x22aa44)
+        Sfx.correct()
         showConfetti(this)
         this.setFeedback(q.success(q.choices[ci]), '#44ff88')
         choiceButtons.forEach((b, i) => {
-          if (i !== ci) (b as any).setEnabled?.(false)
+          if (i !== ci) setButtonEnabled(b, false)
         })
         finish(state.currentPlayer, 1600)
       } else {
         eliminated.add(ci)
         if (bg) bg.setFillStyle(0xaa2222)
-        ;(btn as any).setEnabled?.(false)
-        this.cameras.main.shake(this.d(160), 0.007)
+        setButtonEnabled(btn, false)
+        Sfx.wrong()
+        if (!shouldReduceMotion()) this.cameras.main.shake(this.d(160), 0.007)
         this.setFeedback(q.fail, '#ff7777')
         // Keep keyboard live for remaining options
         this.registerChoiceKeys(q.choices.length, (idx) => onChoice(idx))
@@ -382,7 +389,9 @@ export class MinigameScene extends Phaser.Scene {
 
     this.registerChoiceKeys(q.choices.length, (ci) => onChoice(ci))
 
-    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D  ·  Wrong answers stay out', {
+    this.add.text(w / 2, h - 48, isTouchPreferred(this.sys.game)
+      ? 'Tap an answer  ·  Wrong answers stay out'
+      : 'Keys: 1–4 or A–D  ·  Wrong answers stay out', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
@@ -397,7 +406,7 @@ export class MinigameScene extends Phaser.Scene {
       onComplete: () => {
         if (resolved) return
         this.setFeedback("⏱️ Time's up — no winner this round.", '#ffcc44')
-        choiceButtons.forEach(b => (b as any).setEnabled?.(false))
+        choiceButtons.forEach(b => setButtonEnabled(b, false))
         finish(-1, 1200)
       }
     })
