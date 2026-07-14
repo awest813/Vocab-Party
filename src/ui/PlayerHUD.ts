@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
+import { characterDef } from '../systems/SpriteFactory'
 import { COLORS, DEPTH, FONT, hexColor } from './Theme'
 
 const RANK_LABEL = ['1st', '2nd', '3rd', '4th']
@@ -31,7 +32,7 @@ export class PlayerHUD {
       const x = startX + i * (panelW + gap)
       const y = 52
       const container = this.scene.add.container(x, y)
-      const accent = COLORS.player[i % COLORS.player.length]
+      const accent = characterDef(player.characterIndex).color
 
       const frame = this.scene.add.graphics()
       this.paintFrame(frame, panelW, panelH, accent, false)
@@ -142,7 +143,7 @@ export class PlayerHUD {
       if (!container) return
 
       const isActive = i === state.currentPlayer
-      const accent = COLORS.player[i % COLORS.player.length]
+      const accent = characterDef(player.characterIndex).color
       this.paintFrame(this.frames[i], panelW, panelH, accent, isActive)
 
       const targetScale = isActive ? 1.06 : 1.0

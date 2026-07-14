@@ -38,11 +38,13 @@ const MAP_PRESETS: MapPreset[] = [
 interface InputRow {
   label: Phaser.GameObjects.Text
   charName: Phaser.GameObjects.Text
+  cycleHint: Phaser.GameObjects.Text
   nameText: Phaser.GameObjects.Text
   cursor: Phaser.GameObjects.Text
   bg: Phaser.GameObjects.Rectangle
   ring: Phaser.GameObjects.Graphics
   token: Phaser.GameObjects.Image | Phaser.GameObjects.Arc
+  tokenHit: Phaser.GameObjects.Arc
   active: boolean
   value: string
 }
@@ -56,7 +58,13 @@ export class SetupScene extends Phaser.Scene {
   /** Selected character index per roster slot (into CHARACTER_DEFS). */
   private characterByRow: number[] = [0, 1, 2, 3]
   private mapPreset: MapPresetId = 'classic'
-  private mapCards: { id: MapPresetId; root: Phaser.GameObjects.Container; frame: Phaser.GameObjects.Graphics }[] = []
+  private mapCards: {
+    id: MapPresetId
+    root: Phaser.GameObjects.Container
+    frame: Phaser.GameObjects.Graphics
+    width: number
+    height: number
+  }[] = []
   private rows: InputRow[] = []
   private activeRow = -1
   private countText!: Phaser.GameObjects.Text
@@ -65,6 +73,7 @@ export class SetupScene extends Phaser.Scene {
   private startBtn!: Phaser.GameObjects.Container
   private rowContainers: Phaser.GameObjects.Container[] = []
   private cursorTimers: Phaser.Time.TimerEvent[] = []
+  private leaving = false
 
   constructor() { super('SetupScene') }
 
@@ -150,7 +159,7 @@ export class SetupScene extends Phaser.Scene {
 
     countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
 
-    const mapLabel = this.add.text(w / 2 + 80, optionsY - 48, 'MAP LENGTH', {
+    this.add.text(w / 2 + 80, optionsY - 48, 'MAP LENGTH', {
       fontSize: '12px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.gold),
@@ -166,7 +175,6 @@ export class SetupScene extends Phaser.Scene {
       this.mapCards.push(card)
     })
     this.refreshMapCards()
-    void mapLabel
 
     // ——— Roster ———
     const rosterTop = 238
@@ -186,8 +194,8 @@ export class SetupScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(4)
 
     this.add.text(w / 2, rosterTop + 24, touch
-      ? 'Tap portrait to change character  ·  Tap name / HUMAN-CPU  ·  Tap START'
-      : 'Click portrait to change character  ·  Tab cycles names  ·  Enter to start', {
+      ? 'Tap portrait or name tag to change character  ·  Tap START'
+      : 'Click portrait to change character  ·  1–3 pick map  ·  Enter to start', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -266,6 +274,9 @@ export class SetupScene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))
     this.input.keyboard?.on('keydown-ENTER', () => { if (this.activeRow < 0) this.startGame() })
+    this.input.keyboard?.on('keydown-ONE', () => { if (this.activeRow < 0) this.selectMapPreset('quick') })
+    this.input.keyboard?.on('keydown-TWO', () => { if (this.activeRow < 0) this.selectMapPreset('classic') })
+    this.input.keyboard?.on('keydown-THREE', () => { if (this.activeRow < 0) this.selectMapPreset('full') })
     this.input.keyboard?.on('keydown-ESC', () => {
       if (this.activeRow >= 0) this.setActiveRow(-1)
       else this.scene.start('MenuScene')
@@ -278,6 +289,9 @@ export class SetupScene extends Phaser.Scene {
     this.events.once('shutdown', () => {
       this.input.keyboard?.off('keydown')
       this.input.keyboard?.off('keydown-ENTER')
+      this.input.keyboard?.off('keydown-ONE')
+      this.input.keyboard?.off('keydown-TWO')
+      this.input.keyboard?.off('keydown-THREE')
       this.input.keyboard?.off('keydown-ESC')
       this.cursorTimers.forEach(t => t.destroy())
       this.cursorTimers = []
@@ -288,6 +302,13 @@ export class SetupScene extends Phaser.Scene {
 
   private currentMapRounds(): number {
     return MAP_PRESETS.find(p => p.id === this.mapPreset)?.rounds ?? 10
+  }
+
+  private selectMapPreset(id: MapPresetId) {
+    if (this.leaving || this.mapPreset === id) return
+    this.mapPreset = id
+    this.refreshMapCards()
+    Sfx.uiToggle()
   }
 
   private buildMapCard(preset: MapPreset, x: number, y: number, width: number, height: number) {
@@ -315,22 +336,14 @@ export class SetupScene extends Phaser.Scene {
 
     const hit = this.add.rectangle(0, 0, width, height, 0x000000, 0.001)
       .setInteractive({ useHandCursor: true })
-    hit.on('pointerdown', () => {
-      this.mapPreset = preset.id
-      this.refreshMapCards()
-      Sfx.uiToggle()
-    })
+    hit.on('pointerdown', () => this.selectMapPreset(preset.id))
     hit.on('pointerover', () => {
-      if (this.mapPreset !== preset.id) root.setScale(1.03)
+      if (this.mapPreset !== preset.id) root.setScale(1.04)
     })
     hit.on('pointerout', () => root.setScale(1))
     root.add(hit)
 
-    // Store size for redraw
-    ;(frame as any)._cardW = width
-    ;(frame as any)._cardH = height
-
-    return { id: preset.id, root, frame }
+    return { id: preset.id, root, frame, width, height }
   }
 
   private drawMapPreview(g: Phaser.GameObjects.Graphics, id: MapPresetId, ox: number, oy: number) {
@@ -361,8 +374,8 @@ export class SetupScene extends Phaser.Scene {
   private refreshMapCards() {
     for (const card of this.mapCards) {
       const selected = card.id === this.mapPreset
-      const w = (card.frame as any)._cardW as number
-      const h = (card.frame as any)._cardH as number
+      const w = card.width
+      const h = card.height
       card.frame.clear()
       card.frame.fillStyle(0x000000, 0.25)
       card.frame.fillRoundedRect(-w / 2 + 2, -h / 2 + 3, w, h, 12)
@@ -371,10 +384,13 @@ export class SetupScene extends Phaser.Scene {
       card.frame.lineStyle(2.5, selected ? COLORS.gold : COLORS.strokeSoft, selected ? 0.85 : 0.18)
       card.frame.strokeRoundedRect(-w / 2, -h / 2, w, h, 12)
       if (selected) {
-        card.frame.fillStyle(COLORS.gold, 0.12)
+        card.frame.fillStyle(COLORS.gold, 0.14)
         card.frame.fillRoundedRect(-w / 2 + 3, -h / 2 + 3, w - 6, 10, { tl: 10, tr: 10, bl: 0, br: 0 })
+        card.frame.lineStyle(1.5, COLORS.gold, 0.35)
+        card.frame.strokeRoundedRect(-w / 2 + 4, -h / 2 + 4, w - 8, h - 8, 10)
       }
-      card.root.setAlpha(selected ? 1 : 0.82)
+      card.root.setAlpha(selected ? 1 : 0.78)
+      if (!selected) card.root.setScale(1)
     }
   }
 
@@ -397,9 +413,22 @@ export class SetupScene extends Phaser.Scene {
   }
 
   private cycleCharacter(row: number) {
-    if (row < 0 || row >= this.playerCount) return
+    if (this.leaving || row < 0 || row >= this.playerCount) return
     this.characterByRow[row] = this.nextFreeCharacter(this.characterByRow[row], row)
     this.refreshCharacterVisual(row)
+    const token = this.rows[row]?.token
+    if (token && !shouldReduceMotion()) {
+      this.tweens.killTweensOf(token)
+      token.setScale(1)
+      this.tweens.add({
+        targets: token,
+        scaleX: 1.18,
+        scaleY: 1.18,
+        duration: 120,
+        yoyo: true,
+        ease: 'Back.easeOut',
+      })
+    }
     Sfx.uiToggle()
   }
 
@@ -410,6 +439,7 @@ export class SetupScene extends Phaser.Scene {
     const tex = characterTextureKey(this.characterByRow[index])
     row.charName.setText(def.name)
     row.charName.setColor(hexColor(def.color))
+    row.cycleHint.setX(row.charName.x + row.charName.width + 8)
 
     if (row.token instanceof Phaser.GameObjects.Image) {
       if (this.textures.exists(tex)) row.token.setTexture(tex)
@@ -460,8 +490,31 @@ export class SetupScene extends Phaser.Scene {
       token.setStrokeStyle(2, 0xffffff, 0.7)
     }
 
+    const label = this.add.text(tokenX + 40, rowY - 10, `P${index + 1}`, {
+      fontSize: '13px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.mute),
+      stroke: '#000000',
+      strokeThickness: 2,
+    }).setOrigin(0, 0.5)
+
+    const charName = this.add.text(tokenX + 40, rowY + 10, def.name, {
+      fontSize: '15px',
+      fontFamily: FONT.display,
+      color: hexColor(def.color),
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
+    charName.on('pointerdown', () => this.cycleCharacter(index))
+
+    const cycleHint = this.add.text(tokenX + 40 + charName.width + 8, rowY + 10, '↻', {
+      fontSize: '13px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.mute),
+    }).setOrigin(0, 0.5).setAlpha(0.7)
+
     // Invisible hit over portrait for character cycling
-    const tokenHit = this.add.circle(tokenX, rowY, 28, 0x000000, 0.001)
+    const tokenHit = this.add.circle(tokenX, rowY, 30, 0x000000, 0.001)
       .setInteractive({ useHandCursor: true })
     tokenHit.on('pointerdown', () => this.cycleCharacter(index))
     tokenHit.on('pointerover', () => {
@@ -469,23 +522,7 @@ export class SetupScene extends Phaser.Scene {
     })
     tokenHit.on('pointerout', () => tokenHit.setScale(1))
 
-    const label = this.add.text(tokenX + 38, rowY - 10, `P${index + 1}`, {
-      fontSize: '14px',
-      fontFamily: FONT.display,
-      color: hexColor(COLORS.mute),
-      stroke: '#000000',
-      strokeThickness: 2,
-    }).setOrigin(0, 0.5)
-
-    const charName = this.add.text(tokenX + 38, rowY + 10, def.name, {
-      fontSize: '15px',
-      fontFamily: FONT.display,
-      color: hexColor(def.color),
-      stroke: '#000000',
-      strokeThickness: 3,
-    }).setOrigin(0, 0.5)
-
-    const cpuToggle = this.add.text(w / 2 - 160, rowY, 'HUMAN', {
+    const cpuToggle = this.add.text(w / 2 - 140, rowY, 'HUMAN', {
       fontSize: '14px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.mist),
@@ -525,16 +562,18 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.sky),
     }).setOrigin(0, 0.5).setVisible(false)
 
-    container.add([rowPlate, ring, token, tokenHit, label, charName, cpuToggle, bg, nameText, cursor])
+    container.add([rowPlate, ring, token, tokenHit, label, charName, cycleHint, cpuToggle, bg, nameText, cursor])
 
     const row: InputRow = {
       label,
       charName,
+      cycleHint,
       nameText,
       cursor,
       bg,
       ring,
       token,
+      tokenHit,
       active: false,
       value: DEFAULT_NAMES[index],
     }
@@ -572,11 +611,20 @@ export class SetupScene extends Phaser.Scene {
       const childAlpha = enabled ? 1 : 0.35
       row.label.setAlpha(childAlpha)
       row.charName.setAlpha(childAlpha)
+      row.cycleHint.setAlpha(enabled ? 0.7 : 0.2)
       row.bg.setAlpha(childAlpha)
       row.nameText.setAlpha(childAlpha)
       row.ring.setAlpha(enabled ? 1 : 0.25)
-      if (enabled) row.bg.setInteractive()
-      else row.bg.disableInteractive()
+      row.token.setAlpha(enabled ? 1 : 0.35)
+      if (enabled) {
+        row.bg.setInteractive()
+        row.tokenHit.setInteractive({ useHandCursor: true })
+        row.charName.setInteractive({ useHandCursor: true })
+      } else {
+        row.bg.disableInteractive()
+        row.tokenHit.disableInteractive()
+        row.charName.disableInteractive()
+      }
       const cpuT = this.cpuToggleTexts[i]
       if (cpuT) {
         cpuT.setAlpha(childAlpha)
@@ -668,10 +716,13 @@ export class SetupScene extends Phaser.Scene {
   }
 
   startGame() {
+    if (this.leaving) return
     this.startGameWithRounds(this.currentMapRounds())
   }
 
   private startGameWithRounds(roundsPerGame: number) {
+    if (this.leaving && !isAutoSimMode()) return
+    this.leaving = true
     const names = this.rows.slice(0, this.playerCount).map((r, i) =>
       r.value.trim() || DEFAULT_NAMES[i]
     )

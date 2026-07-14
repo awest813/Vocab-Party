@@ -14,6 +14,7 @@ export type TileType =
 
 import type { CpuLevel } from './CpuPolicy'
 import { DEFAULT_CPU_LEVEL } from './CpuPolicy'
+import { CHARACTER_DEFS } from './SpriteFactory'
 
 export type ItemType = 'dash' | 'swap' | 'warp' | 'shield' | 'double_score' | 'poison_dart' | 'golden_key'
 
@@ -85,7 +86,11 @@ export function createInitialState(
       id: i,
       name,
       emoji: emojis[i],
-      characterIndex: characterIndices?.[i] ?? i,
+      characterIndex: (() => {
+        const raw = characterIndices?.[i] ?? i
+        const n = CHARACTER_DEFS.length
+        return ((Math.floor(raw) % n) + n) % n
+      })(),
       score: 0,
       position: 0,
       trophies: 0,
