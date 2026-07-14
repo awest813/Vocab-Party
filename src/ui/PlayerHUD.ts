@@ -48,11 +48,12 @@ export class PlayerHUD {
       const children: Phaser.GameObjects.GameObject[] = [frame, nameText]
 
       if (player.isCpu) {
+        const lvl = player.cpuLevel === 'hard' ? 'H' : player.cpuLevel === 'easy' ? 'E' : 'N'
         children.push(
-          this.scene.add.text(panelW / 2 - 12, -30, 'CPU', {
+          this.scene.add.text(panelW / 2 - 12, -30, `CPU·${lvl}`, {
             fontSize: '11px',
             fontFamily: FONT.display,
-            color: '#9ad4ff',
+            color: player.cpuLevel === 'hard' ? '#ffb4a2' : player.cpuLevel === 'easy' ? '#b8f0c8' : '#9ad4ff',
             stroke: '#001830',
             strokeThickness: 2,
           }).setOrigin(1, 0)

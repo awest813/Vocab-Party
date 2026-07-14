@@ -11,7 +11,20 @@ import { paintStage } from '../ui/Panel'
 import { COLORS, DEPTH, FONT, hexColor } from '../ui/Theme'
 import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
-import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
+import {
+  cpuBoardQuestionResolve,
+  cpuRollDelayMs,
+  cpuItemThinkDelayMs,
+  cpuChooseItem,
+  cpuShouldBuyShop,
+  cpuShouldBuyStar,
+  cpuChooseBranch,
+  cpuChooseSwapTarget,
+  cpuChoosePoisonTarget,
+  cpuChooseWarpPosition,
+  cpuChooseItemToBuy,
+  cpuPlayerRank,
+} from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import type { QuestionResolution } from './QuestionScene'
@@ -226,11 +239,25 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p?.isCpu) return
     this.rollBtn.setAlpha(0.42)
+    const levelLabel = p.cpuLevel === 'hard' ? 'Hard' : p.cpuLevel === 'easy' ? 'Easy' : 'Normal'
+    this.statusText.setText(`${p.emoji} ${p.name} (CPU · ${levelLabel}) is thinking…`)
     this.time.delayedCall(this.d(cpuRollDelayMs(Phaser.Math, p.cpuLevel)), () => {
       if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
       if (!this.state.players[this.state.currentPlayer]?.isCpu) return
       this.handleRoll(true)
     })
+  }
+
+  private cpuBoardCtx() {
+    return {
+      tileTypes: TILE_TYPES as string[],
+      boardLength: this.nodes.length,
+      nextByNode: this.nodes.map(n => n.next),
+      round: this.state.round,
+      totalRounds: this.roundsPerGame,
+      shopPrice: SHOP_PRICE_COINS,
+      starCost: STAR_COST_COINS,
+    }
   }
 
   drawBackdrop(w: number, h: number) {
@@ -563,17 +590,22 @@ export class BoardScene extends Phaser.Scene {
 
     // CPU Strategic Item Usage
     if (cur.isCpu && cur.inventory.length > 0) {
-      const sorted = [...this.state.players].sort((a, b) => b.score - a.score)
-      const rank = sorted.findIndex(p => p.id === cur.id)
+      const rank = cpuPlayerRank(cur.id, this.state.players)
       const isLast = rank === this.state.players.length - 1
       const itemToUseIdx = cpuChooseItem(
         cur.inventory, cur.coins, cur.score, cur.position, cur.trophies,
-        isLast, rank, cur.cpuLevel
+        isLast, rank, cur.cpuLevel,
+        {
+          ...this.cpuBoardCtx(),
+          rivals: this.state.players.filter(p => p.id !== cur.id),
+        }
       )
 
       if (itemToUseIdx >= 0) {
+        this.statusText.setText(`${cur.emoji} ${cur.name} digs through their backpack…`)
+        await new Promise(r => this.time.delayedCall(this.d(cpuItemThinkDelayMs(Phaser.Math, cur.cpuLevel)), r))
         await this.useItem(this.state.currentPlayer, itemToUseIdx)
-        await new Promise(r => this.time.delayedCall(this.d(1400), r))
+        await new Promise(r => this.time.delayedCall(this.d(900), r))
       }
     }
 
@@ -584,12 +616,9 @@ export class BoardScene extends Phaser.Scene {
 
     const player = this.state.players[this.state.currentPlayer]
 
-    // Handle forced moves (Golden Key)
-    let roll = rollBlockDie()
-    if (player.forcedMoveValue > 0) {
-      roll = player.forcedMoveValue
-      player.forcedMoveValue = 0 // consume
-    }
+    // Handle forced moves (Golden Key) — must apply to the actual movement result
+    const forcedMove = player.forcedMoveValue > 0 ? player.forcedMoveValue : 0
+    if (forcedMove > 0) player.forcedMoveValue = 0
 
     // Dramatic dice roll animation
     this.time.addEvent({
@@ -615,21 +644,27 @@ export class BoardScene extends Phaser.Scene {
 
     await new Promise<void>(res => this.time.delayedCall(this.d(1300), res))
 
-    let result = rollBlockDie()
+    let result = forcedMove > 0 ? forcedMove : rollBlockDie()
     const hadSpeedBoost = player.speedBoostTurns > 0
     const hadDash = player.dashActive
-    if (hadDash) {
+    if (hadDash && forcedMove <= 0) {
       const r2 = rollBlockDie()
       result += r2
       player.dashActive = false
+    } else if (hadDash) {
+      // Golden Key already sets the move; still consume dash so it doesn't linger
+      player.dashActive = false
     }
-    if (hadSpeedBoost) {
+    if (hadSpeedBoost && forcedMove <= 0) {
       result = Math.min(3, result + 1)
       player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
+    } else if (hadSpeedBoost) {
+      player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
     }
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, result - 1)])
-    const surgeText = (hadSpeedBoost ? ' + 💨 Speed Surge' : '') + (hadDash ? ' + 🏃 Dash!' : '')
-    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${hadDash ? ' (2 dice)' : ' (1-3)'}${surgeText}!`)
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, Math.max(1, result) - 1)])
+    const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Speed Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash!' : '')
+    const forceTag = forcedMove > 0 ? ' 🔑' : ''
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${forceTag}${hadDash && forcedMove <= 0 ? ' (2 dice)' : forcedMove > 0 ? ' (Golden Key)' : ' (1-3)'}${surgeText}!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -657,8 +692,22 @@ export class BoardScene extends Phaser.Scene {
 
       if (options.length > 1) {
         if (player.isCpu) {
-          const idx = cpuChooseBranch(player.position, options, TILE_TYPES, player.coins, player.trophies, player.cpuLevel)
+          const idx = cpuChooseBranch(
+            player.position,
+            options,
+            TILE_TYPES as string[],
+            player.coins,
+            player.trophies,
+            player.cpuLevel,
+            {
+              nextByNode: this.nodes.map(n => n.next),
+              boardLength: this.nodes.length,
+              shopPrice: SHOP_PRICE_COINS,
+              starCost: STAR_COST_COINS,
+            }
+          )
           chosenNextId = options[idx]
+          this.statusText.setText(`${player.emoji} ${player.name} picks a path…`)
         } else {
           chosenNextId = await this.promptForBranch(player, options)
         }
@@ -737,7 +786,17 @@ export class BoardScene extends Phaser.Scene {
         break
       case 'swap': {
         const others = this.state.players.filter((_, i) => i !== playerIndex)
-        const target = Phaser.Utils.Array.GetRandom(others)
+        if (others.length === 0) break
+        const targetIndex = player.isCpu
+          ? cpuChooseSwapTarget(
+              playerIndex,
+              this.state.players,
+              TILE_TYPES as string[],
+              this.nodes.length,
+              player.cpuLevel
+            )
+          : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+        const target = this.state.players[targetIndex]
         const temp = player.position
         player.position = target.position
         target.position = temp
@@ -746,8 +805,11 @@ export class BoardScene extends Phaser.Scene {
         break
       }
       case 'warp':
-        player.position = Phaser.Math.Between(0, BOARD_NODES.length - 1)
+        player.position = player.isCpu
+          ? cpuChooseWarpPosition(this.nodes.length, TILE_TYPES as string[], player.cpuLevel)
+          : Phaser.Math.Between(0, this.nodes.length - 1)
         this.updatePlayerTokens()
+        this.showFloatyText(player, '🌀 Warped!', '#88ccff')
         break
       case 'shield':
         player.shieldActive = true
@@ -756,7 +818,9 @@ export class BoardScene extends Phaser.Scene {
         player.doubleScoreActive = true
         break
       case 'poison_dart': {
-        const targetIdx = (playerIndex + 1) % this.state.players.length
+        const targetIdx = player.isCpu
+          ? cpuChoosePoisonTarget(playerIndex, this.state.players, player.cpuLevel)
+          : (playerIndex + 1) % this.state.players.length
         const target = this.state.players[targetIdx]
         target.coins = Math.max(0, target.coins - 8)
         this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
@@ -1047,7 +1111,14 @@ export class BoardScene extends Phaser.Scene {
     const ownerId = this.shopOwners[tileIndex]
 
     if (ownerId === undefined) {
-      if (player.isCpu && !cpuShouldBuyShop(player.coins, player.cpuLevel)) {
+      if (player.isCpu && !cpuShouldBuyShop(player.coins, player.cpuLevel, {
+        trophies: player.trophies,
+        round: this.state.round,
+        totalRounds: this.roundsPerGame,
+        ownedShops: this.countOwnedShops(player.id),
+        shopPrice: SHOP_PRICE_COINS,
+        starCost: STAR_COST_COINS,
+      })) {
         this.statusText.setText(`🏪 ${player.name} passes on this shop.`)
         this.showFloatyText(player, 'Saving coins…', '#aaaaaa')
         this.time.delayedCall(this.d(1200), () => this.endTurn())
@@ -1104,7 +1175,12 @@ export class BoardScene extends Phaser.Scene {
   }
 
   handleStarShop(player: Player) {
-    if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel)) {
+    if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
+      round: this.state.round,
+      totalRounds: this.roundsPerGame,
+      rank: cpuPlayerRank(player.id, this.state.players),
+      starCost: STAR_COST_COINS,
+    })) {
       this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
       this.showFloatyText(player, 'Saving up…', '#aaccff')
       this.time.delayedCall(this.d(1200), () => this.endTurn())
@@ -1350,11 +1426,21 @@ export class BoardScene extends Phaser.Scene {
     const available = Object.values(ITEMS)
     let item
     if (player.isCpu) {
-      // CPU picks preferred item they can afford
-      const prefOrder = cpuPolicyForLevel(player.cpuLevel).preferredItems
-      item = prefOrder.map(t => available.find(a => a.type === t)).find(a => a && player.coins >= a.cost)
-        ?? available.find(a => player.coins >= a.cost)
-        ?? Phaser.Utils.Array.GetRandom(available)
+      const pick = cpuChooseItemToBuy(
+        player.coins,
+        player.inventory,
+        available,
+        player.cpuLevel,
+        {
+          trophies: player.trophies,
+          round: this.state.round,
+          totalRounds: this.roundsPerGame,
+          starCost: STAR_COST_COINS,
+        }
+      )
+      item = pick
+        ? available.find(a => a.type === pick.type) ?? pick
+        : available.find(a => player.coins >= a.cost) ?? Phaser.Utils.Array.GetRandom(available)
     } else {
       item = Phaser.Utils.Array.GetRandom(available)
     }
