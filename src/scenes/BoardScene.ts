@@ -10,7 +10,7 @@ import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { paintStage } from '../ui/Panel'
 import { COLORS, DEPTH, FONT, hexColor } from '../ui/Theme'
 import { playCoinBurst } from '../ui/CoinBurst'
-import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
+import { TILE_TEXTURE_KEY, DICE_TEXTURE_KEYS, characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import {
   cpuBoardQuestionResolve,
   cpuRollDelayMs,
@@ -62,7 +62,6 @@ const SHOP_RENT_COINS = 3
 const SHOP_OWNER_INCOME = 2
 const SHOP_PORTFOLIO_RENT_STEP = 2
 
-const PLAYER_COLORS = [...COLORS.player]
 const SHOP_PORTFOLIO_INCOME_STEP = 1
 const BRICKS_FOR_BUILD_BONUS = 4
 const BUILD_BONUS_SCORE = 6
@@ -151,17 +150,19 @@ export class BoardScene extends Phaser.Scene {
     roundsPerGame?: number
     playerCpu?: boolean[]
     playerCpuLevels?: CpuLevel[]
+    playerCharacters?: number[]
   }) {
     const w = this.scale.width
     const h = this.scale.height
 
     const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
-    const emojis = data?.playerEmojis ?? ['🔴', '🔵', '🟢', '🟡']
+    const emojis = data?.playerEmojis ?? ['🎉', '🧙', '🛡️', '🏴‍☠️']
     this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
     const cpuFlags = data?.playerCpu ?? names.map(() => false)
     const cpuLevels = data?.playerCpuLevels
+    const characters = data?.playerCharacters ?? names.map((_, i) => i)
 
-    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels)
+    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters)
     this.nodes = BOARD_NODES
 
     const boardW = BOARD_COLS * TILE_SIZE
@@ -395,8 +396,7 @@ export class BoardScene extends Phaser.Scene {
       if (type === 'shop' && this.shopOwners[i] !== undefined) {
         const owner = this.state.players.find(p => p.id === this.shopOwners[i])
         if (owner) {
-          const ownerIdx = this.state.players.indexOf(owner)
-          const ownerColor = PLAYER_COLORS[ownerIdx % PLAYER_COLORS.length]
+          const ownerColor = characterDef(owner.characterIndex).color
           const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
           dot.setDepth(2)
           dot.setStrokeStyle(1.5, 0xffffff, 0.75)
@@ -452,7 +452,8 @@ export class BoardScene extends Phaser.Scene {
     const offset = offsets[index] ?? { x: 0, y: 0 }
     const container = this.add.container(x + offset.x, y + offset.y)
 
-    const color = PLAYER_COLORS[index % PLAYER_COLORS.length]
+    const def = characterDef(player.characterIndex)
+    const color = def.color
     const ring = this.add.graphics()
     ring.fillStyle(0x000000, 0.2)
     ring.fillEllipse(1, 18, 34, 10)
@@ -461,7 +462,8 @@ export class BoardScene extends Phaser.Scene {
     ring.lineStyle(1.5, 0xffffff, 0.55)
     ring.strokeCircle(0, -2, 15)
 
-    const sprite = this.add.image(0, -4, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(48, 62)
+    const tex = characterTextureKey(player.characterIndex)
+    const sprite = this.add.image(0, -4, tex).setDisplaySize(48, 62)
 
     container.add([ring, sprite])
     container.setDepth(DEPTH.tokens)
@@ -564,7 +566,7 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
 
     if (!this.rolling && !isAutoSimMode()) {
-      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, `#${PLAYER_COLORS[this.state.currentPlayer].toString(16).padStart(6, '0')}`)
+      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, `#${characterDef(p.characterIndex).color.toString(16).padStart(6, '0')}`)
     }
 
     const cpuTag = p.isCpu ? ' 🤖' : ''

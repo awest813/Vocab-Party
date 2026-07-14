@@ -14,25 +14,37 @@ export type CharacterClass =
   | 'party' | 'wizard' | 'knight' | 'ninja'
   | 'ranger' | 'pirate' | 'robot' | 'princess'
 
-interface CharacterDef {
+export interface CharacterDef {
   cls: CharacterClass
   color: number
   name: string
   /** Optional Quaternius / sprite portrait key from TEXTURE_KEYS */
   portraitKey?: string
+  /** Compact HUD / status glyph for this character. */
+  emoji: string
 }
 
-/** Indexed by player slot. First 4 are the in-game defaults. */
+/** Indexed roster of selectable party characters. */
 export const CHARACTER_DEFS: CharacterDef[] = [
-  { cls: 'party',    color: COLORS.player[0], name: 'Party Ace',     portraitKey: TEXTURE_KEYS.charWarrior },
-  { cls: 'wizard',   color: COLORS.player[1], name: 'Blue Wizard',   portraitKey: TEXTURE_KEYS.charWizard },
-  { cls: 'knight',   color: COLORS.player[2], name: 'Green Knight',  portraitKey: TEXTURE_KEYS.charRanger },
-  { cls: 'pirate',   color: COLORS.player[3], name: 'Gold Pirate',   portraitKey: TEXTURE_KEYS.charRogue },
-  { cls: 'ninja',    color: 0x445566, name: 'Shadow Ninja' },
-  { cls: 'ranger',   color: 0x88aa44, name: 'Forest Ranger', portraitKey: TEXTURE_KEYS.charRanger },
-  { cls: 'robot',    color: 0xa8b4c4, name: 'Steel Robot' },
-  { cls: 'princess', color: 0xff88cc, name: 'Pink Princess' },
+  { cls: 'party',    color: COLORS.player[0], name: 'Party Ace',     emoji: '🎉', portraitKey: TEXTURE_KEYS.charWarrior },
+  { cls: 'wizard',   color: COLORS.player[1], name: 'Blue Wizard',   emoji: '🧙', portraitKey: TEXTURE_KEYS.charWizard },
+  { cls: 'knight',   color: COLORS.player[2], name: 'Green Knight',  emoji: '🛡️', portraitKey: TEXTURE_KEYS.charRanger },
+  { cls: 'pirate',   color: COLORS.player[3], name: 'Gold Pirate',   emoji: '🏴‍☠️', portraitKey: TEXTURE_KEYS.charRogue },
+  { cls: 'ninja',    color: 0x445566, name: 'Shadow Ninja', emoji: '🥷' },
+  { cls: 'ranger',   color: 0x88aa44, name: 'Forest Ranger', emoji: '🏹', portraitKey: TEXTURE_KEYS.charRanger },
+  { cls: 'robot',    color: 0xa8b4c4, name: 'Steel Robot', emoji: '🤖' },
+  { cls: 'princess', color: 0xff88cc, name: 'Pink Princess', emoji: '👑' },
 ]
+
+export function characterTextureKey(index: number): string {
+  const i = ((index % PLAYER_TEXTURE_KEYS.length) + PLAYER_TEXTURE_KEYS.length) % PLAYER_TEXTURE_KEYS.length
+  return PLAYER_TEXTURE_KEYS[i]
+}
+
+export function characterDef(index: number): CharacterDef {
+  const i = ((index % CHARACTER_DEFS.length) + CHARACTER_DEFS.length) % CHARACTER_DEFS.length
+  return CHARACTER_DEFS[i]
+}
 
 export const TILE_COLORS: Record<string, number> = {
   vocab:     0x3d8fff,

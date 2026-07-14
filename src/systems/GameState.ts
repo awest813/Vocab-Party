@@ -30,6 +30,8 @@ export interface Player {
   id: number
   name: string
   emoji: string
+  /** Index into CHARACTER_DEFS / PLAYER_TEXTURE_KEYS. */
+  characterIndex: number
   score: number
   position: number
   trophies: number
@@ -75,13 +77,15 @@ export function createInitialState(
   names: string[],
   emojis: string[],
   cpuFlags?: boolean[],
-  cpuLevels?: CpuLevel[]
+  cpuLevels?: CpuLevel[],
+  characterIndices?: number[]
 ): GameState {
   return {
     players: names.map((name, i) => ({
       id: i,
       name,
       emoji: emojis[i],
+      characterIndex: characterIndices?.[i] ?? i,
       score: 0,
       position: 0,
       trophies: 0,

@@ -19,6 +19,7 @@ export const HOW_TO_TILES: HowToTile[] = [
 ]
 
 export const HOW_TO_RULES = [
+  '🎭 Setup: tap a portrait to pick a character · choose Quick / Classic / Full Map',
   '🎲 Roll to move (tap ROLL, or Space / R on desktop)',
   '📖 Vocab & grammar tiles ask questions for points',
   '🌟 Star tiles: spend 20 coins for a trophy (+12 score)',
