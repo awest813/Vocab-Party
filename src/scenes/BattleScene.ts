@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import { GameState, Player } from '../systems/GameState'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
+import { paintStage } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { cpuBattleChoice } from '../systems/CpuPolicy'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
@@ -44,26 +46,26 @@ export class BattleScene extends Phaser.Scene {
     const h = this.scale.height
 
     // Backdrop
-    this.add.rectangle(0, 0, w, h, 0x070b14, 0.88).setOrigin(0)
-    this.add.rectangle(w / 2, h / 2, w, 300, 0x3a1218, 0.55).setOrigin(0.5)
+    paintStage(this, { topColor: 0x14080c, bottomColor: 0x2a1018, midAlpha: 0.55 })
+    this.add.rectangle(0, 0, w, h, 0x070b14, 0.35).setOrigin(0)
 
     const attacker = data.state.players[data.attackerIndex]
     const defender = data.state.players[data.defenderIndex]
 
     // VS Splash
     const vsContainer = this.add.container(w / 2, h / 2).setDepth(100)
-    const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
+    const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.72).setAlpha(0)
     const vsText = this.add.text(0, -20, 'VS', {
-      fontSize: '100px', fontFamily: 'Fredoka, Arial Black', color: '#ff6b6b',
+      fontSize: '100px', fontFamily: FONT.display, color: hexColor(COLORS.coral),
       stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setScale(3).setAlpha(0)
 
     const atkLabel = this.add.text(-200, 60, `${attacker.emoji} ${attacker.name}`, {
-      fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#ff8888'
+      fontSize: '24px', fontFamily: FONT.display, color: '#ff9a9a'
     }).setOrigin(0.5).setAlpha(0)
 
     const defLabel = this.add.text(200, 60, `${defender.emoji} ${defender.name}`, {
-      fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#8888ff'
+      fontSize: '24px', fontFamily: FONT.display, color: '#9ab0ff'
     }).setOrigin(0.5).setAlpha(0)
 
     vsContainer.add([vsBg, vsText, atkLabel, defLabel])
@@ -85,12 +87,12 @@ export class BattleScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    this.statusText = this.add.text(w / 2, 100, '⚔️ BATTLE START!', {
-      fontSize: '48px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444', stroke: '#000000', strokeThickness: 8
+    this.statusText = this.add.text(w / 2, 88, 'BATTLE!', {
+      fontSize: '44px', fontFamily: FONT.display, color: hexColor(COLORS.coral), stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)
 
-    this.subStatusText = this.add.text(w / 2, 160, `${attacker.name} is attacking ${defender.name}!`, {
-      fontSize: '24px', fontFamily: 'Fredoka, Arial', color: '#ffffff'
+    this.subStatusText = this.add.text(w / 2, 142, `${attacker.name} challenges ${defender.name}`, {
+      fontSize: '22px', fontFamily: FONT.body, color: hexColor(COLORS.mist)
     }).setOrigin(0.5)
 
     this.attackerContainer = this.createPlayerSide(attacker, w / 2 - 250, h / 2, true)
@@ -101,36 +103,42 @@ export class BattleScene extends Phaser.Scene {
 
   private createPlayerSide(player: Player, x: number, y: number, isAttacker: boolean): Phaser.GameObjects.Container {
     const container = this.add.container(x, y)
-    const color = isAttacker ? 0xff4444 : 0x4444ff
-    
-    // Glassmorphic background
-    const bg = this.add.rectangle(0, 0, 220, 260, 0x050510, 0.8)
-    bg.setStrokeStyle(4, color, 0.6)
-    
-    // Top glow line
-    const glow = this.add.rectangle(0, -128, 216, 4, color, 0.8)
+    const color = isAttacker ? COLORS.coral : COLORS.sky
 
-    const name = this.add.text(0, -100, player.name.toUpperCase(), { 
-      fontSize: '22px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', letterSpacing: 2
-    }).setOrigin(0.5)
-    
-    const emoji = this.add.text(0, -45, player.emoji, { fontSize: '72px' }).setOrigin(0.5)
-    
-    const stats = this.add.text(0, 45, `⚔️ +${Math.max(1, player.atk)}  🛡️ +${Math.max(1, player.def)}  💨 +${Math.max(1, player.evd)}`, {
-      fontSize: '20px', fontFamily: 'Fredoka, Arial Black', color: '#8899aa', align: 'center'
+    const g = this.add.graphics()
+    g.fillStyle(0x000000, 0.3)
+    g.fillRoundedRect(-112, -128, 224, 264, 16)
+    g.fillStyle(COLORS.bgPanel, 0.94)
+    g.fillRoundedRect(-110, -130, 220, 260, 16)
+    g.lineStyle(3, color, 0.75)
+    g.strokeRoundedRect(-110, -130, 220, 260, 16)
+    g.fillStyle(color, 0.9)
+    g.fillRoundedRect(-106, -126, 212, 5, 2)
+
+    const role = this.add.text(0, -108, isAttacker ? 'ATTACKER' : 'DEFENDER', {
+      fontSize: '13px', fontFamily: FONT.display, color: hexColor(color),
     }).setOrigin(0.5)
 
-    const rollText = this.add.text(0, 110, '?', { 
-      fontSize: '56px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6 
+    const name = this.add.text(0, -82, player.name.toUpperCase(), {
+      fontSize: '22px', fontFamily: FONT.display, color: '#ffffff',
+    }).setOrigin(0.5)
+
+    const emoji = this.add.text(0, -28, player.emoji, { fontSize: '64px' }).setOrigin(0.5)
+
+    const stats = this.add.text(0, 48, `ATK ${Math.max(1, player.atk)}   DEF ${Math.max(1, player.def)}   EVD ${Math.max(1, player.evd)}`, {
+      fontSize: '15px', fontFamily: FONT.display, color: hexColor(COLORS.mist), align: 'center'
+    }).setOrigin(0.5)
+
+    const rollText = this.add.text(0, 100, '?', {
+      fontSize: '52px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6
     }).setOrigin(0.5)
     rollText.setName('rollText')
 
-    container.add([bg, glow, name, emoji, stats, rollText])
-    
-    // Idle float
+    container.add([g, role, name, emoji, stats, rollText])
+
     this.tweens.add({
       targets: container,
-      y: '+=10',
+      y: '+=8',
       duration: 1500 + Math.random() * 500,
       yoyo: true,
       repeat: -1,
@@ -192,8 +200,8 @@ export class BattleScene extends Phaser.Scene {
         }
       })
 
-      const defBtn = createButton(this, bx - 70, by, '🛡️ DEFEND', 0x4444ff, 0x000088, 140, 50)
-      const evaBtn = createButton(this, bx + 70, by, '💨 EVADE', 0x44ff44, 0x008800, 140, 50)
+      const defBtn = createButton(this, bx - 70, by, 'DEFEND', COLORS.skyDeep, 0x1e5a96, 140, 50)
+      const evaBtn = createButton(this, bx + 70, by, 'EVADE', COLORS.mint, 0x2aa866, 140, 50)
 
       const pick = (choice: 'defend' | 'evade') => {
         if (this.choiceMade) return

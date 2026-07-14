@@ -117,10 +117,12 @@ export class SetupScene extends Phaser.Scene {
     this.setFullMapMode(false, classicBtn, fullMapBtn)
     lenPanel.add([classicBtn, fullMapBtn])
 
-    this.add.text(w / 2, 312, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
+    this.add.text(w / 2, 312, 'Click name to type  ·  Tab to cycle  ·  Click HUMAN/CPU to change  ·  Enter to start', {
       fontSize: '14px',
       fontFamily: FONT.body,
-      color: hexColor(COLORS.mute),
+      color: '#9eb6cc',
+      stroke: '#0a1520',
+      strokeThickness: 2,
     }).setOrigin(0.5)
 
     this.rows = []
@@ -200,19 +202,23 @@ export class SetupScene extends Phaser.Scene {
 
     // Color swatch
     const swatchColor = parseInt(PLAYER_COLORS[index].replace('#', ''), 16)
-    const swatch = this.add.rectangle(w / 2 - 320, rowY, 18, 18, swatchColor)
-    swatch.setStrokeStyle(2, 0xffffff)
+    const swatch = this.add.circle(w / 2 - 310, rowY, 12, swatchColor)
+    swatch.setStrokeStyle(2, 0xffffff, 0.7)
 
-    const label = this.add.text(w / 2 - 300, rowY, `${PLAYER_EMOJIS[index]}  P${index + 1}`, {
+    const label = this.add.text(w / 2 - 288, rowY, `P${index + 1}`, {
       fontSize: '20px',
       fontFamily: FONT.display,
       color: PLAYER_COLORS[index],
+      stroke: '#000000',
+      strokeThickness: 3,
     }).setOrigin(0, 0.5)
 
-    const cpuToggle = this.add.text(w / 2 - 160, rowY, 'Human', {
-      fontSize: '15px',
-      fontFamily: FONT.body,
-      color: hexColor(COLORS.mute),
+    const cpuToggle = this.add.text(w / 2 - 220, rowY, 'HUMAN', {
+      fontSize: '14px',
+      fontFamily: FONT.display,
+      color: '#9eb6cc',
+      backgroundColor: '#1a2438',
+      padding: { left: 8, right: 8, top: 4, bottom: 4 },
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
       if (index >= this.playerCount) return
@@ -271,11 +277,13 @@ export class SetupScene extends Phaser.Scene {
     if (!t) return
     const mode = this.cpuModeByRow[index]
     if (mode === 'off') {
-      t.setText('Human')
-      t.setColor(hexColor(COLORS.mute))
+      t.setText('HUMAN')
+      t.setColor('#9eb6cc')
+      t.setBackgroundColor('#1a2438')
     } else {
-      t.setText(`CPU · ${CPU_LEVEL_LABEL[mode]}`)
-      t.setColor(mode === 'hard' ? '#ffcc88' : '#88ddaa')
+      t.setText(`CPU · ${CPU_LEVEL_LABEL[mode].toUpperCase()}`)
+      t.setColor(mode === 'hard' ? '#ffe0a8' : '#b6f0d0')
+      t.setBackgroundColor(mode === 'hard' ? '#3a2a18' : '#163028')
     }
   }
 

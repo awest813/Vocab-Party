@@ -375,9 +375,11 @@ export class BoardScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(3)
 
     this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
-      fontSize: '14px',
+      fontSize: '15px',
       fontFamily: FONT.body,
-      color: hexColor(COLORS.mist),
+      color: '#d7e8ff',
+      stroke: '#0a1520',
+      strokeThickness: 3,
     }).setOrigin(0.5, 0).setDepth(3)
   }
 
@@ -428,34 +430,50 @@ export class BoardScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    const banner = this.add.container(w + 600, h / 2).setDepth(200)
-    const bg = this.add.rectangle(0, 0, w * 2, 120, 0x000000, 0.7)
-    const text = this.add.text(0, 0, msg, {
-      fontSize: '64px', fontFamily: 'Fredoka, Arial Black', color, stroke: '#000000', strokeThickness: 10
+    const banner = this.add.container(w / 2, -80).setDepth(DEPTH.banner)
+    const g = this.add.graphics()
+    const bw = Math.min(720, 40 + msg.length * 22)
+    g.fillStyle(0x000000, 0.28)
+    g.fillRoundedRect(-bw / 2 + 3, -42, bw, 84, 18)
+    g.fillStyle(COLORS.bgPanel, 0.94)
+    g.fillRoundedRect(-bw / 2, -45, bw, 84, 18)
+    const accent = parseInt(color.replace('#', ''), 16) || COLORS.gold
+    g.lineStyle(3, accent, 0.9)
+    g.strokeRoundedRect(-bw / 2, -45, bw, 84, 18)
+    g.fillStyle(accent, 0.9)
+    g.fillRoundedRect(-bw / 2 + 8, -38, 6, 70, 3)
+
+    const text = this.add.text(10, 0, msg, {
+      fontSize: '36px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 6,
     }).setOrigin(0.5)
-    
-    banner.add([bg, text])
+
+    banner.add([g, text])
 
     return new Promise<void>(resolve => {
       this.tweens.add({
         targets: banner,
-        x: w / 2,
-        duration: 500,
+        y: 118,
+        duration: 420,
         ease: 'Back.easeOut',
         onComplete: () => {
-          this.time.delayedCall(800, () => {
+          this.time.delayedCall(this.d(700), () => {
             this.tweens.add({
               targets: banner,
-              x: -600,
-              duration: 400,
+              y: -100,
+              alpha: 0,
+              duration: 320,
               ease: 'Cubic.easeIn',
               onComplete: () => {
                 banner.destroy()
                 resolve()
-              }
+              },
             })
           })
-        }
+        },
       })
     })
   }

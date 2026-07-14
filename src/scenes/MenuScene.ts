@@ -79,7 +79,7 @@ export class MenuScene extends Phaser.Scene {
       color: hexColor(COLORS.mist),
     }).setOrigin(0.5).setAlpha(0.85)
 
-    const startGlow = this.add.ellipse(w / 2, 390, 420, 100, COLORS.mint, 0.12)
+    const startGlow = this.add.ellipse(w / 2, 380, 420, 100, COLORS.mint, 0.12)
     this.tweens.add({
       targets: startGlow,
       alpha: 0.05,
@@ -89,11 +89,53 @@ export class MenuScene extends Phaser.Scene {
       repeat: -1,
     })
 
-    const startBtn = createButton(this, w / 2, 390, '▶  ENTER PARTY', 0x2ad46a, 0x1fad55, 400, 72)
+    const startBtn = createButton(this, w / 2, 380, '▶  ENTER PARTY', 0x2ad46a, 0x1fad55, 400, 72)
     startBtn.on('pointerdown', () => this.goSetup())
 
-    const howBtn = createButton(this, w / 2, 478, 'HOW TO PLAY', 0x3d8fff, 0x2a6fd4, 360, 56)
+    const howBtn = createButton(this, w / 2, 468, 'HOW TO PLAY', 0x3d8fff, 0x2a6fd4, 360, 56)
     howBtn.on('pointerdown', () => this.showHowToPlay())
+
+    // Atmospheric tile chips — preview the board language without cluttering the CTA
+    const chips = [
+      { emoji: '📖', color: COLORS.sky },
+      { emoji: '✏️', color: COLORS.warning },
+      { emoji: '⭐', color: COLORS.gold },
+      { emoji: '❓', color: 0xaa66ff },
+      { emoji: '🕹️', color: 0xff66aa },
+      { emoji: '🔄', color: COLORS.teal },
+    ]
+    const chipY = 560
+    const chipGap = 78
+    const chipStart = w / 2 - ((chips.length - 1) * chipGap) / 2
+    chips.forEach((chip, i) => {
+      const x = chipStart + i * chipGap
+      const wrap = this.add.container(x, chipY)
+      const g = this.add.graphics()
+      g.fillStyle(chip.color, 0.18)
+      g.fillRoundedRect(-28, -28, 56, 56, 14)
+      g.lineStyle(2, chip.color, 0.55)
+      g.strokeRoundedRect(-28, -28, 56, 56, 14)
+      const t = this.add.text(0, 0, chip.emoji, { fontSize: '24px' }).setOrigin(0.5)
+      wrap.add([g, t])
+      wrap.setAlpha(0).setY(chipY + 20)
+      this.tweens.add({
+        targets: wrap,
+        alpha: 1,
+        y: chipY,
+        duration: 420,
+        delay: 180 + i * 70,
+        ease: 'Back.easeOut',
+      })
+      this.tweens.add({
+        targets: wrap,
+        y: chipY - 6,
+        duration: 1800 + i * 120,
+        yoyo: true,
+        repeat: -1,
+        delay: 600 + i * 90,
+        ease: 'Sine.easeInOut',
+      })
+    })
 
     if (isAutoSimMode()) {
       this.scene.start('SetupScene')

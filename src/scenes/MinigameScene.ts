@@ -1,7 +1,9 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonFill } from '../ui/Button'
+import { paintStage } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 import { scaleAutoSimDelay } from '../systems/gameFlags'
@@ -111,13 +113,13 @@ export class MinigameScene extends Phaser.Scene {
 
     // Splash overlay
     const splashContainer = this.add.container(w / 2, h / 2).setDepth(200)
-    const splashBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
+    const splashBg = this.add.rectangle(0, 0, w, h, 0x070b14, 0.78).setAlpha(0)
     const splashTitle = this.add.text(0, -30, 'MINIGAME!', {
-      fontSize: '76px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
-      stroke: '#2ec4b6', strokeThickness: 12
+      fontSize: '76px', fontFamily: FONT.display, color: '#ffffff',
+      stroke: hexColor(COLORS.teal), strokeThickness: 12
     }).setOrigin(0.5).setScale(0)
-    const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs The World!`, {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ff88cc'
+    const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs Everyone`, {
+      fontSize: '22px', fontFamily: FONT.body, color: hexColor(COLORS.mist)
     }).setOrigin(0.5).setAlpha(0)
 
     splashContainer.add([splashBg, splashTitle, splashBy])
@@ -140,73 +142,73 @@ export class MinigameScene extends Phaser.Scene {
     const { state, onComplete } = this.minigameData
 
     // Cinematic Backdrop
-    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
-    const ambient = this.add.graphics()
-    ambient.fillGradientStyle(0x1a1a3a, 0x1a1a3a, 0x050510, 0x050510, 0.4)
-    ambient.fillRect(0, 0, w, h)
+    paintStage(this)
 
     const names: Record<string, string> = {
-      'context-clue': '🔍 CONTEXT CLUE CLASH',
-      'comma-crisis': '😱 COMMA CRISIS',
-      'parts-of-speech': '🗣️ PARTS OF SPEECH PANIC',
-      'synonym-blitz': '⚡ SYNONYM BLITZ',
-      'sentence-fix': '✨ SENTENCE FIX SHOWDOWN',
-      'antonym-attack': '🔄 ANTONYM ATTACK',
-      'homophone-hunt': '🔊 HOMOPHONE HUNT'
+      'context-clue': 'CONTEXT CLUE CLASH',
+      'comma-crisis': 'COMMA CRISIS',
+      'parts-of-speech': 'PARTS OF SPEECH PANIC',
+      'synonym-blitz': 'SYNONYM BLITZ',
+      'sentence-fix': 'SENTENCE FIX SHOWDOWN',
+      'antonym-attack': 'ANTONYM ATTACK',
+      'homophone-hunt': 'HOMOPHONE HUNT'
     }
 
-    // Glassmorphic Announcement Panel
     const announcePanel = this.add.container(w / 2, h / 2)
-    const panelBg = this.add.rectangle(0, 0, 800, 300, 0x0a1528, 0.85)
-    panelBg.setStrokeStyle(4, 0xffd700, 0.5)
-    
-    const glow = this.add.rectangle(0, -148, 796, 4, 0xffd700, 0.8)
+    const panelBg = this.add.graphics()
+    panelBg.fillStyle(0x000000, 0.3)
+    panelBg.fillRoundedRect(-404, -146, 808, 300, 20)
+    panelBg.fillStyle(COLORS.bgPanel, 0.94)
+    panelBg.fillRoundedRect(-400, -150, 800, 300, 20)
+    panelBg.lineStyle(3, COLORS.gold, 0.55)
+    panelBg.strokeRoundedRect(-400, -150, 800, 300, 20)
+    panelBg.fillStyle(COLORS.gold, 0.85)
+    panelBg.fillRoundedRect(-396, -148, 792, 5, 2)
 
-    const title = this.add.text(0, -70, '🕹️ MINIGAME TIME!', {
-      fontSize: '62px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#ffaa00', strokeThickness: 10
+    const title = this.add.text(0, -70, 'MINIGAME TIME!', {
+      fontSize: '58px', fontFamily: FONT.display, color: '#ffffff', stroke: hexColor(COLORS.goldDeep), strokeThickness: 8
     }).setOrigin(0.5)
 
     const subTitle = this.add.text(0, 20, names[chosen], {
-      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ff88ff', stroke: '#440044', strokeThickness: 6
+      fontSize: '34px', fontFamily: FONT.display, color: hexColor(COLORS.teal), stroke: '#003330', strokeThickness: 5
     }).setOrigin(0.5).setAlpha(0)
 
-    announcePanel.add([panelBg, glow, title, subTitle])
-    announcePanel.setScale(0.8)
-    announcePanel.setAlpha(0)
+    announcePanel.add([panelBg, title, subTitle])
+    announcePanel.setScale(0.85).setAlpha(0)
 
     this.tweens.add({
       targets: announcePanel,
       scaleX: 1, scaleY: 1, alpha: 1,
-      duration: 500, ease: 'Cubic.easeOut'
+      duration: 480, ease: 'Back.easeOut'
     })
 
     this.tweens.add({
       targets: subTitle,
       alpha: 1, y: 40,
-      duration: 400, delay: 600
+      duration: 400, delay: 500
     })
 
     let count = 3
     const countText = this.add.text(w / 2, h / 2 + 180, '', {
-      fontSize: '92px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 8
+      fontSize: '88px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 8
     }).setOrigin(0.5)
 
     const doCount = () => {
       if (count > 0) {
         countText.setText(String(count))
         countText.setScale(2)
-        this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeIn' })
+        this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: 480, ease: 'Back.easeIn' })
         count--
-        this.time.delayedCall(1000, doCount)
+        this.time.delayedCall(900, doCount)
       } else {
-        countText.setText('READY... GO!')
-        countText.setColor('#44ff88')
+        countText.setText('GO!')
+        countText.setColor(hexColor(COLORS.mint))
         countText.setScale(1.5)
-        this.cameras.main.flash(400, 255, 255, 255)
-        this.time.delayedCall(600, () => this.launchMinigame(chosen, state, onComplete))
+        this.cameras.main.flash(350, 255, 255, 255)
+        this.time.delayedCall(500, () => this.launchMinigame(chosen, state, onComplete))
       }
     }
-    this.time.delayedCall(1500, doCount)
+    this.time.delayedCall(1200, doCount)
   }
 
   launchMinigame(type: string, state: GameState, onComplete: (winnerId: number) => void) {
@@ -216,10 +218,7 @@ export class MinigameScene extends Phaser.Scene {
     const h = this.scale.height
 
     // Cinematic Gameplay Backdrop
-    this.add.rectangle(0, 0, w, h, 0x0a1020).setOrigin(0)
-    const g = this.add.graphics()
-    g.fillGradientStyle(0x1a2a4a, 0x1a2a4a, 0x050510, 0x050510, 0.3)
-    g.fillRect(0, 0, w, h)
+    paintStage(this)
 
     switch (type) {
       case 'context-clue': this.playContextClue(state, onComplete); break
@@ -250,22 +249,25 @@ export class MinigameScene extends Phaser.Scene {
 
     // Glassmorphic Question Card
     const card = this.add.container(w / 2, 240)
-    const cardBg = this.add.rectangle(0, 0, 1060, 140, 0x1a2a4a, 0.6)
-    cardBg.setStrokeStyle(2, 0x4488ff, 0.4)
-    
-    const qLabel = this.add.text(w / 2, 60, '🔍 CONTEXT CLUE CLASH', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
+    const cardBg = this.add.graphics()
+    cardBg.fillStyle(COLORS.bgPanel, 0.88)
+    cardBg.fillRoundedRect(-530, -70, 1060, 140, 16)
+    cardBg.lineStyle(2, COLORS.sky, 0.45)
+    cardBg.strokeRoundedRect(-530, -70, 1060, 140, 16)
+
+    const qLabel = this.add.text(w / 2, 58, 'CONTEXT CLUE CLASH', {
+      fontSize: '34px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 5
     }).setOrigin(0.5)
 
-    const qSub = this.add.text(w / 2, 105, 'Fill in the blank using context clues!', {
-      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
+    const qSub = this.add.text(w / 2, 100, 'Fill in the blank using context clues', {
+      fontSize: '18px', fontFamily: FONT.body, color: hexColor(COLORS.mist)
     }).setOrigin(0.5)
 
     const qSentence = this.add.text(0, 0, q.sentence, {
-      fontSize: '28px', fontFamily: 'Fredoka, Arial', color: '#ffffff',
+      fontSize: '26px', fontFamily: FONT.body, color: '#ffffff',
       wordWrap: { width: 1000 }, align: 'center', lineSpacing: 10
     }).setOrigin(0.5)
-    
+
     card.add([cardBg, qSentence])
 
     let done = false
@@ -276,19 +278,17 @@ export class MinigameScene extends Phaser.Scene {
       const correct = ci === q.correct
       if (correct) {
         this.clearChoiceKeys()
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        setButtonFill(btn, COLORS.mint)
         showConfetti(this)
-        this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
-          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
+        this.add.text(w / 2, h - 100, `CORRECT! "${q.word}" wins!`, {
+          fontSize: '30px', fontFamily: FONT.display, color: hexColor(COLORS.mint), stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        setButtonFill(btn, COLORS.danger)
         this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 100, '❌ Wrong! Try again...', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
+        this.add.text(w / 2, h - 100, 'Wrong — try again', {
+          fontSize: '26px', fontFamily: FONT.display, color: hexColor(COLORS.coral)
         }).setOrigin(0.5)
         done = false
       }
@@ -369,16 +369,14 @@ export class MinigameScene extends Phaser.Scene {
       const correct = ci === q.correct_index
       if (correct) {
         this.clearChoiceKeys()
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
@@ -465,16 +463,14 @@ export class MinigameScene extends Phaser.Scene {
       const correct = ci === q.correct
       if (correct) {
         this.clearChoiceKeys()
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
@@ -556,16 +552,14 @@ export class MinigameScene extends Phaser.Scene {
       const correct = ci === q.correct
       if (correct) {
         this.clearChoiceKeys()
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
@@ -649,16 +643,14 @@ export class MinigameScene extends Phaser.Scene {
       const correct = ci === q.correct_index
       if (correct) {
         this.clearChoiceKeys()
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
       } else {
-        const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (btnBg) btnBg.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
@@ -730,16 +722,14 @@ export class MinigameScene extends Phaser.Scene {
       this.clearChoiceKeys()
       const correct = ci === q.correct
       if (correct) {
-        const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (bg2) bg2.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Opposites attract!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
       } else {
-        const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (bg2) bg2.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong! Try again!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
@@ -815,16 +805,14 @@ export class MinigameScene extends Phaser.Scene {
       this.clearChoiceKeys()
       const correct = ci === q.correct
       if (correct) {
-        const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (bg2) bg2.setFillStyle(0x44aa44)
+        setButtonFill(btn, 0x44aa44)
         showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Perfect homophone!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
         this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
       } else {
-        const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
-        if (bg2) bg2.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong homophone! Try again!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'

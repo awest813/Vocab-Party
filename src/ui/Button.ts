@@ -64,8 +64,8 @@ export function createButton(
     fontSize: height >= 64 ? '24px' : height >= 52 ? '20px' : '18px',
     fontFamily: FONT.display,
     color: '#ffffff',
-    stroke: '#0a1020',
-    strokeThickness: 3,
+    stroke: '#102018',
+    strokeThickness: 2,
   }).setOrigin(0.5)
 
   container.add([g, hit, text])
@@ -149,4 +149,10 @@ export function createButton(
   }
 
   return container
+}
+
+/** Recolor a button created by `createButton` (used for correct/wrong feedback). */
+export function setButtonFill(btn: Phaser.GameObjects.Container, color: number): void {
+  const fn = (btn as any).setFillColor as ((c: number) => void) | undefined
+  fn?.(color)
 }
