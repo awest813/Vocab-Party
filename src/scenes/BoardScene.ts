@@ -566,7 +566,7 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
 
     if (!this.rolling && !isAutoSimMode()) {
-      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, `#${characterDef(p.characterIndex).color.toString(16).padStart(6, '0')}`)
+      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, hexColor(characterDef(p.characterIndex).color))
     }
 
     const cpuTag = p.isCpu ? ' 🤖' : ''

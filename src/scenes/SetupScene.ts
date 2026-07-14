@@ -4,9 +4,12 @@ import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Sta
 import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
+import { CHARACTER_COUNT } from '../systems/GameState'
 import {
   CHARACTER_DEFS,
+  CHARACTER_COUNT as SPRITE_CHARACTER_COUNT,
   characterDef,
+  characterShortName,
   characterTextureKey,
 } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
@@ -78,6 +81,9 @@ export class SetupScene extends Phaser.Scene {
   constructor() { super('SetupScene') }
 
   create() {
+    if (CHARACTER_COUNT !== SPRITE_CHARACTER_COUNT || CHARACTER_DEFS.length !== CHARACTER_COUNT) {
+      console.error('[SetupScene] CHARACTER_COUNT mismatch — roster textures may desync')
+    }
     const w = this.scale.width
     const h = this.scale.height
     const reduce = shouldReduceMotion()
@@ -414,7 +420,10 @@ export class SetupScene extends Phaser.Scene {
 
   private cycleCharacter(row: number) {
     if (this.leaving || row < 0 || row >= this.playerCount) return
-    this.characterByRow[row] = this.nextFreeCharacter(this.characterByRow[row], row)
+    const prev = this.characterByRow[row]
+    const next = this.nextFreeCharacter(prev, row)
+    if (next === prev) return
+    this.characterByRow[row] = next
     this.refreshCharacterVisual(row)
     const token = this.rows[row]?.token
     if (token && !shouldReduceMotion()) {
@@ -422,9 +431,9 @@ export class SetupScene extends Phaser.Scene {
       token.setScale(1)
       this.tweens.add({
         targets: token,
-        scaleX: 1.18,
-        scaleY: 1.18,
-        duration: 120,
+        scaleX: 1.16,
+        scaleY: 1.16,
+        duration: 110,
         yoyo: true,
         ease: 'Back.easeOut',
       })
@@ -435,19 +444,23 @@ export class SetupScene extends Phaser.Scene {
   private refreshCharacterVisual(index: number) {
     const row = this.rows[index]
     if (!row) return
-    const def = characterDef(this.characterByRow[index])
-    const tex = characterTextureKey(this.characterByRow[index])
-    row.charName.setText(def.name)
+    const ci = this.characterByRow[index]
+    const def = characterDef(ci)
+    const tex = characterTextureKey(ci)
+    row.charName.setText(characterShortName(ci))
     row.charName.setColor(hexColor(def.color))
-    row.cycleHint.setX(row.charName.x + row.charName.width + 8)
-
+    // Phaser setTexture resets display size — re-apply token size every refresh.
     if (row.token instanceof Phaser.GameObjects.Image) {
-      if (this.textures.exists(tex)) row.token.setTexture(tex)
+      if (this.textures.exists(tex)) {
+        row.token.setTexture(tex)
+        row.token.setDisplaySize(36, 44)
+      }
     } else {
       row.token.setFillStyle(def.color)
     }
+    row.cycleHint.setX(row.charName.x + row.charName.width + 8)
 
-    const tokenX = this.scale.width / 2 - 420
+    const tokenX = this.scale.width / 2 - 430
     const rowY = row.bg.y
     row.ring.clear()
     row.ring.lineStyle(row.active ? 4 : 3, def.color, row.active ? 0.95 : 0.6)
@@ -459,9 +472,9 @@ export class SetupScene extends Phaser.Scene {
   buildRow(index: number, firstRowY: number, spacing: number = 88) {
     const w = this.scale.width
     const rowY = firstRowY + index * spacing
-    const inputW = 300
+    const inputW = 280
     const inputH = 44
-    const inputX = w / 2 + 120
+    const inputX = w / 2 + 150
 
     const container = this.add.container(0, 0).setDepth(5)
     this.rowContainers.push(container)
@@ -472,7 +485,7 @@ export class SetupScene extends Phaser.Scene {
     rowPlate.lineStyle(1, COLORS.strokeSoft, 0.08)
     rowPlate.strokeRoundedRect(w / 2 - 480, rowY - 26, 960, 52, 12)
 
-    const tokenX = w / 2 - 420
+    const tokenX = w / 2 - 430
     const def = characterDef(this.characterByRow[index])
     const tex = characterTextureKey(this.characterByRow[index])
 
@@ -498,7 +511,7 @@ export class SetupScene extends Phaser.Scene {
       strokeThickness: 2,
     }).setOrigin(0, 0.5)
 
-    const charName = this.add.text(tokenX + 40, rowY + 10, def.name, {
+    const charName = this.add.text(tokenX + 40, rowY + 10, characterShortName(this.characterByRow[index]), {
       fontSize: '15px',
       fontFamily: FONT.display,
       color: hexColor(def.color),
@@ -522,7 +535,7 @@ export class SetupScene extends Phaser.Scene {
     })
     tokenHit.on('pointerout', () => tokenHit.setScale(1))
 
-    const cpuToggle = this.add.text(w / 2 - 140, rowY, 'HUMAN', {
+    const cpuToggle = this.add.text(w / 2 - 150, rowY, 'HUMAN', {
       fontSize: '14px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.mist),
@@ -705,9 +718,9 @@ export class SetupScene extends Phaser.Scene {
 
   updateRowDisplay(index: number) {
     const row = this.rows[index]
-    const inputW = 300
+    const inputW = 280
     const w = this.scale.width
-    const inputX = w / 2 + 120
+    const inputX = w / 2 + 150
     const displayName = row.value || ' '
     row.nameText.setText(displayName)
     const textW = row.nameText.width
@@ -721,7 +734,7 @@ export class SetupScene extends Phaser.Scene {
   }
 
   private startGameWithRounds(roundsPerGame: number) {
-    if (this.leaving && !isAutoSimMode()) return
+    if (this.leaving) return
     this.leaving = true
     const names = this.rows.slice(0, this.playerCount).map((r, i) =>
       r.value.trim() || DEFAULT_NAMES[i]

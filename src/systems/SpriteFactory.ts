@@ -46,6 +46,15 @@ export function characterDef(index: number): CharacterDef {
   return CHARACTER_DEFS[i]
 }
 
+/** Short label for tight UI rows (Ace, Wizard, Knight, …). */
+export function characterShortName(index: number): string {
+  const parts = characterDef(index).name.trim().split(/\s+/)
+  return parts[parts.length - 1] || characterDef(index).name
+}
+
+/** Must stay aligned with GameState.CHARACTER_COUNT. */
+export const CHARACTER_COUNT = CHARACTER_DEFS.length
+
 export const TILE_COLORS: Record<string, number> = {
   vocab:     0x3d8fff,
   grammar:   0xff9f1c,

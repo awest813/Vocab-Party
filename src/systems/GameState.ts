@@ -14,7 +14,9 @@ export type TileType =
 
 import type { CpuLevel } from './CpuPolicy'
 import { DEFAULT_CPU_LEVEL } from './CpuPolicy'
-import { CHARACTER_DEFS } from './SpriteFactory'
+
+/** Keep in sync with CHARACTER_DEFS / PLAYER_TEXTURE_KEYS length in SpriteFactory. */
+export const CHARACTER_COUNT = 8
 
 export type ItemType = 'dash' | 'swap' | 'warp' | 'shield' | 'double_score' | 'poison_dart' | 'golden_key'
 
@@ -88,7 +90,7 @@ export function createInitialState(
       emoji: emojis[i],
       characterIndex: (() => {
         const raw = characterIndices?.[i] ?? i
-        const n = CHARACTER_DEFS.length
+        const n = CHARACTER_COUNT
         return ((Math.floor(raw) % n) + n) % n
       })(),
       score: 0,
