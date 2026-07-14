@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
-import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
-import { paintStage } from '../ui/Panel'
+import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
+import { addFloorGlow, addVignette, paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { openHowToPlay } from '../ui/HowToPlay'
 import { openSettingsPanel } from '../ui/SettingsPanel'
@@ -23,36 +23,51 @@ export class MenuScene extends Phaser.Scene {
     const reduce = shouldReduceMotion()
 
     paintStage(this)
-    addStarfieldBackdrop(this, 0.48)
-    if (!reduce) addAmbientMotes(this, 24)
+    const stars = addStarfieldBackdrop(this, 0.52)
+    driftStarfield(this, stars, reduce)
+    addVignette(this, 0.62, -4)
+    if (!reduce) addAmbientMotes(this, 28)
     if (!reduce) this.createParallaxStars()
 
     Sfx.startMusic()
 
-    const spotlight = this.add.ellipse(w / 2, 150, 720, 220, COLORS.gold, 0.07).setDepth(0)
+    // Soft gold key-light behind the brand
+    const spotlight = this.add.ellipse(w / 2, 168, 780, 260, COLORS.gold, 0.08).setDepth(0)
     if (!reduce) {
       this.tweens.add({
         targets: spotlight,
-        alpha: 0.12,
-        scaleX: 1.06,
-        duration: 2400,
+        alpha: 0.14,
+        scaleX: 1.05,
+        duration: 2600,
         yoyo: true,
         repeat: -1,
         ease: 'Sine.easeInOut',
       })
     }
 
-    const titleContainer = this.add.container(w / 2, 148)
+    // Stage platform under the brand — gives the hero a grounded plane
+    const stage = this.add.graphics().setDepth(1)
+    stage.fillStyle(0x000000, 0.28)
+    stage.fillEllipse(w / 2 + 4, 248, 560, 48)
+    stage.fillStyle(COLORS.bgPanel, 0.55)
+    stage.fillEllipse(w / 2, 242, 540, 40)
+    stage.lineStyle(2, COLORS.gold, 0.28)
+    stage.strokeEllipse(w / 2, 242, 540, 40)
+    addFloorGlow(this, w / 2, 250, 560, COLORS.gold, 0.12)
+
+    const titleContainer = this.add.container(w / 2, 142).setDepth(5)
+    titleContainer.setAlpha(0).setY(162)
 
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
-      const leftTrophy = this.add.image(-310, 8, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(48, 48).setAlpha(0.9)
-      const rightTrophy = this.add.image(310, 8, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(48, 48).setAlpha(0.9)
+      const leftTrophy = this.add.image(-300, 10, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
+      const rightTrophy = this.add.image(300, 10, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
       titleContainer.add([leftTrophy, rightTrophy])
       if (!reduce) {
         this.tweens.add({
           targets: [leftTrophy, rightTrophy],
-          y: '-=8',
-          duration: 1800,
+          y: '-=10',
+          angle: { from: -4, to: 4 },
+          duration: 2000,
           yoyo: true,
           repeat: -1,
           ease: 'Sine.easeInOut',
@@ -60,48 +75,79 @@ export class MenuScene extends Phaser.Scene {
       }
     }
 
+    // Deep shadow pass for brand weight
+    const titleShadow = this.add.text(3, 5, 'VOCAB PARTY', {
+      fontSize: '92px',
+      fontFamily: FONT.display,
+      color: '#000000',
+    }).setOrigin(0.5).setAlpha(0.45)
+
     const titleStroke = this.add.text(0, 0, 'VOCAB PARTY', {
-      fontSize: '88px',
+      fontSize: '92px',
       fontFamily: FONT.display,
       color: '#fff8e1',
       stroke: '#000000',
-      strokeThickness: 16,
+      strokeThickness: 18,
     }).setOrigin(0.5)
 
     const title = this.add.text(0, 0, 'VOCAB PARTY', {
-      fontSize: '88px',
+      fontSize: '92px',
       fontFamily: FONT.display,
       color: '#ffe566',
       stroke: hexColor(COLORS.goldDeep),
       strokeThickness: 6,
     }).setOrigin(0.5)
 
-    titleContainer.add([titleStroke, title])
+    // Soft sheen highlight on brand
+    const sheen = this.add.text(0, -2, 'VOCAB PARTY', {
+      fontSize: '92px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+    }).setOrigin(0.5).setAlpha(0.12)
+
+    titleContainer.add([titleShadow, titleStroke, title, sheen])
+
+    this.tweens.add({
+      targets: titleContainer,
+      alpha: 1,
+      y: 142,
+      duration: reduce ? 0 : 520,
+      ease: 'Cubic.easeOut',
+    })
 
     if (!reduce) {
       this.tweens.add({
         targets: titleContainer,
-        y: 158,
-        duration: 2200,
+        y: 152,
+        duration: 2400,
         yoyo: true,
         repeat: -1,
+        delay: 600,
         ease: 'Sine.easeInOut',
       })
     }
 
-    this.add.text(w / 2, 232, 'Roll · Learn · Win the party', {
+    const tagline = this.add.text(w / 2, 228, 'Roll · Learn · Win the party', {
       fontSize: '22px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.mist),
-    }).setOrigin(0.5).setAlpha(0.85)
+    }).setOrigin(0.5).setAlpha(0).setDepth(5)
 
-    const startGlow = this.add.ellipse(w / 2, 360, 420, 100, COLORS.mint, 0.12)
+    this.tweens.add({
+      targets: tagline,
+      alpha: 0.9,
+      duration: reduce ? 0 : 480,
+      delay: reduce ? 0 : 220,
+      ease: 'Cubic.easeOut',
+    })
+
+    const startGlow = this.add.ellipse(w / 2, 368, 440, 110, COLORS.mint, 0.14).setDepth(4)
     if (!reduce) {
       this.tweens.add({
         targets: startGlow,
         alpha: 0.05,
-        scaleX: 1.08,
-        duration: 1100,
+        scaleX: 1.1,
+        duration: 1200,
         yoyo: true,
         repeat: -1,
       })
@@ -115,63 +161,37 @@ export class MenuScene extends Phaser.Scene {
       })
     }
 
-    const startBtn = createButton(this, w / 2, 360, '▶  ENTER PARTY', COLORS.party, COLORS.partyDeep, 400, 72)
+    const startBtn = createButton(this, w / 2, 368, '▶  ENTER PARTY', COLORS.party, COLORS.partyDeep, 420, 74)
+    startBtn.setDepth(6)
     startBtn.on('pointerdown', goSetup)
 
-    const howBtn = createButton(this, w / 2, 445, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 360, 56)
+    const howBtn = createButton(this, w / 2, 458, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 360, 56)
+    howBtn.setDepth(6)
     howBtn.on('pointerdown', () => this.openHowTo())
 
-    const settingsBtn = createButton(this, w / 2, 515, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 360, 56)
+    const settingsBtn = createButton(this, w / 2, 530, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 360, 56)
+    settingsBtn.setDepth(6)
     settingsBtn.on('pointerdown', () => this.openSettings())
 
-    const gear = createButton(this, w - 56, 48, '⚙', COLORS.bgPanelAlt, COLORS.chromeDeep, 64, 52)
-    gear.on('pointerdown', () => this.openSettings())
-
-    // Atmospheric tile chips — preview the board language without cluttering the CTA
-    const chips = [
-      { emoji: '📖', color: COLORS.skyBtn },
-      { emoji: '✏️', color: COLORS.warning },
-      { emoji: '⭐', color: COLORS.gold },
-      { emoji: '❓', color: 0xb45cff },
-      { emoji: '🕹️', color: 0xff5cad },
-      { emoji: '🔄', color: COLORS.teal },
-    ]
-    const chipY = 590
-    const chipGap = 78
-    const chipStart = w / 2 - ((chips.length - 1) * chipGap) / 2
-    chips.forEach((chip, i) => {
-      const x = chipStart + i * chipGap
-      const wrap = this.add.container(x, chipY)
-      const g = this.add.graphics()
-      g.fillStyle(chip.color, 0.18)
-      g.fillRoundedRect(-28, -28, 56, 56, 14)
-      g.lineStyle(2, chip.color, 0.55)
-      g.strokeRoundedRect(-28, -28, 56, 56, 14)
-      const t = this.add.text(0, 0, chip.emoji, { fontSize: '24px' }).setOrigin(0.5)
-      wrap.add([g, t])
-      wrap.setAlpha(0).setY(chipY + 20)
+    // Stagger CTA entrance
+    ;[startBtn, howBtn, settingsBtn].forEach((btn, i) => {
+      btn.setAlpha(0)
+      btn.y += 18
       this.tweens.add({
-        targets: wrap,
+        targets: btn,
         alpha: 1,
-        y: chipY,
-        duration: 420,
-        delay: 180 + i * 70,
+        y: '-=18',
+        duration: reduce ? 0 : 420,
+        delay: reduce ? 0 : 280 + i * 90,
         ease: 'Back.easeOut',
       })
-      if (!reduce) {
-        this.tweens.add({
-          targets: wrap,
-          y: chipY - 6,
-          duration: 1800 + i * 120,
-          yoyo: true,
-          repeat: -1,
-          delay: 600 + i * 90,
-          ease: 'Sine.easeInOut',
-        })
-      }
     })
 
-    this.add.text(w / 2, h - 48, touch
+    const gear = createButton(this, w - 56, 48, '⚙', COLORS.bgPanelAlt, COLORS.chromeDeep, 64, 52)
+    gear.setDepth(8)
+    gear.on('pointerdown', () => this.openSettings())
+
+    const hint = this.add.text(w / 2, h - 48, touch
       ? 'Tap ENTER PARTY to begin  ·  Rotate landscape for the best view'
       : 'Enter = Start  ·  Esc closes panels  ·  ? opens How to Play', {
       fontSize: '14px',
@@ -179,13 +199,20 @@ export class MenuScene extends Phaser.Scene {
       color: hexColor(COLORS.mute),
       align: 'center',
       wordWrap: { width: 900 },
-    }).setOrigin(0.5)
+    }).setOrigin(0.5).setDepth(6).setAlpha(0)
 
-    this.add.text(w / 2, h - 22, 'v2.0  ·  Phaser 3', {
+    const version = this.add.text(w / 2, h - 22, 'v2.0  ·  Phaser 3', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
-    }).setOrigin(0.5)
+    }).setOrigin(0.5).setDepth(6).setAlpha(0)
+
+    this.tweens.add({
+      targets: [hint, version],
+      alpha: 1,
+      duration: reduce ? 0 : 500,
+      delay: reduce ? 0 : 700,
+    })
 
     if (isAutoSimMode()) {
       this.scene.start('SetupScene')
@@ -209,21 +236,21 @@ export class MenuScene extends Phaser.Scene {
     this.cameras.main.fadeIn(420, 7, 11, 20)
 
     if (!reduce) {
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 16; i++) {
         const p = this.add.circle(
           Phaser.Math.Between(40, w - 40),
           Phaser.Math.Between(h - 80, h - 20),
-          Phaser.Math.FloatBetween(1.5, 3),
+          Phaser.Math.FloatBetween(1.5, 3.2),
           COLORS.gold,
           0.7
-        )
+        ).setDepth(2)
         this.tweens.add({
           targets: p,
-          y: '-=180',
+          y: '-=200',
           alpha: 0,
-          duration: Phaser.Math.Between(2200, 4800),
+          duration: Phaser.Math.Between(2400, 5000),
           repeat: -1,
-          delay: Phaser.Math.Between(0, 4000),
+          delay: Phaser.Math.Between(0, 4200),
         })
       }
     }
@@ -271,7 +298,7 @@ export class MenuScene extends Phaser.Scene {
         const x = Phaser.Math.Between(0, w)
         const y = Phaser.Math.Between(0, h)
         const s = Phaser.Math.FloatBetween(layer.size[0], layer.size[1])
-        const star = this.add.circle(x, y, s, 0xffffff, layer.alpha)
+        const star = this.add.circle(x, y, s, 0xffffff, layer.alpha).setDepth(-6)
 
         this.tweens.add({
           targets: star,

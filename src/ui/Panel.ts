@@ -133,6 +133,75 @@ export function paintStage(scene: Phaser.Scene, options?: {
   scene.add.rectangle(0, h * 0.72, w, h * 0.28, COLORS.teal, 0.05).setOrigin(0).setDepth(-18)
 }
 
+/** Soft edge vignette for menu / modal depth. */
+export function addVignette(
+  scene: Phaser.Scene,
+  strength = 0.55,
+  depth = -4
+): Phaser.GameObjects.Graphics {
+  const w = scene.scale.width
+  const h = scene.scale.height
+  const g = scene.add.graphics().setDepth(depth)
+  const steps = 10
+  for (let i = 0; i < steps; i++) {
+    const t = i / steps
+    const inset = t * Math.min(w, h) * 0.22
+    g.fillStyle(0x000000, strength * (1 - t) * 0.12)
+    g.fillRect(inset, inset, w - inset * 2, h - inset * 2)
+  }
+  // Darker corners via overlapping edge bands
+  g.fillStyle(0x000000, strength * 0.35)
+  g.fillRect(0, 0, w, h * 0.08)
+  g.fillRect(0, h * 0.92, w, h * 0.08)
+  g.fillRect(0, 0, w * 0.06, h)
+  g.fillRect(w * 0.94, 0, w * 0.06, h)
+  return g
+}
+
+/** Warm floor spotlight under hero content. */
+export function addFloorGlow(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  width = 520,
+  color = COLORS.gold,
+  alpha = 0.14
+): Phaser.GameObjects.Ellipse {
+  return scene.add
+    .ellipse(x, y, width, Math.max(36, width * 0.12), color, alpha)
+    .setDepth(-3)
+}
+
+/** Nested inset plate used inside setup / pause layouts. */
+export function createInsetPlate(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  opts: { fill?: number; fillAlpha?: number; border?: number; borderAlpha?: number; radius?: number } = {}
+): Phaser.GameObjects.Graphics {
+  const {
+    fill = COLORS.bgPanelAlt,
+    fillAlpha = 0.72,
+    border = COLORS.strokeSoft,
+    borderAlpha = 0.12,
+    radius = 14,
+  } = opts
+  const g = scene.add.graphics()
+  g.fillStyle(0x000000, 0.22)
+  g.fillRoundedRect(x - width / 2 + 2, y - height / 2 + 3, width, height, radius)
+  g.fillStyle(fill, fillAlpha)
+  g.fillRoundedRect(x - width / 2, y - height / 2, width, height, radius)
+  g.fillStyle(0xffffff, 0.04)
+  g.fillRoundedRect(x - width / 2 + 3, y - height / 2 + 2, width - 6, Math.min(18, height / 5), {
+    tl: radius - 2, tr: radius - 2, bl: 3, br: 3,
+  })
+  g.lineStyle(1.5, border, borderAlpha)
+  g.strokeRoundedRect(x - width / 2 + 0.5, y - height / 2 + 0.5, width - 1, height - 1, radius)
+  return g
+}
+
 export function accentLabel(color: number): string {
   return hexColor(color)
 }

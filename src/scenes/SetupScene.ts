@@ -1,14 +1,14 @@
 import Phaser from 'phaser'
 import { createButton, setButtonFill } from '../ui/Button'
-import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
-import { paintStage } from '../ui/Panel'
+import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
+import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, PLAYER_HEX, hexColor } from '../ui/Theme'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers } from '../systems/gameFlags'
-import { isTouchPreferred } from '../systems/GameSettings'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 
 const MAX_PLAYERS = 4
@@ -23,6 +23,7 @@ interface InputRow {
   nameText: Phaser.GameObjects.Text
   cursor: Phaser.GameObjects.Text
   bg: Phaser.GameObjects.Rectangle
+  ring: Phaser.GameObjects.Graphics
   active: boolean
   value: string
 }
@@ -52,107 +53,185 @@ export class SetupScene extends Phaser.Scene {
   create() {
     const w = this.scale.width
     const h = this.scale.height
+    const reduce = shouldReduceMotion()
+    const touch = isTouchPreferred(this.sys.game)
 
     paintStage(this)
-    addStarfieldBackdrop(this, 0.4)
-    addAmbientMotes(this, 18)
+    const stars = addStarfieldBackdrop(this, 0.42)
+    driftStarfield(this, stars, reduce)
+    addVignette(this, 0.5, -4)
+    if (!reduce) addAmbientMotes(this, 18)
     Sfx.startMusic()
 
     const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 48)
+    backBtn.setDepth(10)
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
 
-    const headerPanel = this.add.container(w / 2, 78)
+    // Brand-forward header with nested depth
+    const headerPanel = this.add.container(w / 2, 72).setDepth(5)
+    const hShadow = this.add.graphics()
+    hShadow.fillStyle(0x000000, 0.35)
+    hShadow.fillRoundedRect(-430, -40, 860, 88, 18)
     const hBg = this.add.graphics()
-    hBg.fillStyle(COLORS.bgPanel, 0.78)
-    hBg.fillRoundedRect(-420, -42, 840, 84, 16)
-    hBg.lineStyle(2, COLORS.sky, 0.35)
-    hBg.strokeRoundedRect(-420, -42, 840, 84, 16)
-    const titleText = this.add.text(0, -4, 'PARTY SETUP', {
-      fontSize: '44px',
+    hBg.fillStyle(COLORS.bgPanel, 0.88)
+    hBg.fillRoundedRect(-424, -46, 848, 92, 18)
+    hBg.fillStyle(COLORS.skyDeep, 0.55)
+    hBg.fillRoundedRect(-424, -46, 848, 8, { tl: 18, tr: 18, bl: 0, br: 0 })
+    hBg.lineStyle(2.5, COLORS.gold, 0.4)
+    hBg.strokeRoundedRect(-424, -46, 848, 92, 18)
+    hBg.fillStyle(0xffffff, 0.06)
+    hBg.fillRoundedRect(-414, -38, 828, 22, 8)
+
+    const titleText = this.add.text(0, -10, 'PARTY SETUP', {
+      fontSize: '42px',
       fontFamily: FONT.display,
-      color: '#ffffff',
-      stroke: hexColor(COLORS.skyDeep),
-      strokeThickness: 7,
+      color: hexColor(COLORS.gold),
+      stroke: '#000000',
+      strokeThickness: 6,
     }).setOrigin(0.5)
-    const subtitle = this.add.text(0, 28, 'Choose players, length, and difficulty', {
-      fontSize: '14px',
+    const subtitle = this.add.text(0, 24, 'Players · map length · human or CPU', {
+      fontSize: '15px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mist),
     }).setOrigin(0.5)
-    headerPanel.add([hBg, titleText, subtitle])
+    headerPanel.add([hShadow, hBg, titleText, subtitle])
+    if (!reduce) {
+      headerPanel.setAlpha(0).setY(90)
+      this.tweens.add({
+        targets: headerPanel,
+        alpha: 1,
+        y: 72,
+        duration: 420,
+        ease: 'Cubic.easeOut',
+      })
+    }
 
-    const countY = 176
-    const countPanel = this.add.container(w / 2, countY)
+    // Options band: player count + map length
+    const optionsY = 188
+    createInsetPlate(this, w / 2, optionsY, 980, 118, {
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.78,
+      border: COLORS.sky,
+      borderAlpha: 0.28,
+      radius: 16,
+    }).setDepth(3)
+
+    const countPanel = this.add.container(w / 2 - 250, optionsY).setDepth(4)
     const cpBg = this.add.graphics()
-    cpBg.fillStyle(COLORS.bgPanelAlt, 0.9)
-    cpBg.fillRoundedRect(-210, -38, 420, 76, 14)
-    cpBg.lineStyle(2.5, COLORS.gold, 0.5)
-    cpBg.strokeRoundedRect(-210, -38, 420, 76, 14)
+    cpBg.fillStyle(COLORS.bgPanelAlt, 0.92)
+    cpBg.fillRoundedRect(-190, -42, 380, 84, 14)
+    cpBg.lineStyle(2.5, COLORS.gold, 0.55)
+    cpBg.strokeRoundedRect(-190, -42, 380, 84, 14)
 
-    const countLabel = this.add.text(0, -22, 'PLAYER COUNT', {
+    const countLabel = this.add.text(0, -24, 'PLAYER COUNT', {
       fontSize: '13px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.gold),
     }).setOrigin(0.5)
 
-    this.minusBtn = createButton(this, -120, 12, '−', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
+    this.minusBtn = createButton(this, -110, 14, '−', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
     this.minusBtn.on('pointerdown', () => this.changeCount(-1))
 
-    this.countText = this.add.text(0, 12, String(this.playerCount), {
+    this.countText = this.add.text(0, 14, String(this.playerCount), {
       fontSize: '40px',
       fontFamily: FONT.display,
       color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 4,
     }).setOrigin(0.5)
 
-    this.plusBtn = createButton(this, 120, 12, '+', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
+    this.plusBtn = createButton(this, 110, 14, '+', COLORS.skyDeep, COLORS.skyBtnDeep, 60, 44)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
 
     countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
 
-    const lengthY = 268
-    const lenPanel = this.add.container(w / 2, lengthY)
+    const lenPanel = this.add.container(w / 2 + 220, optionsY).setDepth(4)
+    const mapLabel = this.add.text(0, -36, 'MAP LENGTH', {
+      fontSize: '13px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
+    }).setOrigin(0.5)
 
-    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, COLORS.skyBtn, COLORS.skyBtnDeep, 360, 50)
-    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, COLORS.chrome, COLORS.chromeDeep, 360, 50)
+    const classicBtn = createButton(this, -150, 10, `CLASSIC · ${CLASSIC_ROUNDS}`, COLORS.skyBtn, COLORS.skyBtnDeep, 220, 48)
+    const fullMapBtn = createButton(this, 150, 10, `FULL MAP · ${BOARD_PATH_LENGTH}`, COLORS.chrome, COLORS.chromeDeep, 220, 48)
     classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
     fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
     this.setFullMapMode(false, classicBtn, fullMapBtn)
-    lenPanel.add([classicBtn, fullMapBtn])
+    lenPanel.add([mapLabel, classicBtn, fullMapBtn])
 
-    this.add.text(w / 2, 312, isTouchPreferred(this.sys.game)
+    // Roster plate
+    const rosterTop = 278
+    const rosterH = 300
+    createInsetPlate(this, w / 2, rosterTop + rosterH / 2 - 20, 980, rosterH, {
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.72,
+      border: COLORS.strokeSoft,
+      borderAlpha: 0.14,
+      radius: 16,
+    }).setDepth(3)
+
+    this.add.text(w / 2, rosterTop + 4, 'ROSTER', {
+      fontSize: '14px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.teal),
+    }).setOrigin(0.5).setDepth(4)
+
+    this.add.text(w / 2, rosterTop + 26, touch
       ? 'Tap a name to edit  ·  Tap HUMAN/CPU to cycle  ·  Tap START'
       : 'Click name to type  ·  Tab to cycle  ·  Click HUMAN/CPU to change  ·  Enter to start', {
-      fontSize: '14px',
+      fontSize: '13px',
       fontFamily: FONT.body,
-      color: hexColor(COLORS.mist),
-      stroke: hexColor(COLORS.ink),
-      strokeThickness: 2,
+      color: hexColor(COLORS.mute),
       align: 'center',
-      wordWrap: { width: 1000 },
-    }).setOrigin(0.5)
+      wordWrap: { width: 900 },
+    }).setOrigin(0.5).setDepth(4)
 
     this.rows = []
     this.rowContainers = []
     this.cpuToggleTexts = []
-    // Row band sits between the keyboard hint (~y=318) and the start button (~y=h-80).
-    // Spacing tuned so 4 rows + start button fit at the 1280x720 design surface without overlap.
-    const ROW_SPACING = 70
-    const startY = 362
+    const ROW_SPACING = 58
+    const startY = rosterTop + 68
     for (let i = 0; i < MAX_PLAYERS; i++) {
       this.buildRow(i, startY, ROW_SPACING)
-      this.rowContainers[i].setAlpha(0).setX(this.rowContainers[i].x - 50)
+      this.rowContainers[i].setAlpha(0).setX(this.rowContainers[i].x - 40)
       this.tweens.add({
         targets: this.rowContainers[i],
-        alpha: 1, x: '+=50',
-        duration: 400, delay: 200 + i * 100,
-        ease: 'Cubic.easeOut'
+        alpha: 1, x: '+=40',
+        duration: reduce ? 0 : 380,
+        delay: reduce ? 0 : 160 + i * 80,
+        ease: 'Cubic.easeOut',
       })
       this.refreshCpuToggle(i)
     }
     this.refreshRows()
- 
-    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', COLORS.party, COLORS.partyDeep, 400, 64)
+
+    const startGlow = this.add.ellipse(w / 2, h - 64, 420, 90, COLORS.mint, 0.12).setDepth(4)
+    if (!reduce) {
+      this.tweens.add({
+        targets: startGlow,
+        alpha: 0.05,
+        scaleX: 1.08,
+        duration: 1100,
+        yoyo: true,
+        repeat: -1,
+      })
+    }
+
+    this.startBtn = createButton(this, w / 2, h - 64, '▶  START PARTY', COLORS.party, COLORS.partyDeep, 420, 64)
+    this.startBtn.setDepth(8)
     this.startBtn.on('pointerdown', () => this.startGame())
+    if (!reduce) {
+      this.startBtn.setAlpha(0)
+      this.startBtn.y += 16
+      this.tweens.add({
+        targets: this.startBtn,
+        alpha: 1,
+        y: '-=16',
+        duration: 420,
+        delay: 480,
+        ease: 'Back.easeOut',
+      })
+    }
 
     if (isAutoSimMode()) {
       this.playerCount = getAutoSimPlayers()
@@ -184,6 +263,8 @@ export class SetupScene extends Phaser.Scene {
       this.cursorTimers.forEach(t => t.destroy())
       this.cursorTimers = []
     })
+
+    this.cameras.main.fadeIn(360, 7, 11, 20)
   }
 
   setFullMapMode(fullMap: boolean, classicBtn: Phaser.GameObjects.Container, fullMapBtn: Phaser.GameObjects.Container) {
@@ -198,25 +279,39 @@ export class SetupScene extends Phaser.Scene {
     const w = this.scale.width
     const rowY = firstRowY + index * spacing
     const inputW = 380
-    const inputH = 48
-    const inputX = w / 2 + 60
+    const inputH = 46
+    const inputX = w / 2 + 70
 
-    const container = this.add.container(0, 0)
+    const container = this.add.container(0, 0).setDepth(5)
     this.rowContainers.push(container)
 
-    // Color swatch / character token preview
+    // Soft row plate
+    const rowPlate = this.add.graphics()
+    rowPlate.fillStyle(COLORS.bgDeep, 0.28)
+    rowPlate.fillRoundedRect(w / 2 - 460, rowY - 24, 920, 48, 12)
+    rowPlate.lineStyle(1, COLORS.strokeSoft, 0.08)
+    rowPlate.strokeRoundedRect(w / 2 - 460, rowY - 24, 920, 48, 12)
+
     const swatchColor = parseInt(PLAYER_COLORS[index].replace('#', ''), 16)
     const tokenKey = PLAYER_TEXTURE_KEYS[index]
+    const tokenX = w / 2 - 400
+
+    const ring = this.add.graphics()
+    ring.lineStyle(3, swatchColor, 0.55)
+    ring.strokeCircle(tokenX, rowY, 22)
+    ring.fillStyle(swatchColor, 0.12)
+    ring.fillCircle(tokenX, rowY, 20)
+
     let swatch: Phaser.GameObjects.GameObject
     if (this.textures.exists(tokenKey)) {
-      swatch = this.add.image(w / 2 - 310, rowY, tokenKey).setDisplaySize(36, 40)
+      swatch = this.add.image(tokenX, rowY, tokenKey).setDisplaySize(34, 38)
     } else {
-      const circle = this.add.circle(w / 2 - 310, rowY, 12, swatchColor)
+      const circle = this.add.circle(tokenX, rowY, 12, swatchColor)
       circle.setStrokeStyle(2, 0xffffff, 0.7)
       swatch = circle
     }
 
-    const label = this.add.text(w / 2 - 288, rowY, `P${index + 1}`, {
+    const label = this.add.text(tokenX + 34, rowY, `P${index + 1}`, {
       fontSize: '20px',
       fontFamily: FONT.display,
       color: PLAYER_COLORS[index],
@@ -224,12 +319,12 @@ export class SetupScene extends Phaser.Scene {
       strokeThickness: 3,
     }).setOrigin(0, 0.5)
 
-    const cpuToggle = this.add.text(w / 2 - 220, rowY, 'HUMAN', {
+    const cpuToggle = this.add.text(w / 2 - 250, rowY, 'HUMAN', {
       fontSize: '14px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.mist),
       backgroundColor: hexColor(COLORS.bgPanelAlt),
-      padding: { left: 8, right: 8, top: 4, bottom: 4 },
+      padding: { left: 10, right: 10, top: 6, bottom: 6 },
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
       if (index >= this.playerCount) return
@@ -259,26 +354,26 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.sky),
     }).setOrigin(0, 0.5).setVisible(false)
 
-    container.add([swatch, label, cpuToggle, bg, nameText, cursor])
+    container.add([rowPlate, ring, swatch, label, cpuToggle, bg, nameText, cursor])
 
     const row: InputRow = {
       label,
       nameText,
       cursor,
       bg,
+      ring,
       active: false,
-      value: DEFAULT_NAMES[index]
+      value: DEFAULT_NAMES[index],
     }
     this.rows.push(row)
 
-    // Cursor blink
     const cursorTimer = this.time.addEvent({
       delay: 500,
       loop: true,
       callback: () => {
         if (row.active) cursor.setVisible(!cursor.visible)
         else cursor.setVisible(false)
-      }
+      },
     })
     this.cursorTimers.push(cursorTimer)
   }
@@ -304,6 +399,7 @@ export class SetupScene extends Phaser.Scene {
       row.label.setAlpha(enabled ? 1 : 0.3)
       row.bg.setAlpha(enabled ? 1 : 0.3)
       row.nameText.setAlpha(enabled ? 1 : 0.3)
+      row.ring.setAlpha(enabled ? 1 : 0.25)
       const cpuT = this.cpuToggleTexts[i]
       if (cpuT) {
         cpuT.setAlpha(enabled ? 1 : 0.3)
@@ -314,6 +410,8 @@ export class SetupScene extends Phaser.Scene {
           this.refreshCpuToggle(i)
         }
       }
+      // Dim whole row container extras via row plate alpha on parent
+      this.rowContainers[i]?.setAlpha(enabled ? 1 : 0.45)
       if (!enabled && row.active) this.setActiveRow(-1)
     })
   }
@@ -331,9 +429,17 @@ export class SetupScene extends Phaser.Scene {
     this.rows.forEach((row, i) => {
       const isActive = i === index && i < this.playerCount
       row.active = isActive
-      row.bg.setStrokeStyle(2, isActive ? COLORS.sky : COLORS.mute)
+      row.bg.setStrokeStyle(2.5, isActive ? COLORS.sky : COLORS.mute)
       row.bg.setFillStyle(isActive ? COLORS.bgPanelAlt : COLORS.bgPanel)
       if (!isActive) row.cursor.setVisible(false)
+      const swatchColor = parseInt(PLAYER_COLORS[i].replace('#', ''), 16)
+      row.ring.clear()
+      row.ring.lineStyle(isActive ? 4 : 3, swatchColor, isActive ? 0.9 : 0.55)
+      const tokenX = this.scale.width / 2 - 400
+      const rowY = row.bg.y
+      row.ring.strokeCircle(tokenX, rowY, 22)
+      row.ring.fillStyle(swatchColor, isActive ? 0.22 : 0.12)
+      row.ring.fillCircle(tokenX, rowY, 20)
     })
   }
 
@@ -359,10 +465,9 @@ export class SetupScene extends Phaser.Scene {
     const row = this.rows[index]
     const inputW = 380
     const w = this.scale.width
-    const inputX = w / 2 + 60
+    const inputX = w / 2 + 70
     const displayName = row.value || ' '
     row.nameText.setText(displayName)
-    // Position cursor after text
     const textW = row.nameText.width
     row.cursor.setX(inputX - inputW / 2 + 14 + textW)
     row.cursor.setText('|')
@@ -390,7 +495,7 @@ export class SetupScene extends Phaser.Scene {
           playerEmojis: emojis,
           roundsPerGame,
           playerCpu,
-          playerCpuLevels
+          playerCpuLevels,
         })
       })
     }

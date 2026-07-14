@@ -53,3 +53,21 @@ export function addAmbientMotes(scene: Phaser.Scene, count = 28): void {
     })
   }
 }
+
+/** Slow parallax drift on a starfield image (skips when reduced motion). */
+export function driftStarfield(
+  scene: Phaser.Scene,
+  img: Phaser.GameObjects.Image | null,
+  reducedMotion = false
+): void {
+  if (!img || reducedMotion) return
+  scene.tweens.add({
+    targets: img,
+    x: img.x + 18,
+    y: img.y - 10,
+    duration: 14000,
+    yoyo: true,
+    repeat: -1,
+    ease: 'Sine.easeInOut',
+  })
+}
