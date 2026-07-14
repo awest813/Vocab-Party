@@ -194,7 +194,7 @@ export class ResultsScene extends Phaser.Scene {
       const statsLine = this.add.text(
         w / 2,
         158,
-        `${totalRounds} rounds  ·  ${totalStars} stars  ·  ${totalBricks} bricks`,
+        `${totalRounds} round${totalRounds === 1 ? '' : 's'}  ·  ${totalStars} star${totalStars === 1 ? '' : 's'}  ·  ${totalBricks} brick${totalBricks === 1 ? '' : 's'}`,
         { fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mute) }
       ).setOrigin(0.5).setAlpha(0)
       this.tweens.add({ targets: statsLine, alpha: 1, duration: 400, delay: 400 })
