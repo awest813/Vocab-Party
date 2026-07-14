@@ -69,14 +69,14 @@ export class BattleScene extends Phaser.Scene {
     }).setOrigin(0.5).setAlpha(0)
 
     vsContainer.add([vsBg, vsText, atkLabel, defLabel])
-    this.tweens.add({ targets: vsBg, alpha: 1, duration: 150 })
-    this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: 500, ease: 'Back.easeOut' })
-    this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: 400, delay: 300 })
-    this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: 400, delay: 400 })
-    this.cameras.main.flash(400, 255, 0, 0, true)
+    this.tweens.add({ targets: vsBg, alpha: 1, duration: this.d(150) })
+    this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: this.d(500), ease: 'Back.easeOut' })
+    this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: this.d(400), delay: this.d(300) })
+    this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: this.d(400), delay: this.d(400) })
+    this.cameras.main.flash(this.d(400), 255, 0, 0, true)
 
-    this.time.delayedCall(1500, () => {
-      this.tweens.add({ targets: vsContainer, alpha: 0, duration: 300,
+    this.time.delayedCall(this.d(1500), () => {
+      this.tweens.add({ targets: vsContainer, alpha: 0, duration: this.d(300),
         onComplete: () => vsContainer.destroy(true)
       })
       this.realStart(attacker, defender)
@@ -152,7 +152,7 @@ export class BattleScene extends Phaser.Scene {
     const attacker = this.battleData.state.players[this.battleData.attackerIndex]
     this.statusText.setText(`${attacker.name}'s Attack Roll!`)
     
-    await new Promise(r => this.time.delayedCall(1000, r))
+    await new Promise(r => this.time.delayedCall(this.d(1000), r))
 
     const roll = Phaser.Math.Between(1, 6)
     this.attackerRoll = Math.max(1, roll + attacker.atk)
@@ -160,7 +160,7 @@ export class BattleScene extends Phaser.Scene {
     const rollText = this.attackerContainer.getByName('rollText') as Phaser.GameObjects.Text
     this.animateRoll(rollText, this.attackerRoll)
 
-    await new Promise(r => this.time.delayedCall(1500, r))
+    await new Promise(r => this.time.delayedCall(this.d(1500), r))
     this.startDefenderTurn()
   }
 
@@ -170,7 +170,7 @@ export class BattleScene extends Phaser.Scene {
 
     if (defender.isCpu) {
       const choice = cpuBattleChoice(defender.atk, defender.def, defender.evd, defender.cpuLevel)
-      this.time.delayedCall(1000, () => this.resolveDefender(choice))
+      this.time.delayedCall(this.d(1000), () => this.resolveDefender(choice))
     } else {
       const w = this.scale.width
       const by = this.scale.height / 2 + 160
@@ -234,7 +234,7 @@ export class BattleScene extends Phaser.Scene {
       this.animateRoll(rollText, this.defenderRoll)
     }
 
-    await new Promise(r => this.time.delayedCall(1500, r))
+    await new Promise(r => this.time.delayedCall(this.d(1500), r))
     this.calculateOutcome(choice)
   }
 
@@ -276,7 +276,7 @@ export class BattleScene extends Phaser.Scene {
       dmg = 0
       this.statusText.setText('🛡️ SHIELD BLOCKED!')
       this.cameras.main.flash(400, 68, 204, 255) // Blue shield flash
-      this.time.delayedCall(2000, () => {
+      this.time.delayedCall(this.d(2000), () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
           this.battleData.onComplete({
@@ -325,7 +325,7 @@ export class BattleScene extends Phaser.Scene {
       
       this.subStatusText.setText(`${defender.name} lost ${scoreLost} pts and ${coinsLost} coins!`)
       
-      this.time.delayedCall(2000, () => {
+      this.time.delayedCall(this.d(2000), () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
           this.battleData.onComplete({
@@ -359,7 +359,7 @@ export class BattleScene extends Phaser.Scene {
         })
       }
       showConfetti(this)
-      this.time.delayedCall(2000, () => {
+      this.time.delayedCall(this.d(2000), () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
           this.battleData.onComplete({

@@ -7,6 +7,7 @@ import {
 } from '../systems/SpriteFactory'
 import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { isAutoSimMode } from '../systems/gameFlags'
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene') }
@@ -128,9 +129,9 @@ export class PreloadScene extends Phaser.Scene {
     generatePlayerTextures(this)
     generateTileTextures(this)
 
-    this.cameras.main.fadeIn(360, 7, 11, 20)
+    this.cameras.main.fadeIn(isAutoSimMode() ? 40 : 360, 7, 11, 20)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {
-      this.cameras.main.fadeOut(420, 7, 11, 20)
+      this.cameras.main.fadeOut(isAutoSimMode() ? 40 : 420, 7, 11, 20)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         this.scene.start('MenuScene')
       })

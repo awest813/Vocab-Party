@@ -483,18 +483,21 @@ export class BoardScene extends Phaser.Scene {
     banner.add([g, text])
 
     return new Promise<void>(resolve => {
+      const inMs = this.d(420)
+      const holdMs = this.d(700)
+      const outMs = this.d(320)
       this.tweens.add({
         targets: banner,
         y: 118,
-        duration: 420,
+        duration: Math.max(40, inMs),
         ease: 'Back.easeOut',
         onComplete: () => {
-          this.time.delayedCall(this.d(700), () => {
+          this.time.delayedCall(holdMs, () => {
             this.tweens.add({
               targets: banner,
               y: -100,
               alpha: 0,
-              duration: 320,
+              duration: Math.max(30, outMs),
               ease: 'Cubic.easeIn',
               onComplete: () => {
                 banner.destroy()
@@ -509,8 +512,8 @@ export class BoardScene extends Phaser.Scene {
 
   async updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
-    
-    if (!this.rolling) {
+
+    if (!this.rolling && !isAutoSimMode()) {
       await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, `#${PLAYER_COLORS[this.state.currentPlayer].toString(16).padStart(6, '0')}`)
     }
 
@@ -803,12 +806,12 @@ export class BoardScene extends Phaser.Scene {
       this.tweens.add({
         targets: vsContainer,
         scaleX: 1, scaleY: 1, alpha: 1,
-        duration: 300,
+        duration: this.d(300),
         ease: 'Expo.easeOut',
         onComplete: () => {
           this.cameras.main.flash(200, 255, 0, 0)
-          this.time.delayedCall(600, () => {
-            this.tweens.add({ targets: vsContainer, x: -1500, duration: 300, ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
+          this.time.delayedCall(this.d(600), () => {
+            this.tweens.add({ targets: vsContainer, x: -1500, duration: this.d(300), ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
             this.scene.launch('BattleScene', {
               state: this.state,
               attackerIndex: playerIndex,

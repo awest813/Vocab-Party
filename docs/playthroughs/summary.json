@@ -1,0 +1,30 @@
+[
+  {
+    "name": "classic-5",
+    "query": "autoSim=1&rounds=5&players=4",
+    "elapsedMs": 67746,
+    "reachedResults": true,
+    "errors": []
+  },
+  {
+    "name": "classic-10",
+    "query": "autoSim=1&rounds=10&players=4",
+    "elapsedMs": 138889,
+    "reachedResults": true,
+    "errors": []
+  },
+  {
+    "name": "fullmap-2p-12",
+    "query": "autoSim=1&fullMap=1&rounds=12&players=2",
+    "elapsedMs": 47393,
+    "reachedResults": true,
+    "errors": []
+  },
+  {
+    "name": "fullmap-4p-8",
+    "query": "autoSim=1&fullMap=1&rounds=8&players=4",
+    "elapsedMs": 89878,
+    "reachedResults": true,
+    "errors": []
+  }
+]

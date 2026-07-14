@@ -584,7 +584,10 @@ export function generateTileTextures(scene: Phaser.Scene): void {
   })
 
   // Stamp Kenney icons when available (subtle, under motif readability)
-  decorateTilesWithKenneyIcons(scene)
+  // Disabled: RenderTexture.draw of mixed graphics/icons can throw
+  // "texImage2D: bad image data" on some WebGL backends and stall auto-sim.
+  // Motifs alone already communicate tile type clearly.
+  // decorateTilesWithKenneyIcons(scene)
 }
 
 function decorateTilesWithKenneyIcons(scene: Phaser.Scene): void {

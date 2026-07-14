@@ -7,7 +7,7 @@ import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
-import { isAutoSimMode } from '../systems/gameFlags'
+import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers } from '../systems/gameFlags'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 1
@@ -150,13 +150,15 @@ export class SetupScene extends Phaser.Scene {
     this.startBtn.on('pointerdown', () => this.startGame())
 
     if (isAutoSimMode()) {
-      this.playerCount = 4
+      this.playerCount = getAutoSimPlayers()
       this.countText.setText(String(this.playerCount))
-      this.fullMapMode = false
+      this.fullMapMode = getAutoSimFullMap()
       this.cpuModeByRow = ['normal', 'normal', 'normal', 'normal']
       for (let i = 0; i < MAX_PLAYERS; i++) this.refreshCpuToggle(i)
       this.refreshRows()
-      this.time.delayedCall(80, () => this.startGameWithRounds(5))
+      const requested = getAutoSimRounds()
+      const rounds = requested ?? (this.fullMapMode ? BOARD_PATH_LENGTH : 5)
+      this.time.delayedCall(80, () => this.startGameWithRounds(rounds))
     }
 
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))

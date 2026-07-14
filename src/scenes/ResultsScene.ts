@@ -7,6 +7,7 @@ import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { PLAYER_TEXTURE_KEYS } from '../systems/SpriteFactory'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -118,7 +119,10 @@ export class ResultsScene extends Phaser.Scene {
       cardG.strokeRoundedRect(x - 76, cardY - 74, 152, 144, 14)
       cardG.setAlpha(0)
 
-      const emoji = this.add.text(x, cardY - 42, player.emoji, { fontSize: '44px' }).setOrigin(0.5).setAlpha(0)
+      const emoji = this.textures.exists(PLAYER_TEXTURE_KEYS[player.id % PLAYER_TEXTURE_KEYS.length])
+        ? this.add.image(x, cardY - 36, PLAYER_TEXTURE_KEYS[player.id % PLAYER_TEXTURE_KEYS.length])
+            .setDisplaySize(52, 66).setAlpha(0)
+        : this.add.text(x, cardY - 42, player.emoji, { fontSize: '44px' }).setOrigin(0.5).setAlpha(0)
       const nameT = this.add.text(x, cardY + 8, player.name, {
         fontSize: '20px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5).setAlpha(0)
