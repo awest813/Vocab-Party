@@ -113,19 +113,18 @@ export class MenuScene extends Phaser.Scene {
       y: 142,
       duration: reduce ? 0 : 520,
       ease: 'Cubic.easeOut',
+      onComplete: () => {
+        if (reduce) return
+        this.tweens.add({
+          targets: titleContainer,
+          y: 152,
+          duration: 2400,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+        })
+      },
     })
-
-    if (!reduce) {
-      this.tweens.add({
-        targets: titleContainer,
-        y: 152,
-        duration: 2400,
-        yoyo: true,
-        repeat: -1,
-        delay: 600,
-        ease: 'Sine.easeInOut',
-      })
-    }
 
     const tagline = this.add.text(w / 2, 228, 'Roll · Learn · Win the party', {
       fontSize: '22px',
@@ -153,8 +152,10 @@ export class MenuScene extends Phaser.Scene {
       })
     }
 
+    let leaving = false
     const goSetup = () => {
-      if (this.modalOpen) return
+      if (this.modalOpen || leaving) return
+      leaving = true
       this.cameras.main.fadeOut(380, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         this.scene.start('SetupScene')

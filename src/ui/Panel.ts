@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { shouldReduceMotion } from '../systems/GameSettings'
 import { COLORS, DEPTH, FONT, hexColor } from './Theme'
 
 export interface PanelOptions {
@@ -87,7 +88,7 @@ export function createPanel(scene: Phaser.Scene, opts: PanelOptions): Phaser.Gam
     container.add(t)
   }
 
-  if (animateIn) {
+  if (animateIn && !shouldReduceMotion()) {
     container.setScale(0.88).setAlpha(0)
     scene.tweens.add({
       targets: container,
@@ -133,7 +134,7 @@ export function paintStage(scene: Phaser.Scene, options?: {
   scene.add.rectangle(0, h * 0.72, w, h * 0.28, COLORS.teal, 0.05).setOrigin(0).setDepth(-18)
 }
 
-/** Soft edge vignette for menu / modal depth. */
+/** Soft edge vignette for menu / modal depth (darkens edges, not the center). */
 export function addVignette(
   scene: Phaser.Scene,
   strength = 0.55,
@@ -142,19 +143,18 @@ export function addVignette(
   const w = scene.scale.width
   const h = scene.scale.height
   const g = scene.add.graphics().setDepth(depth)
-  const steps = 10
-  for (let i = 0; i < steps; i++) {
-    const t = i / steps
-    const inset = t * Math.min(w, h) * 0.22
-    g.fillStyle(0x000000, strength * (1 - t) * 0.12)
-    g.fillRect(inset, inset, w - inset * 2, h - inset * 2)
+  const bands = [
+    { size: 0.16, alpha: 0.5 },
+    { size: 0.1, alpha: 0.32 },
+    { size: 0.055, alpha: 0.18 },
+  ]
+  for (const band of bands) {
+    g.fillStyle(0x000000, strength * band.alpha)
+    g.fillRect(0, 0, w, h * band.size)
+    g.fillRect(0, h * (1 - band.size), w, h * band.size)
+    g.fillRect(0, 0, w * band.size, h)
+    g.fillRect(w * (1 - band.size), 0, w * band.size, h)
   }
-  // Darker corners via overlapping edge bands
-  g.fillStyle(0x000000, strength * 0.35)
-  g.fillRect(0, 0, w, h * 0.08)
-  g.fillRect(0, h * 0.92, w, h * 0.08)
-  g.fillRect(0, 0, w * 0.06, h)
-  g.fillRect(w * 0.94, 0, w * 0.06, h)
   return g
 }
 

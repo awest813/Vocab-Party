@@ -5,7 +5,7 @@ import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { openHowToPlay } from '../ui/HowToPlay'
 import { openSettingsPanel } from '../ui/SettingsPanel'
-import { shouldReduceMotion } from '../systems/GameSettings'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 
 export class PauseScene extends Phaser.Scene {
@@ -59,16 +59,19 @@ export class PauseScene extends Phaser.Scene {
       animateIn: true,
     })
 
-    // Decorative pause bars in the header area
+    // Pause bars sit beside the title (not under the text)
+    const headerMidY = -440 / 2 + 56 / 2 + 1
     const bars = this.add.graphics()
-    bars.fillStyle(COLORS.gold, 0.85)
-    bars.fillRoundedRect(-28, -176, 10, 28, 3)
-    bars.fillRoundedRect(18, -176, 10, 28, 3)
+    bars.fillStyle(COLORS.gold, 0.9)
+    bars.fillRoundedRect(-108, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(-95, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(86, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(99, headerMidY - 14, 9, 28, 3)
     panel.add(bars)
     if (!reduce) {
       this.tweens.add({
         targets: bars,
-        alpha: 0.45,
+        alpha: 0.5,
         duration: 900,
         yoyo: true,
         repeat: -1,
@@ -142,7 +145,8 @@ export class PauseScene extends Phaser.Scene {
       this.scene.start('MenuScene')
     })
 
-    const escHint = this.add.text(0, 178, 'Esc to resume', {
+    const touch = isTouchPreferred(this.sys.game)
+    const escHint = this.add.text(0, 178, touch ? 'Tap RESUME to continue' : 'Esc to resume', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),

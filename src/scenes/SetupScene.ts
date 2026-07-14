@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { createButton, setButtonFill } from '../ui/Button'
+import { createButton, setButtonEnabled, setButtonFill } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
 import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, PLAYER_HEX, hexColor } from '../ui/Theme'
@@ -193,17 +193,24 @@ export class SetupScene extends Phaser.Scene {
     const startY = rosterTop + 68
     for (let i = 0; i < MAX_PLAYERS; i++) {
       this.buildRow(i, startY, ROW_SPACING)
-      this.rowContainers[i].setAlpha(0).setX(this.rowContainers[i].x - 40)
+      this.refreshCpuToggle(i)
+    }
+    this.refreshRows()
+    this.refreshCountButtons()
+
+    for (let i = 0; i < MAX_PLAYERS; i++) {
+      const row = this.rowContainers[i]
+      const targetAlpha = i < this.playerCount ? 1 : 0.45
+      row.setAlpha(0).setX(row.x - 40)
       this.tweens.add({
-        targets: this.rowContainers[i],
-        alpha: 1, x: '+=40',
+        targets: row,
+        alpha: targetAlpha,
+        x: '+=40',
         duration: reduce ? 0 : 380,
         delay: reduce ? 0 : 160 + i * 80,
         ease: 'Cubic.easeOut',
       })
-      this.refreshCpuToggle(i)
     }
-    this.refreshRows()
 
     const startGlow = this.add.ellipse(w / 2, h - 64, 420, 90, COLORS.mint, 0.12).setDepth(4)
     if (!reduce) {
@@ -325,7 +332,12 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.mist),
       backgroundColor: hexColor(COLORS.bgPanelAlt),
       padding: { left: 10, right: 10, top: 6, bottom: 6 },
-    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
+    }).setOrigin(0, 0.5)
+    cpuToggle.setInteractive({
+      useHandCursor: true,
+      hitArea: new Phaser.Geom.Rectangle(-8, -18, 168, 36),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+    })
     cpuToggle.on('pointerdown', () => {
       if (index >= this.playerCount) return
       const cur = this.cpuModeByRow[index]
@@ -396,24 +408,39 @@ export class SetupScene extends Phaser.Scene {
   refreshRows() {
     this.rows.forEach((row, i) => {
       const enabled = i < this.playerCount
-      row.label.setAlpha(enabled ? 1 : 0.3)
-      row.bg.setAlpha(enabled ? 1 : 0.3)
-      row.nameText.setAlpha(enabled ? 1 : 0.3)
+      const childAlpha = enabled ? 1 : 0.35
+      row.label.setAlpha(childAlpha)
+      row.bg.setAlpha(childAlpha)
+      row.nameText.setAlpha(childAlpha)
       row.ring.setAlpha(enabled ? 1 : 0.25)
+      if (enabled) row.bg.setInteractive()
+      else row.bg.disableInteractive()
       const cpuT = this.cpuToggleTexts[i]
       if (cpuT) {
-        cpuT.setAlpha(enabled ? 1 : 0.3)
-        if (enabled) cpuT.setInteractive({ useHandCursor: true })
-        else {
+        cpuT.setAlpha(childAlpha)
+        if (enabled) {
+          cpuT.setInteractive({
+            useHandCursor: true,
+            hitArea: new Phaser.Geom.Rectangle(-8, -18, 168, 36),
+            hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+          })
+        } else {
           cpuT.disableInteractive()
           this.cpuModeByRow[i] = 'off'
           this.refreshCpuToggle(i)
         }
       }
-      // Dim whole row container extras via row plate alpha on parent
-      this.rowContainers[i]?.setAlpha(enabled ? 1 : 0.45)
+      // Keep entrance tweens intact — only snap alpha when not mid-intro
+      if (!this.tweens.isTweening(this.rowContainers[i])) {
+        this.rowContainers[i]?.setAlpha(enabled ? 1 : 0.45)
+      }
       if (!enabled && row.active) this.setActiveRow(-1)
     })
+  }
+
+  refreshCountButtons() {
+    setButtonEnabled(this.minusBtn, this.playerCount > MIN_PLAYERS)
+    setButtonEnabled(this.plusBtn, this.playerCount < MAX_PLAYERS)
   }
 
   changeCount(delta: number) {
@@ -422,9 +449,14 @@ export class SetupScene extends Phaser.Scene {
     this.playerCount = next
     this.countText.setText(String(this.playerCount))
     this.refreshRows()
+    this.refreshCountButtons()
   }
 
   setActiveRow(index: number) {
+    if (index >= 0 && index >= this.playerCount) {
+      this.setActiveRow(-1)
+      return
+    }
     this.activeRow = index
     this.rows.forEach((row, i) => {
       const isActive = i === index && i < this.playerCount

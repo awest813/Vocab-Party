@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { createButton } from './Button'
-import { createDimmer, createPanel } from './Panel'
+import { createDimmer, createPanel, addVignette } from './Panel'
 import {
   HOW_TO_CONTROLS_DESKTOP,
   HOW_TO_CONTROLS_TOUCH,
@@ -29,8 +29,10 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
   let alive = true
 
   const root = scene.add.container(0, 0).setDepth(3900)
-  const overlay = createDimmer(scene, 0.55)
+  const overlay = createDimmer(scene, 0.6)
   overlay.setDepth(3900)
+  const vig = addVignette(scene, 0.5, 3900)
+  root.add(vig)
 
   const panelW = mode === 'tiles' ? 780 : 640
   const panelH = mode === 'tiles' ? 540 : 460
@@ -40,8 +42,8 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
     width: panelW,
     height: panelH,
     fill: COLORS.bgPanel,
-    border: COLORS.sky,
-    borderAlpha: 0.55,
+    border: COLORS.gold,
+    borderAlpha: 0.38,
     headerColor: COLORS.skyDeep,
     headerHeight: 48,
     title: 'HOW TO PLAY',

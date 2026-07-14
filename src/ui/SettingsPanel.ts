@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { createButton, setButtonFill, setButtonLabel } from './Button'
-import { createDimmer, createPanel } from './Panel'
+import { createDimmer, createPanel, addVignette, createInsetPlate } from './Panel'
 import { getSettings, setSettings, type GameSettings } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { COLORS, FONT, hexColor } from './Theme'
@@ -24,8 +24,10 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   let settings = getSettings()
 
   const root = scene.add.container(0, 0).setDepth(4000)
-  const overlay = createDimmer(scene, 0.6)
+  const overlay = createDimmer(scene, 0.62)
   overlay.setDepth(4000)
+  const vig = addVignette(scene, 0.55, 4000)
+  root.add(vig)
 
   const panel = createPanel(scene, {
     x: w / 2,
@@ -33,15 +35,24 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
     width: 520,
     height: 460,
     fill: COLORS.bgPanel,
-    border: COLORS.sky,
-    borderAlpha: 0.55,
-    headerColor: COLORS.goldDeep,
+    border: COLORS.gold,
+    borderAlpha: 0.4,
+    headerColor: COLORS.skyDeep,
     headerHeight: 48,
     title: 'SETTINGS',
     titleColor: hexColor(COLORS.gold),
     depth: 4001,
     animateIn: true,
   })
+
+  const plate = createInsetPlate(scene, 0, 20, 460, 320, {
+    fill: COLORS.bgDeep,
+    fillAlpha: 0.35,
+    border: COLORS.strokeSoft,
+    borderAlpha: 0.1,
+    radius: 14,
+  })
+  panel.add(plate)
 
   const hint = scene.add.text(0, -155, 'Audio unlocks after your first tap', {
     fontSize: '14px',
