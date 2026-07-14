@@ -1,12 +1,10 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
-import { createButton, setButtonFill } from '../ui/Button'
-import { paintStage } from '../ui/Panel'
-import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { createButton } from '../ui/Button'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
-import { scaleAutoSimDelay } from '../systems/gameFlags'
+import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 
 interface MinigameSceneData {
   state: GameState
@@ -62,11 +60,58 @@ interface HomophoneQuestion {
   correct: number
 }
 
+type MinigameId =
+  | 'context-clue'
+  | 'comma-crisis'
+  | 'parts-of-speech'
+  | 'synonym-blitz'
+  | 'sentence-fix'
+  | 'antonym-attack'
+  | 'homophone-hunt'
+
+const MINIGAME_META: Record<MinigameId, { title: string; accent: number; tip: string }> = {
+  'context-clue': { title: '🔍 CONTEXT CLUE CLASH', accent: 0x3d8fff, tip: 'Fill in the blank using context clues!' },
+  'comma-crisis': { title: '😱 COMMA CRISIS', accent: 0xff9f1c, tip: 'Pick the sentence with correct commas.' },
+  'parts-of-speech': { title: '🗣️ PARTS OF SPEECH', accent: 0xff44aa, tip: 'What part of speech is the highlighted word?' },
+  'synonym-blitz': { title: '⚡ SYNONYM BLITZ', accent: 0x44ddff, tip: 'Pick the word that means almost the same thing!' },
+  'sentence-fix': { title: '✨ SENTENCE FIX', accent: 0x2ad46a, tip: 'Choose the best-written sentence.' },
+  'antonym-attack': { title: '🔄 ANTONYM ATTACK', accent: 0xc084fc, tip: 'Pick the OPPOSITE of the word below!' },
+  'homophone-hunt': { title: '🔊 HOMOPHONE HUNT', accent: 0x44ccff, tip: 'Choose the correct word for the blank.' },
+}
+
+const ALL_MINIGAMES: MinigameId[] = [
+  'context-clue',
+  'comma-crisis',
+  'parts-of-speech',
+  'synonym-blitz',
+  'sentence-fix',
+  'antonym-attack',
+  'homophone-hunt',
+]
+
+interface QuizSpec {
+  id: MinigameId
+  prompt: string
+  promptSize?: number
+  detail?: string
+  choices: string[]
+  correct: number
+  layout: 'grid' | 'stack'
+  success: (choice: string) => string
+  fail: string
+}
+
 export class MinigameScene extends Phaser.Scene {
   private choiceKeyCleanup?: () => void
   private minigameData!: MinigameSceneData
+  private feedbackText?: Phaser.GameObjects.Text
+  private timerTween?: Phaser.Tweens.Tween
 
   constructor() { super('MinigameScene') }
+
+  private d(ms: number) {
+    return scaleAutoSimDelay(ms)
+  }
 
   private clearChoiceKeys() {
     this.choiceKeyCleanup?.()
@@ -74,10 +119,7 @@ export class MinigameScene extends Phaser.Scene {
   }
 
   /** Map 1–4 / A–D / numpad to choice index 0..3 */
-  private registerChoiceKeys(
-    numChoices: number,
-    onPick: (index: number) => void
-  ) {
+  private registerChoiceKeys(numChoices: number, onPick: (index: number) => void) {
     this.clearChoiceKeys()
     const keyToIndex: Record<string, number> = {
       Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3,
@@ -94,132 +136,133 @@ export class MinigameScene extends Phaser.Scene {
     this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', handler)
   }
 
-  create(data: MinigameSceneData) {
-    this.minigameData = data
+  private shuffleChoices(choices: string[], correct: number): { choices: string[]; correct: number } {
+    const order = choices.map((_, i) => i)
+    Phaser.Utils.Array.Shuffle(order)
+    return {
+      choices: order.map(i => choices[i]),
+      correct: order.indexOf(correct),
+    }
+  }
+
+  private setFeedback(message: string, color: string) {
+    this.feedbackText?.destroy()
+    const h = this.scale.height
+    this.feedbackText = this.add.text(this.scale.width / 2, h - 78, message, {
+      fontSize: '24px',
+      fontFamily: 'Fredoka, Arial Black',
+      color,
+      stroke: '#000000',
+      strokeThickness: 5,
+    }).setOrigin(0.5).setDepth(50)
+  }
+
+  private paintBackdrop() {
     const w = this.scale.width
     const h = this.scale.height
+    this.add.rectangle(0, 0, w, h, 0x0a1020).setOrigin(0)
+    const g = this.add.graphics()
+    g.fillGradientStyle(0x1a2a4a, 0x1a2a4a, 0x050510, 0x050510, 0.35)
+    g.fillRect(0, 0, w, h)
+  }
+
+  create(data: MinigameSceneData) {
+    this.minigameData = data
+    this.feedbackText = undefined
+    this.timerTween = undefined
     const { state, onComplete, cpuMode, cpuLevel } = data
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.clearChoiceKeys()
+      this.timerTween?.stop()
+    })
 
     if (cpuMode) {
       const { currentPlayerWins, totalDelayMs } = simulateCpuMinigameGuesses(Phaser.Math, cpuLevel)
       const winnerId = state.players.length > 0 && currentPlayerWins ? state.currentPlayer : -1
-      const wait = scaleAutoSimDelay(Math.max(400, totalDelayMs))
+      const wait = this.d(Math.max(400, totalDelayMs))
       this.time.delayedCall(Math.max(24, wait), () => onComplete(winnerId))
       return
     }
 
-    const games = ['context-clue', 'comma-crisis', 'parts-of-speech', 'synonym-blitz', 'sentence-fix', 'antonym-attack', 'homophone-hunt']
-    const chosen = Phaser.Utils.Array.GetRandom(games) as string
-
-    // Splash overlay
-    const splashContainer = this.add.container(w / 2, h / 2).setDepth(200)
-    const splashBg = this.add.rectangle(0, 0, w, h, 0x070b14, 0.78).setAlpha(0)
-    const splashTitle = this.add.text(0, -30, 'MINIGAME!', {
-      fontSize: '76px', fontFamily: FONT.display, color: '#ffffff',
-      stroke: hexColor(COLORS.teal), strokeThickness: 12
-    }).setOrigin(0.5).setScale(0)
-    const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs Everyone`, {
-      fontSize: '22px', fontFamily: FONT.body, color: hexColor(COLORS.mist)
-    }).setOrigin(0.5).setAlpha(0)
-
-    splashContainer.add([splashBg, splashTitle, splashBy])
-    this.tweens.add({ targets: splashBg, alpha: 1, duration: 200 })
-    this.tweens.add({ targets: splashTitle, scaleX: 1, scaleY: 1, duration: 500, ease: 'Back.easeOut' })
-    this.tweens.add({ targets: splashBy, alpha: 1, duration: 300, delay: 400 })
-    this.cameras.main.flash(400, 255, 68, 170, true)
-
-    this.time.delayedCall(1500, () => {
-      this.tweens.add({ targets: splashContainer, alpha: 0, duration: 200,
-        onComplete: () => splashContainer.destroy(true)
-      })
-      this.startMinigame(chosen)
-    })
+    const chosen = Phaser.Utils.Array.GetRandom(ALL_MINIGAMES) as MinigameId
+    this.showIntro(chosen)
   }
 
-  private startMinigame(chosen: string) {
+  private showIntro(chosen: MinigameId) {
     const w = this.scale.width
     const h = this.scale.height
-    const { state, onComplete } = this.minigameData
+    const { state } = this.minigameData
+    const meta = MINIGAME_META[chosen]
+    const player = state.players[state.currentPlayer]
 
-    // Cinematic Backdrop
-    paintStage(this)
+    this.paintBackdrop()
 
-    const names: Record<string, string> = {
-      'context-clue': 'CONTEXT CLUE CLASH',
-      'comma-crisis': 'COMMA CRISIS',
-      'parts-of-speech': 'PARTS OF SPEECH PANIC',
-      'synonym-blitz': 'SYNONYM BLITZ',
-      'sentence-fix': 'SENTENCE FIX SHOWDOWN',
-      'antonym-attack': 'ANTONYM ATTACK',
-      'homophone-hunt': 'HOMOPHONE HUNT'
-    }
+    const panel = this.add.container(w / 2, h / 2 - 20)
+    const bg = this.add.rectangle(0, 0, 820, 280, 0x0a1528, 0.9)
+    bg.setStrokeStyle(3, meta.accent, 0.65)
+    const glow = this.add.rectangle(0, -138, 812, 4, meta.accent, 0.85)
 
-    const announcePanel = this.add.container(w / 2, h / 2)
-    const panelBg = this.add.graphics()
-    panelBg.fillStyle(0x000000, 0.3)
-    panelBg.fillRoundedRect(-404, -146, 808, 300, 20)
-    panelBg.fillStyle(COLORS.bgPanel, 0.94)
-    panelBg.fillRoundedRect(-400, -150, 800, 300, 20)
-    panelBg.lineStyle(3, COLORS.gold, 0.55)
-    panelBg.strokeRoundedRect(-400, -150, 800, 300, 20)
-    panelBg.fillStyle(COLORS.gold, 0.85)
-    panelBg.fillRoundedRect(-396, -148, 792, 5, 2)
-
-    const title = this.add.text(0, -70, 'MINIGAME TIME!', {
-      fontSize: '58px', fontFamily: FONT.display, color: '#ffffff', stroke: hexColor(COLORS.goldDeep), strokeThickness: 8
+    const eyebrow = this.add.text(0, -95, '🕹️ MINIGAME', {
+      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
     }).setOrigin(0.5)
 
-    const subTitle = this.add.text(0, 20, names[chosen], {
-      fontSize: '34px', fontFamily: FONT.display, color: hexColor(COLORS.teal), stroke: '#003330', strokeThickness: 5
-    }).setOrigin(0.5).setAlpha(0)
-
-    announcePanel.add([panelBg, title, subTitle])
-    announcePanel.setScale(0.85).setAlpha(0)
-
-    this.tweens.add({
-      targets: announcePanel,
-      scaleX: 1, scaleY: 1, alpha: 1,
-      duration: 480, ease: 'Back.easeOut'
-    })
-
-    this.tweens.add({
-      targets: subTitle,
-      alpha: 1, y: 40,
-      duration: 400, delay: 500
-    })
-
-    let count = 3
-    const countText = this.add.text(w / 2, h / 2 + 180, '', {
-      fontSize: '88px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 8
+    const title = this.add.text(0, -35, meta.title, {
+      fontSize: '40px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
+      stroke: '#000000', strokeThickness: 6, align: 'center', wordWrap: { width: 760 }
     }).setOrigin(0.5)
 
-    const doCount = () => {
+    const byline = this.add.text(0, 45, `${player?.emoji ?? ''} ${player?.name ?? 'Player'} takes the challenge`, {
+      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#ffcce8'
+    }).setOrigin(0.5)
+
+    const tip = this.add.text(0, 90, meta.tip, {
+      fontSize: '18px', fontFamily: 'Fredoka, Arial', color: '#88aacc',
+      wordWrap: { width: 700 }, align: 'center'
+    }).setOrigin(0.5)
+
+    panel.add([bg, glow, eyebrow, title, byline, tip])
+    panel.setScale(0.92).setAlpha(0)
+    this.tweens.add({
+      targets: panel, scaleX: 1, scaleY: 1, alpha: 1,
+      duration: this.d(280), ease: 'Cubic.easeOut'
+    })
+    this.cameras.main.flash(this.d(220), 255, 68, 170, true)
+
+    const countText = this.add.text(w / 2, h / 2 + 190, '', {
+      fontSize: '72px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
+      stroke: '#000000', strokeThickness: 8
+    }).setOrigin(0.5)
+
+    let count = isAutoSimMode() ? 0 : 3
+    const tick = () => {
       if (count > 0) {
         countText.setText(String(count))
-        countText.setScale(2)
-        this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: 480, ease: 'Back.easeIn' })
+        countText.setScale(1.6).setColor('#ffffff')
+        this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: this.d(280), ease: 'Back.easeOut' })
         count--
-        this.time.delayedCall(900, doCount)
+        this.time.delayedCall(this.d(700), tick)
       } else {
         countText.setText('GO!')
-        countText.setColor(hexColor(COLORS.mint))
-        countText.setScale(1.5)
-        this.cameras.main.flash(350, 255, 255, 255)
-        this.time.delayedCall(500, () => this.launchMinigame(chosen, state, onComplete))
+        countText.setColor('#44ff88')
+        countText.setScale(1.35)
+        this.time.delayedCall(this.d(380), () => {
+          panel.destroy(true)
+          countText.destroy()
+          this.launchMinigame(chosen)
+        })
       }
     }
-    this.time.delayedCall(1200, doCount)
+    this.time.delayedCall(this.d(isAutoSimMode() ? 40 : 650), tick)
   }
 
-  launchMinigame(type: string, state: GameState, onComplete: (winnerId: number) => void) {
+  private launchMinigame(type: MinigameId) {
     this.clearChoiceKeys()
     this.children.removeAll(true)
-    const w = this.scale.width
-    const h = this.scale.height
+    this.feedbackText = undefined
+    this.paintBackdrop()
 
-    // Cinematic Gameplay Backdrop
-    paintStage(this)
-
+    const { state, onComplete } = this.minigameData
     switch (type) {
       case 'context-clue': this.playContextClue(state, onComplete); break
       case 'comma-crisis': this.playCommaCrisis(state, onComplete); break
@@ -231,388 +274,233 @@ export class MinigameScene extends Phaser.Scene {
     }
   }
 
-  playContextClue(state: GameState, onComplete: (winnerId: number) => void) {
+  /** Shared multiple-choice runner used by every minigame. */
+  private playQuiz(spec: QuizSpec, state: GameState, onComplete: (winnerId: number) => void) {
     const w = this.scale.width
     const h = this.scale.height
+    const meta = MINIGAME_META[spec.id]
+    const shuffled = this.shuffleChoices(spec.choices, spec.correct)
+    const q = { ...spec, choices: shuffled.choices, correct: shuffled.correct }
+
+    this.add.text(w / 2, 48, meta.title, {
+      fontSize: '34px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700',
+      stroke: '#000000', strokeThickness: 6
+    }).setOrigin(0.5)
+
+    this.add.text(w / 2, 92, meta.tip, {
+      fontSize: '18px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
+    }).setOrigin(0.5)
+
+    const promptY = q.detail ? 168 : 200
+    this.add.text(w / 2, promptY, q.prompt, {
+      fontSize: `${q.promptSize ?? (q.layout === 'stack' ? 26 : 56)}px`,
+      fontFamily: 'Fredoka, Arial Black',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 6,
+      wordWrap: { width: 1000 },
+      align: 'center'
+    }).setOrigin(0.5)
+
+    if (q.detail) {
+      this.add.text(w / 2, 250, q.detail, {
+        fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#c8d8ff',
+        fontStyle: 'italic', wordWrap: { width: 920 }, align: 'center'
+      }).setOrigin(0.5)
+    }
+
+    const labels = ['A', 'B', 'C', 'D']
+    const choiceButtons: Phaser.GameObjects.Container[] = []
+    const eliminated = new Set<number>()
+    let resolved = false
+
+    const finish = (winnerId: number, delayMs: number) => {
+      resolved = true
+      this.clearChoiceKeys()
+      this.timerTween?.stop()
+      this.time.delayedCall(this.d(delayMs), () => onComplete(winnerId))
+    }
+
+    const onChoice = (ci: number) => {
+      if (resolved || eliminated.has(ci)) return
+      const btn = choiceButtons[ci]
+      if (!btn) return
+      const bg = btn.getAt(0) as Phaser.GameObjects.Rectangle
+      const correct = ci === q.correct
+
+      if (correct) {
+        if (bg) bg.setFillStyle(0x22aa44)
+        showConfetti(this)
+        this.setFeedback(q.success(q.choices[ci]), '#44ff88')
+        choiceButtons.forEach((b, i) => {
+          if (i !== ci) (b as any).setEnabled?.(false)
+        })
+        finish(state.currentPlayer, 1600)
+      } else {
+        eliminated.add(ci)
+        if (bg) bg.setFillStyle(0xaa2222)
+        ;(btn as any).setEnabled?.(false)
+        this.cameras.main.shake(this.d(160), 0.007)
+        this.setFeedback(q.fail, '#ff7777')
+        // Keep keyboard live for remaining options
+        this.registerChoiceKeys(q.choices.length, (idx) => onChoice(idx))
+      }
+    }
+
+    q.choices.forEach((choice, ci) => {
+      let bx: number
+      let by: number
+      let bw: number
+      let bh: number
+      if (q.layout === 'stack') {
+        bx = w / 2
+        by = (q.detail ? 285 : 235) + ci * 86
+        bw = 1040
+        bh = 70
+      } else {
+        const col = ci % 2
+        const row = Math.floor(ci / 2)
+        bx = w / 2 + (col === 0 ? -260 : 260)
+        by = (q.detail ? 355 : 330) + row * 92
+        bw = 460
+        bh = 70
+      }
+
+      const long = choice.length > 42
+      const btn = createButton(this, bx, by, `${labels[ci]}  ${choice}`, meta.accent, meta.accent - 0x111111, bw, bh)
+      const label = btn.list.find(c => c instanceof Phaser.GameObjects.Text) as Phaser.GameObjects.Text | undefined
+      if (label) {
+        label.setStyle({
+          fontSize: long ? '15px' : '19px',
+          wordWrap: { width: bw - 36 },
+          align: 'center',
+        })
+      }
+      choiceButtons.push(btn)
+      btn.on('pointerdown', () => onChoice(ci))
+    })
+
+    this.registerChoiceKeys(q.choices.length, (ci) => onChoice(ci))
+
+    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D  ·  Wrong answers stay out', {
+      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
+    }).setOrigin(0.5)
+
+    const track = this.add.rectangle(w / 2, h - 24, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff, 0.35)
+    const timerBar = this.add.rectangle(w / 2 - 500, h - 24, 1000, 10, meta.accent).setOrigin(0, 0.5)
+    void track
+    this.timerTween = this.tweens.add({
+      targets: timerBar,
+      width: 0,
+      duration: this.d(18000),
+      ease: 'Linear',
+      onComplete: () => {
+        if (resolved) return
+        this.setFeedback("⏱️ Time's up — no winner this round.", '#ffcc44')
+        choiceButtons.forEach(b => (b as any).setEnabled?.(false))
+        finish(-1, 1200)
+      }
+    })
+  }
+
+  playContextClue(state: GameState, onComplete: (winnerId: number) => void) {
     const questions = (this.cache.json.get('vocab') as { minigame_context_clues?: ContextClueQuestion[] })
       .minigame_context_clues ?? []
-
-    const fallbackContext: ContextClueQuestion = {
+    const fallback: ContextClueQuestion = {
       sentence: 'The scientist made an important _____ that changed how we understand the universe.',
       word: 'discovery',
       choices: ['discovery', 'confusion', 'mistake', 'question'],
       correct: 0
     }
-    const q: ContextClueQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as ContextClueQuestion)
-      : fallbackContext
-
-    // Glassmorphic Question Card
-    const card = this.add.container(w / 2, 240)
-    const cardBg = this.add.graphics()
-    cardBg.fillStyle(COLORS.bgPanel, 0.88)
-    cardBg.fillRoundedRect(-530, -70, 1060, 140, 16)
-    cardBg.lineStyle(2, COLORS.sky, 0.45)
-    cardBg.strokeRoundedRect(-530, -70, 1060, 140, 16)
-
-    const qLabel = this.add.text(w / 2, 58, 'CONTEXT CLUE CLASH', {
-      fontSize: '34px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 5
-    }).setOrigin(0.5)
-
-    const qSub = this.add.text(w / 2, 100, 'Fill in the blank using context clues', {
-      fontSize: '18px', fontFamily: FONT.body, color: hexColor(COLORS.mist)
-    }).setOrigin(0.5)
-
-    const qSentence = this.add.text(0, 0, q.sentence, {
-      fontSize: '26px', fontFamily: FONT.body, color: '#ffffff',
-      wordWrap: { width: 1000 }, align: 'center', lineSpacing: 10
-    }).setOrigin(0.5)
-
-    card.add([cardBg, qSentence])
-
-    let done = false
-
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
-      if (done) return
-      done = true
-      const correct = ci === q.correct
-      if (correct) {
-        this.clearChoiceKeys()
-        setButtonFill(btn, COLORS.mint)
-        showConfetti(this)
-        this.add.text(w / 2, h - 100, `CORRECT! "${q.word}" wins!`, {
-          fontSize: '30px', fontFamily: FONT.display, color: hexColor(COLORS.mint), stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, COLORS.danger)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 100, 'Wrong — try again', {
-          fontSize: '26px', fontFamily: FONT.display, color: hexColor(COLORS.coral)
-        }).setOrigin(0.5)
-        done = false
-      }
-    }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    const cols = 2
-    q.choices.forEach((choice: string, ci: number) => {
-      const col = ci % cols
-      const row = Math.floor(ci / cols)
-      const bx = w / 2 + (col === 0 ? -260 : 260)
-      const by = 380 + row * 100
-      const btn = createButton(this, bx, by, choice, 0x224488, 0x112255, 440, 70)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn)
-    })
-
-    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 40, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as ContextClueQuestion : fallback
+    this.playQuiz({
+      id: 'context-clue',
+      prompt: raw.sentence,
+      promptSize: 28,
+      choices: raw.choices,
+      correct: raw.correct,
+      layout: 'grid',
+      success: () => `✅ Correct — "${raw.word}" fits the clue!`,
+      fail: '❌ Not quite — use the sentence clues and try again!',
+    }, state, onComplete)
   }
 
   playCommaCrisis(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('grammar') as { minigame_comma?: CommaCrisisQuestion[] })
       .minigame_comma ?? []
-
-    const fallbackComma: CommaCrisisQuestion = {
+    const fallback: CommaCrisisQuestion = {
       sentence: 'Before you leave please turn off the lights and close the door.',
-      correct: 'Before you leave, please turn off the lights, and close the door.',
+      correct: 'Before you leave, please turn off the lights and close the door.',
       choices: [
         'Before you leave please turn off the lights and close the door.',
-        'Before you leave, please turn off the lights, and close the door.',
+        'Before you leave, please turn off the lights and close the door.',
         'Before, you leave please turn off the lights and close, the door.',
         'Before you leave please, turn off the lights and close the door.'
       ],
       correct_index: 1
     }
-    const q: CommaCrisisQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as CommaCrisisQuestion)
-      : fallbackComma
-
-    this.add.text(w / 2, 60, '😱 COMMA CRISIS', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#ff8844', stroke: '#442200', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 130, 'Choose the sentence with correct comma placement!', {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ffccaa'
-    }).setOrigin(0.5)
-
-    let done = false
-
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
-      if (done) return
-      done = true
-      const correct = ci === q.correct_index
-      if (correct) {
-        this.clearChoiceKeys()
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
-          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
-    }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    q.choices.forEach((choice: string, ci: number) => {
-      const by = 260 + ci * 105
-      const btn = createButton(this, w / 2, by, choice, 0x442200, 0x221100, 1000, 80)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn)
-    })
-
-    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa8866'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff8844).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as CommaCrisisQuestion : fallback
+    this.playQuiz({
+      id: 'comma-crisis',
+      prompt: 'Which sentence uses commas correctly?',
+      promptSize: 24,
+      detail: `Starter: “${raw.sentence}”`,
+      choices: raw.choices,
+      correct: raw.correct_index,
+      layout: 'stack',
+      success: () => '✅ Perfect punctuation!',
+      fail: '❌ Comma crisis — try another option!',
+    }, state, onComplete)
   }
 
   playPartsOfSpeech(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('grammar') as { minigame_pos?: PartsOfSpeechQuestion[] })
       .minigame_pos ?? []
-
-    const fallbackPos: PartsOfSpeechQuestion = {
+    const fallback: PartsOfSpeechQuestion = {
       word: 'QUICKLY',
       sentence: 'She ran quickly to catch the bus.',
       choices: ['Noun', 'Verb', 'Adjective', 'Adverb'],
       correct: 3
     }
-    const q: PartsOfSpeechQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as PartsOfSpeechQuestion)
-      : fallbackPos
-
-    this.add.text(w / 2, 60, '🗣️ PARTS OF SPEECH PANIC', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#ff44ff', stroke: '#440044', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 130, 'What part of speech is the highlighted word?', {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ffaaff'
-    }).setOrigin(0.5)
-
-    const wordDisplay = this.add.text(w / 2, 220, q.word, {
-      fontSize: '80px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700',
-      stroke: '#664400', strokeThickness: 8
-    }).setOrigin(0.5)
-    this.tweens.add({ targets: wordDisplay, scaleX: 1.1, scaleY: 1.1, duration: 600, yoyo: true, repeat: -1 })
-
-    this.add.text(w / 2, 310, `"${q.sentence}"`, {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ccccff',
-      wordWrap: { width: 900 }, align: 'center', fontStyle: 'italic'
-    }).setOrigin(0.5)
-
-    const posColors = [0x3355cc, 0xcc3333, 0x33aa33, 0xcc8800]
-    let done = false
-
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container, choice: string) => {
-      if (done) return
-      done = true
-      const correct = ci === q.correct
-      if (correct) {
-        this.clearChoiceKeys()
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
-          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
-    }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    q.choices.forEach((choice: string, ci: number) => {
-      const col = ci % 2
-      const row = Math.floor(ci / 2)
-      const bx = w / 2 + (col === 0 ? -230 : 230)
-      const by = 430 + row * 100
-      const btn = createButton(this, bx, by, choice, posColors[ci], posColors[ci] - 0x112211, 380, 70)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn, choice))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn, q.choices[ci])
-    })
-
-    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa88cc'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0xff44ff).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 80, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as PartsOfSpeechQuestion : fallback
+    this.playQuiz({
+      id: 'parts-of-speech',
+      prompt: raw.word,
+      promptSize: 64,
+      detail: `"${raw.sentence}"`,
+      choices: raw.choices,
+      correct: raw.correct,
+      layout: 'grid',
+      success: (choice) => `✅ Yes — "${raw.word}" is a ${choice}!`,
+      fail: '❌ Wrong part of speech — try again!',
+    }, state, onComplete)
   }
 
   playSynonymBlitz(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('vocab') as { minigame_synonyms?: SynonymBlitzQuestion[] })
       .minigame_synonyms ?? []
-
-    const fallbackSynonym: SynonymBlitzQuestion = {
+    const fallback: SynonymBlitzQuestion = {
       word: 'rapid',
       choices: ['fast', 'slow', 'heavy', 'quiet'],
       correct: 0
     }
-    const q: SynonymBlitzQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as SynonymBlitzQuestion)
-      : fallbackSynonym
-
-    this.add.text(w / 2, 60, '⚡ SYNONYM BLITZ', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#66ddff', stroke: '#003344', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 130, 'Tap the word that means almost the same thing!', {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#aeeeff'
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 240, q.word.toUpperCase(), {
-      fontSize: '72px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
-      stroke: '#224466', strokeThickness: 8
-    }).setOrigin(0.5)
-
-    let done = false
-
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container, choice: string) => {
-      if (done) return
-      done = true
-      const correct = ci === q.correct
-      if (correct) {
-        this.clearChoiceKeys()
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
-          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
-    }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    const cols = 2
-    q.choices.forEach((choice: string, ci: number) => {
-      const col = ci % cols
-      const row = Math.floor(ci / cols)
-      const bx = w / 2 + (col === 0 ? -260 : 260)
-      const by = 400 + row * 100
-      const btn = createButton(this, bx, by, choice, 0x116688, 0x003344, 440, 70)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn, choice))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn, q.choices[ci])
-    })
-
-    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 40, 1000, 10, 0x44ddff).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 40, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as SynonymBlitzQuestion : fallback
+    this.playQuiz({
+      id: 'synonym-blitz',
+      prompt: raw.word.toUpperCase(),
+      promptSize: 64,
+      choices: raw.choices,
+      correct: raw.correct,
+      layout: 'grid',
+      success: (choice) => `✅ Great match — "${choice}"!`,
+      fail: '❌ Not a synonym — try another!',
+    }, state, onComplete)
   }
 
   playSentenceFix(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('grammar') as { minigame_sentence_fix?: SentenceFixQuestion[] })
       .minigame_sentence_fix ?? []
-
-    const fallbackSentenceFix: SentenceFixQuestion = {
+    const fallback: SentenceFixQuestion = {
       prompt: 'Which sentence is written correctly?',
       choices: [
         'Me and him went to the store.',
@@ -622,240 +510,58 @@ export class MinigameScene extends Phaser.Scene {
       ],
       correct_index: 1
     }
-    const q: SentenceFixQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as SentenceFixQuestion)
-      : fallbackSentenceFix
-
-    this.add.text(w / 2, 55, '✨ SENTENCE FIX SHOWDOWN', {
-      fontSize: '34px', fontFamily: 'Fredoka, Arial Black', color: '#88ffcc', stroke: '#114433', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 118, q.prompt, {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ccffee',
-      wordWrap: { width: 980 }, align: 'center'
-    }).setOrigin(0.5)
-
-    let done = false
-
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
-      if (done) return
-      done = true
-      const correct = ci === q.correct_index
-      if (correct) {
-        this.clearChoiceKeys()
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
-          fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(2000, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
-    }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    q.choices.forEach((choice: string, ci: number) => {
-      const by = 200 + ci * 105
-      const btn = createButton(this, w / 2, by, choice, 0x1a4d40, 0x0a2a22, 1000, 78)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn)
-    })
-
-    this.add.text(w / 2, h - 46, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#66aa99'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x66ffcc).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 78, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as SentenceFixQuestion : fallback
+    this.playQuiz({
+      id: 'sentence-fix',
+      prompt: raw.prompt,
+      promptSize: 24,
+      choices: raw.choices,
+      correct: raw.correct_index,
+      layout: 'stack',
+      success: () => '✅ Perfect grammar!',
+      fail: '❌ That sentence needs work — try again!',
+    }, state, onComplete)
   }
 
   playAntonymAttack(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('vocab') as { minigame_antonyms?: AntonymQuestion[] })
       .minigame_antonyms ?? []
-    const fallback: AntonymQuestion = { word: 'hot', choices: ['warm', 'cold', 'mild', 'cool'], correct: 1 }
-    const q: AntonymQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as AntonymQuestion)
-      : fallback
-
-    const header = this.add.text(w / 2, 80, '🔄 ANTONYM ATTACK', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#000000', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    const subHeader = this.add.text(w / 2, 125, 'Pick the OPPOSITE of the word below!', {
-      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 190, q.word, {
-      fontSize: '56px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#884488', strokeThickness: 8
-    }).setOrigin(0.5)
-
-    let done = false
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
-      if (done) return
-      done = true
-      this.clearChoiceKeys()
-      const correct = ci === q.correct
-      if (correct) {
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 100, '✅ CORRECT! Opposites attract!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 100, '❌ Wrong! Try again!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
+    const fallback: AntonymQuestion = {
+      word: 'hot',
+      choices: ['boiling', 'cold', 'warm', 'toasty'],
+      correct: 1
     }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    const cols = 2
-    q.choices.forEach((choice, ci) => {
-      const col = ci % cols
-      const row = Math.floor(ci / cols)
-      const bx = w / 2 + (col === 0 ? -260 : 260)
-      const by = 300 + row * 100
-      const btn = createButton(this, bx, by, choice, 0x6633aa, 0x442288, 440, 70)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn)
-    })
-
-    this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as AntonymQuestion : fallback
+    this.playQuiz({
+      id: 'antonym-attack',
+      prompt: raw.word.toUpperCase(),
+      promptSize: 64,
+      choices: raw.choices,
+      correct: raw.correct,
+      layout: 'grid',
+      success: (choice) => `✅ Opposite locked — "${choice}"!`,
+      fail: '❌ Not the opposite — try again!',
+    }, state, onComplete)
   }
 
   playHomophoneHunt(state: GameState, onComplete: (winnerId: number) => void) {
-    const w = this.scale.width
-    const h = this.scale.height
     const questions = (this.cache.json.get('vocab') as { minigame_homophones?: HomophoneQuestion[] })
       .minigame_homophones ?? []
-    const fallback: HomophoneQuestion = { prompt: "_____ going to the store.", choices: ["They're", "Their", "There", "Thier"], correct: 0 }
-    const q: HomophoneQuestion = questions.length > 0
-      ? (Phaser.Utils.Array.GetRandom(questions) as HomophoneQuestion)
-      : fallback
-
-    const header = this.add.text(w / 2, 80, '🔊 HOMOPHONE HUNT', {
-      fontSize: '36px', fontFamily: 'Fredoka, Arial Black', color: '#44ddff', stroke: '#004466', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    const subHeader = this.add.text(w / 2, 125, 'Choose the correct word to complete the sentence!', {
-      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, 200, q.prompt, {
-      fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#004466', strokeThickness: 6
-    }).setOrigin(0.5)
-
-    let done = false
-    const onChoice = (ci: number, btn: Phaser.GameObjects.Container) => {
-      if (done) return
-      done = true
-      this.clearChoiceKeys()
-      const correct = ci === q.correct
-      if (correct) {
-        setButtonFill(btn, 0x44aa44)
-        showConfetti(this)
-        this.add.text(w / 2, h - 100, '✅ CORRECT! Perfect homophone!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
-        }).setOrigin(0.5)
-        this.time.delayedCall(1500, () => onComplete(state.currentPlayer))
-      } else {
-        setButtonFill(btn, 0xaa2222)
-        this.cameras.main.shake(200, 0.008)
-        this.add.text(w / 2, h - 100, '❌ Wrong homophone! Try again!', {
-          fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
-        }).setOrigin(0.5)
-        done = false
-      }
+    const fallback: HomophoneQuestion = {
+      prompt: '_____ going to the store later.',
+      choices: ["They're", 'Their', 'There', 'Thier'],
+      correct: 0
     }
-
-    const choiceButtons: Phaser.GameObjects.Container[] = []
-    const cols = 2
-    q.choices.forEach((choice, ci) => {
-      const col = ci % cols
-      const row = Math.floor(ci / cols)
-      const bx = w / 2 + (col === 0 ? -260 : 260)
-      const by = 300 + row * 100
-      const btn = createButton(this, bx, by, choice, 0x225588, 0x113366, 440, 70)
-      choiceButtons.push(btn)
-      btn.on('pointerdown', () => onChoice(ci, btn))
-    })
-
-    this.registerChoiceKeys(q.choices.length, (ci) => {
-      const btn = choiceButtons[ci]
-      if (btn) onChoice(ci, btn)
-    })
-
-    this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
-      fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
-    }).setOrigin(0.5)
-
-    const timerBar = this.add.rectangle(w / 2 - 500, h - 30, 1000, 10, 0x44ff88).setOrigin(0, 0.5)
-    this.add.rectangle(w / 2, h - 30, 1000, 14, 0x333355).setStrokeStyle(2, 0xffffff)
-    this.tweens.add({
-      targets: timerBar, width: 0, duration: 20000, ease: 'Linear',
-      onComplete: () => {
-        if (!done) {
-          done = true
-          this.clearChoiceKeys()
-          this.add.text(w / 2, h - 100, "⏱️ Time's up! No winner.", {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ffcc44'
-          }).setOrigin(0.5)
-          this.time.delayedCall(1500, () => onComplete(-1))
-        }
-      }
-    })
+    const raw = questions.length > 0 ? Phaser.Utils.Array.GetRandom(questions) as HomophoneQuestion : fallback
+    this.playQuiz({
+      id: 'homophone-hunt',
+      prompt: raw.prompt,
+      promptSize: 30,
+      choices: raw.choices,
+      correct: raw.correct,
+      layout: 'grid',
+      success: (choice) => `✅ Perfect fit — "${choice}"!`,
+      fail: '❌ Wrong homophone — try again!',
+    }, state, onComplete)
   }
 }

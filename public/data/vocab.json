@@ -1051,30 +1051,30 @@
       "sentence": "The scientist made an important _____ that changed how we understand the universe.",
       "word": "discovery",
       "choices": [
-        "mistake",
-        "question",
         "discovery",
-        "confusion"
+        "confusion",
+        "mistake",
+        "question"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "sentence": "She was so _____ that she finished the race even though her legs ached.",
       "word": "determined",
       "choices": [
-        "lazy",
         "determined",
+        "lazy",
         "confused",
         "distracted"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "sentence": "The _____ rainforest sheltered hundreds of plant and animal species.",
       "word": "diverse",
       "choices": [
-        "silent",
         "empty",
+        "silent",
         "diverse",
         "identical"
       ],
@@ -1086,8 +1086,8 @@
       "choices": [
         "hushed",
         "confused",
-        "angry",
-        "booming"
+        "booming",
+        "angry"
       ],
       "correct": 0
     },
@@ -1096,9 +1096,9 @@
       "word": "unstable",
       "choices": [
         "unstable",
-        "colorful",
         "popular",
-        "sturdy"
+        "sturdy",
+        "colorful"
       ],
       "correct": 0
     },
@@ -1106,23 +1106,23 @@
       "sentence": "After days of hard work, the team felt _____ when they finally finished.",
       "word": "relieved",
       "choices": [
-        "furious",
-        "relieved",
         "jealous",
-        "bored"
+        "bored",
+        "furious",
+        "relieved"
       ],
-      "correct": 1
+      "correct": 3
     },
     {
       "sentence": "The puppy wagged its tail and greeted everyone — it was incredibly _____.",
       "word": "affectionate",
       "choices": [
-        "hostile",
-        "affectionate",
         "exhausted",
-        "fierce"
+        "fierce",
+        "affectionate",
+        "hostile"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "sentence": "The hikers followed the _____ trail, carefully marked with bright orange signs.",
@@ -1139,52 +1139,52 @@
       "sentence": "The teacher used diagrams and examples to help students _____ the concept.",
       "word": "grasp",
       "choices": [
+        "memorize",
         "ignore",
         "grasp",
-        "forget",
-        "memorize"
+        "forget"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "sentence": "After the storm, the town was in complete _____, with downed trees and flooded streets.",
       "word": "chaos",
       "choices": [
-        "order",
-        "silence",
         "celebration",
-        "chaos"
+        "chaos",
+        "order",
+        "silence"
       ],
-      "correct": 3
+      "correct": 1
     },
     {
       "sentence": "The kind stranger offered to _____ the lost tourist to the nearest bus stop.",
       "word": "escort",
       "choices": [
+        "chase",
         "abandon",
         "escort",
-        "block",
-        "chase"
+        "block"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "sentence": "The chef prepared a _____ meal using only fresh, local ingredients.",
       "word": "savory",
       "choices": [
-        "bland",
-        "inedible",
         "frozen",
-        "savory"
+        "inedible",
+        "savory",
+        "bland"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "sentence": "The night sky was so _____ that we could see thousands of stars.",
       "word": "cloudless",
       "choices": [
-        "foggy",
         "crowded",
+        "foggy",
         "murky",
         "cloudless"
       ],
@@ -1194,120 +1194,142 @@
       "sentence": "The athlete showed great _____ by training every day for the Olympics.",
       "word": "discipline",
       "choices": [
-        "luck",
         "excuse",
         "impulse",
-        "discipline"
+        "discipline",
+        "luck"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "sentence": "Because the instructions were _____, nobody knew how to assemble the furniture.",
       "word": "vague",
       "choices": [
-        "vague",
+        "brief",
         "precise",
-        "helpful",
-        "brief"
+        "vague",
+        "helpful"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "sentence": "The artist used _____ colors that made the painting stand out in the gallery.",
       "word": "vibrant",
       "choices": [
-        "vibrant",
-        "faded",
+        "muted",
         "dull",
-        "muted"
+        "faded",
+        "vibrant"
       ],
-      "correct": 0
+      "correct": 3
     },
     {
       "sentence": "After the long hike, the cold stream water felt incredibly _____.",
       "word": "refreshing",
       "choices": [
-        "bitter",
-        "refreshing",
         "salty",
-        "stagnant"
+        "stagnant",
+        "refreshing",
+        "bitter"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "sentence": "Her argument was so _____ that even skeptics began to agree.",
       "word": "persuasive",
       "choices": [
         "quiet",
-        "persuasive",
         "random",
-        "sloppy"
+        "sloppy",
+        "persuasive"
       ],
-      "correct": 1
+      "correct": 3
     },
     {
       "sentence": "The museum exhibit was _____ — every display held a surprising detail.",
       "word": "fascinating",
       "choices": [
-        "boring",
         "broken",
-        "empty",
-        "fascinating"
+        "boring",
+        "fascinating",
+        "empty"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "sentence": "We had to _____ our plans when the sudden rain flooded the field.",
       "word": "abandon",
       "choices": [
-        "abandon",
         "ignore",
         "repeat",
+        "abandon",
         "celebrate"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "sentence": "The detective searched for any _____ that might explain the mystery.",
       "word": "clue",
       "choices": [
+        "clue",
         "rumor",
         "distraction",
-        "clue",
         "decoration"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "sentence": "Although the hike was exhausting, the mountain view was _____.",
       "word": "spectacular",
       "choices": [
-        "ordinary",
-        "invisible",
         "spectacular",
+        "invisible",
+        "ordinary",
         "disappointing"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "sentence": "Please _____ your sources so readers know where the facts came from.",
       "word": "cite",
       "choices": [
+        "cite",
         "erase",
         "hide",
-        "cite",
         "invent"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "sentence": "The new rule will _____ students from bringing phones into the exam room.",
       "word": "prohibit",
       "choices": [
-        "prohibit",
         "reward",
         "encourage",
-        "require"
+        "require",
+        "prohibit"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "His apology sounded _____; nobody believed he was truly sorry.",
+      "word": "insincere",
+      "choices": [
+        "brief",
+        "sincere",
+        "insincere",
+        "timely"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "The map was _____ enough that even first-time visitors found the trailhead.",
+      "word": "legible",
+      "choices": [
+        "legible",
+        "blank",
+        "smudged",
+        "secret"
       ],
       "correct": 0
     }
@@ -1316,110 +1338,110 @@
     {
       "word": "rapid",
       "choices": [
+        "quiet",
         "fast",
         "heavy",
-        "slow",
-        "quiet"
-      ],
-      "correct": 0
-    },
-    {
-      "word": "brave",
-      "choices": [
-        "cowardly",
-        "lazy",
-        "noisy",
-        "fearless"
-      ],
-      "correct": 3
-    },
-    {
-      "word": "ancient",
-      "choices": [
-        "loud",
-        "very old",
-        "tiny",
-        "modern"
+        "slow"
       ],
       "correct": 1
     },
     {
-      "word": "fragile",
+      "word": "brave",
       "choices": [
-        "quick",
-        "colorful",
-        "easily broken",
-        "strong"
+        "lazy",
+        "fearless",
+        "noisy",
+        "cowardly"
       ],
-      "correct": 2
+      "correct": 1
     },
     {
-      "word": "enormous",
+      "word": "ancient",
       "choices": [
-        "huge",
-        "small",
-        "quiet",
-        "bitter"
+        "very old",
+        "tiny",
+        "modern",
+        "loud"
       ],
       "correct": 0
     },
     {
+      "word": "fragile",
+      "choices": [
+        "easily broken",
+        "strong",
+        "colorful",
+        "quick"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "enormous",
+      "choices": [
+        "small",
+        "quiet",
+        "bitter",
+        "huge"
+      ],
+      "correct": 3
+    },
+    {
       "word": "silent",
       "choices": [
-        "noisy",
+        "bright",
         "angry",
         "without sound",
-        "bright"
+        "noisy"
       ],
       "correct": 2
     },
     {
       "word": "generous",
       "choices": [
-        "giving freely",
         "sleepy",
         "sharp",
-        "selfish"
+        "selfish",
+        "giving freely"
       ],
-      "correct": 0
+      "correct": 3
     },
     {
       "word": "furious",
       "choices": [
-        "hungry",
         "extremely angry",
         "polite",
-        "calm"
+        "calm",
+        "hungry"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "word": "timid",
       "choices": [
-        "bold",
-        "tall",
+        "clever",
         "shy",
-        "clever"
-      ],
-      "correct": 2
-    },
-    {
-      "word": "gloomy",
-      "choices": [
-        "sweet",
-        "dark and sad",
-        "cheerful",
-        "tiny"
+        "tall",
+        "bold"
       ],
       "correct": 1
     },
     {
+      "word": "gloomy",
+      "choices": [
+        "dark and sad",
+        "tiny",
+        "sweet",
+        "cheerful"
+      ],
+      "correct": 0
+    },
+    {
       "word": "sparse",
       "choices": [
-        "round",
+        "shiny",
         "crowded",
         "thinly scattered",
-        "shiny"
+        "round"
       ],
       "correct": 2
     },
@@ -1427,18 +1449,18 @@
       "word": "meticulous",
       "choices": [
         "careless",
+        "cheap",
         "very careful",
-        "sleepy",
-        "cheap"
+        "sleepy"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "word": "obstinate",
       "choices": [
+        "flexible",
         "quiet",
         "fast",
-        "flexible",
         "stubborn"
       ],
       "correct": 3
@@ -1446,9 +1468,9 @@
     {
       "word": "vivid",
       "choices": [
-        "noisy",
-        "brightly clear",
         "short",
+        "brightly clear",
+        "noisy",
         "dull"
       ],
       "correct": 1
@@ -1456,151 +1478,171 @@
     {
       "word": "lethargic",
       "choices": [
-        "sluggish",
         "bright",
-        "energetic",
-        "angry"
+        "sluggish",
+        "angry",
+        "energetic"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "word": "diligent",
       "choices": [
+        "lazy",
         "hardworking",
         "calm",
-        "lazy",
         "noisy"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "word": "concise",
       "choices": [
-        "loud",
+        "brief",
         "slow",
-        "wordy",
-        "brief"
+        "loud",
+        "wordy"
       ],
-      "correct": 3
+      "correct": 0
     },
     {
       "word": "scarce",
       "choices": [
         "heavy",
-        "rare",
         "plentiful",
-        "bright"
+        "bright",
+        "rare"
       ],
-      "correct": 1
+      "correct": 3
     },
     {
       "word": "hostile",
       "choices": [
         "sleepy",
         "friendly",
-        "unfriendly",
-        "tiny"
+        "tiny",
+        "unfriendly"
       ],
-      "correct": 2
+      "correct": 3
     },
     {
       "word": "compel",
       "choices": [
-        "suggest",
         "delay",
+        "force",
         "ignore",
-        "force"
+        "suggest"
       ],
-      "correct": 3
+      "correct": 1
     },
     {
       "word": "obscure",
       "choices": [
-        "shiny",
-        "unclear",
         "loud",
-        "famous"
+        "famous",
+        "shiny",
+        "unclear"
       ],
-      "correct": 1
+      "correct": 3
     },
     {
       "word": "genuine",
       "choices": [
-        "authentic",
         "broken",
-        "cheap",
-        "fake"
+        "fake",
+        "authentic",
+        "cheap"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "word": "diminish",
       "choices": [
-        "increase",
         "decrease",
-        "freeze",
-        "celebrate"
+        "celebrate",
+        "increase",
+        "freeze"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "word": "assert",
       "choices": [
-        "deny",
         "whisper",
+        "state firmly",
         "ask",
-        "state firmly"
+        "deny"
       ],
-      "correct": 3
+      "correct": 1
+    },
+    {
+      "word": "precise",
+      "choices": [
+        "exact",
+        "soft",
+        "late",
+        "messy"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "reluctant",
+      "choices": [
+        "eager",
+        "swift",
+        "unwilling",
+        "loud"
+      ],
+      "correct": 2
     }
   ],
   "minigame_antonyms": [
     {
       "word": "hot",
       "choices": [
+        "cold",
         "boiling",
-        "warm",
         "toasty",
-        "cold"
+        "warm"
       ],
-      "correct": 3
+      "correct": 0
     },
     {
       "word": "brave",
       "choices": [
+        "cowardly",
         "strong",
         "fast",
-        "cowardly",
         "bold"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "word": "friendly",
       "choices": [
         "generous",
+        "kind",
         "hostile",
-        "polite",
-        "kind"
+        "polite"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "word": "expand",
       "choices": [
-        "contract",
         "increase",
+        "spread",
         "grow",
-        "spread"
+        "contract"
       ],
-      "correct": 0
+      "correct": 3
     },
     {
       "word": "wealthy",
       "choices": [
-        "lucky",
-        "poor",
         "famous",
+        "poor",
+        "lucky",
         "rich"
       ],
       "correct": 1
@@ -1608,59 +1650,59 @@
     {
       "word": "ancient",
       "choices": [
+        "historic",
         "old",
         "modern",
-        "historic",
         "wise"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "word": "ascend",
       "choices": [
         "climb",
-        "rise",
+        "descend",
         "float",
-        "descend"
-      ],
-      "correct": 3
-    },
-    {
-      "word": "permanent",
-      "choices": [
-        "solid",
-        "lasting",
-        "strong",
-        "temporary"
-      ],
-      "correct": 3
-    },
-    {
-      "word": "optimistic",
-      "choices": [
-        "hopeful",
-        "pessimistic",
-        "joyful",
-        "cheerful"
+        "rise"
       ],
       "correct": 1
     },
     {
-      "word": "chaotic",
+      "word": "permanent",
       "choices": [
-        "organized",
-        "crazy",
-        "loud",
-        "wild"
+        "strong",
+        "lasting",
+        "temporary",
+        "solid"
+      ],
+      "correct": 2
+    },
+    {
+      "word": "optimistic",
+      "choices": [
+        "pessimistic",
+        "joyful",
+        "cheerful",
+        "hopeful"
       ],
       "correct": 0
     },
     {
+      "word": "chaotic",
+      "choices": [
+        "crazy",
+        "wild",
+        "organized",
+        "loud"
+      ],
+      "correct": 2
+    },
+    {
       "word": "generous",
       "choices": [
-        "rich",
-        "selfish",
         "kind",
+        "selfish",
+        "rich",
         "giving"
       ],
       "correct": 1
@@ -1668,68 +1710,68 @@
     {
       "word": "rigid",
       "choices": [
-        "stiff",
-        "flexible",
         "hard",
-        "strong"
-      ],
-      "correct": 1
-    },
-    {
-      "word": "frequent",
-      "choices": [
-        "usual",
-        "rare",
-        "often",
-        "common"
-      ],
-      "correct": 1
-    },
-    {
-      "word": "artificial",
-      "choices": [
-        "synthetic",
-        "fake",
-        "plastic",
-        "natural"
+        "stiff",
+        "strong",
+        "flexible"
       ],
       "correct": 3
     },
     {
+      "word": "frequent",
+      "choices": [
+        "rare",
+        "often",
+        "usual",
+        "common"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "artificial",
+      "choices": [
+        "natural",
+        "synthetic",
+        "fake",
+        "plastic"
+      ],
+      "correct": 0
+    },
+    {
       "word": "triumph",
       "choices": [
-        "prize",
         "defeat",
+        "prize",
         "victory",
         "success"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "word": "vivid",
       "choices": [
-        "dull",
         "colorful",
-        "bright",
-        "clear"
+        "dull",
+        "clear",
+        "bright"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "word": "encourage",
       "choices": [
-        "discourage",
         "inspire",
-        "support",
-        "motivate"
+        "motivate",
+        "discourage",
+        "support"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "word": "abundant",
       "choices": [
-        "plentiful",
         "rich",
+        "plentiful",
         "scarce",
         "ample"
       ],
@@ -1739,59 +1781,59 @@
       "word": "reluctant",
       "choices": [
         "slow",
-        "shy",
+        "eager",
         "hesitant",
-        "eager"
+        "shy"
       ],
-      "correct": 3
+      "correct": 1
     },
     {
       "word": "humble",
       "choices": [
         "quiet",
-        "modest",
         "gentle",
-        "proud"
+        "proud",
+        "modest"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "word": "harmony",
       "choices": [
-        "unity",
         "balance",
+        "peace",
         "discord",
-        "peace"
+        "unity"
       ],
       "correct": 2
     },
     {
       "word": "shallow",
       "choices": [
-        "narrow",
-        "wide",
         "deep",
+        "wide",
+        "narrow",
         "surface"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "word": "scarce",
       "choices": [
         "thin",
         "limited",
-        "rare",
-        "plentiful"
+        "plentiful",
+        "rare"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "word": "hostile",
       "choices": [
-        "fierce",
+        "angry",
         "cold",
         "friendly",
-        "angry"
+        "fierce"
       ],
       "correct": 2
     },
@@ -1800,50 +1842,70 @@
       "choices": [
         "vague",
         "hidden",
-        "dim",
-        "clear"
+        "clear",
+        "dim"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
-      "word": "compel",
+      "word": "include",
       "choices": [
-        "push",
-        "allow",
-        "force",
-        "require"
+        "contain",
+        "invite",
+        "exclude",
+        "add"
       ],
-      "correct": 1
+      "correct": 2
+    },
+    {
+      "word": "complex",
+      "choices": [
+        "simple",
+        "detailed",
+        "complicated",
+        "dense"
+      ],
+      "correct": 0
+    },
+    {
+      "word": "arrive",
+      "choices": [
+        "land",
+        "reach",
+        "depart",
+        "enter"
+      ],
+      "correct": 2
     }
   ],
   "minigame_homophones": [
     {
       "prompt": "_____ going to the store later.",
       "choices": [
+        "Thier",
         "Their",
         "They're",
-        "Thier",
         "There"
       ],
-      "correct": 1
+      "correct": 2
     },
     {
       "prompt": "Put the book over _____ on the shelf.",
       "choices": [
         "their",
         "thier",
-        "there",
-        "they're"
+        "they're",
+        "there"
       ],
-      "correct": 2
+      "correct": 3
     },
     {
       "prompt": "The dog wagged _____ tail happily.",
       "choices": [
         "its",
         "its'",
-        "it's",
-        "its's"
+        "its's",
+        "it's"
       ],
       "correct": 0
     },
@@ -1851,87 +1913,87 @@
       "prompt": "_____ a beautiful day outside!",
       "choices": [
         "Its'",
+        "It's",
         "Its",
-        "Its's",
-        "It's"
+        "Its's"
       ],
-      "correct": 3
+      "correct": 1
     },
     {
       "prompt": "I need _____ buy some groceries.",
       "choices": [
-        "tow",
+        "too",
         "to",
         "two",
-        "too"
+        "tow"
       ],
       "correct": 1
     },
     {
       "prompt": "She ate _____ many cookies.",
       "choices": [
-        "tow",
         "too",
+        "tow",
         "two",
         "to"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "prompt": "There were _____ birds on the fence.",
       "choices": [
-        "tow",
         "two",
+        "tow",
         "too",
         "to"
       ],
-      "correct": 1
+      "correct": 0
     },
     {
       "prompt": "The _____ soaked the town overnight.",
       "choices": [
-        "rein",
-        "reign",
+        "rain",
         "rane",
-        "rain"
+        "rein",
+        "reign"
       ],
-      "correct": 3
+      "correct": 0
     },
     {
       "prompt": "The king's _____ lasted for decades.",
       "choices": [
         "rane",
         "rein",
-        "reign",
-        "rain"
+        "rain",
+        "reign"
       ],
-      "correct": 2
+      "correct": 3
     },
     {
       "prompt": "Can you _____ the bell?",
       "choices": [
-        "hear",
-        "hare",
         "hair",
-        "here"
+        "here",
+        "hear",
+        "hare"
       ],
-      "correct": 0
+      "correct": 2
     },
     {
       "prompt": "Come over _____ right now!",
       "choices": [
-        "here",
         "hair",
         "hare",
-        "hear"
+        "hear",
+        "here"
       ],
-      "correct": 0
+      "correct": 3
     },
     {
       "prompt": "The _____ of the mountain was covered in snow.",
       "choices": [
-        "pique",
         "peck",
+        "pique",
         "peek",
         "peak"
       ],
@@ -1940,60 +2002,60 @@
     {
       "prompt": "She took a quick _____ through the window.",
       "choices": [
-        "peek",
         "peck",
-        "pique",
-        "peak"
-      ],
-      "correct": 0
-    },
-    {
-      "prompt": "A strong _____ blew the leaves across the yard.",
-      "choices": [
-        "whined",
-        "wind",
-        "wined",
-        "wand"
+        "peek",
+        "peak",
+        "pique"
       ],
       "correct": 1
     },
     {
+      "prompt": "A strong _____ blew the leaves across the yard.",
+      "choices": [
+        "wind",
+        "wined",
+        "whined",
+        "wand"
+      ],
+      "correct": 0
+    },
+    {
       "prompt": "He needed to _____ his watch.",
       "choices": [
+        "wind",
         "wined",
         "wond",
-        "wind",
         "whined"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "prompt": "She _____ the race by a wide margin.",
       "choices": [
-        "one",
+        "won",
         "wun",
-        "wan",
-        "won"
+        "one",
+        "wan"
       ],
-      "correct": 3
+      "correct": 0
     },
     {
       "prompt": "I have _____ dollar left.",
       "choices": [
-        "wan",
-        "won",
         "one",
-        "own"
+        "won",
+        "own",
+        "wan"
       ],
-      "correct": 2
+      "correct": 0
     },
     {
       "prompt": "Please _____ the door behind you.",
       "choices": [
         "close",
         "clothes",
-        "cloze",
-        "claws"
+        "claws",
+        "cloze"
       ],
       "correct": 0
     },
@@ -2001,37 +2063,37 @@
       "prompt": "The _____ you wear should be warm.",
       "choices": [
         "clothes",
+        "close",
         "claws",
-        "cloze",
-        "close"
+        "cloze"
       ],
       "correct": 0
     },
     {
       "prompt": "The cat cleaned its _____ with its tongue.",
       "choices": [
-        "pause",
-        "pores",
+        "paws",
         "pours",
-        "paws"
+        "pores",
+        "pause"
       ],
-      "correct": 3
+      "correct": 0
     },
     {
       "prompt": "Press _____ to continue the game.",
       "choices": [
-        "paws",
+        "pours",
         "pores",
-        "pause",
-        "pours"
+        "paws",
+        "pause"
       ],
-      "correct": 2
+      "correct": 3
     },
     {
       "prompt": "I can _____ the ocean from my window.",
       "choices": [
-        "cee",
         "si",
+        "cee",
         "see",
         "sea"
       ],
@@ -2040,8 +2102,8 @@
     {
       "prompt": "We sailed across the _____ at dawn.",
       "choices": [
-        "si",
         "cee",
+        "si",
         "sea",
         "see"
       ],
@@ -2052,38 +2114,58 @@
       "choices": [
         "right",
         "wright",
-        "rite",
-        "write"
+        "write",
+        "rite"
       ],
-      "correct": 3
+      "correct": 2
     },
     {
       "prompt": "Turn _____ at the next corner.",
       "choices": [
         "write",
         "rite",
-        "right",
-        "wright"
+        "wright",
+        "right"
       ],
-      "correct": 2
+      "correct": 3
     },
     {
       "prompt": "The _____ shone brightly after the storm.",
       "choices": [
+        "sin",
         "sun",
         "soon",
-        "son",
-        "sin"
+        "son"
       ],
-      "correct": 0
+      "correct": 1
     },
     {
       "prompt": "Their _____ just started high school.",
       "choices": [
         "son",
-        "sin",
+        "sun",
         "soon",
-        "sun"
+        "sin"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Don't _____ the soup until it cools.",
+      "choices": [
+        "poor",
+        "power",
+        "pour",
+        "pore"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "I need to _____ over the instructions carefully.",
+      "choices": [
+        "pore",
+        "pour",
+        "power",
+        "poor"
       ],
       "correct": 0
     }
