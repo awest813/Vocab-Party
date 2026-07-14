@@ -110,8 +110,8 @@ export class SetupScene extends Phaser.Scene {
     const lengthY = 268
     const lenPanel = this.add.container(w / 2, lengthY)
 
-    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, COLORS.bgPanelAlt, 0x223048, 360, 50)
-    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, COLORS.tealDeep, 0x146a62, 360, 50)
+    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, 0x3d8fff, 0x2a6fd4, 360, 50)
+    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, 0x2a3548, 0x223048, 360, 50)
     classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
     fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
     this.setFullMapMode(false, classicBtn, fullMapBtn)
@@ -143,7 +143,7 @@ export class SetupScene extends Phaser.Scene {
     }
     this.refreshRows()
  
-    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', COLORS.mint, 0x2aa866, 400, 64)
+    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', 0x2ad46a, 0x1fad55, 400, 64)
     this.startBtn.on('pointerdown', () => this.startGame())
 
     if (isAutoSimMode()) {
@@ -178,8 +178,14 @@ export class SetupScene extends Phaser.Scene {
 
   setFullMapMode(fullMap: boolean, classicBtn: Phaser.GameObjects.Container, fullMapBtn: Phaser.GameObjects.Container) {
     this.fullMapMode = fullMap
-    classicBtn.setAlpha(fullMap ? 0.55 : 1)
-    fullMapBtn.setAlpha(fullMap ? 1 : 0.55)
+    const setFill = (btn: Phaser.GameObjects.Container, color: number) => {
+      const fn = (btn as any).setFillColor as ((c: number) => void) | undefined
+      fn?.(color)
+    }
+    setFill(classicBtn, fullMap ? 0x2a3548 : 0x3d8fff)
+    setFill(fullMapBtn, fullMap ? 0x2ad46a : 0x2a3548)
+    classicBtn.setAlpha(1)
+    fullMapBtn.setAlpha(1)
   }
 
   buildRow(index: number, firstRowY: number, spacing: number = 88) {
@@ -194,16 +200,16 @@ export class SetupScene extends Phaser.Scene {
 
     // Color swatch
     const swatchColor = parseInt(PLAYER_COLORS[index].replace('#', ''), 16)
-    const swatch = this.add.rectangle(w / 2 - 240, rowY, 18, 18, swatchColor)
+    const swatch = this.add.rectangle(w / 2 - 320, rowY, 18, 18, swatchColor)
     swatch.setStrokeStyle(2, 0xffffff)
 
-    const label = this.add.text(w / 2 - 222, rowY, `${PLAYER_EMOJIS[index]} Player ${index + 1}`, {
+    const label = this.add.text(w / 2 - 300, rowY, `${PLAYER_EMOJIS[index]}  P${index + 1}`, {
       fontSize: '20px',
       fontFamily: FONT.display,
       color: PLAYER_COLORS[index],
     }).setOrigin(0, 0.5)
 
-    const cpuToggle = this.add.text(w / 2 - 88, rowY, '(CPU)', {
+    const cpuToggle = this.add.text(w / 2 - 160, rowY, 'Human', {
       fontSize: '15px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -265,8 +271,8 @@ export class SetupScene extends Phaser.Scene {
     if (!t) return
     const mode = this.cpuModeByRow[index]
     if (mode === 'off') {
-      t.setText('(CPU)')
-      t.setColor('#6699aa')
+      t.setText('Human')
+      t.setColor(hexColor(COLORS.mute))
     } else {
       t.setText(`CPU · ${CPU_LEVEL_LABEL[mode]}`)
       t.setColor(mode === 'hard' ? '#ffcc88' : '#88ddaa')

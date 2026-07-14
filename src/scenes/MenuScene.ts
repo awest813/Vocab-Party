@@ -49,15 +49,17 @@ export class MenuScene extends Phaser.Scene {
     const titleStroke = this.add.text(0, 0, 'VOCAB PARTY', {
       fontSize: '88px',
       fontFamily: FONT.display,
-      color: '#ffffff',
-      stroke: hexColor(COLORS.goldDeep),
-      strokeThickness: 14,
+      color: '#fff8e1',
+      stroke: '#000000',
+      strokeThickness: 16,
     }).setOrigin(0.5)
 
     const title = this.add.text(0, 0, 'VOCAB PARTY', {
       fontSize: '88px',
       fontFamily: FONT.display,
-      color: hexColor(COLORS.gold),
+      color: '#ffe566',
+      stroke: hexColor(COLORS.goldDeep),
+      strokeThickness: 6,
     }).setOrigin(0.5)
 
     titleContainer.add([titleStroke, title])
@@ -87,10 +89,10 @@ export class MenuScene extends Phaser.Scene {
       repeat: -1,
     })
 
-    const startBtn = createButton(this, w / 2, 390, '▶  ENTER PARTY', COLORS.mint, 0x2aa866, 400, 72)
+    const startBtn = createButton(this, w / 2, 390, '▶  ENTER PARTY', 0x2ad46a, 0x1fad55, 400, 72)
     startBtn.on('pointerdown', () => this.goSetup())
 
-    const howBtn = createButton(this, w / 2, 478, 'HOW TO PLAY', COLORS.skyDeep, 0x1e5a96, 360, 56)
+    const howBtn = createButton(this, w / 2, 478, 'HOW TO PLAY', 0x3d8fff, 0x2a6fd4, 360, 56)
     howBtn.on('pointerdown', () => this.showHowToPlay())
 
     if (isAutoSimMode()) {

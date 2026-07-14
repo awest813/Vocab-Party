@@ -39,19 +39,19 @@ export function createButton(
     g.fillRoundedRect(-width / 2 + 2, -height / 2 + bevel + 2, width, faceH, radius)
 
     const bevelCol = Phaser.Display.Color.IntegerToColor(fill)
-    bevelCol.darken(28)
+    bevelCol.darken(18)
     g.fillStyle(bevelCol.color, 1)
     g.fillRoundedRect(-width / 2, -height / 2 + yOff + (pressed ? 0 : bevel * 0.35), width, faceH + bevel * 0.65, radius)
 
-    g.fillStyle(fill, 0.95)
+    g.fillStyle(fill, 1)
     g.fillRoundedRect(-width / 2, -height / 2 + yOff, width, faceH, radius)
 
-    g.fillStyle(0xffffff, 0.14)
+    g.fillStyle(0xffffff, 0.22)
     g.fillRoundedRect(-width / 2 + 5, -height / 2 + yOff + 3, width - 10, faceH * 0.38, {
       tl: radius - 2, tr: radius - 2, bl: 4, br: 4,
     })
 
-    g.lineStyle(2, 0xffffff, 0.28)
+    g.lineStyle(2.5, 0xffffff, 0.45)
     g.strokeRoundedRect(-width / 2 + 1, -height / 2 + yOff + 1, width - 2, faceH - 2, radius)
   }
 
@@ -64,8 +64,8 @@ export function createButton(
     fontSize: height >= 64 ? '24px' : height >= 52 ? '20px' : '18px',
     fontFamily: FONT.display,
     color: '#ffffff',
-    stroke: '#000000',
-    strokeThickness: 4,
+    stroke: '#0a1020',
+    strokeThickness: 3,
   }).setOrigin(0.5)
 
   container.add([g, hit, text])
