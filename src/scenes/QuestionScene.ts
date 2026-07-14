@@ -4,6 +4,8 @@ import { showConfetti } from '../ui/Confetti'
 import type { GameState } from '../systems/GameState'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 interface QuestionData {
   question: string
@@ -99,7 +101,7 @@ export class QuestionScene extends Phaser.Scene {
     }).setOrigin(0.5)
 
     // Keyboard hint
-    this.add.text(w / 2, h / 2 - 140, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h / 2 - 140, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px',
       fontFamily: 'Fredoka, Arial',
       color: '#667788'
@@ -265,8 +267,9 @@ export class QuestionScene extends Phaser.Scene {
     const h = this.scale.height
 
     if (correct) {
+      Sfx.correct()
       showConfetti(this)
-      this.cameras.main.flash(400, 100, 255, 100)
+      if (!shouldReduceMotion()) this.cameras.main.flash(400, 100, 255, 100)
 
       if (speedSurge) {
         // Speed surge particle burst
@@ -310,8 +313,11 @@ export class QuestionScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(201)
       })
     } else {
-      this.cameras.main.shake(300, 0.01)
-      this.cameras.main.flash(300, 255, 0, 0, true)
+      Sfx.wrong()
+      if (!shouldReduceMotion()) {
+        this.cameras.main.shake(300, 0.01)
+        this.cameras.main.flash(300, 255, 0, 0, true)
+      }
       
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 140, 0xff0000, 0.6)

@@ -5,6 +5,8 @@ import { createButton } from '../ui/Button'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 import { scaleAutoSimDelay } from '../systems/gameFlags'
+import { Sfx } from '../systems/Sfx'
+import { isTouchPreferred } from '../systems/GameSettings'
 
 interface MinigameSceneData {
   state: GameState
@@ -278,7 +280,7 @@ export class MinigameScene extends Phaser.Scene {
         this.clearChoiceKeys()
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 100, `✅ CORRECT! "${q.word}" wins!`, {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -286,7 +288,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong! Try again...', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -311,7 +313,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn)
     })
 
-    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 68, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
@@ -371,7 +373,7 @@ export class MinigameScene extends Phaser.Scene {
         this.clearChoiceKeys()
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 80, '✅ PERFECT PUNCTUATION!', {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -379,7 +381,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Comma Crisis!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -400,7 +402,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn)
     })
 
-    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 48, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa8866'
     }).setOrigin(0.5)
 
@@ -467,7 +469,7 @@ export class MinigameScene extends Phaser.Scene {
         this.clearChoiceKeys()
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 80, `✅ Correct! It's a ${choice}!`, {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -475,7 +477,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 80, '❌ Wrong Part of Speech!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -499,7 +501,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn, q.choices[ci])
     })
 
-    this.add.text(w / 2, h - 48, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 48, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#aa88cc'
     }).setOrigin(0.5)
 
@@ -558,7 +560,7 @@ export class MinigameScene extends Phaser.Scene {
         this.clearChoiceKeys()
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 100, `✅ Great match — "${choice}"!`, {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -566,7 +568,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Not quite — try another!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -591,7 +593,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn, q.choices[ci])
     })
 
-    this.add.text(w / 2, h - 68, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 68, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
@@ -651,7 +653,7 @@ export class MinigameScene extends Phaser.Scene {
         this.clearChoiceKeys()
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 78, '✅ Perfect grammar!', {
           fontSize: '32px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -659,7 +661,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const btnBg = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (btnBg) btnBg.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 78, '❌ That sentence needs work!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -680,7 +682,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn)
     })
 
-    this.add.text(w / 2, h - 46, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 46, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#66aa99'
     }).setOrigin(0.5)
 
@@ -732,7 +734,7 @@ export class MinigameScene extends Phaser.Scene {
       if (correct) {
         const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (bg2) bg2.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Opposites attract!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -740,7 +742,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (bg2) bg2.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong! Try again!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -765,7 +767,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn)
     })
 
-    this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 55, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 
@@ -817,7 +819,7 @@ export class MinigameScene extends Phaser.Scene {
       if (correct) {
         const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (bg2) bg2.setFillStyle(0x44aa44)
-        showConfetti(this)
+        Sfx.correct(); showConfetti(this)
         this.add.text(w / 2, h - 100, '✅ CORRECT! Perfect homophone!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 5
         }).setOrigin(0.5)
@@ -825,7 +827,7 @@ export class MinigameScene extends Phaser.Scene {
       } else {
         const bg2 = btn.getAt(0) as Phaser.GameObjects.Rectangle
         if (bg2) bg2.setFillStyle(0xaa2222)
-        this.cameras.main.shake(200, 0.008)
+        Sfx.wrong(); this.cameras.main.shake(200, 0.008)
         this.add.text(w / 2, h - 100, '❌ Wrong homophone! Try again!', {
           fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444'
         }).setOrigin(0.5)
@@ -850,7 +852,7 @@ export class MinigameScene extends Phaser.Scene {
       if (btn) onChoice(ci, btn)
     })
 
-    this.add.text(w / 2, h - 55, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h - 55, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px', fontFamily: 'Fredoka, Arial', color: '#6688aa'
     }).setOrigin(0.5)
 

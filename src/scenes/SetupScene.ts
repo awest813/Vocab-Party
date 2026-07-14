@@ -4,6 +4,8 @@ import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode } from '../systems/gameFlags'
+import { isTouchPreferred } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 const MAX_PLAYERS = 4
 const MIN_PLAYERS = 1
@@ -59,6 +61,7 @@ export class SetupScene extends Phaser.Scene {
     // Back button
     const backBtn = createButton(this, 100, 50, '← MENU', 0x334466, 0x223355, 140, 48)
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
+    Sfx.startMusic()
 
     // Glassmorphic Header Panel
     const headerPanel = this.add.container(w / 2, 80)
@@ -101,10 +104,14 @@ export class SetupScene extends Phaser.Scene {
     lenPanel.add([classicBtn, fullMapBtn])
 
     // Name rows header
-    this.add.text(w / 2, 318, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
+    this.add.text(w / 2, 318, isTouchPreferred(this.sys.game)
+      ? 'Tap a name to edit  ·  Tap HUMAN/CPU to cycle  ·  Tap START'
+      : 'Click name to type  ·  Tab to cycle  ·  Click HUMAN/CPU  ·  Enter to start', {
       fontSize: '15px',
       fontFamily: 'Fredoka, Arial',
-      color: '#667788'
+      color: '#667788',
+      align: 'center',
+      wordWrap: { width: 1000 },
     }).setOrigin(0.5)
 
     this.rows = []

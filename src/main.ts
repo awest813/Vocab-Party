@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { initGameFlagsFromLocation } from './systems/gameFlags'
+import { installAudioUnlock, Sfx } from './systems/Sfx'
 import { BootScene } from './scenes/BootScene'
 import { PreloadScene } from './scenes/PreloadScene'
 import { MenuScene } from './scenes/MenuScene'
@@ -23,15 +24,33 @@ const config: Phaser.Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: 1280,
     height: 720,
-    expandParent: true
+    expandParent: true,
+  },
+  audio: {
+    disableWebAudio: false,
+  },
+  input: {
+    activePointers: 3,
   },
   physics: {
     default: 'arcade',
-    arcade: { gravity: { x: 0, y: 0 }, debug: false }
+    arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene]
+  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene],
 }
 
 initGameFlagsFromLocation()
+installAudioUnlock()
 
-new Phaser.Game(config)
+const game = new Phaser.Game(config)
+
+// Keep canvas sharp on resize / orientation changes (FIT already handles layout).
+window.addEventListener('orientationchange', () => {
+  window.setTimeout(() => game.scale.refresh(), 120)
+})
+window.addEventListener('resize', () => {
+  game.scale.refresh()
+})
+
+// Warm SFX graph lazily; music starts from MenuScene.
+void Sfx

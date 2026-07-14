@@ -11,6 +11,8 @@ import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import type { QuestionResolution } from './QuestionScene'
 import type { BattleResult } from './BattleScene'
@@ -160,20 +162,25 @@ export class BoardScene extends Phaser.Scene {
     this.hud = new PlayerHUD(this, this.state)
     this.createPauseButton()
     this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
+    Sfx.startMusic()
+
+    const touch = isTouchPreferred(this.sys.game)
 
     // Bottom control panel
     this.add.rectangle(w / 2, h - 56, w, 112, 0x12122a).setOrigin(0.5, 0.5)
     this.add.rectangle(w / 2, h - 112, w, 2, 0x334466).setOrigin(0.5, 0.5)
 
-    this.statusText = this.add.text(w / 2 - 160, h - 56, '', {
-      fontSize: '20px',
+    this.statusText = this.add.text(w / 2 - 170, h - 68, '', {
+      fontSize: '18px',
       fontFamily: 'Fredoka, Arial Black, Arial',
       color: '#ffffff',
       stroke: '#000033',
-      strokeThickness: 4
+      strokeThickness: 4,
+      wordWrap: { width: 420 },
+      align: 'center',
     }).setOrigin(0.5)
 
-    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52)
+    this.diceSprite = this.add.image(w / 2 + 70, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52)
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
@@ -183,11 +190,19 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(1, 0)
 
-    this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
+    this.rollBtn = createButton(this, w - 118, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 196, 64)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
-    this.itemBtn = createButton(this, w - 300, h - 56, '🎒 ITEMS', 0x44ccff, 0x0088cc, 160, 56)
+    this.itemBtn = createButton(this, w - 330, h - 56, '🎒 ITEMS', 0x44ccff, 0x0088cc, 176, 64)
     this.itemBtn.on('pointerdown', () => this.toggleItemMenu())
+
+    this.add.text(24, h - 28, touch
+      ? 'Tap ROLL · Tap tile to inspect · ⏸️ pause'
+      : 'Space / R = Roll · Esc = Pause · Hover or tap tiles', {
+      fontSize: '13px',
+      fontFamily: 'Fredoka, Arial',
+      color: '#667799',
+    }).setOrigin(0, 0.5)
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
@@ -318,12 +333,11 @@ export class BoardScene extends Phaser.Scene {
       })
 
       img.on('pointerover', () => {
-        img.setAlpha(0.8)
-        img.setScale(img.displayWidth / img.width * 1.1, img.displayHeight / img.height * 1.1)
+        img.setAlpha(0.85)
         this.tweens.add({
           targets: img,
-          scaleX: img.displayWidth / img.width * 1.12,
-          scaleY: img.displayHeight / img.height * 1.12,
+          scaleX: (TILE_SIZE - 4) / img.width * 1.1,
+          scaleY: (TILE_SIZE - 4) / img.height * 1.1,
           duration: 100,
           ease: 'Sine.easeOut'
         })
@@ -331,7 +345,6 @@ export class BoardScene extends Phaser.Scene {
       })
       img.on('pointerout', () => {
         img.setAlpha(1)
-        img.setScale(img.displayWidth / img.width, img.displayHeight / img.height)
         this.tweens.add({
           targets: img,
           scaleX: (TILE_SIZE - 4) / img.width,
@@ -339,7 +352,11 @@ export class BoardScene extends Phaser.Scene {
           duration: 100,
           ease: 'Sine.easeOut'
         })
-        this.tileHintText?.setText('Hover a tile to inspect its effect.')
+        this.tileHintText?.setText(this.tileInspectHint())
+      })
+      img.on('pointerdown', () => {
+        this.tileHintText?.setText(this.describeTile(i, type))
+        Sfx.uiHover()
       })
 
       const label = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1).setScale(0)
@@ -387,11 +404,17 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(3)
 
-    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
+    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, this.tileInspectHint(), {
       fontSize: '14px',
       fontFamily: 'Fredoka, Arial',
       color: '#bbd7ff'
     }).setOrigin(0.5, 0).setDepth(3)
+  }
+
+  private tileInspectHint() {
+    return isTouchPreferred(this.sys.game)
+      ? 'Tap a tile to inspect its effect.'
+      : 'Hover or tap a tile to inspect its effect.'
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
@@ -541,6 +564,7 @@ export class BoardScene extends Phaser.Scene {
     }
 
     this.rolling = true
+    Sfx.roll()
     this.rollBtn.setAlpha(0.5)
     this.itemBtn.setAlpha(0.5)
     this.closeItemMenu()
@@ -572,7 +596,7 @@ export class BoardScene extends Phaser.Scene {
           this.time.delayedCall(100, () => spark.destroy())
         }
 
-        this.cameras.main.shake(50, 0.003)
+        this.cameras.main.shake(50, shouldReduceMotion() ? 0 : 0.003)
       }
     })
 
@@ -633,6 +657,7 @@ export class BoardScene extends Phaser.Scene {
       player.position = chosenNextId
       if (prev > 0 && player.position === 0) {
         player.coins += 5
+        Sfx.coin()
         this.showFloatyText(player, '+5 Lap Coins!', '#ffcc66')
       }
       const {x, y} = this.getTileXY(player.position)
@@ -951,6 +976,9 @@ export class BoardScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(20)
     if (msg.includes('+')) {
       playCoinBurst(this, tokenPos.x, tokenPos.y - 8)
+      if (msg.includes('🪙') || msg.toLowerCase().includes('coin') || msg.includes('+5') || msg.includes('+3') || msg.includes('+2') || msg.includes('+4') || msg.includes('+10')) {
+        Sfx.coin()
+      }
     }
     this.tweens.add({
       targets: txt,
@@ -1090,6 +1118,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private starPurchaseSplash(player: Player) {
+    Sfx.star()
     const w = this.scale.width
     const h = this.scale.height
     const container = this.add.container(w / 2, h / 2).setDepth(300)
@@ -1408,12 +1437,13 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private createPauseButton() {
-    const btn = createButton(this, 50, 50, '⏸️', 0x223344, 0x334455, 60, 60)
+    const btn = createButton(this, 56, 52, '⏸️', 0x223344, 0x334455, 72, 64)
     btn.on('pointerdown', () => this.pauseGame())
   }
 
   private pauseGame() {
     if (this.scene.isActive('PauseScene')) return
+    Sfx.pause()
     this.scene.pause()
     this.scene.launch('PauseScene')
   }

@@ -5,6 +5,7 @@ import { showConfetti } from '../ui/Confetti'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { Sfx } from '../systems/Sfx'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -192,6 +193,7 @@ export class ResultsScene extends Phaser.Scene {
     })
 
     this.time.delayedCall(this.d(1200), () => {
+      Sfx.win()
       showConfetti(this)
       const banner = this.add.text(w / 2, 130, `🎉 ${sorted[0].name} WINS! 🎉`, {
         fontSize: '38px',
@@ -232,6 +234,13 @@ export class ResultsScene extends Phaser.Scene {
     menuBtn.on('pointerdown', () => {
       this.cameras.main.flash(300, 255, 255, 255)
       this.time.delayedCall(300, () => this.scene.start('MenuScene'))
+    })
+
+    this.input.keyboard?.on('keydown-ENTER', () => {
+      this.scene.start('SetupScene')
+    })
+    this.input.keyboard?.on('keydown-ESC', () => {
+      this.scene.start('MenuScene')
     })
   }
 

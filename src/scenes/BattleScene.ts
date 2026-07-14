@@ -4,6 +4,8 @@ import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { cpuBattleChoice } from '../systems/CpuPolicy'
+import { Sfx } from '../systems/Sfx'
+import { shouldReduceMotion } from '../systems/GameSettings'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 interface BattleSceneData {
@@ -67,11 +69,12 @@ export class BattleScene extends Phaser.Scene {
     }).setOrigin(0.5).setAlpha(0)
 
     vsContainer.add([vsBg, vsText, atkLabel, defLabel])
+    Sfx.battle()
     this.tweens.add({ targets: vsBg, alpha: 1, duration: 150 })
     this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: 500, ease: 'Back.easeOut' })
     this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: 400, delay: 300 })
     this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: 400, delay: 400 })
-    this.cameras.main.flash(400, 255, 0, 0, true)
+    if (!shouldReduceMotion()) this.cameras.main.flash(400, 255, 0, 0, true)
 
     this.time.delayedCall(1500, () => {
       this.tweens.add({ targets: vsContainer, alpha: 0, duration: 300,
@@ -168,8 +171,8 @@ export class BattleScene extends Phaser.Scene {
       const by = this.scale.height / 2 + 160
       const bx = w / 2 + 250
 
-      this.add.text(bx, by - 50, 'Choose quickly!', {
-        fontSize: '16px', fontFamily: 'Fredoka, Arial', color: '#ffcc44'
+      this.add.text(bx, by - 52, 'Choose quickly!  ·  1 Defend · 2 Evade', {
+        fontSize: '15px', fontFamily: 'Fredoka, Arial', color: '#ffcc44'
       }).setOrigin(0.5).setName('timerLabel')
 
       // Timer bar
@@ -185,6 +188,7 @@ export class BattleScene extends Phaser.Scene {
       this.defenderTimerEvent = this.time.delayedCall(this.d(8000), () => {
         if (!this.choiceMade) {
           this.choiceMade = true
+          this.input.keyboard?.off('keydown', onKey)
           defBtn?.destroy()
           evaBtn?.destroy()
           this.statusText.setText('⏱️ Time ran out! Auto-defending!')
@@ -192,8 +196,8 @@ export class BattleScene extends Phaser.Scene {
         }
       })
 
-      const defBtn = createButton(this, bx - 70, by, '🛡️ DEFEND', 0x4444ff, 0x000088, 140, 50)
-      const evaBtn = createButton(this, bx + 70, by, '💨 EVADE', 0x44ff44, 0x008800, 140, 50)
+      const defBtn = createButton(this, bx - 80, by, '🛡️ DEFEND', 0x4444ff, 0x000088, 150, 56)
+      const evaBtn = createButton(this, bx + 80, by, '💨 EVADE', 0x44ff44, 0x008800, 150, 56)
 
       const pick = (choice: 'defend' | 'evade') => {
         if (this.choiceMade) return
@@ -201,9 +205,16 @@ export class BattleScene extends Phaser.Scene {
         this.defenderTimerEvent?.remove()
         this.tweens.killTweensOf(this.defenderTimerBar)
         this.defenderTimerBar?.destroy()
+        this.input.keyboard?.off('keydown', onKey)
         defBtn.destroy(); evaBtn.destroy()
         this.resolveDefender(choice)
       }
+
+      const onKey = (ev: KeyboardEvent) => {
+        if (ev.code === 'Digit1' || ev.code === 'KeyA' || ev.code === 'Numpad1') pick('defend')
+        if (ev.code === 'Digit2' || ev.code === 'KeyB' || ev.code === 'Numpad2') pick('evade')
+      }
+      this.input.keyboard?.on('keydown', onKey)
 
       defBtn.on('pointerdown', () => pick('defend'))
       evaBtn.on('pointerdown', () => pick('evade'))
