@@ -1,5 +1,8 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
+import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
+import { paintStage } from '../ui/Panel'
+import { COLORS, FONT, PLAYER_HEX, hexColor } from '../ui/Theme'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
@@ -10,7 +13,7 @@ const MIN_PLAYERS = 1
 
 const DEFAULT_NAMES = ['Alex', 'Blake', 'Casey', 'Dana']
 const PLAYER_EMOJIS = ['🔴', '🔵', '🟢', '🟡']
-const PLAYER_COLORS = ['#ff6666', '#6688ff', '#66dd66', '#ffdd44']
+const PLAYER_COLORS = [...PLAYER_HEX]
 
 interface InputRow {
   label: Phaser.GameObjects.Text
@@ -49,62 +52,75 @@ export class SetupScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    // Cinematic Backdrop
-    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
-    const ambient = this.add.graphics()
-    ambient.fillGradientStyle(0x1a1a3a, 0x1a1a3a, 0x050510, 0x050510, 0.4)
-    ambient.fillRect(0, 0, w, h)
-    this.createStars()
+    paintStage(this)
+    addStarfieldBackdrop(this, 0.4)
+    addAmbientMotes(this, 18)
 
-    // Back button
-    const backBtn = createButton(this, 100, 50, '← MENU', 0x334466, 0x223355, 140, 48)
+    const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, 0x223048, 140, 48)
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
 
-    // Glassmorphic Header Panel
-    const headerPanel = this.add.container(w / 2, 80)
-    const hBg = this.add.rectangle(0, 0, 1100, 100, 0x0a1528, 0.7)
-    hBg.setStrokeStyle(2, 0x4488ff, 0.3)
-    const titleText = this.add.text(0, -10, '🚀 EXPEDITION SETUP', {
-      fontSize: '48px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#4488ff', strokeThickness: 8
+    const headerPanel = this.add.container(w / 2, 78)
+    const hBg = this.add.graphics()
+    hBg.fillStyle(COLORS.bgPanel, 0.78)
+    hBg.fillRoundedRect(-420, -42, 840, 84, 16)
+    hBg.lineStyle(2, COLORS.sky, 0.35)
+    hBg.strokeRoundedRect(-420, -42, 840, 84, 16)
+    const titleText = this.add.text(0, -4, 'PARTY SETUP', {
+      fontSize: '44px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+      stroke: hexColor(COLORS.skyDeep),
+      strokeThickness: 7,
     }).setOrigin(0.5)
-    headerPanel.add([hBg, titleText])
+    const subtitle = this.add.text(0, 28, 'Choose players, length, and difficulty', {
+      fontSize: '14px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0.5)
+    headerPanel.add([hBg, titleText, subtitle])
 
-    // Player Count Console
-    const countY = 180
+    const countY = 176
     const countPanel = this.add.container(w / 2, countY)
-    const cpBg = this.add.rectangle(0, 0, 400, 80, 0x1a2a4a, 0.8)
-    cpBg.setStrokeStyle(3, 0xffd700, 0.5)
-    
-    const countLabel = this.add.text(0, -25, 'PLAYER COUNT', { fontSize: '14px', fontFamily: 'Fredoka, Arial Black', color: '#ffd700' }).setOrigin(0.5)
-    
-    this.minusBtn = createButton(this, -120, 10, '−', 0x554488, 0x332266, 60, 44)
-    this.minusBtn.on('pointerdown', () => this.changeCount(-1))
- 
-    this.countText = this.add.text(0, 10, String(this.playerCount), {
-      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff'
+    const cpBg = this.add.graphics()
+    cpBg.fillStyle(COLORS.bgPanelAlt, 0.9)
+    cpBg.fillRoundedRect(-210, -38, 420, 76, 14)
+    cpBg.lineStyle(2.5, COLORS.gold, 0.5)
+    cpBg.strokeRoundedRect(-210, -38, 420, 76, 14)
+
+    const countLabel = this.add.text(0, -22, 'PLAYER COUNT', {
+      fontSize: '13px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
     }).setOrigin(0.5)
- 
-    this.plusBtn = createButton(this, 120, 10, '+', 0x554488, 0x332266, 60, 44)
+
+    this.minusBtn = createButton(this, -120, 12, '−', COLORS.skyDeep, 0x1e5a96, 60, 44)
+    this.minusBtn.on('pointerdown', () => this.changeCount(-1))
+
+    this.countText = this.add.text(0, 12, String(this.playerCount), {
+      fontSize: '40px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+    }).setOrigin(0.5)
+
+    this.plusBtn = createButton(this, 120, 12, '+', COLORS.skyDeep, 0x1e5a96, 60, 44)
     this.plusBtn.on('pointerdown', () => this.changeCount(1))
-    
+
     countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
 
-    // Game Length Console
-    const lengthY = 275
+    const lengthY = 268
     const lenPanel = this.add.container(w / 2, lengthY)
-    
-    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, 0x334466, 0x223355, 360, 50)
-    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, 0x2a5533, 0x1a4422, 360, 50)
+
+    const classicBtn = createButton(this, -200, 0, `CLASSIC · ${CLASSIC_ROUNDS} ROUNDS`, COLORS.bgPanelAlt, 0x223048, 360, 50)
+    const fullMapBtn = createButton(this, 200, 0, `FULL MAP · ${BOARD_PATH_LENGTH} ROUNDS`, COLORS.tealDeep, 0x146a62, 360, 50)
     classicBtn.on('pointerdown', () => this.setFullMapMode(false, classicBtn, fullMapBtn))
     fullMapBtn.on('pointerdown', () => this.setFullMapMode(true, classicBtn, fullMapBtn))
     this.setFullMapMode(false, classicBtn, fullMapBtn)
     lenPanel.add([classicBtn, fullMapBtn])
 
-    // Name rows header
-    this.add.text(w / 2, 318, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
-      fontSize: '15px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#667788'
+    this.add.text(w / 2, 312, 'Click to type · Tab/Enter to cycle · CPU: click to cycle · Enter to start · Esc to back', {
+      fontSize: '14px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
     this.rows = []
@@ -127,8 +143,7 @@ export class SetupScene extends Phaser.Scene {
     }
     this.refreshRows()
  
-    // Start Button
-    this.startBtn = createButton(this, w / 2, h - 80, '🚀 COMMENCE EXPEDITION', 0x22bb55, 0x1a8844, 420, 64)
+    this.startBtn = createButton(this, w / 2, h - 72, 'START PARTY', COLORS.mint, 0x2aa866, 400, 64)
     this.startBtn.on('pointerdown', () => this.startGame())
 
     if (isAutoSimMode()) {
@@ -141,23 +156,17 @@ export class SetupScene extends Phaser.Scene {
       this.time.delayedCall(80, () => this.startGameWithRounds(5))
     }
 
-    // Keyboard input
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))
-
-    // Enter to start, Escape to go back
     this.input.keyboard?.on('keydown-ENTER', () => { if (this.activeRow < 0) this.startGame() })
-    // Enter to start, Escape to deselect or go back
     this.input.keyboard?.on('keydown-ESC', () => {
       if (this.activeRow >= 0) this.setActiveRow(-1)
       else this.scene.start('MenuScene')
     })
 
-    // Tap away to deselect
     this.input.on('pointerdown', (_ptr: Phaser.Input.Pointer, objs: Phaser.GameObjects.GameObject[]) => {
       if (objs.length === 0) this.setActiveRow(-1)
     })
 
-    // Cleanup on shutdown
     this.events.once('shutdown', () => {
       this.input.keyboard?.off('keydown')
       this.input.keyboard?.off('keydown-ENTER')
@@ -165,26 +174,6 @@ export class SetupScene extends Phaser.Scene {
       this.cursorTimers.forEach(t => t.destroy())
       this.cursorTimers = []
     })
-  }
-
-  createStars() {
-    const w = this.scale.width
-    const h = this.scale.height
-    for (let i = 0; i < 50; i++) {
-      const x = Phaser.Math.Between(0, w)
-      const y = Phaser.Math.Between(0, h)
-      const size = Phaser.Math.FloatBetween(0.8, 2.5)
-      const star = this.add.circle(x, y, size, 0xffffff, Phaser.Math.FloatBetween(0.15, 0.7))
-      this.tweens.add({
-        targets: star,
-        alpha: Phaser.Math.FloatBetween(0.05, 0.25),
-        duration: Phaser.Math.Between(900, 3000),
-        yoyo: true,
-        repeat: -1,
-        delay: Phaser.Math.Between(0, 2000),
-        ease: 'Sine.easeInOut'
-      })
-    }
   }
 
   setFullMapMode(fullMap: boolean, classicBtn: Phaser.GameObjects.Container, fullMapBtn: Phaser.GameObjects.Container) {
@@ -208,17 +197,16 @@ export class SetupScene extends Phaser.Scene {
     const swatch = this.add.rectangle(w / 2 - 240, rowY, 18, 18, swatchColor)
     swatch.setStrokeStyle(2, 0xffffff)
 
-    // Player label
     const label = this.add.text(w / 2 - 222, rowY, `${PLAYER_EMOJIS[index]} Player ${index + 1}`, {
       fontSize: '20px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: PLAYER_COLORS[index]
+      fontFamily: FONT.display,
+      color: PLAYER_COLORS[index],
     }).setOrigin(0, 0.5)
 
     const cpuToggle = this.add.text(w / 2 - 88, rowY, '(CPU)', {
       fontSize: '15px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#6699aa'
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
     cpuToggle.on('pointerdown', () => {
       if (index >= this.playerCount) return
@@ -231,24 +219,21 @@ export class SetupScene extends Phaser.Scene {
     })
     this.cpuToggleTexts.push(cpuToggle)
 
-    // Input background
-    const bg = this.add.rectangle(inputX, rowY, inputW, inputH, 0x181830)
-    bg.setStrokeStyle(2, 0x334466)
+    const bg = this.add.rectangle(inputX, rowY, inputW, inputH, COLORS.bgPanel)
+    bg.setStrokeStyle(2, 0x3a4f6a)
     bg.setInteractive()
     bg.on('pointerdown', () => this.setActiveRow(index))
 
-    // Name display text
     const nameText = this.add.text(inputX - inputW / 2 + 14, rowY, DEFAULT_NAMES[index], {
       fontSize: '22px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#ffffff'
+      fontFamily: FONT.body,
+      color: '#ffffff',
     }).setOrigin(0, 0.5)
 
-    // Cursor
     const cursor = this.add.text(inputX - inputW / 2 + 14, rowY, '', {
       fontSize: '22px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#88aaff'
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.sky),
     }).setOrigin(0, 0.5).setVisible(false)
 
     container.add([swatch, label, cpuToggle, bg, nameText, cursor])
@@ -321,8 +306,8 @@ export class SetupScene extends Phaser.Scene {
     this.rows.forEach((row, i) => {
       const isActive = i === index && i < this.playerCount
       row.active = isActive
-      row.bg.setStrokeStyle(2, isActive ? 0x88aaff : 0x334466)
-      row.bg.setFillStyle(isActive ? 0x1e2248 : 0x181830)
+      row.bg.setStrokeStyle(2, isActive ? COLORS.sky : 0x3a4f6a)
+      row.bg.setFillStyle(isActive ? COLORS.bgPanelAlt : COLORS.bgPanel)
       if (!isActive) row.cursor.setVisible(false)
     })
   }

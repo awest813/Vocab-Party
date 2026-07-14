@@ -14,7 +14,7 @@ import { PauseScene } from './scenes/PauseScene'
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
-  backgroundColor: '#1a1a2e',
+  backgroundColor: '#070b14',
   scale: {
     // FIT scales the 1280x720 design surface uniformly to fit any window aspect ratio,
     // letterboxing on non-16:9. Game logic always uses 1280x720 internally so menus

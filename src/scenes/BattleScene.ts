@@ -44,8 +44,8 @@ export class BattleScene extends Phaser.Scene {
     const h = this.scale.height
 
     // Backdrop
-    this.add.rectangle(0, 0, w, h, 0x000000, 0.85).setOrigin(0)
-    this.add.rectangle(w / 2, h / 2, w, 300, 0x330000, 0.6).setOrigin(0.5)
+    this.add.rectangle(0, 0, w, h, 0x070b14, 0.88).setOrigin(0)
+    this.add.rectangle(w / 2, h / 2, w, 300, 0x3a1218, 0.55).setOrigin(0.5)
 
     const attacker = data.state.players[data.attackerIndex]
     const defender = data.state.players[data.defenderIndex]
@@ -53,8 +53,8 @@ export class BattleScene extends Phaser.Scene {
     // VS Splash
     const vsContainer = this.add.container(w / 2, h / 2).setDepth(100)
     const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
-    const vsText = this.add.text(0, -20, '⚔️ VS ⚔️', {
-      fontSize: '100px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444',
+    const vsText = this.add.text(0, -20, 'VS', {
+      fontSize: '100px', fontFamily: 'Fredoka, Arial Black', color: '#ff6b6b',
       stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setScale(3).setAlpha(0)
 

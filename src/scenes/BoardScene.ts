@@ -6,7 +6,9 @@ import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/Board
 import { createButton } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
-import { addStarfieldBackdrop } from '../ui/Starfield'
+import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
+import { paintStage } from '../ui/Panel'
+import { COLORS, DEPTH, FONT, hexColor } from '../ui/Theme'
 import { playCoinBurst } from '../ui/CoinBurst'
 import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
 import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
@@ -45,7 +47,7 @@ const SHOP_RENT_COINS = 3
 const SHOP_OWNER_INCOME = 2
 const SHOP_PORTFOLIO_RENT_STEP = 2
 
-const PLAYER_COLORS = [0xff4444, 0x4488ff, 0x44dd44, 0xffcc00]
+const PLAYER_COLORS = [...COLORS.player]
 const SHOP_PORTFOLIO_INCOME_STEP = 1
 const BRICKS_FOR_BUILD_BONUS = 4
 const BUILD_BONUS_SCORE = 6
@@ -162,31 +164,38 @@ export class BoardScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
 
     // Bottom control panel
-    this.add.rectangle(w / 2, h - 56, w, 112, 0x12122a).setOrigin(0.5, 0.5)
-    this.add.rectangle(w / 2, h - 112, w, 2, 0x334466).setOrigin(0.5, 0.5)
+    const chrome = this.add.graphics().setDepth(DEPTH.chrome - 5)
+    chrome.fillStyle(COLORS.bgPanel, 0.94)
+    chrome.fillRect(0, h - 108, w, 108)
+    chrome.fillStyle(COLORS.teal, 0.35)
+    chrome.fillRect(0, h - 110, w, 3)
+    chrome.fillStyle(0x000000, 0.25)
+    chrome.fillRect(0, h - 108, w, 4)
 
     this.statusText = this.add.text(w / 2 - 160, h - 56, '', {
       fontSize: '20px',
-      fontFamily: 'Fredoka, Arial Black, Arial',
+      fontFamily: FONT.display,
       color: '#ffffff',
       stroke: '#000033',
-      strokeThickness: 4
-    }).setOrigin(0.5)
+      strokeThickness: 4,
+    }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
-    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52)
+    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52).setDepth(DEPTH.chrome)
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#aaddff',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.sky),
       stroke: '#000033',
-      strokeThickness: 4
-    }).setOrigin(1, 0)
+      strokeThickness: 4,
+    }).setOrigin(1, 0).setDepth(DEPTH.hud)
 
-    this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
+    this.rollBtn = createButton(this, w - 110, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 180, 56)
+    this.rollBtn.setDepth(DEPTH.chrome)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
-    this.itemBtn = createButton(this, w - 300, h - 56, '🎒 ITEMS', 0x44ccff, 0x0088cc, 160, 56)
+    this.itemBtn = createButton(this, w - 300, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 160, 56)
+    this.itemBtn.setDepth(DEPTH.chrome)
     this.itemBtn.on('pointerdown', () => this.toggleItemMenu())
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
@@ -225,33 +234,9 @@ export class BoardScene extends Phaser.Scene {
   }
 
   drawBackdrop(w: number, h: number) {
-    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
-    
-    // Ambient color wash (Flat to avoid WebGL texture generation issues)
-    this.add.rectangle(0, 0, w, h, 0x111122, 0.3).setOrigin(0).setDepth(-10)
-
-    addStarfieldBackdrop(this, 0.45)
-    
-    // Floating dust/motes
-    for (let i = 0; i < 30; i++) {
-      const mote = this.add.circle(
-        Phaser.Math.Between(0, w),
-        Phaser.Math.Between(0, h),
-        Phaser.Math.Between(1, 3),
-        0x44ccff,
-        0.15
-      ).setDepth(-5)
-      
-      this.tweens.add({
-        targets: mote,
-        alpha: 0.6,
-        y: '-=40',
-        duration: Phaser.Math.Between(3000, 6000),
-        yoyo: true,
-        repeat: -1,
-        delay: Phaser.Math.Between(0, 3000)
-      })
-    }
+    paintStage(this)
+    addStarfieldBackdrop(this, 0.42)
+    addAmbientMotes(this, 26)
   }
 
   drawBoard() {
@@ -264,15 +249,14 @@ export class BoardScene extends Phaser.Scene {
     const fy = this.boardOriginY - pad
 
     // Ornate outer frame
-    const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, 0x0d0d1f).setDepth(-3)
-    outer.setStrokeStyle(4, 0xffd700, 0.4)
-    
-    const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, 0x111122).setDepth(-2)
-    inner.setStrokeStyle(2, 0x44ccff, 0.3)
-    
-    // Board felt with inner vignette
-    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, 0x0d0d1f)
-    felt.setStrokeStyle(1, 0x334466, 0.5).setDepth(-1)
+    const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, COLORS.bgDeep).setDepth(-3)
+    outer.setStrokeStyle(4, COLORS.gold, 0.45)
+
+    const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, COLORS.bgMid).setDepth(-2)
+    inner.setStrokeStyle(2, COLORS.teal, 0.35)
+
+    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, COLORS.bgPanel)
+    felt.setStrokeStyle(1, 0x3a4f6a, 0.5).setDepth(-1)
 
     // Decorative corner icons
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
@@ -365,8 +349,11 @@ export class BoardScene extends Phaser.Scene {
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
     const cy = this.boardOriginY + BOARD_ROWS * TILE_SIZE / 2
-    const titlePanel = this.add.rectangle(cx, cy, 240, 100, 0x0a1520, 0.88)
-    titlePanel.setStrokeStyle(2, 0x335577, 0.9).setDepth(2)
+    const titlePanel = this.add.graphics().setDepth(2)
+    titlePanel.fillStyle(COLORS.bgPanel, 0.9)
+    titlePanel.fillRoundedRect(cx - 120, cy - 50, 240, 100, 14)
+    titlePanel.lineStyle(2, COLORS.sky, 0.55)
+    titlePanel.strokeRoundedRect(cx - 120, cy - 50, 240, 100, 14)
 
     if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
       this.add.image(cx - 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
@@ -374,23 +361,23 @@ export class BoardScene extends Phaser.Scene {
     }
     this.add.text(cx, cy - 18, 'VOCAB', {
       fontSize: '28px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#e8f4ff',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.frost),
       stroke: '#102040',
-      strokeThickness: 4
+      strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
     this.add.text(cx, cy + 18, 'PARTY', {
       fontSize: '28px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#FFD700',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
       stroke: '#553300',
-      strokeThickness: 4
+      strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
 
     this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
       fontSize: '14px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#bbd7ff'
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
     }).setOrigin(0.5, 0).setDepth(3)
   }
 
@@ -1355,18 +1342,24 @@ export class BoardScene extends Phaser.Scene {
     const h = this.scale.height
     this.itemMenu = this.add.container(w / 2, h / 2).setDepth(100)
     
-    const bg = this.add.rectangle(0, 0, 400, 300, 0x1a1a2e, 0.95).setStrokeStyle(3, 0x44ccff)
-    const title = this.add.text(0, -120, '🎒 YOUR ITEMS', { fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#44ccff' }).setOrigin(0.5)
+    const bg = this.add.graphics()
+    bg.fillStyle(COLORS.bgPanel, 0.96)
+    bg.fillRoundedRect(-200, -150, 400, 300, 16)
+    bg.lineStyle(2.5, COLORS.teal, 0.6)
+    bg.strokeRoundedRect(-200, -150, 400, 300, 16)
+    const title = this.add.text(0, -120, 'YOUR ITEMS', {
+      fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal), stroke: '#003322', strokeThickness: 3,
+    }).setOrigin(0.5)
     this.itemMenu.add([bg, title])
 
     player.inventory.forEach((type, i) => {
       const item = ITEMS[type]
-      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, 0x223344, 0x334455, 340, 40)
+      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, COLORS.bgPanelAlt, 0x223048, 340, 40)
       btn.on('pointerdown', () => this.useItem(this.state.currentPlayer, i))
       this.itemMenu?.add(btn)
     })
 
-    const closeBtn = createButton(this, 0, 110, 'CLOSE', 0x555555, 0x333333, 100, 40)
+    const closeBtn = createButton(this, 0, 110, 'CLOSE', COLORS.mute, 0x4a5a6e, 120, 40)
     closeBtn.on('pointerdown', () => this.closeItemMenu())
     this.itemMenu.add(closeBtn)
   }
@@ -1408,7 +1401,8 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private createPauseButton() {
-    const btn = createButton(this, 50, 50, '⏸️', 0x223344, 0x334455, 60, 60)
+    const btn = createButton(this, 50, 50, 'II', COLORS.bgPanelAlt, 0x223048, 56, 56)
+    btn.setDepth(DEPTH.hud)
     btn.on('pointerdown', () => this.pauseGame())
   }
 

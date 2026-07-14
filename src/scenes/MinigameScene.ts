@@ -112,9 +112,9 @@ export class MinigameScene extends Phaser.Scene {
     // Splash overlay
     const splashContainer = this.add.container(w / 2, h / 2).setDepth(200)
     const splashBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.7).setAlpha(0)
-    const splashTitle = this.add.text(0, -30, '🕹️ MINIGAME!', {
-      fontSize: '80px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
-      stroke: '#ff44aa', strokeThickness: 12
+    const splashTitle = this.add.text(0, -30, 'MINIGAME!', {
+      fontSize: '76px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
+      stroke: '#2ec4b6', strokeThickness: 12
     }).setOrigin(0.5).setScale(0)
     const splashBy = this.add.text(0, 50, `${state.players[state.currentPlayer]?.emoji ?? ''} ${state.players[state.currentPlayer]?.name ?? ''} vs The World!`, {
       fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#ff88cc'

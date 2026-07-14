@@ -1,16 +1,10 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
-import { addStarfieldBackdrop } from '../ui/Starfield'
+import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
+import { createDimmer, createPanel, paintStage } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode } from '../systems/gameFlags'
-
-const TILE_LEGEND = [
-  { emoji: '📖', label: 'Vocab', color: 0x4488ff },
-  { emoji: '✏️', label: 'Grammar', color: 0xff8844 },
-  { emoji: '⭐', label: 'Bonus', color: 0xffdd00 },
-  { emoji: '❓', label: 'Mystery', color: 0xaa44ff },
-  { emoji: '🕹️', label: 'Minigame', color: 0xff44aa },
-  { emoji: '🔄', label: 'Swap', color: 0x44ffaa },
-]
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 
 export class MenuScene extends Phaser.Scene {
   private howToPlayOpen = false
@@ -20,134 +14,140 @@ export class MenuScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    // Deep space gradient
-    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
-    
-    // Ambient fog/glow (Flat for compatibility)
-    this.add.rectangle(0, 0, w, h, 0x1a1a2e, 0.4).setOrigin(0)
-
-    addStarfieldBackdrop(this, 0.5)
+    paintStage(this)
+    addStarfieldBackdrop(this, 0.48)
+    addAmbientMotes(this, 24)
     this.createParallaxStars()
 
-    // Cinematic Title
-    const titleContainer = this.add.container(w / 2, 160)
-    
-    const titleGlow = this.add.ellipse(0, 0, 800, 200, 0xffd700, 0.05)
-    
-    const title = this.add.text(0, 0, 'VOCAB PARTY', {
-      fontSize: '92px',
-      fontFamily: 'Fredoka, Arial Black, Arial',
-      color: '#ffffff',
-      stroke: '#FFD700',
-      strokeThickness: 12
-    }).setOrigin(0.5)
-    
-    const titleOverlay = this.add.text(0, 0, 'VOCAB PARTY', {
-      fontSize: '92px',
-      fontFamily: 'Fredoka, Arial Black, Arial',
-      color: '#FFD700',
-    }).setOrigin(0.5).setAlpha(0.8)
+    const spotlight = this.add.ellipse(w / 2, 150, 720, 220, COLORS.gold, 0.07).setDepth(0)
+    this.tweens.add({
+      targets: spotlight,
+      alpha: 0.12,
+      scaleX: 1.06,
+      duration: 2400,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    })
 
-    titleContainer.add([titleGlow, title, titleOverlay])
-    
-    // Edition Badge
-    const badge = this.add.container(w / 2 + 320, 100)
-    const bBg = this.add.polygon(0, 0, [0, -20, 100, -20, 120, 0, 100, 20, 0, 20], 0xffd700, 0.8)
-    const bText = this.add.text(55, 0, 'THE PARTY', { fontSize: '12px', fontFamily: 'Fredoka, Arial Black', color: '#000000' }).setOrigin(0.5)
-    badge.add([bBg, bText]).setAngle(-15)
-    this.tweens.add({ targets: badge, angle: -10, duration: 2000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+    const titleContainer = this.add.container(w / 2, 148)
+
+    if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
+      const leftTrophy = this.add.image(-310, 8, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(48, 48).setAlpha(0.9)
+      const rightTrophy = this.add.image(310, 8, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(48, 48).setAlpha(0.9)
+      titleContainer.add([leftTrophy, rightTrophy])
+      this.tweens.add({
+        targets: [leftTrophy, rightTrophy],
+        y: '-=8',
+        duration: 1800,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      })
+    }
+
+    const titleStroke = this.add.text(0, 0, 'VOCAB PARTY', {
+      fontSize: '88px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+      stroke: hexColor(COLORS.goldDeep),
+      strokeThickness: 14,
+    }).setOrigin(0.5)
+
+    const title = this.add.text(0, 0, 'VOCAB PARTY', {
+      fontSize: '88px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
+    }).setOrigin(0.5)
+
+    titleContainer.add([titleStroke, title])
 
     this.tweens.add({
       targets: titleContainer,
-      y: 175,
-      scaleX: 1.02,
-      scaleY: 1.02,
-      duration: 2000,
+      y: 158,
+      duration: 2200,
       yoyo: true,
       repeat: -1,
-      ease: 'Sine.easeInOut'
+      ease: 'Sine.easeInOut',
     })
 
-    this.tweens.add({
-      targets: titleOverlay,
-      alpha: 0.4,
-      duration: 1500,
-      yoyo: true,
-      repeat: -1
-    })
-
-    // Subtitle
-    this.add.text(w / 2, 260, 'THE ULTIMATE COMPETITIVE LEARNING EXPERIENCE', {
+    this.add.text(w / 2, 232, 'Roll · Learn · Win the party', {
       fontSize: '22px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#aaddff',
-      letterSpacing: 4
-    }).setOrigin(0.5).setAlpha(0.7)
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0.5).setAlpha(0.85)
 
-    // Main Actions
-    const startGlow = this.add.ellipse(w / 2, 420, 450, 120, 0x22bb55, 0.15).setDepth(0)
-    this.tweens.add({ targets: startGlow, alpha: 0.05, scaleX: 1.1, scaleY: 1.1, duration: 1000, yoyo: true, repeat: -1 })
-
-    const startBtn = createButton(this, w / 2, 420, '▶  ENTER PARTY', 0x22bb55, 0x1a8844, 400, 72)
-    startBtn.on('pointerdown', () => {
-      this.cameras.main.fadeOut(400, 0, 0, 0)
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-        this.scene.start('SetupScene')
-      })
+    const startGlow = this.add.ellipse(w / 2, 390, 420, 100, COLORS.mint, 0.12)
+    this.tweens.add({
+      targets: startGlow,
+      alpha: 0.05,
+      scaleX: 1.08,
+      duration: 1100,
+      yoyo: true,
+      repeat: -1,
     })
 
-    const howBtn = createButton(this, w / 2, 510, '❓  HOW TO PLAY', 0x5566ff, 0x3344cc, 400, 60)
+    const startBtn = createButton(this, w / 2, 390, '▶  ENTER PARTY', COLORS.mint, 0x2aa866, 400, 72)
+    startBtn.on('pointerdown', () => this.goSetup())
+
+    const howBtn = createButton(this, w / 2, 478, 'HOW TO PLAY', COLORS.skyDeep, 0x1e5a96, 360, 56)
     howBtn.on('pointerdown', () => this.showHowToPlay())
 
     if (isAutoSimMode()) {
       this.scene.start('SetupScene')
     }
 
-    // Version/Footer
-    this.add.text(w / 2, h - 30, 'v2.0  •  PHASER 3 ENGINE', {
+    this.add.text(w / 2, h - 28, 'v2.0  ·  Phaser 3', {
       fontSize: '14px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#445577'
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
-    // Keyboard shortcuts
     this.input.keyboard?.on('keydown-ESC', () => {
       if (this.howToPlayOpen) return
       this.showHowToPlay()
     })
     this.input.keyboard?.on('keydown-ENTER', () => {
       if (this.howToPlayOpen) return
-      this.cameras.main.fadeOut(400, 0, 0, 0)
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-        this.scene.start('SetupScene')
-      })
+      this.goSetup()
     })
 
-    // Fade in on enter
-    this.cameras.main.fadeIn(400, 5, 5, 16)
+    this.cameras.main.fadeIn(420, 7, 11, 20)
 
-    // Floating particles
-    for (let i = 0; i < 20; i++) {
-      const p = this.add.text(Phaser.Math.Between(0, w), Phaser.Math.Between(h - 100, h), '✨', { fontSize: '16px' })
+    for (let i = 0; i < 14; i++) {
+      const p = this.add.circle(
+        Phaser.Math.Between(40, w - 40),
+        Phaser.Math.Between(h - 80, h - 20),
+        Phaser.Math.FloatBetween(1.5, 3),
+        COLORS.gold,
+        0.7
+      )
       this.tweens.add({
         targets: p,
-        y: '-=200',
+        y: '-=180',
         alpha: 0,
-        duration: Phaser.Math.Between(2000, 5000),
+        duration: Phaser.Math.Between(2200, 4800),
         repeat: -1,
-        delay: Phaser.Math.Between(0, 5000)
+        delay: Phaser.Math.Between(0, 4000),
       })
     }
+  }
+
+  private goSetup() {
+    this.cameras.main.fadeOut(380, 0, 0, 0)
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      this.scene.start('SetupScene')
+    })
   }
 
   createParallaxStars() {
     const w = this.scale.width
     const h = this.scale.height
-    
+
     const layers = [
-      { count: 100, size: [1, 2], speed: 0.05, alpha: 0.3 },
-      { count: 50, size: [2, 3], speed: 0.1, alpha: 0.6 },
-      { count: 20, size: [3, 5], speed: 0.2, alpha: 0.9 }
+      { count: 70, size: [1, 2], speed: 0.04, alpha: 0.28 },
+      { count: 36, size: [2, 3], speed: 0.09, alpha: 0.55 },
+      { count: 14, size: [3, 4.5], speed: 0.16, alpha: 0.85 },
     ]
 
     layers.forEach(layer => {
@@ -156,13 +156,13 @@ export class MenuScene extends Phaser.Scene {
         const y = Phaser.Math.Between(0, h)
         const s = Phaser.Math.FloatBetween(layer.size[0], layer.size[1])
         const star = this.add.circle(x, y, s, 0xffffff, layer.alpha)
-        
+
         this.tweens.add({
           targets: star,
           x: `+=${w}`,
           duration: (w / layer.speed) * 10,
           repeat: -1,
-          onRepeat: () => star.setX(-10)
+          onRepeat: () => star.setX(-10),
         })
       }
     })
@@ -174,88 +174,93 @@ export class MenuScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    const container = this.add.container(0, 0)
+    const root = this.add.container(0, 0).setDepth(80)
+    const overlay = createDimmer(this, 0.58)
+    overlay.setDepth(79)
 
-    const overlay = this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.55).setInteractive()
-    const panel = this.add.rectangle(w / 2, h / 2, 780, 500, 0x141430)
-    panel.setStrokeStyle(3, 0x6688cc)
+    const panel = createPanel(this, {
+      x: w / 2,
+      y: h / 2,
+      width: 820,
+      height: 520,
+      border: COLORS.gold,
+      borderAlpha: 0.45,
+      headerColor: COLORS.goldDeep,
+      headerHeight: 48,
+      title: 'HOW TO PLAY',
+      titleColor: hexColor(COLORS.gold),
+      animateIn: true,
+      depth: 80,
+    })
 
-    // Title
-    const titleText = this.add.text(w / 2, h / 2 - 220, '🎲 HOW TO PLAY', {
-      fontSize: '32px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#FFD700',
-      stroke: '#664400',
-      strokeThickness: 5
-    }).setOrigin(0.5)
-
-    // Instructions
-    const instrText = this.add.text(w / 2, h / 2 - 172, 'Take turns rolling the dice and moving around the board.', {
+    const instrText = this.add.text(w / 2, h / 2 - 168, 'Take turns rolling the dice and moving around the board.', {
       fontSize: '17px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#aabbdd',
-      align: 'center'
-    }).setOrigin(0.5)
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+      align: 'center',
+    }).setOrigin(0.5).setDepth(81)
 
-    // Tile grid
     const tileItems = [
-      { emoji: '📖', label: 'Vocab', desc: 'Answer a vocabulary question (+10)', color: 0x4488ff },
-      { emoji: '✏️', label: 'Grammar', desc: 'Fix a grammar problem (+10)', color: 0xff8844 },
-      { emoji: '⭐', label: 'Bonus', desc: 'Earn 5 bonus points automatically!', color: 0xffdd00 },
-      { emoji: '❓', label: 'Mystery', desc: 'Random surprise effect!', color: 0xaa44ff },
-      { emoji: '🕹️', label: 'Minigame', desc: 'Everyone plays, winner gets +15', color: 0xff44aa },
-      { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: 0x44ffaa },
+      { emoji: '📖', label: 'Vocab', desc: 'Answer a vocabulary question (+10)', color: COLORS.sky },
+      { emoji: '✏️', label: 'Grammar', desc: 'Fix a grammar problem (+10)', color: COLORS.warning },
+      { emoji: '⭐', label: 'Bonus', desc: 'Earn 5 bonus points automatically!', color: COLORS.gold },
+      { emoji: '❓', label: 'Mystery', desc: 'Random surprise effect!', color: 0xaa66ff },
+      { emoji: '🕹️', label: 'Minigame', desc: 'Everyone plays, winner gets +15', color: 0xff66aa },
+      { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: COLORS.teal },
     ]
 
     const cols = 2
-    const itemW = 340
-    const itemH = 56
-    const gridX = w / 2 - itemW - 10
-    const gridStartY = h / 2 - 120
-
+    const itemW = 360
+    const itemH = 54
+    const gridX = w / 2 - itemW - 12
+    const gridStartY = h / 2 - 118
     const tileObjects: Phaser.GameObjects.GameObject[] = []
+
     tileItems.forEach((item, i) => {
       const col = i % cols
       const row = Math.floor(i / cols)
-      const x = gridX + col * (itemW + 20)
-      const y = gridStartY + row * (itemH + 10)
+      const x = gridX + col * (itemW + 24)
+      const y = gridStartY + row * (itemH + 12)
 
-      const bg = this.add.rectangle(x + itemW / 2, y + itemH / 2, itemW, itemH, item.color, 0.15)
-      bg.setStrokeStyle(1.5, item.color, 0.6)
-      const emojiT = this.add.text(x + 10, y + itemH / 2, item.emoji, { fontSize: '24px' }).setOrigin(0, 0.5)
-      const labelT = this.add.text(x + 46, y + itemH / 2 - 9, item.label, {
-        fontSize: '15px', fontFamily: 'Fredoka, Arial Black', color: '#eeeeff'
-      }).setOrigin(0, 0.5)
-      const descT = this.add.text(x + 46, y + itemH / 2 + 10, item.desc, {
-        fontSize: '12px', fontFamily: 'Fredoka, Arial', color: '#9999bb'
-      }).setOrigin(0, 0.5)
-      tileObjects.push(bg, emojiT, labelT, descT)
+      const g = this.add.graphics().setDepth(81)
+      g.fillStyle(item.color, 0.12)
+      g.fillRoundedRect(x, y, itemW, itemH, 10)
+      g.lineStyle(1.5, item.color, 0.55)
+      g.strokeRoundedRect(x, y, itemW, itemH, 10)
+
+      const emojiT = this.add.text(x + 14, y + itemH / 2, item.emoji, { fontSize: '22px' }).setOrigin(0, 0.5).setDepth(81)
+      const labelT = this.add.text(x + 50, y + itemH / 2 - 9, item.label, {
+        fontSize: '15px', fontFamily: FONT.display, color: '#f2f7ff',
+      }).setOrigin(0, 0.5).setDepth(81)
+      const descT = this.add.text(x + 50, y + itemH / 2 + 11, item.desc, {
+        fontSize: '12px', fontFamily: FONT.body, color: '#8fa6bf',
+      }).setOrigin(0, 0.5).setDepth(81)
+      tileObjects.push(g, emojiT, labelT, descT)
     })
 
-    const winText = this.add.text(w / 2, h / 2 + 190, '🏆  Most points wins (round count is set in setup; solo play is supported).', {
-      fontSize: '18px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#FFD700',
-      stroke: '#443300',
-      strokeThickness: 3
-    }).setOrigin(0.5)
+    const winText = this.add.text(w / 2, h / 2 + 178, 'Most points win — round count is set in setup. Solo play works too.', {
+      fontSize: '16px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
+      stroke: '#3a2800',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(81)
 
-    const closeBtn = createButton(this, w / 2, h / 2 + 232, '✕  CLOSE', 0xdd3333, 0xaa2222, 200, 48)
+    const closeBtn = createButton(this, w / 2, h / 2 + 228, 'CLOSE', COLORS.danger, 0xb83232, 200, 48)
+    closeBtn.setDepth(81)
 
-    container.add([overlay, panel, titleText, instrText, ...tileObjects, winText, closeBtn])
+    root.add([panel, instrText, ...tileObjects, winText, closeBtn])
 
-    const onEsc = () => destroy()
     const destroy = () => {
       if (!this.howToPlayOpen) return
       this.howToPlayOpen = false
       this.input.keyboard?.off('keydown-ESC', onEsc)
-      container.destroy(true)
+      overlay.destroy()
+      root.destroy(true)
     }
+    const onEsc = () => destroy()
     closeBtn.on('pointerdown', destroy)
     overlay.on('pointerdown', destroy)
     this.input.keyboard?.on('keydown-ESC', onEsc)
-
-    panel.setScale(0.85)
-    this.tweens.add({ targets: panel, scaleX: 1, scaleY: 1, duration: 250, ease: 'Back.easeOut' })
   }
 }
