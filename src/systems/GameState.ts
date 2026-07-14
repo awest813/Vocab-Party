@@ -15,6 +15,9 @@ export type TileType =
 import type { CpuLevel } from './CpuPolicy'
 import { DEFAULT_CPU_LEVEL } from './CpuPolicy'
 
+/** Keep in sync with CHARACTER_DEFS / PLAYER_TEXTURE_KEYS length in SpriteFactory. */
+export const CHARACTER_COUNT = 8
+
 export type ItemType = 'dash' | 'swap' | 'warp' | 'shield' | 'double_score' | 'poison_dart' | 'golden_key'
 
 export interface Item {
@@ -30,6 +33,8 @@ export interface Player {
   id: number
   name: string
   emoji: string
+  /** Index into CHARACTER_DEFS / PLAYER_TEXTURE_KEYS. */
+  characterIndex: number
   score: number
   position: number
   trophies: number
@@ -75,13 +80,19 @@ export function createInitialState(
   names: string[],
   emojis: string[],
   cpuFlags?: boolean[],
-  cpuLevels?: CpuLevel[]
+  cpuLevels?: CpuLevel[],
+  characterIndices?: number[]
 ): GameState {
   return {
     players: names.map((name, i) => ({
       id: i,
       name,
       emoji: emojis[i],
+      characterIndex: (() => {
+        const raw = characterIndices?.[i] ?? i
+        const n = CHARACTER_COUNT
+        return ((Math.floor(raw) % n) + n) % n
+      })(),
       score: 0,
       position: 0,
       trophies: 0,

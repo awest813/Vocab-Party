@@ -1,10 +1,17 @@
 import Phaser from 'phaser'
 import { createButton } from '../ui/Button'
+import { addVignette, createDimmer, createPanel } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { openHowToPlay } from '../ui/HowToPlay'
+import { openSettingsPanel } from '../ui/SettingsPanel'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 export class PauseScene extends Phaser.Scene {
-  private helpOpen = false
-  private closeHelp: (() => void) | null = null
+  private modalOpen = false
+  private closeModal: (() => void) | null = null
+
   constructor() {
     super('PauseScene')
   }
@@ -12,102 +19,147 @@ export class PauseScene extends Phaser.Scene {
   create() {
     const w = this.scale.width
     const h = this.scale.height
+    const reduce = shouldReduceMotion()
 
-    // Semi-transparent backdrop
-    this.add.rectangle(0, 0, w, h, 0x000000, 0.6).setOrigin(0)
-    
-    // Glassmorphic Panel with Kenney card back
-    const panel = this.add.container(w / 2, h / 2)
-    const cardTex = TEXTURE_KEYS.kenneyCardBlue
-    const hasCard = this.textures.exists(cardTex)
-    const bg = hasCard
-      ? this.add.image(0, 0, cardTex).setDisplaySize(400, 320).setAlpha(0.85)
-      : this.add.rectangle(0, 0, 400, 320, 0x1a2a4a, 0.85)
-    if (!hasCard) (bg as Phaser.GameObjects.Rectangle).setStrokeStyle(4, 0x4488ff, 0.6)
-    
-    const title = this.add.text(0, -110, '⏸️ PAUSED', {
-      fontSize: '42px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#000000', strokeThickness: 6
-    }).setOrigin(0.5)
+    Sfx.pause()
+    createDimmer(this, 0.68)
+    addVignette(this, 0.72, 59)
 
-    const resumeBtn = createButton(this, 0, -20, 'RESUME', 0x22bb55, 0x1a8844, 300, 50)
-    resumeBtn.on('pointerdown', () => {
-      this.scene.resume('BoardScene')
-      this.scene.stop()
+    // Outer glow ring behind the pause card
+    const glow = this.add.graphics().setDepth(59)
+    glow.fillStyle(COLORS.sky, 0.08)
+    glow.fillRoundedRect(w / 2 - 230, h / 2 - 230, 460, 460, 28)
+    glow.lineStyle(2, COLORS.gold, 0.22)
+    glow.strokeRoundedRect(w / 2 - 222, h / 2 - 222, 444, 444, 24)
+    if (!reduce) {
+      this.tweens.add({
+        targets: glow,
+        alpha: 0.55,
+        duration: 1600,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      })
+    }
+
+    const panel = createPanel(this, {
+      x: w / 2,
+      y: h / 2,
+      width: 440,
+      height: 440,
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.96,
+      border: COLORS.gold,
+      borderAlpha: 0.42,
+      headerColor: COLORS.skyDeep,
+      headerHeight: 56,
+      title: 'PAUSED',
+      titleColor: hexColor(COLORS.gold),
+      depth: 60,
+      animateIn: true,
     })
 
-    const quitBtn = createButton(this, 0, 50, 'QUIT TO MENU', 0xaa2222, 0x881111, 300, 50)
+    // Pause bars sit beside the title (not under the text)
+    const headerMidY = -440 / 2 + 56 / 2 + 1
+    const bars = this.add.graphics()
+    bars.fillStyle(COLORS.gold, 0.9)
+    bars.fillRoundedRect(-108, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(-95, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(86, headerMidY - 14, 9, 28, 3)
+    bars.fillRoundedRect(99, headerMidY - 14, 9, 28, 3)
+    panel.add(bars)
+    if (!reduce) {
+      this.tweens.add({
+        targets: bars,
+        alpha: 0.5,
+        duration: 900,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      })
+    }
+
+    if (this.textures.exists(TEXTURE_KEYS.kenneyCardBlue)) {
+      panel.add(
+        this.add.image(0, 20, TEXTURE_KEYS.kenneyCardBlue)
+          .setDisplaySize(300, 220)
+          .setAlpha(0.07)
+      )
+    }
+
+    // Soft inset plate behind buttons for nested depth
+    const plate = this.add.graphics()
+    plate.fillStyle(COLORS.bgDeep, 0.35)
+    plate.fillRoundedRect(-170, -118, 340, 268, 14)
+    plate.lineStyle(1.5, COLORS.strokeSoft, 0.1)
+    plate.strokeRoundedRect(-170, -118, 340, 268, 14)
+    panel.add(plate)
+
+    const resume = () => {
+      if (this.modalOpen) return
+      this.scene.resume('BoardScene')
+      this.scene.stop()
+    }
+
+    const resumeBtn = createButton(this, 0, -72, '▶  RESUME', COLORS.party, COLORS.partyDeep, 320, 56)
+    resumeBtn.on('pointerdown', resume)
+
+    const settingsBtn = createButton(this, 0, -4, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 320, 50)
+    settingsBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      this.modalOpen = true
+      panel.setVisible(false)
+      glow.setVisible(false)
+      this.closeModal = openSettingsPanel(this, {
+        onClose: () => {
+          this.modalOpen = false
+          this.closeModal = null
+          panel.setVisible(true)
+          glow.setVisible(true)
+        },
+      })
+    })
+
+    const helpBtn = createButton(this, 0, 58, 'HOW TO PLAY', COLORS.skyDeep, COLORS.skyBtnDeep, 320, 50)
+    helpBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      this.modalOpen = true
+      panel.setVisible(false)
+      glow.setVisible(false)
+      this.closeModal = openHowToPlay(this, {
+        mode: 'rules',
+        onClose: () => {
+          this.modalOpen = false
+          this.closeModal = null
+          panel.setVisible(true)
+          glow.setVisible(true)
+        },
+      })
+    })
+
+    const quitBtn = createButton(this, 0, 120, 'QUIT TO MENU', COLORS.danger, COLORS.dangerDeep, 320, 50)
     quitBtn.on('pointerdown', () => {
+      if (this.modalOpen) return
+      Sfx.stopMusic()
       this.scene.stop('BoardScene')
       this.scene.start('MenuScene')
     })
 
-    const helpBtn = createButton(this, 0, 120, 'HOW TO PLAY', 0x4488ff, 0x224488, 300, 50)
-    helpBtn.on('pointerdown', () => this.showHelp(panel, helpBtn, resumeBtn, quitBtn))
-
-    panel.add([bg, title, resumeBtn, quitBtn, helpBtn])
-    panel.setScale(0.8).setAlpha(0)
-    
-    this.tweens.add({
-      targets: panel,
-      scaleX: 1, scaleY: 1, alpha: 1,
-      duration: 300, ease: 'Back.easeOut'
-    })
-
-    // ESC to resume (or close help if open)
-    this.input.keyboard?.on('keydown-ESC', () => {
-      if (this.helpOpen) {
-        this.closeHelp?.()
-        return
-      }
-      this.scene.resume('BoardScene')
-      this.scene.stop()
-    })
-  }
-
-  private showHelp(panel: Phaser.GameObjects.Container, ...hide: Phaser.GameObjects.Container[]) {
-    if (this.helpOpen) return
-    this.helpOpen = true
-    hide.forEach(o => o.setVisible(false))
-    const w = this.scale.width
-    const h = this.scale.height
-
-    const rules = [
-      '🎲 Roll the dice to move around the board',
-      '📖 Land on tiles to answer vocab/grammar questions',
-      '⭐ Collect Stars (cost: 20 coins) to earn trophies',
-      '🛡️ Use items: Dash, Swap, Warp, Shield, Double Score, Poison Dart, Golden Key',
-      '🏪 Buy shops to collect rent from passing players',
-      '⚔️ Battle happens when two players land on the same tile',
-      '🎯 First to 5 trophies wins! Most points breaks ties',
-    ]
-
-    const helpPanel = this.add.container(w / 2, h / 2)
-    const bg = this.add.rectangle(0, 0, 600, 380, 0x141430, 0.95)
-    bg.setStrokeStyle(3, 0x6688cc, 0.8)
-
-    const title = this.add.text(0, -150, '📖 HOW TO PLAY', {
-      fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700', stroke: '#664400', strokeThickness: 4
+    const touch = isTouchPreferred(this.sys.game)
+    const escHint = this.add.text(0, 178, touch ? 'Tap RESUME to continue' : 'Esc to resume', {
+      fontSize: '13px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
-    const texts = rules.map((rule, i) =>
-      this.add.text(0, -100 + i * 36, rule, {
-        fontSize: '16px', fontFamily: 'Fredoka, Arial', color: '#aabbdd'
-      }).setOrigin(0.5)
-    )
+    panel.add([resumeBtn, settingsBtn, helpBtn, quitBtn, escHint])
 
-    const closeBtn = createButton(this, 0, 155, '✕ CLOSE', 0xdd3333, 0xaa2222, 160, 44)
-    const close = () => {
-      if (!this.helpOpen) return
-      this.helpOpen = false
-      this.closeHelp = null
-      helpPanel.destroy(true)
-      hide.forEach(o => o.setVisible(true))
-    }
-    this.closeHelp = close
-    closeBtn.on('pointerdown', close)
-
-    helpPanel.add([bg, title, ...texts, closeBtn])
-    helpPanel.setScale(0.85)
-    this.tweens.add({ targets: helpPanel, scaleX: 1, scaleY: 1, duration: 200, ease: 'Back.easeOut' })
+    this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.modalOpen) {
+        this.closeModal?.()
+        return
+      }
+      resume()
+    })
   }
 }

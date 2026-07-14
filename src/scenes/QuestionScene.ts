@@ -1,9 +1,13 @@
 import Phaser from 'phaser'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonFill } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
+import { createDimmer, createPanel } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
 import type { GameState } from '../systems/GameState'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 
 interface QuestionData {
   question: string
@@ -48,77 +52,82 @@ export class QuestionScene extends Phaser.Scene {
       ? this.cache.json.get('vocab').questions
       : this.cache.json.get('grammar').questions
 
-    const q: QuestionData = Phaser.Utils.Array.GetRandom(questions)
+    const raw: QuestionData = Phaser.Utils.Array.GetRandom(questions)
+    // Shuffle answer order each time so players (and CPUs) can't learn a key pattern.
+    const order = raw.answers.map((_, i) => i)
+    Phaser.Utils.Array.Shuffle(order)
+    const q: QuestionData = {
+      question: raw.question,
+      answers: order.map(i => raw.answers[i]),
+      correct: order.indexOf(raw.correct),
+      explanation: raw.explanation,
+    }
     const player = state.players[playerIndex]
 
     // Deep environment wash
-    this.add.rectangle(0, 0, w, h, 0x050510, 0.85).setOrigin(0)
-    
-    // Glassmorphic Question Panel with Kenney card back
+    createDimmer(this, 0.78)
+
     const panelW = 920
     const panelH = 520
-    const panelContainer = this.add.container(w / 2, h / 2)
-    
-    const borderColor = type === 'vocab' ? 0x4488ff : 0xff8844
+    const borderColor = type === 'vocab' ? COLORS.sky : COLORS.warning
     const cardTex = type === 'vocab' ? TEXTURE_KEYS.kenneyCardBlue : TEXTURE_KEYS.kenneyCardRed
     const hasCard = this.textures.exists(cardTex)
-    const panelBg = hasCard
-      ? this.add.image(0, 0, cardTex).setDisplaySize(panelW, panelH).setAlpha(0.8)
-      : this.add.rectangle(0, 0, panelW, panelH, 0x0a1528, 0.8)
-    if (!hasCard) (panelBg as Phaser.GameObjects.Rectangle).setStrokeStyle(4, borderColor, 0.6)
-    
-    const accentGlow = this.add.rectangle(0, -panelH / 2 + 2, panelW - 4, 4, borderColor, 0.8)
-    
-    panelContainer.add([panelBg, accentGlow])
-    panelContainer.setScale(0.8)
-    panelContainer.setAlpha(0)
-    
-    this.tweens.add({
-      targets: panelContainer,
-      scaleX: 1, scaleY: 1,
-      alpha: 1,
-      duration: isAutoSimMode() ? 40 : 400,
-      ease: 'Cubic.easeOut'
+
+    const panelContainer = createPanel(this, {
+      x: w / 2,
+      y: h / 2,
+      width: panelW,
+      height: panelH,
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.94,
+      border: borderColor,
+      borderAlpha: 0.65,
+      headerColor: borderColor,
+      headerHeight: 6,
+      depth: 40,
+      animateIn: true,
     })
 
-    // Header
-    const headerColor = type === 'vocab' ? '#4488ff' : '#ff8844'
-    const headerLabel = type === 'vocab' ? '📖 VOCABULARY QUESTION' : '✏️ GRAMMAR QUESTION'
+    if (hasCard) {
+      panelContainer.add(
+        this.add.image(0, 10, cardTex).setDisplaySize(panelW - 40, panelH - 50).setAlpha(0.12)
+      )
+    }
+
+    const headerColor = type === 'vocab' ? hexColor(COLORS.sky) : hexColor(COLORS.warning)
+    const headerLabel = type === 'vocab' ? 'VOCABULARY QUESTION' : 'GRAMMAR QUESTION'
     const header = this.add.text(w / 2, h / 2 - 210, headerLabel, {
-      fontSize: '28px',
-      fontFamily: 'Fredoka, Arial Black',
+      fontSize: '26px',
+      fontFamily: FONT.display,
       color: headerColor,
       stroke: '#000000',
-      strokeThickness: 4
-    }).setOrigin(0.5).setAlpha(0)
+      strokeThickness: 4,
+    }).setOrigin(0.5).setAlpha(0).setDepth(45)
 
     this.add.text(w / 2, h / 2 - 170, `${player.emoji} ${player.name}'s Turn  ·  Score: ${player.score}`, {
-      fontSize: '20px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#aaaacc'
-    }).setOrigin(0.5)
+      fontSize: '18px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0.5).setDepth(45)
 
-    // Keyboard hint
-    this.add.text(w / 2, h / 2 - 140, 'Keys: 1–4 or A–D', {
+    this.add.text(w / 2, h / 2 - 140, isTouchPreferred(this.sys.game) ? 'Tap an answer' : 'Keys: 1–4 or A–D', {
       fontSize: '14px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#667788'
-    }).setOrigin(0.5)
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
+    }).setOrigin(0.5).setDepth(45)
 
     this.tweens.add({ targets: header, alpha: 1, duration: isAutoSimMode() ? 30 : 300, delay: isAutoSimMode() ? 0 : 200 })
 
-    // Question text
     const qText = this.add.text(w / 2, h / 2 - 100, q.question, {
       fontSize: '24px',
-      fontFamily: 'Fredoka, Arial',
+      fontFamily: FONT.body,
       color: '#ffffff',
       wordWrap: { width: 820 },
-      align: 'center'
-    }).setOrigin(0.5).setAlpha(0)
+      align: 'center',
+    }).setOrigin(0.5).setAlpha(0).setDepth(45)
     this.tweens.add({ targets: qText, alpha: 1, duration: isAutoSimMode() ? 30 : 400, delay: isAutoSimMode() ? 0 : 300 })
 
-    // Answer buttons
-    const answerColors = [0x4444cc, 0xcc4444, 0x44aa44, 0xcc8800]
+    const answerColors = [COLORS.skyDeep, COLORS.coral, COLORS.mint, COLORS.warning]
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
     let countdownTimer: Phaser.Time.TimerEvent
@@ -135,11 +144,9 @@ export class QuestionScene extends Phaser.Scene {
       const speedSurge = correct && secondsLeft >= 10
       // Highlight correct (green) and picked wrong (red) buttons
       this.answerContainers.forEach((c, idx) => {
-        const bg = c.getAt(0) as Phaser.GameObjects.Rectangle
-        if (!bg) return
-        if (idx === q.correct) bg.setFillStyle(0x22aa44)
-        else if (idx === i && !correct) bg.setFillStyle(0xcc2222)
-        else bg.setAlpha(0.4)
+        if (idx === q.correct) setButtonFill(c, COLORS.mint)
+        else if (idx === i && !correct) setButtonFill(c, COLORS.danger)
+        else c.setAlpha(0.4)
       })
       this.handleAnswer(correct, timeBonus, speedSurge, btn, onComplete, q.explanation)
     }
@@ -165,8 +172,8 @@ export class QuestionScene extends Phaser.Scene {
       const col = i % 2
       const bx = w / 2 + (col === 0 ? -230 : 230)
       const by = h / 2 + 40 + row * 90
-      const btn = createButton(this, bx, by, `${labels[i]}: ${ans}`, answerColors[i], answerColors[i] - 0x222222, 380, 64)
-      btn.setAlpha(0)
+      const btn = createButton(this, bx, by, `${labels[i]}: ${ans}`, answerColors[i], answerColors[i], 380, 64)
+      btn.setAlpha(0).setDepth(45)
       btn.setName(`btn_${i}`)
       this.answerContainers.push(btn)
       this.tweens.add({
@@ -180,18 +187,22 @@ export class QuestionScene extends Phaser.Scene {
     })
 
     // Timer bar
-    this.add.rectangle(w / 2, h / 2 + 225, 800, 16, 0x333355)
-      .setStrokeStyle(2, 0xffffff)
-    const timerBar = this.add.rectangle(w / 2 - 400, h / 2 + 225, 800, 12, 0x44ff88)
-    timerBar.setOrigin(0, 0.5)
+    const timerTrack = this.add.graphics().setDepth(45)
+    timerTrack.fillStyle(0x1a2438, 1)
+    timerTrack.fillRoundedRect(w / 2 - 400, h / 2 + 217, 800, 16, 8)
+    timerTrack.lineStyle(1.5, 0xffffff, 0.25)
+    timerTrack.strokeRoundedRect(w / 2 - 400, h / 2 + 217, 800, 16, 8)
 
-    const countdownText = this.add.text(w / 2 + 430, h / 2 + 225, '15', {
+    const timerBar = this.add.rectangle(w / 2 - 400, h / 2 + 225, 800, 10, COLORS.mint)
+    timerBar.setOrigin(0, 0.5).setDepth(45)
+
+    const countdownText = this.add.text(w / 2 + 420, h / 2 + 225, '15', {
       fontSize: '22px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#44ff88',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.mint),
       stroke: '#002200',
-      strokeThickness: 3
-    }).setOrigin(0, 0.5)
+      strokeThickness: 3,
+    }).setOrigin(0, 0.5).setDepth(45)
 
     countdownTimer = this.time.addEvent({
       delay: isAutoSimMode() ? 60 : 1000,
@@ -207,7 +218,7 @@ export class QuestionScene extends Phaser.Scene {
             duration: 100, yoyo: true,
             ease: 'Bounce.easeInOut'
           })
-          this.cameras.main.shake(100, 0.005)
+          if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
         }
         else if (secondsLeft <= 10) countdownText.setColor('#ff8800')
       }
@@ -265,8 +276,9 @@ export class QuestionScene extends Phaser.Scene {
     const h = this.scale.height
 
     if (correct) {
+      Sfx.correct()
       showConfetti(this)
-      this.cameras.main.flash(400, 100, 255, 100)
+      if (!shouldReduceMotion()) this.cameras.main.flash(400, 100, 255, 100)
 
       if (speedSurge) {
         // Speed surge particle burst
@@ -290,33 +302,36 @@ export class QuestionScene extends Phaser.Scene {
       }
 
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
-      const bg = this.add.rectangle(0, 0, w, 140, 0x00ff88, 0.6)
-      const txt = this.add.text(0, 0, '✅ CORRECT!', {
-        fontSize: '84px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#004400', strokeThickness: 10
+      const bg = this.add.rectangle(0, 0, w, 140, COLORS.mint, 0.55)
+      const txt = this.add.text(0, 0, 'CORRECT!', {
+        fontSize: '78px', fontFamily: FONT.display, color: '#ffffff', stroke: '#004400', strokeThickness: 10
       }).setOrigin(0.5)
       banner.add([bg, txt]).setScale(3).setAlpha(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
 
       if (timeBonus > 0) {
         this.time.delayedCall(this.d(400), () => {
-          this.add.text(w / 2, h / 2 + 100, `⚡ SPEED BONUS +${timeBonus}`, {
-            fontSize: '28px', fontFamily: 'Fredoka, Arial Black', color: '#88ddff', stroke: '#102844', strokeThickness: 4
+          this.add.text(w / 2, h / 2 + 100, `SPEED BONUS +${timeBonus}`, {
+            fontSize: '26px', fontFamily: FONT.display, color: '#88ddff', stroke: '#102844', strokeThickness: 4
           }).setOrigin(0.5).setDepth(201)
         })
       }
       this.time.delayedCall(this.d(600), () => {
-        this.add.text(w / 2, h / 2 + 160, `📈 +${10 + timeBonus} pts`, {
-          fontSize: '22px', fontFamily: 'Fredoka, Arial Black', color: '#44ff88', stroke: '#004400', strokeThickness: 4
+        this.add.text(w / 2, h / 2 + 160, `+${10 + timeBonus} pts`, {
+          fontSize: '22px', fontFamily: FONT.display, color: hexColor(COLORS.mint), stroke: '#004400', strokeThickness: 4
         }).setOrigin(0.5).setDepth(201)
       })
     } else {
-      this.cameras.main.shake(300, 0.01)
-      this.cameras.main.flash(300, 255, 0, 0, true)
+      Sfx.wrong()
+      if (!shouldReduceMotion()) {
+        this.cameras.main.shake(300, 0.01)
+        this.cameras.main.flash(300, 255, 0, 0, true)
+      }
       
       const banner = this.add.container(w / 2, h / 2).setDepth(200)
-      const bg = this.add.rectangle(0, 0, w, 140, 0xff0000, 0.6)
-      const txt = this.add.text(0, 0, '❌ WRONG', {
-        fontSize: '84px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff', stroke: '#440000', strokeThickness: 10
+      const bg = this.add.rectangle(0, 0, w, 140, COLORS.danger, 0.55)
+      const txt = this.add.text(0, 0, 'WRONG', {
+        fontSize: '78px', fontFamily: FONT.display, color: '#ffffff', stroke: '#440000', strokeThickness: 10
       }).setOrigin(0.5)
       banner.add([bg, txt]).setScale(3).setAlpha(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })

@@ -5,6 +5,9 @@ import {
   generatePlayerTextures,
   generateTileTextures,
 } from '../systems/SpriteFactory'
+import { paintStage } from '../ui/Panel'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { isAutoSimMode } from '../systems/gameFlags'
 
 export class PreloadScene extends Phaser.Scene {
   constructor() { super('PreloadScene') }
@@ -13,52 +16,66 @@ export class PreloadScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    // Dark loading backdrop
-    this.add.rectangle(w / 2, h / 2, w, h, 0x030312)
+    paintStage(this)
 
-    // Animated title
-    const titleText = this.add.text(w / 2, h / 2 - 80, 'VOCAB PARTY', {
+    const titleText = this.add.text(w / 2, h / 2 - 90, 'VOCAB PARTY', {
       fontSize: '52px',
-      fontFamily: 'Fredoka, Arial Black, Arial',
-      color: '#ffffff',
-      stroke: '#3333aa',
-      strokeThickness: 8
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
+      stroke: hexColor(COLORS.goldDeep),
+      strokeThickness: 8,
     }).setOrigin(0.5).setAlpha(0)
 
-    this.tweens.add({ targets: titleText, alpha: 1, y: h / 2 - 100, duration: 500, ease: 'Cubic.easeOut' })
+    this.tweens.add({
+      targets: titleText,
+      alpha: 1,
+      y: h / 2 - 108,
+      duration: 480,
+      ease: 'Cubic.easeOut',
+    })
 
-    // Loading bar with glow
-    const barBg = this.add.rectangle(w / 2, h / 2 + 20, 420, 28, 0x111133).setStrokeStyle(2, 0x4488ff, 0.4)
-    const barFill = this.add.rectangle(w / 2 - 210, h / 2 + 20, 0, 22, 0x4488ff).setOrigin(0, 0.5)
-    const barGlow = this.add.rectangle(w / 2 - 210, h / 2 + 20, 0, 28, 0x4488ff, 0.2).setOrigin(0, 0.5)
-
-    const statusText = this.add.text(w / 2, h / 2 + 60, 'Loading assets...', {
+    this.add.text(w / 2, h / 2 - 48, 'Getting the party ready…', {
       fontSize: '16px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#6688aa'
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0.5)
+
+    // Loading bar
+    const barW = 440
+    const barBg = this.add.graphics()
+    barBg.fillStyle(COLORS.bgPanel, 0.95)
+    barBg.fillRoundedRect(w / 2 - barW / 2, h / 2 + 8, barW, 28, 10)
+    barBg.lineStyle(2, COLORS.sky, 0.4)
+    barBg.strokeRoundedRect(w / 2 - barW / 2, h / 2 + 8, barW, 28, 10)
+
+    const barFill = this.add.graphics()
+    const statusText = this.add.text(w / 2, h / 2 + 58, 'Loading assets…', {
+      fontSize: '15px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
     this.load.on('progress', (value: number) => {
-      barFill.width = 416 * value
-      barGlow.width = 416 * value
+      barFill.clear()
+      const fillW = Math.max(8, (barW - 8) * value)
+      barFill.fillStyle(COLORS.teal, 1)
+      barFill.fillRoundedRect(w / 2 - barW / 2 + 4, h / 2 + 12, fillW, 20, 8)
+      barFill.fillStyle(0xffffff, 0.18)
+      barFill.fillRoundedRect(w / 2 - barW / 2 + 6, h / 2 + 14, fillW - 4, 8, 4)
     })
 
     this.load.on('complete', () => {
       statusText.setText('Ready!')
-      this.tweens.add({
-        targets: barFill,
-        fillColor: 0x44ff88,
-        duration: 200
-      })
+      barFill.clear()
+      barFill.fillStyle(COLORS.mint, 1)
+      barFill.fillRoundedRect(w / 2 - barW / 2 + 4, h / 2 + 12, barW - 8, 20, 8)
     })
 
     this.load.on('loaderror', (file: any) => console.error('PreloadScene: Load error on', file.src))
 
-    // Load JSON data
     this.load.json('vocab', 'data/vocab.json')
     this.load.json('grammar', 'data/grammar.json')
 
-    // External assets
     this.load.image(TEXTURE_KEYS.starfield, EXTERNAL_ASSETS.starfield)
     this.load.image(TEXTURE_KEYS.particleYellow, EXTERNAL_ASSETS.particleYellow)
     this.load.image(TEXTURE_KEYS.particleRed, EXTERNAL_ASSETS.particleRed)
@@ -79,9 +96,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.skyNebula, EXTERNAL_ASSETS.skyNebula)
     this.load.spritesheet(TEXTURE_KEYS.coin, EXTERNAL_ASSETS.coinSheet, {
       frameWidth: 16,
-      frameHeight: 16
+      frameHeight: 16,
     })
-    // Kenney game icons
     this.load.image(TEXTURE_KEYS.kenneyStar, EXTERNAL_ASSETS.kenneyStar)
     this.load.image(TEXTURE_KEYS.kenneyTrophy, EXTERNAL_ASSETS.kenneyTrophy)
     this.load.image(TEXTURE_KEYS.kenneyCart, EXTERNAL_ASSETS.kenneyCart)
@@ -89,11 +105,15 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.kenneyQuestion, EXTERNAL_ASSETS.kenneyQuestion)
     this.load.image(TEXTURE_KEYS.kenneyHome, EXTERNAL_ASSETS.kenneyHome)
     this.load.image(TEXTURE_KEYS.kenneyReturn, EXTERNAL_ASSETS.kenneyReturn)
-    // Kenney card backs
+    this.load.image(TEXTURE_KEYS.kenneyDie1, EXTERNAL_ASSETS.kenneyDie1)
+    this.load.image(TEXTURE_KEYS.kenneyDie2, EXTERNAL_ASSETS.kenneyDie2)
+    this.load.image(TEXTURE_KEYS.kenneyDie3, EXTERNAL_ASSETS.kenneyDie3)
+    this.load.image(TEXTURE_KEYS.kenneyDie4, EXTERNAL_ASSETS.kenneyDie4)
+    this.load.image(TEXTURE_KEYS.kenneyDie5, EXTERNAL_ASSETS.kenneyDie5)
+    this.load.image(TEXTURE_KEYS.kenneyDie6, EXTERNAL_ASSETS.kenneyDie6)
     this.load.image(TEXTURE_KEYS.kenneyCardRed, EXTERNAL_ASSETS.kenneyCardRed)
     this.load.image(TEXTURE_KEYS.kenneyCardBlue, EXTERNAL_ASSETS.kenneyCardBlue)
     this.load.image(TEXTURE_KEYS.kenneyCardGreen, EXTERNAL_ASSETS.kenneyCardGreen)
-    // Character sprites
     this.load.image(TEXTURE_KEYS.charPhaserDude, EXTERNAL_ASSETS.charPhaserDude)
     this.load.image(TEXTURE_KEYS.charMushroom, EXTERNAL_ASSETS.charMushroom)
     this.load.image(TEXTURE_KEYS.charBunny, EXTERNAL_ASSETS.charBunny)
@@ -109,9 +129,9 @@ export class PreloadScene extends Phaser.Scene {
     generatePlayerTextures(this)
     generateTileTextures(this)
 
-    this.cameras.main.fadeIn(400, 3, 3, 18)
+    this.cameras.main.fadeIn(isAutoSimMode() ? 40 : 360, 7, 11, 20)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {
-      this.cameras.main.fadeOut(500, 3, 3, 18)
+      this.cameras.main.fadeOut(isAutoSimMode() ? 40 : 420, 7, 11, 20)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
         this.scene.start('MenuScene')
       })

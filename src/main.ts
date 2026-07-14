@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { initGameFlagsFromLocation } from './systems/gameFlags'
+import { installAudioUnlock, Sfx } from './systems/Sfx'
 import { BootScene } from './scenes/BootScene'
 import { PreloadScene } from './scenes/PreloadScene'
 import { MenuScene } from './scenes/MenuScene'
@@ -14,7 +15,7 @@ import { PauseScene } from './scenes/PauseScene'
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
-  backgroundColor: '#1a1a2e',
+  backgroundColor: '#070b14',
   scale: {
     // FIT scales the 1280x720 design surface uniformly to fit any window aspect ratio,
     // letterboxing on non-16:9. Game logic always uses 1280x720 internally so menus
@@ -23,15 +24,33 @@ const config: Phaser.Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: 1280,
     height: 720,
-    expandParent: true
+    expandParent: true,
+  },
+  audio: {
+    disableWebAudio: false,
+  },
+  input: {
+    activePointers: 3,
   },
   physics: {
     default: 'arcade',
-    arcade: { gravity: { x: 0, y: 0 }, debug: false }
+    arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene]
+  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene],
 }
 
 initGameFlagsFromLocation()
+installAudioUnlock()
 
-new Phaser.Game(config)
+const game = new Phaser.Game(config)
+
+// Keep canvas sharp on resize / orientation changes (FIT already handles layout).
+window.addEventListener('orientationchange', () => {
+  window.setTimeout(() => game.scale.refresh(), 120)
+})
+window.addEventListener('resize', () => {
+  game.scale.refresh()
+})
+
+// Warm SFX graph lazily; music starts from MenuScene.
+void Sfx

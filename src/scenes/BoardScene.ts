@@ -3,15 +3,32 @@ import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState, ITEMS } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonEnabled } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
-import { addStarfieldBackdrop } from '../ui/Starfield'
+import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
+import { paintStage } from '../ui/Panel'
+import { COLORS, DEPTH, FONT, hexColor } from '../ui/Theme'
 import { playCoinBurst } from '../ui/CoinBurst'
-import { TILE_TEXTURE_KEY, PLAYER_TEXTURE_KEYS, DICE_TEXTURE_KEYS } from '../systems/SpriteFactory'
-import { cpuBoardQuestionResolve, cpuRollDelayMs, cpuChooseItem, cpuPolicyForLevel, cpuShouldBuyShop, cpuShouldBuyStar, cpuChooseBranch } from '../systems/CpuPolicy'
+import { TILE_TEXTURE_KEY, DICE_TEXTURE_KEYS, characterDef, characterTextureKey } from '../systems/SpriteFactory'
+import {
+  cpuBoardQuestionResolve,
+  cpuRollDelayMs,
+  cpuItemThinkDelayMs,
+  cpuChooseItem,
+  cpuShouldBuyShop,
+  cpuShouldBuyStar,
+  cpuChooseBranch,
+  cpuChooseSwapTarget,
+  cpuChoosePoisonTarget,
+  cpuChooseWarpPosition,
+  cpuChooseItemToBuy,
+  cpuPlayerRank,
+} from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import type { BattleResult } from './BattleScene'
 
@@ -45,7 +62,6 @@ const SHOP_RENT_COINS = 3
 const SHOP_OWNER_INCOME = 2
 const SHOP_PORTFOLIO_RENT_STEP = 2
 
-const PLAYER_COLORS = [0xff4444, 0x4488ff, 0x44dd44, 0xffcc00]
 const SHOP_PORTFOLIO_INCOME_STEP = 1
 const BRICKS_FOR_BUILD_BONUS = 4
 const BUILD_BONUS_SCORE = 6
@@ -134,17 +150,19 @@ export class BoardScene extends Phaser.Scene {
     roundsPerGame?: number
     playerCpu?: boolean[]
     playerCpuLevels?: CpuLevel[]
+    playerCharacters?: number[]
   }) {
     const w = this.scale.width
     const h = this.scale.height
 
     const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
-    const emojis = data?.playerEmojis ?? ['🔴', '🔵', '🟢', '🟡']
+    const emojis = data?.playerEmojis ?? ['🎉', '🧙', '🛡️', '🏴‍☠️']
     this.roundsPerGame = data?.roundsPerGame ?? DEFAULT_ROUNDS_PER_GAME
     const cpuFlags = data?.playerCpu ?? names.map(() => false)
     const cpuLevels = data?.playerCpuLevels
+    const characters = data?.playerCharacters ?? names.map((_, i) => i)
 
-    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels)
+    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters)
     this.nodes = BOARD_NODES
 
     const boardW = BOARD_COLS * TILE_SIZE
@@ -160,34 +178,52 @@ export class BoardScene extends Phaser.Scene {
     this.hud = new PlayerHUD(this, this.state)
     this.createPauseButton()
     this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
+    Sfx.startMusic()
+
+    const touch = isTouchPreferred(this.sys.game)
 
     // Bottom control panel
-    this.add.rectangle(w / 2, h - 56, w, 112, 0x12122a).setOrigin(0.5, 0.5)
-    this.add.rectangle(w / 2, h - 112, w, 2, 0x334466).setOrigin(0.5, 0.5)
+    const chrome = this.add.graphics().setDepth(DEPTH.chrome - 5)
+    chrome.fillStyle(COLORS.bgPanel, 0.94)
+    chrome.fillRect(0, h - 108, w, 108)
+    chrome.fillStyle(COLORS.teal, 0.35)
+    chrome.fillRect(0, h - 110, w, 3)
+    chrome.fillStyle(0x000000, 0.25)
+    chrome.fillRect(0, h - 108, w, 4)
 
     this.statusText = this.add.text(w / 2 - 160, h - 56, '', {
       fontSize: '20px',
-      fontFamily: 'Fredoka, Arial Black, Arial',
+      fontFamily: FONT.display,
       color: '#ffffff',
       stroke: '#000033',
-      strokeThickness: 4
-    }).setOrigin(0.5)
+      strokeThickness: 4,
+    }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
-    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52)
+    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52).setDepth(DEPTH.chrome)
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#aaddff',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.sky),
       stroke: '#000033',
-      strokeThickness: 4
-    }).setOrigin(1, 0)
+      strokeThickness: 4,
+    }).setOrigin(1, 0).setDepth(DEPTH.hud)
 
-    this.rollBtn = createButton(this, w - 110, h - 56, '🎲 ROLL', 0xffcc00, 0xcc9900, 180, 56)
+    this.rollBtn = createButton(this, w - 118, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 196, 64)
+    this.rollBtn.setDepth(DEPTH.chrome)
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
-    this.itemBtn = createButton(this, w - 300, h - 56, '🎒 ITEMS', 0x44ccff, 0x0088cc, 160, 56)
+    this.itemBtn = createButton(this, w - 330, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 176, 64)
+    this.itemBtn.setDepth(DEPTH.chrome)
     this.itemBtn.on('pointerdown', () => this.toggleItemMenu())
+
+    this.add.text(24, h - 28, touch
+      ? 'Tap ROLL · Tap tile to inspect · pause (II)'
+      : 'Space / R = Roll · Esc = Pause · Hover or tap tiles', {
+      fontSize: '13px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mute),
+    }).setOrigin(0, 0.5).setDepth(DEPTH.chrome)
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
@@ -217,6 +253,8 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p?.isCpu) return
     this.rollBtn.setAlpha(0.42)
+    const levelLabel = p.cpuLevel === 'hard' ? 'Hard' : p.cpuLevel === 'easy' ? 'Easy' : 'Normal'
+    this.statusText.setText(`${p.emoji} ${p.name} (CPU · ${levelLabel}) is thinking…`)
     this.time.delayedCall(this.d(cpuRollDelayMs(Phaser.Math, p.cpuLevel)), () => {
       if (!this.scene.isActive() || this.scene.isPaused() || this.rolling) return
       if (!this.state.players[this.state.currentPlayer]?.isCpu) return
@@ -224,34 +262,22 @@ export class BoardScene extends Phaser.Scene {
     })
   }
 
-  drawBackdrop(w: number, h: number) {
-    this.add.rectangle(0, 0, w, h, 0x050510).setOrigin(0)
-    
-    // Ambient color wash (Flat to avoid WebGL texture generation issues)
-    this.add.rectangle(0, 0, w, h, 0x111122, 0.3).setOrigin(0).setDepth(-10)
-
-    addStarfieldBackdrop(this, 0.45)
-    
-    // Floating dust/motes
-    for (let i = 0; i < 30; i++) {
-      const mote = this.add.circle(
-        Phaser.Math.Between(0, w),
-        Phaser.Math.Between(0, h),
-        Phaser.Math.Between(1, 3),
-        0x44ccff,
-        0.15
-      ).setDepth(-5)
-      
-      this.tweens.add({
-        targets: mote,
-        alpha: 0.6,
-        y: '-=40',
-        duration: Phaser.Math.Between(3000, 6000),
-        yoyo: true,
-        repeat: -1,
-        delay: Phaser.Math.Between(0, 3000)
-      })
+  private cpuBoardCtx() {
+    return {
+      tileTypes: TILE_TYPES as string[],
+      boardLength: this.nodes.length,
+      nextByNode: this.nodes.map(n => n.next),
+      round: this.state.round,
+      totalRounds: this.roundsPerGame,
+      shopPrice: SHOP_PRICE_COINS,
+      starCost: STAR_COST_COINS,
     }
+  }
+
+  drawBackdrop(w: number, h: number) {
+    paintStage(this)
+    addStarfieldBackdrop(this, 0.42)
+    addAmbientMotes(this, 26)
   }
 
   drawBoard() {
@@ -264,15 +290,14 @@ export class BoardScene extends Phaser.Scene {
     const fy = this.boardOriginY - pad
 
     // Ornate outer frame
-    const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, 0x0d0d1f).setDepth(-3)
-    outer.setStrokeStyle(4, 0xffd700, 0.4)
-    
-    const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, 0x111122).setDepth(-2)
-    inner.setStrokeStyle(2, 0x44ccff, 0.3)
-    
-    // Board felt with inner vignette
-    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, 0x0d0d1f)
-    felt.setStrokeStyle(1, 0x334466, 0.5).setDepth(-1)
+    const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, COLORS.bgDeep).setDepth(-3)
+    outer.setStrokeStyle(4, COLORS.gold, 0.45)
+
+    const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, COLORS.bgMid).setDepth(-2)
+    inner.setStrokeStyle(2, COLORS.teal, 0.35)
+
+    const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, COLORS.bgPanel)
+    felt.setStrokeStyle(1, 0x3a4f6a, 0.5).setDepth(-1)
 
     // Decorative corner icons
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
@@ -293,9 +318,26 @@ export class BoardScene extends Phaser.Scene {
         if (nodeSet.has(`${col},${row}`)) continue
         const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
         const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
-        this.add.rectangle(x, y, TILE_SIZE - 6, TILE_SIZE - 6, 0x07160f, 0.92).setDepth(-1)
+        const cell = this.add.graphics().setDepth(-1)
+        cell.fillStyle(0x0a1c14, 0.88)
+        cell.fillRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
+        cell.lineStyle(1, 0x1a3a28, 0.35)
+        cell.strokeRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
       }
     }
+
+    // Path underlay glow connecting tiles
+    const pathGlow = this.add.graphics().setDepth(-1)
+    pathGlow.lineStyle(10, COLORS.teal, 0.08)
+    this.nodes.forEach((node, i) => {
+      if (i === 0) return
+      const prev = this.nodes[i - 1]
+      const x1 = this.boardOriginX + prev.col * TILE_SIZE + TILE_SIZE / 2
+      const y1 = this.boardOriginY + prev.row * TILE_SIZE + TILE_SIZE / 2
+      const x2 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
+      const y2 = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
+      pathGlow.lineBetween(x1, y1, x2, y2)
+    })
 
     this.nodes.forEach((node, i) => {
       const type = this.getTileTypeAt(i)
@@ -303,70 +345,72 @@ export class BoardScene extends Phaser.Scene {
       const y = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
 
       const img = this.add.image(x, y, TILE_TEXTURE_KEY(type))
-      img.setDisplaySize(TILE_SIZE - 4, TILE_SIZE - 4)
+      img.setDisplaySize(TILE_SIZE - 2, TILE_SIZE - 2)
       img.setDepth(0)
       img.setInteractive()
       img.setScale(0)
 
       this.tweens.add({
         targets: img,
-        scaleX: (TILE_SIZE - 4) / img.width,
-        scaleY: (TILE_SIZE - 4) / img.height,
+        scaleX: (TILE_SIZE - 2) / img.width,
+        scaleY: (TILE_SIZE - 2) / img.height,
         duration: 400,
-        delay: i * 20,
-        ease: 'Back.easeOut'
+        delay: i * 18,
+        ease: 'Back.easeOut',
       })
 
       img.on('pointerover', () => {
-        img.setAlpha(0.8)
-        img.setScale(img.displayWidth / img.width * 1.1, img.displayHeight / img.height * 1.1)
         this.tweens.add({
           targets: img,
-          scaleX: img.displayWidth / img.width * 1.12,
-          scaleY: img.displayHeight / img.height * 1.12,
+          scaleX: (TILE_SIZE - 2) / img.width * 1.1,
+          scaleY: (TILE_SIZE - 2) / img.height * 1.1,
           duration: 100,
-          ease: 'Sine.easeOut'
+          ease: 'Sine.easeOut',
         })
         this.tileHintText?.setText(this.describeTile(i, type))
       })
       img.on('pointerout', () => {
-        img.setAlpha(1)
-        img.setScale(img.displayWidth / img.width, img.displayHeight / img.height)
         this.tweens.add({
           targets: img,
-          scaleX: (TILE_SIZE - 4) / img.width,
-          scaleY: (TILE_SIZE - 4) / img.height,
+          scaleX: (TILE_SIZE - 2) / img.width,
+          scaleY: (TILE_SIZE - 2) / img.height,
           duration: 100,
-          ease: 'Sine.easeOut'
+          ease: 'Sine.easeOut',
         })
-        this.tileHintText?.setText('Hover a tile to inspect its effect.')
+        this.tileHintText?.setText(this.tileInspectHint())
+      })
+      img.on('pointerdown', () => {
+        this.tileHintText?.setText(this.describeTile(i, type))
+        Sfx.uiHover()
       })
 
-      const label = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '20px' }).setOrigin(0.5).setDepth(1).setScale(0)
-      this.tweens.add({ targets: label, scaleX: 1, scaleY: 1, duration: 400, delay: i * 20 + 200, ease: 'Back.easeOut' })
+      // Tiny index badge (readable, not competing with motif)
+      this.add.text(x - TILE_SIZE / 2 + 7, y - TILE_SIZE / 2 + 5, String(i), {
+        fontSize: '9px',
+        fontFamily: FONT.display,
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
+      }).setAlpha(0.55).setDepth(1)
 
-      // Shop ownership indicator dot
       if (type === 'shop' && this.shopOwners[i] !== undefined) {
         const owner = this.state.players.find(p => p.id === this.shopOwners[i])
         if (owner) {
-          const ownerIdx = this.state.players.indexOf(owner)
-          const ownerColor = PLAYER_COLORS[ownerIdx % PLAYER_COLORS.length]
-          const dot = this.add.circle(x + TILE_SIZE / 2 - 8, y - TILE_SIZE / 2 + 8, 4, ownerColor, 1)
+          const ownerColor = characterDef(owner.characterIndex).color
+          const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
           dot.setDepth(2)
-          dot.setStrokeStyle(1.5, 0xffffff, 0.6)
+          dot.setStrokeStyle(1.5, 0xffffff, 0.75)
         }
       }
-
-      this.add.text(x - TILE_SIZE / 2 + 6, y - TILE_SIZE / 2 + 4, String(i), {
-        fontSize: '9px',
-        color: '#ffffff'
-      }).setAlpha(0.7).setDepth(1)
     })
 
     const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
     const cy = this.boardOriginY + BOARD_ROWS * TILE_SIZE / 2
-    const titlePanel = this.add.rectangle(cx, cy, 240, 100, 0x0a1520, 0.88)
-    titlePanel.setStrokeStyle(2, 0x335577, 0.9).setDepth(2)
+    const titlePanel = this.add.graphics().setDepth(2)
+    titlePanel.fillStyle(COLORS.bgPanel, 0.9)
+    titlePanel.fillRoundedRect(cx - 120, cy - 50, 240, 100, 14)
+    titlePanel.lineStyle(2, COLORS.sky, 0.55)
+    titlePanel.strokeRoundedRect(cx - 120, cy - 50, 240, 100, 14)
 
     if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
       this.add.image(cx - 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
@@ -374,40 +418,66 @@ export class BoardScene extends Phaser.Scene {
     }
     this.add.text(cx, cy - 18, 'VOCAB', {
       fontSize: '28px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#e8f4ff',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.frost),
       stroke: '#102040',
-      strokeThickness: 4
+      strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
     this.add.text(cx, cy + 18, 'PARTY', {
       fontSize: '28px',
-      fontFamily: 'Fredoka, Arial Black',
-      color: '#FFD700',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.gold),
       stroke: '#553300',
-      strokeThickness: 4
+      strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
 
-    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, 'Hover a tile to inspect its effect.', {
-      fontSize: '14px',
-      fontFamily: 'Fredoka, Arial',
-      color: '#bbd7ff'
+    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, this.tileInspectHint(), {
+      fontSize: '15px',
+      fontFamily: FONT.body,
+      color: '#d7e8ff',
+      stroke: '#0a1520',
+      strokeThickness: 3,
     }).setOrigin(0.5, 0).setDepth(3)
   }
 
+  private tileInspectHint() {
+    return isTouchPreferred(this.sys.game)
+      ? 'Tap a tile to inspect its effect.'
+      : 'Hover or tap a tile to inspect its effect.'
+  }
+
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
-    const {x, y} = this.getTileXY(0)
-    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
-    const offset = offsets[index]
+    const { x, y } = this.getTileXY(0)
+    const offsets = [{ x: -12, y: -12 }, { x: 12, y: -12 }, { x: -12, y: 12 }, { x: 12, y: 12 }]
+    const offset = offsets[index] ?? { x: 0, y: 0 }
     const container = this.add.container(x + offset.x, y + offset.y)
 
-    // Drop shadow
-    const shadow = this.add.ellipse(2, 4, 32, 12, 0x000000, 0.25)
-    container.add(shadow)
+    const def = characterDef(player.characterIndex)
+    const color = def.color
+    const ring = this.add.graphics()
+    ring.fillStyle(0x000000, 0.2)
+    ring.fillEllipse(1, 18, 34, 10)
+    ring.lineStyle(3, color, 0.95)
+    ring.strokeCircle(0, -2, 18)
+    ring.lineStyle(1.5, 0xffffff, 0.55)
+    ring.strokeCircle(0, -2, 15)
 
-    const sprite = this.add.image(0, 0, PLAYER_TEXTURE_KEYS[index]).setDisplaySize(32, 32)
-    const label = this.add.text(0, 0, player.emoji, { fontSize: '14px' }).setOrigin(0.5)
-    container.add([sprite, label])
-    container.setDepth(10)
+    const tex = characterTextureKey(player.characterIndex)
+    const sprite = this.add.image(0, -4, tex).setDisplaySize(48, 62)
+
+    container.add([ring, sprite])
+    container.setDepth(DEPTH.tokens)
+
+    // Idle bob
+    this.tweens.add({
+      targets: sprite,
+      y: -7,
+      duration: 900 + index * 120,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    })
+
     return container
   }
 
@@ -441,43 +511,62 @@ export class BoardScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
 
-    const banner = this.add.container(w + 600, h / 2).setDepth(200)
-    const bg = this.add.rectangle(0, 0, w * 2, 120, 0x000000, 0.7)
-    const text = this.add.text(0, 0, msg, {
-      fontSize: '64px', fontFamily: 'Fredoka, Arial Black', color, stroke: '#000000', strokeThickness: 10
+    const banner = this.add.container(w / 2, -80).setDepth(DEPTH.banner)
+    const g = this.add.graphics()
+    const bw = Math.min(720, 40 + msg.length * 22)
+    g.fillStyle(0x000000, 0.28)
+    g.fillRoundedRect(-bw / 2 + 3, -42, bw, 84, 18)
+    g.fillStyle(COLORS.bgPanel, 0.94)
+    g.fillRoundedRect(-bw / 2, -45, bw, 84, 18)
+    const accent = parseInt(color.replace('#', ''), 16) || COLORS.gold
+    g.lineStyle(3, accent, 0.9)
+    g.strokeRoundedRect(-bw / 2, -45, bw, 84, 18)
+    g.fillStyle(accent, 0.9)
+    g.fillRoundedRect(-bw / 2 + 8, -38, 6, 70, 3)
+
+    const text = this.add.text(10, 0, msg, {
+      fontSize: '36px',
+      fontFamily: FONT.display,
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 6,
     }).setOrigin(0.5)
-    
-    banner.add([bg, text])
+
+    banner.add([g, text])
 
     return new Promise<void>(resolve => {
+      const inMs = this.d(420)
+      const holdMs = this.d(700)
+      const outMs = this.d(320)
       this.tweens.add({
         targets: banner,
-        x: w / 2,
-        duration: 500,
+        y: 118,
+        duration: Math.max(40, inMs),
         ease: 'Back.easeOut',
         onComplete: () => {
-          this.time.delayedCall(800, () => {
+          this.time.delayedCall(holdMs, () => {
             this.tweens.add({
               targets: banner,
-              x: -600,
-              duration: 400,
+              y: -100,
+              alpha: 0,
+              duration: Math.max(30, outMs),
               ease: 'Cubic.easeIn',
               onComplete: () => {
                 banner.destroy()
                 resolve()
-              }
+              },
             })
           })
-        }
+        },
       })
     })
   }
 
   async updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
-    
-    if (!this.rolling) {
-      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, `#${PLAYER_COLORS[this.state.currentPlayer].toString(16).padStart(6, '0')}`)
+
+    if (!this.rolling && !isAutoSimMode()) {
+      await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, hexColor(characterDef(p.characterIndex).color))
     }
 
     const cpuTag = p.isCpu ? ' 🤖' : ''
@@ -490,11 +579,11 @@ export class BoardScene extends Phaser.Scene {
     this.hud.update(this.state)
 
     if (p.isCpu && !this.rolling) {
-      ;(this.rollBtn as any).setEnabled?.(false)
-      ;(this.itemBtn as any).setEnabled?.(false)
+      setButtonEnabled(this.rollBtn, false)
+      setButtonEnabled(this.itemBtn, false)
     } else if (!this.rolling) {
-      ;(this.rollBtn as any).setEnabled?.(true)
-      ;(this.itemBtn as any).setEnabled?.(true)
+      setButtonEnabled(this.rollBtn, true)
+      setButtonEnabled(this.itemBtn, true)
     }
 
     this.turnGlowTween?.stop()
@@ -526,17 +615,22 @@ export class BoardScene extends Phaser.Scene {
 
     // CPU Strategic Item Usage
     if (cur.isCpu && cur.inventory.length > 0) {
-      const sorted = [...this.state.players].sort((a, b) => b.score - a.score)
-      const rank = sorted.findIndex(p => p.id === cur.id)
+      const rank = cpuPlayerRank(cur.id, this.state.players)
       const isLast = rank === this.state.players.length - 1
       const itemToUseIdx = cpuChooseItem(
         cur.inventory, cur.coins, cur.score, cur.position, cur.trophies,
-        isLast, rank, cur.cpuLevel
+        isLast, rank, cur.cpuLevel,
+        {
+          ...this.cpuBoardCtx(),
+          rivals: this.state.players.filter(p => p.id !== cur.id),
+        }
       )
 
       if (itemToUseIdx >= 0) {
+        this.statusText.setText(`${cur.emoji} ${cur.name} digs through their backpack…`)
+        await new Promise(r => this.time.delayedCall(this.d(cpuItemThinkDelayMs(Phaser.Math, cur.cpuLevel)), r))
         await this.useItem(this.state.currentPlayer, itemToUseIdx)
-        await new Promise(r => this.time.delayedCall(this.d(1400), r))
+        await new Promise(r => this.time.delayedCall(this.d(900), r))
       }
     }
 
@@ -544,15 +638,13 @@ export class BoardScene extends Phaser.Scene {
     this.rollBtn.setAlpha(0.5)
     this.itemBtn.setAlpha(0.5)
     this.closeItemMenu()
+    Sfx.roll()
 
     const player = this.state.players[this.state.currentPlayer]
 
-    // Handle forced moves (Golden Key)
-    let roll = rollBlockDie()
-    if (player.forcedMoveValue > 0) {
-      roll = player.forcedMoveValue
-      player.forcedMoveValue = 0 // consume
-    }
+    // Handle forced moves (Golden Key) — must apply to the actual movement result
+    const forcedMove = player.forcedMoveValue > 0 ? player.forcedMoveValue : 0
+    if (forcedMove > 0) player.forcedMoveValue = 0
 
     // Dramatic dice roll animation
     this.time.addEvent({
@@ -572,27 +664,33 @@ export class BoardScene extends Phaser.Scene {
           this.time.delayedCall(100, () => spark.destroy())
         }
 
-        this.cameras.main.shake(50, 0.003)
+        if (!shouldReduceMotion()) this.cameras.main.shake(50, 0.003)
       }
     })
 
     await new Promise<void>(res => this.time.delayedCall(this.d(1300), res))
 
-    let result = rollBlockDie()
+    let result = forcedMove > 0 ? forcedMove : rollBlockDie()
     const hadSpeedBoost = player.speedBoostTurns > 0
     const hadDash = player.dashActive
-    if (hadDash) {
+    if (hadDash && forcedMove <= 0) {
       const r2 = rollBlockDie()
       result += r2
       player.dashActive = false
+    } else if (hadDash) {
+      // Golden Key already sets the move; still consume dash so it doesn't linger
+      player.dashActive = false
     }
-    if (hadSpeedBoost) {
+    if (hadSpeedBoost && forcedMove <= 0) {
       result = Math.min(3, result + 1)
       player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
+    } else if (hadSpeedBoost) {
+      player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
     }
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, result - 1)])
-    const surgeText = (hadSpeedBoost ? ' + 💨 Speed Surge' : '') + (hadDash ? ' + 🏃 Dash!' : '')
-    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${hadDash ? ' (2 dice)' : ' (1-3)'}${surgeText}!`)
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, Math.max(1, result) - 1)])
+    const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Speed Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash!' : '')
+    const forceTag = forcedMove > 0 ? ' 🔑' : ''
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${forceTag}${hadDash && forcedMove <= 0 ? ' (2 dice)' : forcedMove > 0 ? ' (Golden Key)' : ' (1-3)'}${surgeText}!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -620,8 +718,22 @@ export class BoardScene extends Phaser.Scene {
 
       if (options.length > 1) {
         if (player.isCpu) {
-          const idx = cpuChooseBranch(player.position, options, TILE_TYPES, player.coins, player.trophies, player.cpuLevel)
+          const idx = cpuChooseBranch(
+            player.position,
+            options,
+            TILE_TYPES as string[],
+            player.coins,
+            player.trophies,
+            player.cpuLevel,
+            {
+              nextByNode: this.nodes.map(n => n.next),
+              boardLength: this.nodes.length,
+              shopPrice: SHOP_PRICE_COINS,
+              starCost: STAR_COST_COINS,
+            }
+          )
           chosenNextId = options[idx]
+          this.statusText.setText(`${player.emoji} ${player.name} picks a path…`)
         } else {
           chosenNextId = await this.promptForBranch(player, options)
         }
@@ -659,7 +771,7 @@ export class BoardScene extends Phaser.Scene {
       })
     }
 
-    this.cameras.main.shake(100, 0.005)
+    if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
     
     // Squash and stretch tile
     const tileImg = this.children.list.find(c => c instanceof Phaser.GameObjects.Image && c.x === token.x - off.x && c.y === token.y - off.y) as Phaser.GameObjects.Image
@@ -691,6 +803,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.statusText.setText(`🎒 ${player.name} used ${item.name}!`)
     this.showFloatyText(player, `Used ${item.emoji}`, '#ffffff')
+    Sfx.item()
     player.inventory.splice(inventoryIndex, 1)
     this.closeItemMenu()
 
@@ -700,7 +813,17 @@ export class BoardScene extends Phaser.Scene {
         break
       case 'swap': {
         const others = this.state.players.filter((_, i) => i !== playerIndex)
-        const target = Phaser.Utils.Array.GetRandom(others)
+        if (others.length === 0) break
+        const targetIndex = player.isCpu
+          ? cpuChooseSwapTarget(
+              playerIndex,
+              this.state.players,
+              TILE_TYPES as string[],
+              this.nodes.length,
+              player.cpuLevel
+            )
+          : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+        const target = this.state.players[targetIndex]
         const temp = player.position
         player.position = target.position
         target.position = temp
@@ -709,8 +832,11 @@ export class BoardScene extends Phaser.Scene {
         break
       }
       case 'warp':
-        player.position = Phaser.Math.Between(0, BOARD_NODES.length - 1)
+        player.position = player.isCpu
+          ? cpuChooseWarpPosition(this.nodes.length, TILE_TYPES as string[], player.cpuLevel)
+          : Phaser.Math.Between(0, this.nodes.length - 1)
         this.updatePlayerTokens()
+        this.showFloatyText(player, '🌀 Warped!', '#88ccff')
         break
       case 'shield':
         player.shieldActive = true
@@ -719,7 +845,9 @@ export class BoardScene extends Phaser.Scene {
         player.doubleScoreActive = true
         break
       case 'poison_dart': {
-        const targetIdx = (playerIndex + 1) % this.state.players.length
+        const targetIdx = player.isCpu
+          ? cpuChoosePoisonTarget(playerIndex, this.state.players, player.cpuLevel)
+          : (playerIndex + 1) % this.state.players.length
         const target = this.state.players[targetIdx]
         target.coins = Math.max(0, target.coins - 8)
         this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
@@ -750,7 +878,7 @@ export class BoardScene extends Phaser.Scene {
       duration: 500,
       onComplete: () => ripple.destroy()
     })
-    this.cameras.main.shake(150, 0.002)
+    if (!shouldReduceMotion()) this.cameras.main.shake(150, 0.002)
 
     // Check for collision (Battle)
     const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
@@ -769,12 +897,12 @@ export class BoardScene extends Phaser.Scene {
       this.tweens.add({
         targets: vsContainer,
         scaleX: 1, scaleY: 1, alpha: 1,
-        duration: 300,
+        duration: this.d(300),
         ease: 'Expo.easeOut',
         onComplete: () => {
           this.cameras.main.flash(200, 255, 0, 0)
-          this.time.delayedCall(600, () => {
-            this.tweens.add({ targets: vsContainer, x: -1500, duration: 300, ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
+          this.time.delayedCall(this.d(600), () => {
+            this.tweens.add({ targets: vsContainer, x: -1500, duration: this.d(300), ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
             this.scene.launch('BattleScene', {
               state: this.state,
               attackerIndex: playerIndex,
@@ -830,7 +958,7 @@ export class BoardScene extends Phaser.Scene {
           this.showDamageNumber(player, 5, 'pts')
           this.showDamageNumber(player, 4, '🪙')
           this.cameras.main.flash(400, 255, 215, 0, false)
-          this.cameras.main.shake(200, 0.005)
+          if (!shouldReduceMotion()) this.cameras.main.shake(200, 0.005)
           showConfetti(this)
           this.endTurn()
           break
@@ -846,7 +974,7 @@ export class BoardScene extends Phaser.Scene {
             this.showDamageNumber(player, -4, 'pts')
             this.showDamageNumber(player, -5, '🪙', true)
             this.cameras.main.flash(400, 200, 0, 0, false)
-            this.cameras.main.shake(400, 0.02)
+            if (!shouldReduceMotion()) this.cameras.main.shake(400, 0.02)
           }
           this.endTurn()
           break
@@ -950,6 +1078,7 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5).setDepth(20)
     if (msg.includes('+')) {
+      Sfx.coin()
       playCoinBurst(this, tokenPos.x, tokenPos.y - 8)
     }
     this.tweens.add({
@@ -1010,7 +1139,14 @@ export class BoardScene extends Phaser.Scene {
     const ownerId = this.shopOwners[tileIndex]
 
     if (ownerId === undefined) {
-      if (player.isCpu && !cpuShouldBuyShop(player.coins, player.cpuLevel)) {
+      if (player.isCpu && !cpuShouldBuyShop(player.coins, player.cpuLevel, {
+        trophies: player.trophies,
+        round: this.state.round,
+        totalRounds: this.roundsPerGame,
+        ownedShops: this.countOwnedShops(player.id),
+        shopPrice: SHOP_PRICE_COINS,
+        starCost: STAR_COST_COINS,
+      })) {
         this.statusText.setText(`🏪 ${player.name} passes on this shop.`)
         this.showFloatyText(player, 'Saving coins…', '#aaaaaa')
         this.time.delayedCall(this.d(1200), () => this.endTurn())
@@ -1067,7 +1203,12 @@ export class BoardScene extends Phaser.Scene {
   }
 
   handleStarShop(player: Player) {
-    if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel)) {
+    if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
+      round: this.state.round,
+      totalRounds: this.roundsPerGame,
+      rank: cpuPlayerRank(player.id, this.state.players),
+      starCost: STAR_COST_COINS,
+    })) {
       this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
       this.showFloatyText(player, 'Saving up…', '#aaccff')
       this.time.delayedCall(this.d(1200), () => this.endTurn())
@@ -1090,6 +1231,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private starPurchaseSplash(player: Player) {
+    Sfx.star()
     const w = this.scale.width
     const h = this.scale.height
     const container = this.add.container(w / 2, h / 2).setDepth(300)
@@ -1117,7 +1259,7 @@ export class BoardScene extends Phaser.Scene {
     this.tweens.add({ targets: title, scaleX: 1, scaleY: 1, alpha: 1, duration: 400, delay: 400, ease: 'Back.easeOut' })
     this.tweens.add({ targets: name, alpha: 1, duration: 300, delay: 700 })
     this.cameras.main.flash(500, 255, 215, 0, true)
-    this.cameras.main.shake(300, 0.008)
+    if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
 
     // Golden sparkle burst
     if (!isAutoSimMode()) {
@@ -1301,7 +1443,7 @@ export class BoardScene extends Phaser.Scene {
       const roundsLeft = this.roundsPerGame - this.state.round
       if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
         const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
-        this.cameras.main.shake(300, 0.008)
+        if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
         this.cameras.main.flash(400, 255, 100, 0, true)
         this.showAnnouncement(warning, '#ff8800')
       }
@@ -1313,11 +1455,21 @@ export class BoardScene extends Phaser.Scene {
     const available = Object.values(ITEMS)
     let item
     if (player.isCpu) {
-      // CPU picks preferred item they can afford
-      const prefOrder = cpuPolicyForLevel(player.cpuLevel).preferredItems
-      item = prefOrder.map(t => available.find(a => a.type === t)).find(a => a && player.coins >= a.cost)
-        ?? available.find(a => player.coins >= a.cost)
-        ?? Phaser.Utils.Array.GetRandom(available)
+      const pick = cpuChooseItemToBuy(
+        player.coins,
+        player.inventory,
+        available,
+        player.cpuLevel,
+        {
+          trophies: player.trophies,
+          round: this.state.round,
+          totalRounds: this.roundsPerGame,
+          starCost: STAR_COST_COINS,
+        }
+      )
+      item = pick
+        ? available.find(a => a.type === pick.type) ?? pick
+        : available.find(a => player.coins >= a.cost) ?? Phaser.Utils.Array.GetRandom(available)
     } else {
       item = Phaser.Utils.Array.GetRandom(available)
     }
@@ -1355,18 +1507,24 @@ export class BoardScene extends Phaser.Scene {
     const h = this.scale.height
     this.itemMenu = this.add.container(w / 2, h / 2).setDepth(100)
     
-    const bg = this.add.rectangle(0, 0, 400, 300, 0x1a1a2e, 0.95).setStrokeStyle(3, 0x44ccff)
-    const title = this.add.text(0, -120, '🎒 YOUR ITEMS', { fontSize: '24px', fontFamily: 'Fredoka, Arial Black', color: '#44ccff' }).setOrigin(0.5)
+    const bg = this.add.graphics()
+    bg.fillStyle(COLORS.bgPanel, 0.96)
+    bg.fillRoundedRect(-200, -150, 400, 300, 16)
+    bg.lineStyle(2.5, COLORS.teal, 0.6)
+    bg.strokeRoundedRect(-200, -150, 400, 300, 16)
+    const title = this.add.text(0, -120, 'YOUR ITEMS', {
+      fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal), stroke: '#003322', strokeThickness: 3,
+    }).setOrigin(0.5)
     this.itemMenu.add([bg, title])
 
     player.inventory.forEach((type, i) => {
       const item = ITEMS[type]
-      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, 0x223344, 0x334455, 340, 40)
+      const btn = createButton(this, 0, -60 + i * 50, `${item.emoji} ${item.name}`, COLORS.bgPanelAlt, COLORS.chromeDeep, 340, 40)
       btn.on('pointerdown', () => this.useItem(this.state.currentPlayer, i))
       this.itemMenu?.add(btn)
     })
 
-    const closeBtn = createButton(this, 0, 110, 'CLOSE', 0x555555, 0x333333, 100, 40)
+    const closeBtn = createButton(this, 0, 110, 'CLOSE', COLORS.mute, 0x4a5a6e, 120, 40)
     closeBtn.on('pointerdown', () => this.closeItemMenu())
     this.itemMenu.add(closeBtn)
   }
@@ -1408,12 +1566,14 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private createPauseButton() {
-    const btn = createButton(this, 50, 50, '⏸️', 0x223344, 0x334455, 60, 60)
+    const btn = createButton(this, 56, 52, 'II', COLORS.bgPanelAlt, COLORS.chromeDeep, 72, 64)
+    btn.setDepth(DEPTH.hud)
     btn.on('pointerdown', () => this.pauseGame())
   }
 
   private pauseGame() {
     if (this.scene.isActive('PauseScene')) return
+    Sfx.pause()
     this.scene.pause()
     this.scene.launch('PauseScene')
   }
