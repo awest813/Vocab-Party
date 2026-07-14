@@ -19,9 +19,6 @@ export class ResultsScene extends Phaser.Scene {
 
   create(data: { state: GameState }) {
     const { state } = data
-    if (typeof window !== 'undefined') {
-      ;(window as unknown as { __VOCAB_PARTY_RESULTS_READY__?: boolean }).__VOCAB_PARTY_RESULTS_READY__ = true
-    }
     const w = this.scale.width
     const h = this.scale.height
 
@@ -38,6 +35,20 @@ export class ResultsScene extends Phaser.Scene {
       if (b.trophies !== a.trophies) return b.trophies - a.trophies
       return b.score - a.score
     })
+
+    if (typeof window !== 'undefined') {
+      const w = window as unknown as {
+        __VOCAB_PARTY_RESULTS_READY__?: boolean
+        __VOCAB_PARTY_WINNER__?: { name: string; score: number; trophies: number; players: number }
+      }
+      w.__VOCAB_PARTY_RESULTS_READY__ = true
+      w.__VOCAB_PARTY_WINNER__ = {
+        name: sorted[0]?.name ?? '?',
+        score: sorted[0]?.score ?? 0,
+        trophies: sorted[0]?.trophies ?? 0,
+        players: state.players.length,
+      }
+    }
 
     const titleRow = this.add.container(w / 2, 48)
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {

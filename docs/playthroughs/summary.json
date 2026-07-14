@@ -1,30 +1,146 @@
 [
   {
-    "name": "classic-5",
-    "query": "autoSim=1&rounds=5&players=4",
-    "elapsedMs": 67746,
+    "name": "classic-1p-6",
+    "query": "autoSim=1&rounds=6&players=1",
+    "players": 1,
+    "fullMap": false,
+    "rounds": 6,
+    "elapsedMs": 20972,
     "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 8,
+      "trophies": 0,
+      "players": 1
+    },
     "errors": []
   },
   {
-    "name": "classic-10",
-    "query": "autoSim=1&rounds=10&players=4",
-    "elapsedMs": 138889,
+    "name": "classic-2p-8",
+    "query": "autoSim=1&rounds=8&players=2",
+    "players": 2,
+    "fullMap": false,
+    "rounds": 8,
+    "elapsedMs": 40735,
     "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 30,
+      "trophies": 0,
+      "players": 2
+    },
+    "errors": []
+  },
+  {
+    "name": "classic-3p-7",
+    "query": "autoSim=1&rounds=7&players=3",
+    "players": 3,
+    "fullMap": false,
+    "rounds": 7,
+    "elapsedMs": 58981,
+    "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 90,
+      "trophies": 1,
+      "players": 3
+    },
+    "errors": []
+  },
+  {
+    "name": "classic-4p-5",
+    "query": "autoSim=1&rounds=5&players=4",
+    "players": 4,
+    "fullMap": false,
+    "rounds": 5,
+    "elapsedMs": 74903,
+    "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 33,
+      "trophies": 1,
+      "players": 4
+    },
+    "errors": []
+  },
+  {
+    "name": "classic-4p-10",
+    "query": "autoSim=1&rounds=10&players=4",
+    "players": 4,
+    "fullMap": false,
+    "rounds": 10,
+    "elapsedMs": 119455,
+    "reachedResults": true,
+    "winner": {
+      "name": "Blake",
+      "score": 127,
+      "trophies": 1,
+      "players": 4
+    },
+    "errors": []
+  },
+  {
+    "name": "fullmap-1p-10",
+    "query": "autoSim=1&fullMap=1&rounds=10&players=1",
+    "players": 1,
+    "fullMap": true,
+    "rounds": 10,
+    "elapsedMs": 29720,
+    "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 45,
+      "trophies": 0,
+      "players": 1
+    },
     "errors": []
   },
   {
     "name": "fullmap-2p-12",
     "query": "autoSim=1&fullMap=1&rounds=12&players=2",
-    "elapsedMs": 47393,
+    "players": 2,
+    "fullMap": true,
+    "rounds": 12,
+    "elapsedMs": 58112,
     "reachedResults": true,
+    "winner": {
+      "name": "Alex",
+      "score": 90,
+      "trophies": 1,
+      "players": 2
+    },
+    "errors": []
+  },
+  {
+    "name": "fullmap-3p-9",
+    "query": "autoSim=1&fullMap=1&rounds=9&players=3",
+    "players": 3,
+    "fullMap": true,
+    "rounds": 9,
+    "elapsedMs": 77781,
+    "reachedResults": true,
+    "winner": {
+      "name": "Blake",
+      "score": 56,
+      "trophies": 0,
+      "players": 3
+    },
     "errors": []
   },
   {
     "name": "fullmap-4p-8",
     "query": "autoSim=1&fullMap=1&rounds=8&players=4",
-    "elapsedMs": 89878,
+    "players": 4,
+    "fullMap": true,
+    "rounds": 8,
+    "elapsedMs": 111079,
     "reachedResults": true,
+    "winner": {
+      "name": "Dana",
+      "score": 67,
+      "trophies": 0,
+      "players": 4
+    },
     "errors": []
   }
 ]
