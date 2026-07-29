@@ -576,7 +576,7 @@ export function cpuChoosePoisonTarget(
   }
 
   const ranked = others.map(({ p, i }) => {
-    let score = p.coins * 2 + p.trophies * 15 + p.score * 0.25
+    const score = p.coins * 2 + p.trophies * 15 + p.score * 0.25
     return { i, score }
   })
   ranked.sort((a, b) => b.score - a.score)

@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
 import { showConfetti } from '../ui/Confetti'
-import { createButton, setButtonEnabled } from '../ui/Button'
+import { createButton, setButtonEnabled, setButtonFill } from '../ui/Button'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
@@ -232,7 +232,7 @@ export class MinigameScene extends Phaser.Scene {
       targets: panel, scaleX: 1, scaleY: 1, alpha: 1,
       duration: this.d(280), ease: 'Cubic.easeOut'
     })
-    this.cameras.main.flash(this.d(220), 255, 68, 170, true)
+    if (!shouldReduceMotion()) this.cameras.main.flash(this.d(220), 255, 68, 170, true)
 
     const countText = this.add.text(w / 2, h / 2 + 190, '', {
       fontSize: '72px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
@@ -330,11 +330,10 @@ export class MinigameScene extends Phaser.Scene {
       if (resolved || eliminated.has(ci)) return
       const btn = choiceButtons[ci]
       if (!btn) return
-      const bg = btn.getAt(0) as Phaser.GameObjects.Rectangle
       const correct = ci === q.correct
 
       if (correct) {
-        if (bg) bg.setFillStyle(0x22aa44)
+        setButtonFill(btn, 0x22aa44)
         Sfx.correct()
         showConfetti(this)
         this.setFeedback(q.success(q.choices[ci]), '#44ff88')
@@ -344,7 +343,7 @@ export class MinigameScene extends Phaser.Scene {
         finish(state.currentPlayer, 1600)
       } else {
         eliminated.add(ci)
-        if (bg) bg.setFillStyle(0xaa2222)
+        setButtonFill(btn, 0xaa2222)
         setButtonEnabled(btn, false)
         Sfx.wrong()
         if (!shouldReduceMotion()) this.cameras.main.shake(this.d(160), 0.007)
@@ -361,7 +360,7 @@ export class MinigameScene extends Phaser.Scene {
       let bh: number
       if (q.layout === 'stack') {
         bx = w / 2
-        by = (q.detail ? 285 : 235) + ci * 86
+        by = (q.detail ? 330 : 255) + ci * 86
         bw = 1040
         bh = 70
       } else {

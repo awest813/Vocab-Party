@@ -130,8 +130,6 @@ export class QuestionScene extends Phaser.Scene {
     const answerColors = [COLORS.skyDeep, COLORS.coral, COLORS.mint, COLORS.warning]
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
-    let countdownTimer: Phaser.Time.TimerEvent
-    let timerBarTween: Phaser.Tweens.Tween | undefined
     let secondsLeft = 15
 
     const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
@@ -204,7 +202,7 @@ export class QuestionScene extends Phaser.Scene {
       strokeThickness: 3,
     }).setOrigin(0, 0.5).setDepth(45)
 
-    countdownTimer = this.time.addEvent({
+    const countdownTimer = this.time.addEvent({
       delay: isAutoSimMode() ? 60 : 1000,
       repeat: 14,
       callback: () => {
@@ -224,7 +222,7 @@ export class QuestionScene extends Phaser.Scene {
       }
     })
 
-    timerBarTween = this.tweens.add({
+    const timerBarTween = this.tweens.add({
       targets: timerBar,
       width: 0,
       duration: isAutoSimMode() ? 900 : 15000,

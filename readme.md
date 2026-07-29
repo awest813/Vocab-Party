@@ -51,7 +51,7 @@ npm run preview
 | ✏️ Grammar | Answer a grammar question (+10 pts) |
 | ⭐ Bonus | Instant +5 points |
 | ❓ Mystery | Random effect: bonus, penalty, or extra roll |
-| 🕹️ Minigame | Everyone plays a fast minigame; winner gets +15 pts |
+| 🕹️ Minigame | The player who lands here faces a fast challenge; winning it earns +15 pts / +5 coins |
 | 🔄 Swap | Swap board positions with a random player |
 
 4. After **10 rounds** (40 total turns), the **Final Results** screen shows the podium.
@@ -59,9 +59,15 @@ npm run preview
 
 ### Minigames
 
+One is chosen at random each time a player lands on a 🕹️ Minigame tile:
+
 - **🔍 Context Clue Clash** — Fill in the blank using context clues
 - **😱 Comma Crisis** — Pick the sentence with correct comma placement
-- **🗣️ Parts of Speech Panic** — Identify the part of speech of the highlighted word
+- **🗣️ Parts of Speech** — Identify the part of speech of the featured word
+- **⚡ Synonym Blitz** — Pick the word that means almost the same thing
+- **✨ Sentence Fix** — Choose the best-written sentence
+- **🔄 Antonym Attack** — Pick the opposite of the given word
+- **🔊 Homophone Hunt** — Choose the correct word for the blank
 
 ---
 
@@ -85,7 +91,7 @@ Vocab-Party/
     │   ├── MenuScene.ts     # Main menu with animated background
     │   ├── BoardScene.ts    # Core game board, dice rolling, turn management
     │   ├── QuestionScene.ts # Vocabulary & grammar question overlay
-    │   ├── MinigameScene.ts # Three minigame implementations
+    │   ├── MinigameScene.ts # Seven minigame implementations
     │   └── ResultsScene.ts  # Final podium and winner announcement
     ├── systems/
     │   ├── GameState.ts     # Player/state types and factory

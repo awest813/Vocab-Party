@@ -611,6 +611,9 @@ export function generateTileTextures(scene: Phaser.Scene): void {
   // decorateTilesWithKenneyIcons(scene)
 }
 
+// Currently unused — see the disabled call site above for why. Kept for future
+// re-enablement once the WebGL texImage2D issue is resolved upstream.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function decorateTilesWithKenneyIcons(scene: Phaser.Scene): void {
   Object.entries(TILE_ICON_KEYS).forEach(([type, iconKey]) => {
     if (!iconKey || !scene.textures.exists(iconKey)) return
