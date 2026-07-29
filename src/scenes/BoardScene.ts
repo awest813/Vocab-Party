@@ -170,7 +170,7 @@ export class BoardScene extends Phaser.Scene {
     this.boardOriginX = (w - boardW) / 2
     this.boardOriginY = (h - boardH) / 2 + 50
 
-    this.drawBackdrop(w, h)
+    this.drawBackdrop()
     this.drawBoard()
 
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
@@ -274,7 +274,7 @@ export class BoardScene extends Phaser.Scene {
     }
   }
 
-  drawBackdrop(w: number, h: number) {
+  drawBackdrop() {
     paintStage(this)
     addStarfieldBackdrop(this, 0.42)
     addAmbientMotes(this, 26)
@@ -509,7 +509,6 @@ export class BoardScene extends Phaser.Scene {
 
   private async showAnnouncement(msg: string, color: string = '#ffffff') {
     const w = this.scale.width
-    const h = this.scale.height
 
     const banner = this.add.container(w / 2, -80).setDepth(DEPTH.banner)
     const g = this.add.graphics()
