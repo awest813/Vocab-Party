@@ -89,20 +89,6 @@ export const KENNEY_TILE_FACE_KEYS: Partial<Record<string, string>> = {
   penalty: TEXTURE_KEYS.kenneyQuestion,
 }
 
-/** Optional Kenney icon overlays stamped onto procedural tiles. */
-const TILE_ICON_KEYS: Partial<Record<string, string>> = {
-  vocab: TEXTURE_KEYS.kenneyQuestion,
-  grammar: TEXTURE_KEYS.kenneyReturn,
-  bonus: TEXTURE_KEYS.kenneyStar,
-  mystery: TEXTURE_KEYS.kenneyQuestion,
-  minigame: TEXTURE_KEYS.kenneyGamepad,
-  swap: TEXTURE_KEYS.kenneyReturn,
-  start: TEXTURE_KEYS.kenneyHome,
-  shop: TEXTURE_KEYS.kenneyCart,
-  star: TEXTURE_KEYS.kenneyStar,
-  item_shop: TEXTURE_KEYS.kenneyCart,
-}
-
 const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
   [{ x: 32, y: 32 }],
   [{ x: 18, y: 18 }, { x: 46, y: 46 }],
@@ -652,38 +638,6 @@ export function generateTileTextures(scene: Phaser.Scene): void {
     } else {
       generateProceduralTile(scene, type, color, key)
     }
-  })
-}
-
-// Currently unused — see the disabled call site above for why. Kept for future
-// re-enablement once the WebGL texImage2D issue is resolved upstream.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function decorateTilesWithKenneyIcons(scene: Phaser.Scene): void {
-  Object.entries(TILE_ICON_KEYS).forEach(([type, iconKey]) => {
-    if (!iconKey || !scene.textures.exists(iconKey)) return
-    const tileKey = TILE_TEXTURE_KEY(type)
-    if (!scene.textures.exists(tileKey)) return
-
-    const SIZE = 64
-    const rt = scene.make.renderTexture({ width: SIZE + 2, height: SIZE + 4 }, false)
-    rt.draw(tileKey, 0, 0)
-
-    const icon = scene.make.image({ x: SIZE / 2, y: SIZE / 2 - 2, key: iconKey }, false)
-    icon.setDisplaySize(22, 22)
-    icon.setAlpha(0.55)
-    icon.setTint(0xffffff)
-    rt.draw(icon)
-
-    // Redraw motif on top for clarity
-    const g = scene.make.graphics({ x: 0, y: 0 }, false)
-    drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
-    rt.draw(g, 0, 0)
-
-    if (scene.textures.exists(tileKey)) scene.textures.remove(tileKey)
-    rt.saveTexture(tileKey)
-    rt.destroy()
-    icon.destroy()
-    g.destroy()
   })
 }
 

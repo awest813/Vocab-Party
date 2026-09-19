@@ -28,21 +28,24 @@ export const HOW_TO_RULES = [
   '🎭 Setup: tap a portrait to pick a character · choose Quick / Classic / Full Map',
   '🎲 Roll to move (tap ROLL, or Space / R on desktop)',
   '📖 Vocab & grammar tiles ask questions for points',
-  '🌟 Star tiles: spend 20 coins for a trophy (+12 score)',
-  '🏪 Buy shops to earn rent · 🛍️ Item shops stock power-ups',
+  '🌟 Star & 🏪 shop tiles: choose Buy or Pass when you land',
+  '🛍️ Item shops let you pick a card or pass · use ITEMS on your turn',
   '⚔️ Landing on another player starts a battle',
   '🎯 First to 5 trophies wins — or most trophies (then score) when rounds end',
 ]
 
 export const HOW_TO_CONTROLS_DESKTOP = [
-  'Board: Space / Enter / R = Roll · Esc = Pause',
+  'Board: Space / Enter / R = Roll · Esc = Pause · 1/2 = fork paths',
   'Questions & minigames: 1–4 or A–D',
+  'Shops & item cards: 1 = yes/buy · 2 or Esc = pass/cancel',
+  'Item backpack: 1–7 use a card · Esc closes',
   'Battle: 1 = Defend · 2 = Evade',
 ]
 
 export const HOW_TO_CONTROLS_TOUCH = [
   'Board: Tap ROLL / ITEMS · Tap ⏸️ to pause',
   'Questions & minigames: Tap an answer',
+  'Shops & items: Tap Buy/Pass or pick a card',
   'Battle: Tap Defend or Evade',
   'Tap a board tile anytime to inspect it',
 ]

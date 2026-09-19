@@ -94,6 +94,7 @@ export class BoardScene extends Phaser.Scene {
   private shopOwnerDots = new Map<number, Phaser.GameObjects.Arc>()
   private choiceModal?: Phaser.GameObjects.Container
   private choiceKeyCleanup?: () => void
+  private itemMenuKeyCleanup?: () => void
   /** Tile index → board tile sprite (for landing animations). */
   private tileImages = new Map<number, Phaser.GameObjects.Image>()
   private activeAnnouncement?: Phaser.GameObjects.Container
@@ -251,6 +252,7 @@ export class BoardScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown', rollKeyHandler)
       this.input.keyboard?.off('keydown-ESC', escHandler)
       this.closeChoiceModal()
+      this.closeItemMenu()
     })
 
     this.updateStatus()
@@ -820,11 +822,32 @@ export class BoardScene extends Phaser.Scene {
     const itemType = player.inventory[inventoryIndex]
     const item = ITEMS[itemType]
 
+    this.closeItemMenu()
+
+    let chosenTarget: number | null = null
+    if (!player.isCpu) {
+      if (itemType === 'swap' || itemType === 'poison_dart') {
+        chosenTarget = await this.promptPlayerChoice(
+          playerIndex,
+          itemType === 'swap' ? 'Swap positions with who?' : 'Poison who?'
+        )
+        if (chosenTarget === null) {
+          this.statusText.setText('🎒 Item use cancelled.')
+          return
+        }
+      } else if (itemType === 'warp') {
+        const warp = await this.promptBinaryChoice('Warp to a random tile?', 'WARP', 'CANCEL')
+        if (!warp) {
+          this.statusText.setText('🎒 Item use cancelled.')
+          return
+        }
+      }
+    }
+
     this.statusText.setText(`🎒 ${player.name} used ${item.name}!`)
     this.showFloatyText(player, `Used ${item.emoji}`, '#ffffff')
     Sfx.item()
     player.inventory.splice(inventoryIndex, 1)
-    this.closeItemMenu()
 
     switch (itemType) {
       case 'dash':
@@ -841,7 +864,7 @@ export class BoardScene extends Phaser.Scene {
               this.nodes.length,
               player.cpuLevel
             )
-          : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+          : chosenTarget!
         const target = this.state.players[targetIndex]
         const temp = player.position
         player.position = target.position
@@ -866,7 +889,7 @@ export class BoardScene extends Phaser.Scene {
       case 'poison_dart': {
         const targetIdx = player.isCpu
           ? cpuChoosePoisonTarget(playerIndex, this.state.players, player.cpuLevel)
-          : (playerIndex + 1) % this.state.players.length
+          : chosenTarget!
         const target = this.state.players[targetIdx]
         target.coins = Math.max(0, target.coins - 8)
         this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
@@ -902,57 +925,7 @@ export class BoardScene extends Phaser.Scene {
     // Check for collision (Battle)
     const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
     if (otherOnTile) {
-      this.statusText.setText('⚔️ ENCOUNTER!')
-      
-      const vsContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setDepth(200)
-      const vsBg = this.add.rectangle(0, 0, 1200, 200, 0x000000, 0.7)
-      const vsText = this.add.text(0, 0, '⚔️ ENCOUNTER ⚔️', {
-        fontSize: '110px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444', stroke: '#ffffff', strokeThickness: 12
-      }).setOrigin(0.5)
-      
-      vsContainer.add([vsBg, vsText])
-      vsContainer.setScale(3).setAlpha(0)
-      
-      this.tweens.add({
-        targets: vsContainer,
-        scaleX: 1, scaleY: 1, alpha: 1,
-        duration: this.d(300),
-        ease: 'Expo.easeOut',
-        onComplete: () => {
-          this.cameras.main.flash(200, 255, 0, 0)
-          this.time.delayedCall(this.d(600), () => {
-            this.tweens.add({ targets: vsContainer, x: -1500, duration: this.d(300), ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
-            this.scene.launch('BattleScene', {
-              state: this.state,
-              attackerIndex: playerIndex,
-              defenderIndex: this.state.players.indexOf(otherOnTile),
-              onComplete: (result: BattleResult) => {
-                this.scene.stop('BattleScene')
-                this.scene.resume()
-                
-                const attacker = this.state.players[playerIndex]
-                const defender = otherOnTile
-                
-                if (result.winnerIndex === playerIndex) {
-                  attacker.score += result.scoreLost
-                  attacker.coins += result.coinsLost
-                  defender.score = Math.max(0, defender.score - result.scoreLost)
-                  defender.coins = Math.max(0, defender.coins - result.coinsLost)
-                  this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
-                  this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
-                  this.showDamageNumber(defender, -result.scoreLost, 'pts')
-                  if (result.coinsLost > 0) this.showDamageNumber(defender, -result.coinsLost, '🪙')
-                } else {
-                  this.showFloatyText(defender, 'Safe!', '#44ccff')
-                }
-
-                this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex, opts))
-              }
-            })
-            this.scene.pause()
-          })
-        }
-      })
+      this.launchBattle(playerIndex, otherOnTile, type, tileIndex, opts)
       return
     }
 
@@ -1184,6 +1157,110 @@ export class BoardScene extends Phaser.Scene {
     this.choiceModal = undefined
   }
 
+  private launchBattle(
+    playerIndex: number,
+    otherOnTile: Player,
+    type: TileType,
+    tileIndex: number,
+    opts?: { skipSwap?: boolean }
+  ) {
+    this.statusText.setText('⚔️ ENCOUNTER!')
+    if (!shouldReduceMotion()) this.cameras.main.flash(200, 255, 0, 0, true)
+
+    this.scene.launch('BattleScene', {
+      state: this.state,
+      attackerIndex: playerIndex,
+      defenderIndex: this.state.players.indexOf(otherOnTile),
+      onComplete: (result: BattleResult) => {
+        this.scene.stop('BattleScene')
+        this.scene.resume()
+
+        const attacker = this.state.players[playerIndex]
+        const defender = otherOnTile
+
+        if (result.winnerIndex === playerIndex) {
+          attacker.score += result.scoreLost
+          attacker.coins += result.coinsLost
+          defender.score = Math.max(0, defender.score - result.scoreLost)
+          defender.coins = Math.max(0, defender.coins - result.coinsLost)
+          this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
+          this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
+          this.showDamageNumber(defender, -result.scoreLost, 'pts')
+          if (result.coinsLost > 0) this.showDamageNumber(defender, -result.coinsLost, '🪙')
+        } else {
+          this.showFloatyText(defender, 'Safe!', '#44ccff')
+        }
+
+        this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex, opts))
+      },
+    })
+    this.scene.pause()
+  }
+
+  private promptPlayerChoice(playerIndex: number, title: string): Promise<number | null> {
+    const candidates = this.state.players
+      .map((_, i) => i)
+      .filter(i => i !== playerIndex)
+    if (candidates.length === 0) return Promise.resolve(null)
+    if (candidates.length === 1) return Promise.resolve(candidates[0])
+
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-230, -150, 460, 300, 16)
+      bg.lineStyle(2.5, COLORS.coral, 0.55)
+      bg.strokeRoundedRect(-230, -150, 460, 300, 16)
+      const hdr = this.add.text(0, -118, title, {
+        fontSize: '22px', fontFamily: FONT.display, color: '#ffffff',
+        wordWrap: { width: 400 }, align: 'center',
+      }).setOrigin(0.5)
+      this.choiceModal.add([dim, bg, hdr])
+
+      const finish = (value: number | null) => {
+        this.closeChoiceModal()
+        resolve(value)
+      }
+
+      candidates.forEach((idx, i) => {
+        const rival = this.state.players[idx]
+        const btn = createButton(
+          this, 0, -70 + i * 48,
+          `${rival.name} (${rival.score} pts)`,
+          COLORS.bgPanelAlt, COLORS.chromeDeep, 380, 40
+        )
+        btn.on('pointerdown', () => finish(idx))
+        this.choiceModal?.add(btn)
+      })
+
+      const cancelBtn = createButton(this, 0, 110, 'CANCEL', COLORS.mute, 0x4a5a6e, 140, 40)
+      cancelBtn.on('pointerdown', () => finish(null))
+      dim.on('pointerdown', () => finish(null))
+      this.choiceModal.add(cancelBtn)
+
+      const onKey = (ev: KeyboardEvent) => {
+        const keyToIndex: Record<string, number> = {
+          Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3,
+          Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3,
+        }
+        const pick = keyToIndex[ev.code]
+        if (pick !== undefined && pick < candidates.length) {
+          ev.preventDefault()
+          finish(candidates[pick])
+        } else if (ev.code === 'Escape') {
+          ev.preventDefault()
+          finish(null)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
   private promptBinaryChoice(message: string, yesLabel: string, noLabel: string): Promise<boolean> {
     return new Promise(resolve => {
       const w = this.scale.width
@@ -1236,10 +1313,10 @@ export class BoardScene extends Phaser.Scene {
       const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
       const bg = this.add.graphics()
       bg.fillStyle(COLORS.bgPanel, 0.96)
-      bg.fillRoundedRect(-240, -180, 480, 360, 16)
+      bg.fillRoundedRect(-250, -210, 500, 440, 16)
       bg.lineStyle(2.5, COLORS.teal, 0.55)
-      bg.strokeRoundedRect(-240, -180, 480, 360, 16)
-      const title = this.add.text(0, -140, 'ITEM SHOP', {
+      bg.strokeRoundedRect(-250, -210, 500, 440, 16)
+      const title = this.add.text(0, -170, 'ITEM SHOP', {
         fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal),
       }).setOrigin(0.5)
       this.choiceModal.add([dim, bg, title])
@@ -1252,7 +1329,7 @@ export class BoardScene extends Phaser.Scene {
       available.forEach((item, i) => {
         const affordable = player.coins >= item.cost
         const btn = createButton(
-          this, 0, -80 + i * 44,
+          this, 0, -90 + i * 52,
           `${item.emoji} ${item.name} (${item.cost}🪙)`,
           affordable ? COLORS.bgPanelAlt : COLORS.mute,
           affordable ? COLORS.chromeDeep : 0x4a5a6e,
@@ -1260,9 +1337,13 @@ export class BoardScene extends Phaser.Scene {
         )
         if (affordable) btn.on('pointerdown', () => finish(item))
         this.choiceModal?.add(btn)
+        this.choiceModal?.add(this.add.text(0, -66 + i * 52, item.description, {
+          fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
+          wordWrap: { width: 400 }, align: 'center',
+        }).setOrigin(0.5))
       })
 
-      const passBtn = createButton(this, 0, 130, 'PASS', COLORS.mute, 0x4a5a6e, 140, 40)
+      const passBtn = createButton(this, 0, 195, 'PASS', COLORS.mute, 0x4a5a6e, 140, 40)
       passBtn.on('pointerdown', () => finish(null))
       dim.on('pointerdown', () => finish(null))
       this.choiceModal.add(passBtn)
@@ -1735,9 +1816,28 @@ export class BoardScene extends Phaser.Scene {
     const closeBtn = createButton(this, 0, 110, 'CLOSE', COLORS.mute, 0x4a5a6e, 120, 40)
     closeBtn.on('pointerdown', () => this.closeItemMenu())
     this.itemMenu.add(closeBtn)
+
+    const onKey = (ev: KeyboardEvent) => {
+      const keyToIndex: Record<string, number> = {
+        Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5, Digit7: 6,
+        Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5, Numpad7: 6,
+      }
+      const idx = keyToIndex[ev.code]
+      if (idx !== undefined && idx < player.inventory.length) {
+        ev.preventDefault()
+        void this.useItem(this.state.currentPlayer, idx)
+      } else if (ev.code === 'Escape') {
+        ev.preventDefault()
+        this.closeItemMenu()
+      }
+    }
+    this.input.keyboard?.on('keydown', onKey)
+    this.itemMenuKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
   }
 
   private closeItemMenu() {
+    this.itemMenuKeyCleanup?.()
+    this.itemMenuKeyCleanup = undefined
     this.itemMenu?.destroy()
     this.itemMenu = undefined
   }

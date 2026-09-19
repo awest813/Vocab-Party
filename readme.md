@@ -61,10 +61,10 @@ npm run typecheck
 | ❓ Mystery | Random effect: bonus, penalty, or extra roll |
 | 🕹️ Minigame | Fast challenge — winner earns +15 pts / +5 coins |
 | 🔄 Swap | Swap board positions with another player |
-| 🏪 Shop | Buy shops to collect rent |
-| 🌟 Star | Spend 20 coins for a trophy (+12 score) |
+| 🏪 Shop | Buy shops to collect rent (Buy/Pass prompt) |
+| 🌟 Star | Spend 20 coins for a trophy (+12 score, Buy/Pass prompt) |
 | 🧱 Brick | Collect pieces for build bonuses |
-| 🛍️ Item Shop | Buy power-up cards |
+| 🛍️ Item Shop | Pick a power-up card or pass |
 
 4. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
 5. Click **🔄 PLAY AGAIN** or **🏠 MAIN MENU** from results.
