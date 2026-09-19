@@ -10,12 +10,18 @@ export type HowToTile = {
 }
 
 export const HOW_TO_TILES: HowToTile[] = [
+  { emoji: '🏠', label: 'Start', desc: 'Pass for +5 coins · land for +3 score/coins', color: TILE_COLORS.start },
   { emoji: '📖', label: 'Vocab', desc: 'Answer a vocabulary question (+10)', color: TILE_COLORS.vocab },
   { emoji: '✏️', label: 'Grammar', desc: 'Fix a grammar problem (+10)', color: TILE_COLORS.grammar },
   { emoji: '⭐', label: 'Bonus', desc: 'Earn +5 score and +4 coins!', color: TILE_COLORS.bonus },
+  { emoji: '💀', label: 'Penalty', desc: 'Lose score and coins (shield blocks it)', color: TILE_COLORS.penalty },
   { emoji: '❓', label: 'Mystery', desc: 'Random surprise effect!', color: TILE_COLORS.mystery },
   { emoji: '🕹️', label: 'Minigame', desc: 'Quick challenge — winner gets +15', color: TILE_COLORS.minigame },
   { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: TILE_COLORS.swap },
+  { emoji: '🏪', label: 'Shop', desc: 'Buy shops to earn rent from rivals', color: TILE_COLORS.shop },
+  { emoji: '🌟', label: 'Star', desc: 'Spend 20 coins for a trophy (+12 score)', color: TILE_COLORS.star },
+  { emoji: '🧱', label: 'Brick', desc: 'Collect pieces for build bonuses', color: TILE_COLORS.brick },
+  { emoji: '🛍️', label: 'Item Shop', desc: 'Buy power-up cards for your turn', color: TILE_COLORS.item_shop },
 ]
 
 export const HOW_TO_RULES = [

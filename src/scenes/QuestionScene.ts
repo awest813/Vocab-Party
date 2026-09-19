@@ -31,6 +31,26 @@ interface QuestionSceneData {
   cpuResolve?: { delayMs: number; correctChance: number }
 }
 
+const FALLBACK_QUESTIONS: Record<'vocab' | 'grammar', QuestionData> = {
+  vocab: {
+    question: "What does 'resilient' mean?",
+    answers: ['Easily broken', 'Quick to recover', 'Slow to move', 'Hard to see'],
+    correct: 1,
+    explanation: 'Resilient means able to recover quickly from difficulties.',
+  },
+  grammar: {
+    question: 'Which sentence is correct?',
+    answers: [
+      'She dont like apples.',
+      "She doesn't like apples.",
+      'She do not like apples.',
+      'She doesnt likes apples.',
+    ],
+    correct: 1,
+    explanation: "Use doesn't + base verb for third-person singular negatives.",
+  },
+}
+
 export class QuestionScene extends Phaser.Scene {
   constructor() { super('QuestionScene') }
 
@@ -48,11 +68,13 @@ export class QuestionScene extends Phaser.Scene {
     const h = this.scale.height
     const { type, playerIndex, state, onComplete, cpuResolve } = data
 
-    const questions: QuestionData[] = type === 'vocab'
-      ? this.cache.json.get('vocab').questions
-      : this.cache.json.get('grammar').questions
-
-    const raw: QuestionData = Phaser.Utils.Array.GetRandom(questions)
+    const bank = type === 'vocab'
+      ? this.cache.json.get('vocab')?.questions as QuestionData[] | undefined
+      : this.cache.json.get('grammar')?.questions as QuestionData[] | undefined
+    const questions = Array.isArray(bank) ? bank : []
+    const raw: QuestionData = questions.length > 0
+      ? Phaser.Utils.Array.GetRandom(questions)
+      : FALLBACK_QUESTIONS[type]
     // Shuffle answer order each time so players (and CPUs) can't learn a key pattern.
     const order = raw.answers.map((_, i) => i)
     Phaser.Utils.Array.Shuffle(order)

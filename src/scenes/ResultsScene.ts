@@ -228,11 +228,17 @@ export class ResultsScene extends Phaser.Scene {
       })
     })
 
-    this.input.keyboard?.on('keydown-ENTER', () => {
+    const onEnter = () => {
       this.scene.start('SetupScene')
-    })
-    this.input.keyboard?.on('keydown-ESC', () => {
+    }
+    const onEsc = () => {
       this.scene.start('MenuScene')
+    }
+    this.input.keyboard?.on('keydown-ENTER', onEnter)
+    this.input.keyboard?.on('keydown-ESC', onEsc)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.keyboard?.off('keydown-ENTER', onEnter)
+      this.input.keyboard?.off('keydown-ESC', onEsc)
     })
   }
 

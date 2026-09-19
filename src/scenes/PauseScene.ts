@@ -141,7 +141,11 @@ export class PauseScene extends Phaser.Scene {
     quitBtn.on('pointerdown', () => {
       if (this.modalOpen) return
       Sfx.stopMusic()
-      this.scene.stop('BoardScene')
+      for (const sceneKey of ['QuestionScene', 'MinigameScene', 'BattleScene', 'BoardScene', 'PauseScene']) {
+        if (this.scene.isActive(sceneKey) || this.scene.isPaused(sceneKey)) {
+          this.scene.stop(sceneKey)
+        }
+      }
       this.scene.start('MenuScene')
     })
 

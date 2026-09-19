@@ -17,6 +17,11 @@ export class MenuScene extends Phaser.Scene {
   constructor() { super('MenuScene') }
 
   create() {
+    if (isAutoSimMode()) {
+      this.scene.start('SetupScene')
+      return
+    }
+
     const w = this.scale.width
     const h = this.scale.height
     const touch = isTouchPreferred(this.sys.game)
@@ -215,11 +220,6 @@ export class MenuScene extends Phaser.Scene {
       delay: reduce ? 0 : 700,
     })
 
-    if (isAutoSimMode()) {
-      this.scene.start('SetupScene')
-      return
-    }
-
     this.input.keyboard?.on('keydown-ESC', () => {
       if (this.modalOpen) {
         this.closeModal?.()
@@ -227,9 +227,11 @@ export class MenuScene extends Phaser.Scene {
       }
     })
     this.input.keyboard?.on('keydown-ENTER', goSetup)
-    this.input.keyboard?.on('keydown-SLASH', () => {
-      if (!this.modalOpen) this.openHowTo()
-    })
+    const openHowToFromKeyboard = (ev: KeyboardEvent) => {
+      if (this.modalOpen) return
+      if (ev.key === '?' || ev.code === 'Slash') this.openHowTo()
+    }
+    this.input.keyboard?.on('keydown', openHowToFromKeyboard)
     this.input.keyboard?.on('keydown-KeyH', () => {
       if (!this.modalOpen) this.openHowTo()
     })

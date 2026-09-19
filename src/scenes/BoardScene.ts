@@ -90,6 +90,9 @@ export class BoardScene extends Phaser.Scene {
   private turnGlowTween?: Phaser.Tweens.Tween
   /** Tile index → owner player id (Fortune Street–style shops). */
   private shopOwners: Record<number, number> = {}
+  /** Tile index → board tile sprite (for landing animations). */
+  private tileImages = new Map<number, Phaser.GameObjects.Image>()
+  private activeAnnouncement?: Phaser.GameObjects.Container
 
   private d(ms: number) {
     return scaleAutoSimDelay(ms)
@@ -135,6 +138,8 @@ export class BoardScene extends Phaser.Scene {
         return `Tile ${tileIndex}: BRICK — gather pieces; every ${BRICKS_FOR_BUILD_BONUS} gives +${BUILD_BONUS_SCORE} score.`
       case 'item_shop':
         return `Tile ${tileIndex}: ITEM SHOP — buy powerful cards to use during your turn.`
+      case 'penalty':
+        return `Tile ${tileIndex}: PENALTY — lose score and coins unless shielded.`
     }
   }
 
@@ -349,6 +354,7 @@ export class BoardScene extends Phaser.Scene {
       img.setDepth(0)
       img.setInteractive()
       img.setScale(0)
+      this.tileImages.set(i, img)
 
       this.tweens.add({
         targets: img,
@@ -510,7 +516,11 @@ export class BoardScene extends Phaser.Scene {
   private async showAnnouncement(msg: string, color: string = '#ffffff') {
     const w = this.scale.width
 
+    this.activeAnnouncement?.destroy()
+    this.activeAnnouncement = undefined
+
     const banner = this.add.container(w / 2, -80).setDepth(DEPTH.banner)
+    this.activeAnnouncement = banner
     const g = this.add.graphics()
     const bw = Math.min(720, 40 + msg.length * 22)
     g.fillStyle(0x000000, 0.28)
@@ -552,6 +562,7 @@ export class BoardScene extends Phaser.Scene {
               ease: 'Cubic.easeIn',
               onComplete: () => {
                 banner.destroy()
+                if (this.activeAnnouncement === banner) this.activeAnnouncement = undefined
                 resolve()
               },
             })
@@ -773,7 +784,7 @@ export class BoardScene extends Phaser.Scene {
     if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
     
     // Squash and stretch tile
-    const tileImg = this.children.list.find(c => c instanceof Phaser.GameObjects.Image && c.x === token.x - off.x && c.y === token.y - off.y) as Phaser.GameObjects.Image
+    const tileImg = this.tileImages.get(player.position)
     if (tileImg) {
       this.tweens.add({
         targets: tileImg,
@@ -853,15 +864,15 @@ export class BoardScene extends Phaser.Scene {
         break
       }
       case 'golden_key':
-        player.forcedMoveValue = 5
-        this.showFloatyText(player, '🔑 Next roll: 5', '#ffee44')
+        player.forcedMoveValue = 3
+        this.showFloatyText(player, '🔑 Next roll: 3', '#ffee44')
         break
     }
 
     await new Promise(r => this.time.delayedCall(this.d(800), r))
   }
 
-  landOnTile(playerIndex: number) {
+  landOnTile(playerIndex: number, opts?: { skipSwap?: boolean }) {
     const player = this.state.players[playerIndex]
     const tileIndex = player.position
     const type = this.getTileTypeAt(tileIndex)
@@ -926,7 +937,7 @@ export class BoardScene extends Phaser.Scene {
                   this.showFloatyText(defender, 'Safe!', '#44ccff')
                 }
 
-                this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex))
+                this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex, opts))
               }
             })
             this.scene.pause()
@@ -936,10 +947,10 @@ export class BoardScene extends Phaser.Scene {
       return
     }
 
-    this.handleTileEffect(playerIndex, type, tileIndex)
+    this.handleTileEffect(playerIndex, type, tileIndex, opts)
   }
 
-  private handleTileEffect(playerIndex: number, type: TileType, tileIndex: number) {
+  private handleTileEffect(playerIndex: number, type: TileType, tileIndex: number, opts?: { skipSwap?: boolean }) {
     const player = this.state.players[playerIndex]
     this.time.delayedCall(this.d(700), () => {
       switch (type) {
@@ -1046,7 +1057,11 @@ export class BoardScene extends Phaser.Scene {
           this.handleMystery(player)
           break
         case 'swap':
-          this.handleSwap(player, playerIndex)
+          if (opts?.skipSwap) {
+            this.endTurn()
+          } else {
+            this.handleSwap(player, playerIndex)
+          }
           break
         case 'shop':
           this.handleShop(player, playerIndex, tileIndex)
@@ -1398,8 +1413,16 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
-    const target = Phaser.Utils.Array.GetRandom(others)
-    const targetIndex = this.state.players.indexOf(target)
+    const targetIndex = player.isCpu
+      ? cpuChooseSwapTarget(
+          playerIndex,
+          this.state.players,
+          TILE_TYPES as string[],
+          this.nodes.length,
+          player.cpuLevel
+        )
+      : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+    const target = this.state.players[targetIndex]
 
     const tmpPos = player.position
     player.position = target.position
@@ -1417,7 +1440,7 @@ export class BoardScene extends Phaser.Scene {
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
     
     await new Promise(r => this.time.delayedCall(swapDur + 200, r))
-    this.landOnTile(playerIndex)
+    this.landOnTile(playerIndex, { skipSwap: true })
   }
 
   endTurn() {
@@ -1534,8 +1557,20 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private async promptForBranch(player: Player, options: number[]): Promise<number> {
-    this.statusText.setText('🗺️ Choose your path!')
+    this.statusText.setText('🗺️ Choose your path! (1/2 or click)')
     return new Promise<number>(resolve => {
+      let settled = false
+      const finish = (nodeId: number) => {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(nodeId)
+      }
+      const cleanup = () => {
+        overlays.forEach(o => o.destroy())
+        this.input.keyboard?.off('keydown', onKeyDown)
+      }
+
       const overlays: Phaser.GameObjects.GameObject[] = []
       options.forEach(nodeId => {
         const { x, y } = this.getTileXY(nodeId)
@@ -1555,12 +1590,18 @@ export class BoardScene extends Phaser.Scene {
           repeat: -1
         })
 
-        highlight.on('pointerdown', () => {
-          overlays.forEach(o => o.destroy())
-          resolve(nodeId)
-        })
+        highlight.on('pointerdown', () => finish(nodeId))
         overlays.push(highlight, arrow)
       })
+
+      const onKeyDown = (ev: KeyboardEvent) => {
+        const idx = ['Digit1', 'Digit2', 'Numpad1', 'Numpad2'].indexOf(ev.code)
+        if (idx >= 0 && idx < options.length) {
+          ev.preventDefault()
+          finish(options[idx])
+        }
+      }
+      this.input.keyboard?.on('keydown', onKeyDown)
     })
   }
 
