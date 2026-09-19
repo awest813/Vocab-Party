@@ -73,6 +73,20 @@ export const TILE_COLORS: Record<string, number> = {
 /** Tile types with textures generated at boot. */
 export const BOARD_TILE_TYPES = Object.keys(TILE_COLORS) as (keyof typeof TILE_COLORS)[]
 
+/** Kenney tile face art composited onto the procedural bevel base. */
+export const KENNEY_TILE_FACE_KEYS: Partial<Record<string, string>> = {
+  start: TEXTURE_KEYS.kenneyTileStart,
+  vocab: TEXTURE_KEYS.kenneyTileVocab,
+  grammar: TEXTURE_KEYS.kenneyTileGrammar,
+  bonus: TEXTURE_KEYS.kenneyTileBonus,
+  mystery: TEXTURE_KEYS.kenneyTileMystery,
+  minigame: TEXTURE_KEYS.kenneyTileMinigame,
+  swap: TEXTURE_KEYS.kenneyTileSwap,
+  shop: TEXTURE_KEYS.kenneyTileShop,
+  star: TEXTURE_KEYS.kenneyTileStar,
+  brick: TEXTURE_KEYS.kenneyTileBrick,
+}
+
 /** Optional Kenney icon overlays stamped onto procedural tiles. */
 const TILE_ICON_KEYS: Partial<Record<string, string>> = {
   vocab: TEXTURE_KEYS.kenneyQuestion,
@@ -549,66 +563,94 @@ function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number,
   }
 }
 
-export function generateTileTextures(scene: Phaser.Scene): void {
+function drawTileBevelBase(g: Phaser.GameObjects.Graphics, color: number, SIZE: number, CORNER: number): void {
+  const dark = shade(color, -32)
+  const mid = shade(color, -14)
+
+  g.fillStyle(0x000000, 0.28)
+  g.fillRoundedRect(4, 6, SIZE - 6, SIZE - 6, CORNER)
+  g.fillStyle(dark, 1)
+  g.fillRoundedRect(1, 5, SIZE - 2, SIZE - 5, CORNER)
+  g.fillStyle(mid, 1)
+  g.fillRoundedRect(2, 3, SIZE - 4, SIZE - 6, CORNER - 1)
+  g.fillStyle(color, 1)
+  g.fillRoundedRect(2, 1, SIZE - 4, SIZE - 8, CORNER - 1)
+  g.lineStyle(0.8, 0xffffff, 0.07)
+  for (let i = -SIZE; i < SIZE * 2; i += 10) {
+    g.strokeLineShape(new Phaser.Geom.Line(i, 2, i + SIZE, SIZE - 6))
+    g.strokeLineShape(new Phaser.Geom.Line(i, SIZE - 6, i + SIZE, 2))
+  }
+  g.fillStyle(0xffffff, 0.18)
+  g.fillRoundedRect(5, 4, SIZE - 10, 14, { tl: 8, tr: 8, bl: 3, br: 3 })
+}
+
+function drawTileFinish(g: Phaser.GameObjects.Graphics, color: number, SIZE: number, CORNER: number): void {
+  const dark = shade(color, -32)
+  g.fillStyle(0xffffff, 0.16)
+  g.fillEllipse(SIZE * 0.34, SIZE * 0.28, SIZE * 0.38, SIZE * 0.16)
+  g.lineStyle(2.5, 0xffffff, 0.55)
+  g.strokeRoundedRect(3, 2, SIZE - 6, SIZE - 8, CORNER - 2)
+  g.lineStyle(1.5, dark, 0.35)
+  g.strokeRoundedRect(5, 4, SIZE - 10, SIZE - 12, CORNER - 3)
+}
+
+function generateProceduralTile(scene: Phaser.Scene, type: string, color: number, key: string): void {
   const SIZE = 64
   const CORNER = 12
+  const g = scene.add.graphics()
+  drawTileBevelBase(g, color, SIZE, CORNER)
+  drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
+  drawTileFinish(g, color, SIZE, CORNER)
+  g.generateTexture(key, SIZE + 2, SIZE + 4)
+  g.destroy()
+}
 
+function generateKenneyFaceTile(
+  scene: Phaser.Scene,
+  type: string,
+  color: number,
+  key: string,
+  faceKey: string
+): void {
+  const SIZE = 64
+  const CORNER = 12
+  const W = SIZE + 2
+  const H = SIZE + 4
+
+  const rt = scene.make.renderTexture({ width: W, height: H }, false)
+  const base = scene.make.graphics({ x: 0, y: 0 }, false)
+  drawTileBevelBase(base, color, SIZE, CORNER)
+  rt.draw(base, 0, 0)
+
+  const face = scene.make.image({ x: W / 2, y: H / 2 - 2, key: faceKey }, false)
+  face.setDisplaySize(SIZE - 10, SIZE - 10)
+  face.setTint(Phaser.Display.Color.IntegerToColor(color).color)
+  face.setAlpha(0.96)
+  rt.draw(face, W / 2 - face.displayWidth / 2, H / 2 - 2 - face.displayHeight / 2)
+
+  const finish = scene.make.graphics({ x: 0, y: 0 }, false)
+  drawTileFinish(finish, color, SIZE, CORNER)
+  rt.draw(finish, 0, 0)
+
+  rt.saveTexture(key)
+  rt.destroy()
+  base.destroy()
+  face.destroy()
+  finish.destroy()
+}
+
+export function generateTileTextures(scene: Phaser.Scene): void {
   Object.entries(TILE_COLORS).forEach(([type, color]) => {
     const key = TILE_TEXTURE_KEY(type)
     if (scene.textures.exists(key)) scene.textures.remove(key)
 
-    const g = scene.add.graphics()
-    const dark = shade(color, -32)
-    const mid = shade(color, -14)
-
-    // Drop shadow
-    g.fillStyle(0x000000, 0.28)
-    g.fillRoundedRect(4, 6, SIZE - 6, SIZE - 6, CORNER)
-
-    // 3D base lip
-    g.fillStyle(dark, 1)
-    g.fillRoundedRect(1, 5, SIZE - 2, SIZE - 5, CORNER)
-
-    // Mid bevel
-    g.fillStyle(mid, 1)
-    g.fillRoundedRect(2, 3, SIZE - 4, SIZE - 6, CORNER - 1)
-
-    // Face
-    g.fillStyle(color, 1)
-    g.fillRoundedRect(2, 1, SIZE - 4, SIZE - 8, CORNER - 1)
-
-    // Subtle diamond weave
-    g.lineStyle(0.8, 0xffffff, 0.07)
-    for (let i = -SIZE; i < SIZE * 2; i += 10) {
-      g.strokeLineShape(new Phaser.Geom.Line(i, 2, i + SIZE, SIZE - 6))
-      g.strokeLineShape(new Phaser.Geom.Line(i, SIZE - 6, i + SIZE, 2))
+    const faceKey = KENNEY_TILE_FACE_KEYS[type]
+    if (faceKey && scene.textures.exists(faceKey)) {
+      generateKenneyFaceTile(scene, type, color, key, faceKey)
+    } else {
+      generateProceduralTile(scene, type, color, key)
     }
-
-    // Top gloss band
-    g.fillStyle(0xffffff, 0.18)
-    g.fillRoundedRect(5, 4, SIZE - 10, 14, { tl: 8, tr: 8, bl: 3, br: 3 })
-
-    drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
-
-    // Specular
-    g.fillStyle(0xffffff, 0.16)
-    g.fillEllipse(SIZE * 0.34, SIZE * 0.28, SIZE * 0.38, SIZE * 0.16)
-
-    // Rim
-    g.lineStyle(2.5, 0xffffff, 0.55)
-    g.strokeRoundedRect(3, 2, SIZE - 6, SIZE - 8, CORNER - 2)
-    g.lineStyle(1.5, dark, 0.35)
-    g.strokeRoundedRect(5, 4, SIZE - 10, SIZE - 12, CORNER - 3)
-
-    g.generateTexture(key, SIZE + 2, SIZE + 4)
-    g.destroy()
   })
-
-  // Stamp Kenney icons when available (subtle, under motif readability)
-  // Disabled: RenderTexture.draw of mixed graphics/icons can throw
-  // "texImage2D: bad image data" on some WebGL backends and stall auto-sim.
-  // Motifs alone already communicate tile type clearly.
-  // decorateTilesWithKenneyIcons(scene)
 }
 
 // Currently unused — see the disabled call site above for why. Kept for future

@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { GameState } from '../systems/GameState'
-import { characterDef } from '../systems/SpriteFactory'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import { COLORS, DEPTH, FONT, hexColor } from './Theme'
 
 const RANK_LABEL = ['1st', '2nd', '3rd', '4th']
@@ -38,15 +39,24 @@ export class PlayerHUD {
       this.paintFrame(frame, panelW, panelH, accent, false)
       this.frames.push(frame)
 
-      const nameText = this.scene.add.text(-panelW / 2 + 12, -30, `${player.emoji} ${player.name}`, {
+      const children: Phaser.GameObjects.GameObject[] = [frame]
+
+      const tex = characterTextureKey(player.characterIndex)
+      if (this.scene.textures.exists(tex)) {
+        children.push(
+          this.scene.add.image(-panelW / 2 + 34, 2, tex)
+            .setDisplaySize(38, 48)
+        )
+      }
+
+      const nameText = this.scene.add.text(-panelW / 2 + 58, -30, player.name, {
         fontSize: '17px',
         fontFamily: FONT.display,
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,
       })
-
-      const children: Phaser.GameObjects.GameObject[] = [frame, nameText]
+      children.push(nameText)
 
       if (player.isCpu) {
         const lvl = player.cpuLevel === 'hard' ? 'H' : player.cpuLevel === 'easy' ? 'E' : 'N'
@@ -188,14 +198,14 @@ export class PlayerHUD {
 
       const metaText = this.metaTexts[i]
       if (metaText) {
-        metaText.setText(`🪙 ${player.coins}   🌟 ${player.trophies}${inventory ? '   ' + inventory : ''}`)
+        metaText.setText(`${player.coins} coins · ${player.trophies} stars${inventory ? ' · ' + inventory : ''}`)
       }
 
       const rankText = this.rankTexts[i]
       if (rankText) {
         const rank = rankById.get(player.id) || 1
-        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '•'
-        rankText.setText(`${medal} ${RANK_LABEL[rank - 1] ?? `#${rank}`}`)
+        const label = RANK_LABEL[rank - 1] ?? `#${rank}`
+        rankText.setText(rank === 1 && this.scene.textures.exists(TEXTURE_KEYS.kenneyTrophy) ? `★ ${label}` : label)
         rankText.setColor(rank === 1 ? hexColor(COLORS.gold) : '#ffffff')
       }
 

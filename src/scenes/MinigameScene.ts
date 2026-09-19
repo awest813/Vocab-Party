@@ -7,7 +7,11 @@ import { simulateCpuMinigameGuesses } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
-import { COLORS } from '../ui/Theme'
+import { createDimmer, createPanel, paintStage } from '../ui/Panel'
+import { addStarfieldBackdrop } from '../ui/Starfield'
+import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { characterTextureKey } from '../systems/SpriteFactory'
 
 interface MinigameSceneData {
   state: GameState
@@ -161,12 +165,8 @@ export class MinigameScene extends Phaser.Scene {
   }
 
   private paintBackdrop() {
-    const w = this.scale.width
-    const h = this.scale.height
-    this.add.rectangle(0, 0, w, h, 0x0a1020).setOrigin(0)
-    const g = this.add.graphics()
-    g.fillGradientStyle(0x1a2a4a, 0x1a2a4a, 0x050510, 0x050510, 0.35)
-    g.fillRect(0, 0, w, h)
+    paintStage(this, { topColor: 0x0f1830, bottomColor: 0x070b14, midAlpha: 0.5 })
+    addStarfieldBackdrop(this, 0.42)
   }
 
   create(data: MinigameSceneData) {
@@ -200,38 +200,55 @@ export class MinigameScene extends Phaser.Scene {
     const player = state.players[state.currentPlayer]
 
     this.paintBackdrop()
+    createDimmer(this, 0.55)
 
     Sfx.splash()
 
-    const panel = this.add.container(w / 2, h / 2 - 20)
-    const bg = this.add.rectangle(0, 0, 820, 280, 0x0a1528, 0.9)
-    bg.setStrokeStyle(3, meta.accent, 0.65)
-    const glow = this.add.rectangle(0, -138, 812, 4, meta.accent, 0.85)
-
-    const eyebrow = this.add.text(0, -95, '🕹️ MINIGAME', {
-      fontSize: '22px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
-    }).setOrigin(0.5)
-
-    const title = this.add.text(0, -35, meta.title, {
-      fontSize: '40px', fontFamily: 'Fredoka, Arial Black', color: '#ffffff',
-      stroke: '#000000', strokeThickness: 6, align: 'center', wordWrap: { width: 760 }
-    }).setOrigin(0.5)
-
-    const byline = this.add.text(0, 45, `${player?.emoji ?? ''} ${player?.name ?? 'Player'} takes the challenge`, {
-      fontSize: '20px', fontFamily: 'Fredoka, Arial', color: '#ffcce8'
-    }).setOrigin(0.5)
-
-    const tip = this.add.text(0, 90, meta.tip, {
-      fontSize: '18px', fontFamily: 'Fredoka, Arial', color: '#88aacc',
-      wordWrap: { width: 700 }, align: 'center'
-    }).setOrigin(0.5)
-
-    panel.add([bg, glow, eyebrow, title, byline, tip])
-    panel.setScale(0.92).setAlpha(0)
-    this.tweens.add({
-      targets: panel, scaleX: 1, scaleY: 1, alpha: 1,
-      duration: this.d(280), ease: 'Cubic.easeOut'
+    const panel = createPanel(this, {
+      x: w / 2,
+      y: h / 2 - 20,
+      width: 820,
+      height: 300,
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.94,
+      border: meta.accent,
+      borderAlpha: 0.7,
+      headerColor: meta.accent,
+      headerHeight: 8,
+      depth: 20,
+      animateIn: true,
     })
+
+    if (this.textures.exists(TEXTURE_KEYS.kenneyGamepad)) {
+      panel.add(
+        this.add.image(0, 10, TEXTURE_KEYS.kenneyGamepad)
+          .setDisplaySize(220, 220)
+          .setAlpha(0.08)
+      )
+    }
+
+    panel.add(this.add.text(0, -108, '🕹️ MINIGAME', {
+      fontSize: '22px', fontFamily: FONT.display, color: hexColor(COLORS.mist),
+    }).setOrigin(0.5))
+
+    panel.add(this.add.text(0, -48, meta.title, {
+      fontSize: '38px', fontFamily: FONT.display, color: '#ffffff',
+      stroke: '#000000', strokeThickness: 6, align: 'center', wordWrap: { width: 760 },
+    }).setOrigin(0.5))
+
+    const bylineRow = this.add.container(0, 38)
+    if (player && this.textures.exists(characterTextureKey(player.characterIndex))) {
+      bylineRow.add(this.add.image(-90, 0, characterTextureKey(player.characterIndex)).setDisplaySize(34, 42))
+    }
+    bylineRow.add(this.add.text(player ? 0 : 0, 0, `${player?.name ?? 'Player'} takes the challenge`, {
+      fontSize: '20px', fontFamily: FONT.body, color: '#ffcce8',
+    }).setOrigin(0.5))
+    panel.add(bylineRow)
+
+    panel.add(this.add.text(0, 88, meta.tip, {
+      fontSize: '18px', fontFamily: FONT.body, color: '#88aacc',
+      wordWrap: { width: 700 }, align: 'center',
+    }).setOrigin(0.5))
     if (!shouldReduceMotion()) this.cameras.main.flash(this.d(220), 255, 68, 170, true)
 
     const countText = this.add.text(w / 2, h / 2 + 190, '', {
@@ -254,6 +271,7 @@ export class MinigameScene extends Phaser.Scene {
         this.time.delayedCall(this.d(380), () => {
           panel.destroy(true)
           countText.destroy()
+          this.children.removeAll(true)
           this.launchMinigame(chosen)
         })
       }
@@ -287,14 +305,29 @@ export class MinigameScene extends Phaser.Scene {
     const shuffled = this.shuffleChoices(spec.choices, spec.correct)
     const q = { ...spec, choices: shuffled.choices, correct: shuffled.correct }
 
-    this.add.text(w / 2, 48, meta.title, {
-      fontSize: '34px', fontFamily: 'Fredoka, Arial Black', color: '#FFD700',
-      stroke: '#000000', strokeThickness: 6
-    }).setOrigin(0.5)
+    createDimmer(this, 0.72)
+    createPanel(this, {
+      x: w / 2,
+      y: 78,
+      width: 760,
+      height: 88,
+      fill: COLORS.bgPanel,
+      fillAlpha: 0.92,
+      border: meta.accent,
+      borderAlpha: 0.55,
+      headerColor: meta.accent,
+      headerHeight: 6,
+      depth: 10,
+      animateIn: false,
+    })
+    this.add.text(w / 2, 52, meta.title, {
+      fontSize: '32px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
+      stroke: '#000000', strokeThickness: 6,
+    }).setOrigin(0.5).setDepth(11)
 
     this.add.text(w / 2, 92, meta.tip, {
-      fontSize: '18px', fontFamily: 'Fredoka, Arial', color: '#aaccff'
-    }).setOrigin(0.5)
+      fontSize: '18px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+    }).setOrigin(0.5).setDepth(11)
 
     const promptY = q.detail ? 168 : 200
     this.add.text(w / 2, promptY, q.prompt, {

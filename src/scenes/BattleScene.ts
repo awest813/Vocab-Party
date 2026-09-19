@@ -2,8 +2,10 @@ import Phaser from 'phaser'
 import { GameState, Player } from '../systems/GameState'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
-import { paintStage } from '../ui/Panel'
+import { addVignette, paintStage } from '../ui/Panel'
+import { addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
+import { characterTextureKey } from '../systems/SpriteFactory'
 import { scaleAutoSimDelay } from '../systems/gameFlags'
 import { cpuBattleChoice } from '../systems/CpuPolicy'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
@@ -49,7 +51,13 @@ export class BattleScene extends Phaser.Scene {
 
     // Backdrop
     paintStage(this, { topColor: 0x14080c, bottomColor: 0x2a1018, midAlpha: 0.55 })
-    this.add.rectangle(0, 0, w, h, 0x070b14, 0.35).setOrigin(0)
+    addStarfieldBackdrop(this, 0.28)
+    if (this.textures.exists(TEXTURE_KEYS.skySpace3)) {
+      const sky = this.add.image(w / 2, h / 2, TEXTURE_KEYS.skySpace3)
+      sky.setScale(Math.max(w / sky.width, h / sky.height) * 1.05)
+      sky.setAlpha(0.18).setDepth(-8).setTint(0xff8899)
+    }
+    addVignette(this, 0.55, -3)
     Sfx.battle()
 
     const attacker = data.state.players[data.attackerIndex]
@@ -63,19 +71,14 @@ export class BattleScene extends Phaser.Scene {
       stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setScale(3).setAlpha(0)
 
-    const atkLabel = this.add.text(-200, 60, `${attacker.emoji} ${attacker.name}`, {
-      fontSize: '24px', fontFamily: FONT.display, color: '#ff9a9a'
-    }).setOrigin(0.5).setAlpha(0)
+    const atkSide = this.createVsToken(attacker, -220, 40, COLORS.coral).setAlpha(0)
+    const defSide = this.createVsToken(defender, 220, 40, COLORS.sky).setAlpha(0)
 
-    const defLabel = this.add.text(200, 60, `${defender.emoji} ${defender.name}`, {
-      fontSize: '24px', fontFamily: FONT.display, color: '#9ab0ff'
-    }).setOrigin(0.5).setAlpha(0)
-
-    vsContainer.add([vsBg, vsText, atkLabel, defLabel])
+    vsContainer.add([vsBg, vsText, atkSide, defSide])
     this.tweens.add({ targets: vsBg, alpha: 1, duration: this.d(150) })
     this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: this.d(500), ease: 'Back.easeOut' })
-    this.tweens.add({ targets: atkLabel, alpha: 1, x: -250, duration: this.d(400), delay: this.d(300) })
-    this.tweens.add({ targets: defLabel, alpha: 1, x: 250, duration: this.d(400), delay: this.d(400) })
+    this.tweens.add({ targets: atkSide, alpha: 1, x: '-=30', duration: this.d(400), delay: this.d(300) })
+    this.tweens.add({ targets: defSide, alpha: 1, x: '+=30', duration: this.d(400), delay: this.d(400) })
     if (!shouldReduceMotion()) this.cameras.main.flash(this.d(400), 255, 0, 0, true)
 
     this.time.delayedCall(this.d(1500), () => {
@@ -104,6 +107,20 @@ export class BattleScene extends Phaser.Scene {
     this.startAttackerTurn()
   }
 
+  private createVsToken(player: Player, x: number, y: number, accent: number): Phaser.GameObjects.Container {
+    const side = this.add.container(x, y)
+    const tex = characterTextureKey(player.characterIndex)
+    if (this.textures.exists(tex)) {
+      side.add(this.add.image(0, -8, tex).setDisplaySize(56, 70))
+    } else {
+      side.add(this.add.text(0, 0, player.emoji, { fontSize: '48px' }).setOrigin(0.5))
+    }
+    side.add(this.add.text(0, 52, player.name, {
+      fontSize: '20px', fontFamily: FONT.display, color: hexColor(accent),
+    }).setOrigin(0.5))
+    return side
+  }
+
   private createPlayerSide(player: Player, x: number, y: number, isAttacker: boolean): Phaser.GameObjects.Container {
     const container = this.add.container(x, y)
     const color = isAttacker ? COLORS.coral : COLORS.sky
@@ -126,7 +143,10 @@ export class BattleScene extends Phaser.Scene {
       fontSize: '22px', fontFamily: FONT.display, color: '#ffffff',
     }).setOrigin(0.5)
 
-    const emoji = this.add.text(0, -28, player.emoji, { fontSize: '64px' }).setOrigin(0.5)
+    const tex = characterTextureKey(player.characterIndex)
+    const avatar = this.textures.exists(tex)
+      ? this.add.image(0, -28, tex).setDisplaySize(58, 72)
+      : this.add.text(0, -28, player.emoji, { fontSize: '64px' }).setOrigin(0.5)
 
     const stats = this.add.text(0, 48, `ATK ${Math.max(1, player.atk)}   DEF ${Math.max(1, player.def)}   EVD ${Math.max(1, player.evd)}`, {
       fontSize: '15px', fontFamily: FONT.display, color: hexColor(COLORS.mist), align: 'center'
@@ -137,7 +157,7 @@ export class BattleScene extends Phaser.Scene {
     }).setOrigin(0.5)
     rollText.setName('rollText')
 
-    container.add([g, role, name, emoji, stats, rollText])
+    container.add([g, role, name, avatar, stats, rollText])
 
     this.tweens.add({
       targets: container,

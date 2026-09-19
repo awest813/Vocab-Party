@@ -92,7 +92,9 @@ export class QuestionScene extends Phaser.Scene {
     const panelW = 920
     const panelH = 520
     const borderColor = type === 'vocab' ? COLORS.sky : COLORS.warning
-    const cardTex = type === 'vocab' ? TEXTURE_KEYS.kenneyCardBlue : TEXTURE_KEYS.kenneyCardRed
+    const cardTex = type === 'vocab'
+      ? TEXTURE_KEYS.kenneyCardBlue
+      : TEXTURE_KEYS.kenneyCardGreen
     const hasCard = this.textures.exists(cardTex)
 
     const panelContainer = createPanel(this, {

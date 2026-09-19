@@ -216,6 +216,11 @@ export class BoardScene extends Phaser.Scene {
 
     this.rollBtn = createButton(this, w - 118, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 196, 64)
     this.rollBtn.setDepth(DEPTH.chrome)
+    if (this.textures.exists(TEXTURE_KEYS.kenneyDie1)) {
+      this.rollBtn.add(
+        this.add.image(-62, 0, TEXTURE_KEYS.kenneyDie1).setDisplaySize(26, 26).setTint(0xffe8a0)
+      )
+    }
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
     this.itemBtn = createButton(this, w - 330, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 176, 64)
@@ -983,6 +988,10 @@ export class BoardScene extends Phaser.Scene {
             this.showFloatyText(player, '💀 OUCH! -4 pts -5 coins!', '#ff4444')
             this.showDamageNumber(player, -4, 'pts')
             this.showDamageNumber(player, -5, '🪙', true)
+            {
+              const pos = this.playerTokens[playerIndex]
+              this.burstAt(pos.x, pos.y, TEXTURE_KEYS.particleRed, 0xff4444)
+            }
             this.cameras.main.flash(400, 200, 0, 0, false)
             if (!shouldReduceMotion()) this.cameras.main.shake(400, 0.02)
           }
@@ -1171,6 +1180,10 @@ export class BoardScene extends Phaser.Scene {
         this.shopOwners[tileIndex] = player.id
         this.statusText.setText(`🏪 ${player.name} bought this shop!`)
         this.showFloatyText(player, `-${SHOP_PRICE_COINS} 🪙 · You own it!`, '#ffaa66')
+        {
+          const pos = this.playerTokens[playerIndex]
+          this.burstAt(pos.x, pos.y - 20, TEXTURE_KEYS.gem, 0xffcc66)
+        }
       } else {
         this.statusText.setText(`🏪 Too pricey! Need ${SHOP_PRICE_COINS} coins.`)
         this.showFloatyText(player, 'Window shopping…', '#aaaaaa')
@@ -1235,6 +1248,10 @@ export class BoardScene extends Phaser.Scene {
       this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
       this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
       this.showDamageNumber(player, 12, 'pts')
+      {
+        const pos = this.playerTokens[this.state.players.indexOf(player)]
+        this.burstAt(pos.x, pos.y, TEXTURE_KEYS.starSmall, 0xffee44)
+      }
       this.starPurchaseSplash(player)
     } else {
       player.coins += 2
@@ -1636,5 +1653,19 @@ export class BoardScene extends Phaser.Scene {
   private getPlayerOffset(index: number) {
     const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
     return offsets[index % 4]
+  }
+
+  private burstAt(x: number, y: number, textureKey: string, tint?: number) {
+    if (isAutoSimMode() || !this.textures.exists(textureKey)) return
+    const burst = this.add.particles(x, y, textureKey, {
+      speed: { min: 40, max: 120 },
+      scale: { start: 0.5, end: 0 },
+      alpha: { start: 0.9, end: 0 },
+      lifespan: 500,
+      quantity: 8,
+      tint: tint ?? 0xffffff,
+      blendMode: 'ADD',
+    }).setDepth(25)
+    this.time.delayedCall(520, () => burst.destroy())
   }
 }

@@ -9,6 +9,7 @@ import { isAutoSimMode } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { TILE_COLORS, TILE_TEXTURE_KEY } from '../systems/SpriteFactory'
 
 export class MenuScene extends Phaser.Scene {
   private modalOpen = false
@@ -144,6 +145,8 @@ export class MenuScene extends Phaser.Scene {
       delay: reduce ? 0 : 220,
       ease: 'Cubic.easeOut',
     })
+
+    this.createTilePreviewRow(w / 2, 292, reduce)
 
     const startGlow = this.add.ellipse(w / 2, 368, 440, 110, COLORS.mint, 0.14).setDepth(4)
     if (!reduce) {
@@ -283,6 +286,54 @@ export class MenuScene extends Phaser.Scene {
         if (s.muted || s.musicVolume <= 0.01) Sfx.stopMusic()
         else Sfx.startMusic()
       },
+    })
+  }
+
+  private createTilePreviewRow(cx: number, cy: number, reduce: boolean) {
+    const previewTypes = ['vocab', 'grammar', 'bonus', 'mystery', 'minigame', 'swap'] as const
+    const spacing = 72
+    const startX = cx - ((previewTypes.length - 1) * spacing) / 2
+
+    previewTypes.forEach((type, i) => {
+      const x = startX + i * spacing
+      const chip = this.add.container(x, cy).setDepth(5).setAlpha(0).setScale(0.85)
+      const color = TILE_COLORS[type]
+      const bg = this.add.graphics()
+      bg.fillStyle(0x000000, 0.28)
+      bg.fillRoundedRect(-28, -24, 56, 48, 10)
+      bg.fillStyle(color, 0.92)
+      bg.fillRoundedRect(-26, -26, 52, 44, 10)
+      bg.lineStyle(2, 0xffffff, 0.45)
+      bg.strokeRoundedRect(-26, -26, 52, 44, 10)
+      chip.add(bg)
+
+      const tex = TILE_TEXTURE_KEY(type)
+      if (this.textures.exists(tex)) {
+        chip.add(this.add.image(0, -4, tex).setDisplaySize(40, 40))
+      }
+
+      chip.y += 12
+      this.tweens.add({
+        targets: chip,
+        alpha: 1,
+        y: cy,
+        scaleX: 1,
+        scaleY: 1,
+        duration: reduce ? 0 : 360,
+        delay: reduce ? 0 : 320 + i * 55,
+        ease: 'Back.easeOut',
+      })
+
+      if (!reduce) {
+        this.tweens.add({
+          targets: chip,
+          y: cy - 6,
+          duration: 1400 + i * 120,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+        })
+      }
     })
   }
 
