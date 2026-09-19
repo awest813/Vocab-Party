@@ -158,12 +158,16 @@ export class PauseScene extends Phaser.Scene {
 
     panel.add([resumeBtn, settingsBtn, helpBtn, quitBtn, escHint])
 
-    this.input.keyboard?.on('keydown-ESC', () => {
+    const onEsc = () => {
       if (this.modalOpen) {
         this.closeModal?.()
         return
       }
       resume()
+    }
+    this.input.keyboard?.on('keydown-ESC', onEsc)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.keyboard?.off('keydown-ESC', onEsc)
     })
   }
 }

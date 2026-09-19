@@ -228,6 +228,7 @@ export class BattleScene extends Phaser.Scene {
           this.input.keyboard?.off('keydown', onKey)
           defBtn?.destroy()
           evaBtn?.destroy()
+          this.children.getByName('timerLabel')?.destroy()
           this.statusText.setText('⏱️ Time ran out! Auto-defending!')
           this.time.delayedCall(this.d(800), () => this.resolveDefender('defend'))
         }
@@ -239,6 +240,7 @@ export class BattleScene extends Phaser.Scene {
         this.defenderTimerEvent?.remove()
         this.tweens.killTweensOf(this.defenderTimerBar)
         this.defenderTimerBar?.destroy()
+        this.children.getByName('timerLabel')?.destroy()
         this.input.keyboard?.off('keydown', onKey)
         defBtn.destroy(); evaBtn.destroy()
         this.resolveDefender(choice)

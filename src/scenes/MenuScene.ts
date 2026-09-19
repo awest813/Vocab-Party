@@ -11,6 +11,10 @@ import { Sfx } from '../systems/Sfx'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { TILE_COLORS, TILE_TEXTURE_KEY } from '../systems/SpriteFactory'
 
+const TILE_PREVIEW_EMOJI: Record<string, string> = {
+  vocab: '📖', grammar: '✏️', bonus: '⭐', mystery: '❓', minigame: '🕹️', swap: '🔄',
+}
+
 export class MenuScene extends Phaser.Scene {
   private modalOpen = false
   private closeModal: (() => void) | null = null
@@ -223,20 +227,28 @@ export class MenuScene extends Phaser.Scene {
       delay: reduce ? 0 : 700,
     })
 
-    this.input.keyboard?.on('keydown-ESC', () => {
+    const onEsc = () => {
       if (this.modalOpen) {
         this.closeModal?.()
         return
       }
-    })
-    this.input.keyboard?.on('keydown-ENTER', goSetup)
+    }
     const openHowToFromKeyboard = (ev: KeyboardEvent) => {
       if (this.modalOpen) return
       if (ev.key === '?' || ev.code === 'Slash') this.openHowTo()
     }
-    this.input.keyboard?.on('keydown', openHowToFromKeyboard)
-    this.input.keyboard?.on('keydown-KeyH', () => {
+    const onHelpKey = () => {
       if (!this.modalOpen) this.openHowTo()
+    }
+    this.input.keyboard?.on('keydown-ESC', onEsc)
+    this.input.keyboard?.on('keydown-ENTER', goSetup)
+    this.input.keyboard?.on('keydown', openHowToFromKeyboard)
+    this.input.keyboard?.on('keydown-KeyH', onHelpKey)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.keyboard?.off('keydown-ESC', onEsc)
+      this.input.keyboard?.off('keydown-ENTER', goSetup)
+      this.input.keyboard?.off('keydown', openHowToFromKeyboard)
+      this.input.keyboard?.off('keydown-KeyH', onHelpKey)
     })
 
     this.cameras.main.fadeIn(420, 7, 11, 20)
@@ -310,6 +322,10 @@ export class MenuScene extends Phaser.Scene {
       const tex = TILE_TEXTURE_KEY(type)
       if (this.textures.exists(tex)) {
         chip.add(this.add.image(0, -4, tex).setDisplaySize(40, 40))
+      } else {
+        chip.add(this.add.text(0, -4, TILE_PREVIEW_EMOJI[type] ?? '?', {
+          fontSize: '22px',
+        }).setOrigin(0.5))
       }
 
       chip.y += 12

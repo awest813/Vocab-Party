@@ -113,6 +113,7 @@ export class MinigameScene extends Phaser.Scene {
   private minigameData!: MinigameSceneData
   private feedbackText?: Phaser.GameObjects.Text
   private timerTween?: Phaser.Tweens.Tween
+  private introTimers: Phaser.Time.TimerEvent[] = []
 
   constructor() { super('MinigameScene') }
 
@@ -123,6 +124,11 @@ export class MinigameScene extends Phaser.Scene {
   private clearChoiceKeys() {
     this.choiceKeyCleanup?.()
     this.choiceKeyCleanup = undefined
+  }
+
+  private clearIntroTimers() {
+    this.introTimers.forEach(t => t.remove())
+    this.introTimers = []
   }
 
   /** Map 1–4 / A–D / numpad to choice index 0..3 */
@@ -178,6 +184,7 @@ export class MinigameScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.clearChoiceKeys()
       this.timerTween?.stop()
+      this.clearIntroTimers()
     })
 
     if (cpuMode) {
@@ -263,23 +270,25 @@ export class MinigameScene extends Phaser.Scene {
         countText.setScale(1.6).setColor('#ffffff')
         this.tweens.add({ targets: countText, scaleX: 1, scaleY: 1, duration: this.d(280), ease: 'Back.easeOut' })
         count--
-        this.time.delayedCall(this.d(700), tick)
+        this.introTimers.push(this.time.delayedCall(this.d(700), tick))
       } else {
         countText.setText('GO!')
         countText.setColor('#44ff88')
         countText.setScale(1.35)
-        this.time.delayedCall(this.d(380), () => {
+        this.introTimers.push(this.time.delayedCall(this.d(380), () => {
+          this.clearIntroTimers()
           panel.destroy(true)
           countText.destroy()
           this.children.removeAll(true)
           this.launchMinigame(chosen)
-        })
+        }))
       }
     }
-    this.time.delayedCall(this.d(isAutoSimMode() ? 40 : 650), tick)
+    this.introTimers.push(this.time.delayedCall(this.d(isAutoSimMode() ? 40 : 650), tick))
   }
 
   private launchMinigame(type: MinigameId) {
+    this.clearIntroTimers()
     this.clearChoiceKeys()
     this.children.removeAll(true)
     this.feedbackText = undefined
@@ -306,7 +315,7 @@ export class MinigameScene extends Phaser.Scene {
     const q = { ...spec, choices: shuffled.choices, correct: shuffled.correct }
 
     createDimmer(this, 0.72)
-    createPanel(this, {
+    const headerPanel = createPanel(this, {
       x: w / 2,
       y: 78,
       width: 760,
@@ -320,14 +329,14 @@ export class MinigameScene extends Phaser.Scene {
       depth: 10,
       animateIn: false,
     })
-    this.add.text(w / 2, 52, meta.title, {
+    headerPanel.add(this.add.text(0, -26, meta.title, {
       fontSize: '32px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
       stroke: '#000000', strokeThickness: 6,
-    }).setOrigin(0.5).setDepth(11)
+    }).setOrigin(0.5))
 
-    this.add.text(w / 2, 92, meta.tip, {
+    headerPanel.add(this.add.text(0, 14, meta.tip, {
       fontSize: '18px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
-    }).setOrigin(0.5).setDepth(11)
+    }).setOrigin(0.5))
 
     const promptY = q.detail ? 168 : 200
     this.add.text(w / 2, promptY, q.prompt, {

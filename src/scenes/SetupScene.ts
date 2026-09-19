@@ -278,27 +278,33 @@ export class SetupScene extends Phaser.Scene {
       this.time.delayedCall(80, () => this.startGameWithRounds(rounds))
     }
 
-    this.input.keyboard?.on('keydown', (event: KeyboardEvent) => this.onKey(event))
-    this.input.keyboard?.on('keydown-ENTER', () => { if (this.activeRow < 0) this.startGame() })
-    this.input.keyboard?.on('keydown-ONE', () => { if (this.activeRow < 0) this.selectMapPreset('quick') })
-    this.input.keyboard?.on('keydown-TWO', () => { if (this.activeRow < 0) this.selectMapPreset('classic') })
-    this.input.keyboard?.on('keydown-THREE', () => { if (this.activeRow < 0) this.selectMapPreset('full') })
-    this.input.keyboard?.on('keydown-ESC', () => {
+    const onKey = (event: KeyboardEvent) => this.onKey(event)
+    const onEnter = () => { if (this.activeRow < 0) this.startGame() }
+    const onOne = () => { if (this.activeRow < 0) this.selectMapPreset('quick') }
+    const onTwo = () => { if (this.activeRow < 0) this.selectMapPreset('classic') }
+    const onThree = () => { if (this.activeRow < 0) this.selectMapPreset('full') }
+    const onEsc = () => {
       if (this.activeRow >= 0) this.setActiveRow(-1)
       else this.scene.start('MenuScene')
-    })
+    }
+    this.input.keyboard?.on('keydown', onKey)
+    this.input.keyboard?.on('keydown-ENTER', onEnter)
+    this.input.keyboard?.on('keydown-ONE', onOne)
+    this.input.keyboard?.on('keydown-TWO', onTwo)
+    this.input.keyboard?.on('keydown-THREE', onThree)
+    this.input.keyboard?.on('keydown-ESC', onEsc)
 
     this.input.on('pointerdown', (_ptr: Phaser.Input.Pointer, objs: Phaser.GameObjects.GameObject[]) => {
       if (objs.length === 0) this.setActiveRow(-1)
     })
 
     this.events.once('shutdown', () => {
-      this.input.keyboard?.off('keydown')
-      this.input.keyboard?.off('keydown-ENTER')
-      this.input.keyboard?.off('keydown-ONE')
-      this.input.keyboard?.off('keydown-TWO')
-      this.input.keyboard?.off('keydown-THREE')
-      this.input.keyboard?.off('keydown-ESC')
+      this.input.keyboard?.off('keydown', onKey)
+      this.input.keyboard?.off('keydown-ENTER', onEnter)
+      this.input.keyboard?.off('keydown-ONE', onOne)
+      this.input.keyboard?.off('keydown-TWO', onTwo)
+      this.input.keyboard?.off('keydown-THREE', onThree)
+      this.input.keyboard?.off('keydown-ESC', onEsc)
       this.cursorTimers.forEach(t => t.destroy())
       this.cursorTimers = []
     })

@@ -48,7 +48,7 @@ npm run typecheck
    - **Quick** — 5 rounds
    - **Classic** — 10 rounds
    - **Full Map** — 44 rounds
-2. Click **🎲 ROLL DICE** on your turn to roll the block die (**1–3**).
+2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher).
 3. Your token moves along the board. The tile you land on determines what happens:
 
 | Tile | Effect |
@@ -99,7 +99,7 @@ Vocab-Party/
     ├── main.ts              # Phaser game config & scene list
     ├── scenes/
     │   ├── BootScene.ts     # Initial boot, starts preload
-    │   ├── PreloadScene.ts  # Loading bar, loads JSON data files
+    │   ├── PreloadScene.ts  # Loading bar, JSON + Kenney/phaser assets, texture generation
     │   ├── MenuScene.ts     # Main menu with animated background
     │   ├── SetupScene.ts    # Character, player count, and map selection
     │   ├── BoardScene.ts    # Core game board, dice rolling, turn management
@@ -114,9 +114,14 @@ Vocab-Party/
     │   ├── BoardLayout.ts   # Board node graph
     │   ├── CpuPolicy.ts     # CPU decision-making
     │   ├── GameSettings.ts  # Audio and accessibility settings
+    │   ├── SpriteFactory.ts # Procedural tiles, tokens, Kenney compositing
+    │   ├── ExternalAssetKeys.ts
     │   └── Sfx.ts           # Sound effects and music
     └── ui/
         ├── Button.ts        # Reusable animated button component
+        ├── Panel.ts         # Panels, dimmers, stage chrome
+        ├── Starfield.ts     # Backdrop effects
+        ├── Theme.ts         # Shared palette and depth constants
         ├── PlayerHUD.ts     # Top player score panels
         └── Confetti.ts      # Confetti particle effect
 ```
@@ -158,6 +163,9 @@ Same format as vocab questions. Also supports minigame data:
   "choices": ["Noun", "Verb", "Adjective", "Adverb"],
   "correct": 2
 }
+
+// Other minigame banks in grammar.json / vocab.json:
+// minigame_sentence_fix, minigame_synonyms, minigame_antonyms, minigame_homophones
 ```
 
 ### Context Clue Minigame (`public/data/vocab.json`)

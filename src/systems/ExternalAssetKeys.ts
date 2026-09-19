@@ -4,7 +4,7 @@
  * - Kenney Game Icons (tile overlays) — https://kenney.nl/assets/game-icons
  * - Quaternius LowPoly RPG Characters (player pawn crops from albedo textures) —
  *   https://opengameart.org/content/lowpoly-rpg-characters
- * - Board tiles are 64×64 composites (card backs + icons) generated from the above.
+ * - Board tiles are 64×64 composites (Kenney tile faces + icons on procedural bevels).
  * License copies: public/assets/kenney/*.txt, public/assets/quaternius/*.txt
  */
 

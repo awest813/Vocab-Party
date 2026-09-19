@@ -85,6 +85,8 @@ export const KENNEY_TILE_FACE_KEYS: Partial<Record<string, string>> = {
   shop: TEXTURE_KEYS.kenneyTileShop,
   star: TEXTURE_KEYS.kenneyTileStar,
   brick: TEXTURE_KEYS.kenneyTileBrick,
+  item_shop: TEXTURE_KEYS.kenneyCart,
+  penalty: TEXTURE_KEYS.kenneyQuestion,
 }
 
 /** Optional Kenney icon overlays stamped onto procedural tiles. */

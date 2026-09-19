@@ -47,6 +47,12 @@ export class PlayerHUD {
           this.scene.add.image(-panelW / 2 + 34, 2, tex)
             .setDisplaySize(38, 48)
         )
+      } else {
+        children.push(
+          this.scene.add.text(-panelW / 2 + 34, 2, player.emoji, {
+            fontSize: '28px',
+          }).setOrigin(0.5)
+        )
       }
 
       const nameText = this.scene.add.text(-panelW / 2 + 58, -30, player.name, {

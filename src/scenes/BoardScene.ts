@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState, ITEMS } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS, type Item } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
@@ -90,6 +90,10 @@ export class BoardScene extends Phaser.Scene {
   private turnGlowTween?: Phaser.Tweens.Tween
   /** Tile index → owner player id (Fortune Street–style shops). */
   private shopOwners: Record<number, number> = {}
+  /** Tile index → owner badge on shop tiles. */
+  private shopOwnerDots = new Map<number, Phaser.GameObjects.Arc>()
+  private choiceModal?: Phaser.GameObjects.Container
+  private choiceKeyCleanup?: () => void
   /** Tile index → board tile sprite (for landing animations). */
   private tileImages = new Map<number, Phaser.GameObjects.Image>()
   private activeAnnouncement?: Phaser.GameObjects.Container
@@ -182,7 +186,8 @@ export class BoardScene extends Phaser.Scene {
 
     this.hud = new PlayerHUD(this, this.state)
     this.createPauseButton()
-    this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
+    const escHandler = () => this.pauseGame()
+    this.input.keyboard?.on('keydown-ESC', escHandler)
     Sfx.startMusic()
 
     const touch = isTouchPreferred(this.sys.game)
@@ -244,6 +249,8 @@ export class BoardScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown', rollKeyHandler)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.keyboard?.off('keydown', rollKeyHandler)
+      this.input.keyboard?.off('keydown-ESC', escHandler)
+      this.closeChoiceModal()
     })
 
     this.updateStatus()
@@ -404,14 +411,8 @@ export class BoardScene extends Phaser.Scene {
         strokeThickness: 2,
       }).setAlpha(0.55).setDepth(1)
 
-      if (type === 'shop' && this.shopOwners[i] !== undefined) {
-        const owner = this.state.players.find(p => p.id === this.shopOwners[i])
-        if (owner) {
-          const ownerColor = characterDef(owner.characterIndex).color
-          const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
-          dot.setDepth(2)
-          dot.setStrokeStyle(1.5, 0xffffff, 0.75)
-        }
+      if (type === 'shop') {
+        this.refreshShopOwnerBadge(i)
       }
     })
 
@@ -474,14 +475,16 @@ export class BoardScene extends Phaser.Scene {
     ring.strokeCircle(0, -2, 15)
 
     const tex = characterTextureKey(player.characterIndex)
-    const sprite = this.add.image(0, -4, tex).setDisplaySize(48, 62)
+    const avatar = this.textures.exists(tex)
+      ? this.add.image(0, -4, tex).setDisplaySize(48, 62)
+      : this.add.text(0, -4, player.emoji, { fontSize: '36px' }).setOrigin(0.5)
 
-    container.add([ring, sprite])
+    container.add([ring, avatar])
     container.setDepth(DEPTH.tokens)
 
     // Idle bob
     this.tweens.add({
-      targets: sprite,
+      targets: avatar,
       y: -7,
       duration: 900 + index * 120,
       yoyo: true,
@@ -702,7 +705,8 @@ export class BoardScene extends Phaser.Scene {
     } else if (hadSpeedBoost) {
       player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
     }
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, Math.max(1, result) - 1)])
+    const diceFace = Math.min(3, Math.max(1, forcedMove > 0 ? forcedMove : (hadDash && forcedMove <= 0 ? Math.min(3, result) : result)))
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[diceFace - 1])
     const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Speed Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash!' : '')
     const forceTag = forcedMove > 0 ? ' 🔑' : ''
     this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${forceTag}${hadDash && forcedMove <= 0 ? ' (2 dice)' : forcedMove > 0 ? ' (Golden Key)' : ' (1-3)'}${surgeText}!`)
@@ -1073,16 +1077,16 @@ export class BoardScene extends Phaser.Scene {
           }
           break
         case 'shop':
-          this.handleShop(player, playerIndex, tileIndex)
+          void this.handleShop(player, playerIndex, tileIndex)
           break
         case 'star':
-          this.handleStarShop(player)
+          void this.handleStarShop(player)
           break
         case 'brick':
           this.handleBrickCollect(player)
           break
         case 'item_shop':
-          this.handleItemShop(player)
+          void this.handleItemShop(player)
           break
         default:
           this.endTurn()
@@ -1158,7 +1162,131 @@ export class BoardScene extends Phaser.Scene {
     }
   }
 
-  handleShop(player: Player, playerIndex: number, tileIndex: number) {
+  private refreshShopOwnerBadge(tileIndex: number) {
+    this.shopOwnerDots.get(tileIndex)?.destroy()
+    this.shopOwnerDots.delete(tileIndex)
+    const ownerId = this.shopOwners[tileIndex]
+    if (ownerId === undefined) return
+    const owner = this.state.players.find(p => p.id === ownerId)
+    if (!owner) return
+    const { x, y } = this.getTileXY(tileIndex)
+    const ownerColor = characterDef(owner.characterIndex).color
+    const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
+    dot.setDepth(2)
+    dot.setStrokeStyle(1.5, 0xffffff, 0.75)
+    this.shopOwnerDots.set(tileIndex, dot)
+  }
+
+  private closeChoiceModal() {
+    this.choiceKeyCleanup?.()
+    this.choiceKeyCleanup = undefined
+    this.choiceModal?.destroy()
+    this.choiceModal = undefined
+  }
+
+  private promptBinaryChoice(message: string, yesLabel: string, noLabel: string): Promise<boolean> {
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-220, -110, 440, 220, 16)
+      bg.lineStyle(2.5, COLORS.gold, 0.55)
+      bg.strokeRoundedRect(-220, -110, 440, 220, 16)
+      const msg = this.add.text(0, -40, message, {
+        fontSize: '20px', fontFamily: FONT.display, color: '#ffffff',
+        wordWrap: { width: 380 }, align: 'center',
+      }).setOrigin(0.5)
+      const yesBtn = createButton(this, -100, 50, yesLabel, COLORS.party, COLORS.partyDeep, 180, 48)
+      const noBtn = createButton(this, 100, 50, noLabel, COLORS.bgPanelAlt, COLORS.chromeDeep, 180, 48)
+      this.choiceModal.add([dim, bg, msg, yesBtn, noBtn])
+
+      const finish = (value: boolean) => {
+        this.closeChoiceModal()
+        resolve(value)
+      }
+      yesBtn.on('pointerdown', () => finish(true))
+      noBtn.on('pointerdown', () => finish(false))
+      dim.on('pointerdown', () => finish(false))
+
+      const onKey = (ev: KeyboardEvent) => {
+        if (ev.code === 'Digit1' || ev.code === 'Numpad1' || ev.code === 'KeyY') {
+          ev.preventDefault()
+          finish(true)
+        } else if (ev.code === 'Digit2' || ev.code === 'Numpad2' || ev.code === 'KeyN' || ev.code === 'Escape') {
+          ev.preventDefault()
+          finish(false)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
+  private promptItemPurchase(player: Player): Promise<Item | null> {
+    const available = Object.values(ITEMS)
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-240, -180, 480, 360, 16)
+      bg.lineStyle(2.5, COLORS.teal, 0.55)
+      bg.strokeRoundedRect(-240, -180, 480, 360, 16)
+      const title = this.add.text(0, -140, 'ITEM SHOP', {
+        fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal),
+      }).setOrigin(0.5)
+      this.choiceModal.add([dim, bg, title])
+
+      const finish = (item: Item | null) => {
+        this.closeChoiceModal()
+        resolve(item)
+      }
+
+      available.forEach((item, i) => {
+        const affordable = player.coins >= item.cost
+        const btn = createButton(
+          this, 0, -80 + i * 44,
+          `${item.emoji} ${item.name} (${item.cost}🪙)`,
+          affordable ? COLORS.bgPanelAlt : COLORS.mute,
+          affordable ? COLORS.chromeDeep : 0x4a5a6e,
+          420, 38
+        )
+        if (affordable) btn.on('pointerdown', () => finish(item))
+        this.choiceModal?.add(btn)
+      })
+
+      const passBtn = createButton(this, 0, 130, 'PASS', COLORS.mute, 0x4a5a6e, 140, 40)
+      passBtn.on('pointerdown', () => finish(null))
+      dim.on('pointerdown', () => finish(null))
+      this.choiceModal.add(passBtn)
+
+      const onKey = (ev: KeyboardEvent) => {
+        const keyToIndex: Record<string, number> = {
+          Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5, Digit7: 6,
+          Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5, Numpad7: 6,
+        }
+        const idx = keyToIndex[ev.code]
+        if (idx !== undefined && idx < available.length && player.coins >= available[idx].cost) {
+          ev.preventDefault()
+          finish(available[idx])
+        } else if (ev.code === 'Escape' || ev.code === 'Digit0' || ev.code === 'Numpad0') {
+          ev.preventDefault()
+          finish(null)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
+  async handleShop(player: Player, playerIndex: number, tileIndex: number) {
     const ownerId = this.shopOwners[tileIndex]
 
     if (ownerId === undefined) {
@@ -1175,9 +1303,23 @@ export class BoardScene extends Phaser.Scene {
         this.time.delayedCall(this.d(1200), () => this.endTurn())
         return
       }
+      if (!player.isCpu && player.coins >= SHOP_PRICE_COINS) {
+        const buy = await this.promptBinaryChoice(
+          `Buy this shop for ${SHOP_PRICE_COINS} coins?`,
+          `BUY (${SHOP_PRICE_COINS}🪙)`,
+          'PASS'
+        )
+        if (!buy) {
+          this.statusText.setText(`🏪 ${player.name} passes on this shop.`)
+          this.showFloatyText(player, 'Saving coins…', '#aaaaaa')
+          this.time.delayedCall(this.d(1200), () => this.endTurn())
+          return
+        }
+      }
       if (player.coins >= SHOP_PRICE_COINS) {
         player.coins -= SHOP_PRICE_COINS
         this.shopOwners[tileIndex] = player.id
+        this.refreshShopOwnerBadge(tileIndex)
         this.statusText.setText(`🏪 ${player.name} bought this shop!`)
         this.showFloatyText(player, `-${SHOP_PRICE_COINS} 🪙 · You own it!`, '#ffaa66')
         {
@@ -1229,7 +1371,7 @@ export class BoardScene extends Phaser.Scene {
     this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
-  handleStarShop(player: Player) {
+  async handleStarShop(player: Player) {
     if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
       round: this.state.round,
       totalRounds: this.roundsPerGame,
@@ -1240,6 +1382,19 @@ export class BoardScene extends Phaser.Scene {
       this.showFloatyText(player, 'Saving up…', '#aaccff')
       this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
+    }
+    if (!player.isCpu && player.coins >= STAR_COST_COINS) {
+      const buy = await this.promptBinaryChoice(
+        `Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
+        `BUY (${STAR_COST_COINS}🪙)`,
+        'PASS'
+      )
+      if (!buy) {
+        this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
+        this.showFloatyText(player, 'Saving up…', '#aaccff')
+        this.time.delayedCall(this.d(1200), () => this.endTurn())
+        return
+      }
     }
     if (player.coins >= STAR_COST_COINS) {
       player.coins -= STAR_COST_COINS
@@ -1414,6 +1569,7 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(1200), () => {
         this.rolling = false
         this.rollBtn.setAlpha(1)
+        this.itemBtn.setAlpha(1)
         const cpu = this.state.players[this.state.currentPlayer]?.isCpu ?? false
         this.handleRoll(cpu)
       })
@@ -1464,6 +1620,7 @@ export class BoardScene extends Phaser.Scene {
     this.scene.resume()
     this.rolling = false
     this.rollBtn.setAlpha(1)
+    this.itemBtn.setAlpha(1)
 
     this.state.turn++
     const totalTurns = this.state.players.length * this.roundsPerGame
@@ -1490,9 +1647,9 @@ export class BoardScene extends Phaser.Scene {
     this.updateStatus()
   }
 
-  handleItemShop(player: Player) {
+  async handleItemShop(player: Player) {
     const available = Object.values(ITEMS)
-    let item
+    let item: Item | undefined
     if (player.isCpu) {
       const pick = cpuChooseItemToBuy(
         player.coins,
@@ -1507,10 +1664,22 @@ export class BoardScene extends Phaser.Scene {
         }
       )
       item = pick
-        ? available.find(a => a.type === pick.type) ?? pick
-        : available.find(a => player.coins >= a.cost) ?? Phaser.Utils.Array.GetRandom(available)
+        ? available.find(a => a.type === pick.type)
+        : available.find(a => player.coins >= a.cost)
+      if (!item) item = Phaser.Utils.Array.GetRandom(available)
     } else {
-      item = Phaser.Utils.Array.GetRandom(available)
+      const picked = await this.promptItemPurchase(player)
+      if (!picked) {
+        this.statusText.setText(`🛍️ ${player.name} leaves the item shop.`)
+        this.showFloatyText(player, 'Maybe next time…', '#aaaaaa')
+        this.time.delayedCall(this.d(1200), () => this.endTurn())
+        return
+      }
+      item = picked
+    }
+    if (!item) {
+      this.time.delayedCall(this.d(800), () => this.endTurn())
+      return
     }
     if (player.coins >= item.cost) {
       player.coins -= item.cost
@@ -1611,14 +1780,20 @@ export class BoardScene extends Phaser.Scene {
         overlays.push(highlight, arrow)
       })
 
+      const keyToIndex: Record<string, number> = {
+        Digit1: 0, Digit2: 1, Numpad1: 0, Numpad2: 1,
+      }
       const onKeyDown = (ev: KeyboardEvent) => {
-        const idx = ['Digit1', 'Digit2', 'Numpad1', 'Numpad2'].indexOf(ev.code)
-        if (idx >= 0 && idx < options.length) {
+        const idx = keyToIndex[ev.code]
+        if (idx !== undefined && idx < options.length) {
           ev.preventDefault()
           finish(options[idx])
         }
       }
       this.input.keyboard?.on('keydown', onKeyDown)
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+        if (!settled) cleanup()
+      })
     })
   }
 
