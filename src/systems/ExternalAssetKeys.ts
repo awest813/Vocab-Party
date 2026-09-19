@@ -4,7 +4,7 @@
  * - Kenney Game Icons (tile overlays) — https://kenney.nl/assets/game-icons
  * - Quaternius LowPoly RPG Characters (player pawn crops from albedo textures) —
  *   https://opengameart.org/content/lowpoly-rpg-characters
- * - Board tiles are 64×64 composites (card backs + icons) generated from the above.
+ * - Board tiles are 64×64 composites (Kenney tile faces + icons on procedural bevels).
  * License copies: public/assets/kenney/*.txt, public/assets/quaternius/*.txt
  */
 
@@ -51,6 +51,20 @@ export const EXTERNAL_ASSETS = {
   kenneyCardRed: 'assets/kenney/boardgame/cards/cardBack_red2.png',
   kenneyCardBlue: 'assets/kenney/boardgame/cards/cardBack_blue2.png',
   kenneyCardGreen: 'assets/kenney/boardgame/cards/cardBack_green2.png',
+  kenneyCardHearts: 'assets/kenney/boardgame/cards/cardHeartsA.png',
+  kenneyCardClubs: 'assets/kenney/boardgame/cards/cardClubsA.png',
+  kenneyCardDiamonds: 'assets/kenney/boardgame/cards/cardDiamondsA.png',
+  // Kenney board tile faces (64×64 art)
+  kenneyTileStart: 'assets/kenney/tiles/tile_start.png',
+  kenneyTileVocab: 'assets/kenney/tiles/tile_vocab.png',
+  kenneyTileGrammar: 'assets/kenney/tiles/tile_grammar.png',
+  kenneyTileBonus: 'assets/kenney/tiles/tile_bonus.png',
+  kenneyTileMystery: 'assets/kenney/tiles/tile_mystery.png',
+  kenneyTileMinigame: 'assets/kenney/tiles/tile_minigame.png',
+  kenneyTileSwap: 'assets/kenney/tiles/tile_swap.png',
+  kenneyTileShop: 'assets/kenney/tiles/tile_shop.png',
+  kenneyTileStar: 'assets/kenney/tiles/tile_star.png',
+  kenneyTileBrick: 'assets/kenney/tiles/tile_brick.png',
   // Character sprites (MIT — photonstorm/phaser3-examples)
   charPhaserDude: 'assets/phaser-examples/sprites/phaser-dude.png',
   charMushroom: 'assets/phaser-examples/sprites/mushroom.png',
@@ -102,6 +116,19 @@ export const TEXTURE_KEYS = {
   kenneyCardRed: 'kenney_card_red',
   kenneyCardBlue: 'kenney_card_blue',
   kenneyCardGreen: 'kenney_card_green',
+  kenneyCardHearts: 'kenney_card_hearts',
+  kenneyCardClubs: 'kenney_card_clubs',
+  kenneyCardDiamonds: 'kenney_card_diamonds',
+  kenneyTileStart: 'kenney_tile_start',
+  kenneyTileVocab: 'kenney_tile_vocab',
+  kenneyTileGrammar: 'kenney_tile_grammar',
+  kenneyTileBonus: 'kenney_tile_bonus',
+  kenneyTileMystery: 'kenney_tile_mystery',
+  kenneyTileMinigame: 'kenney_tile_minigame',
+  kenneyTileSwap: 'kenney_tile_swap',
+  kenneyTileShop: 'kenney_tile_shop',
+  kenneyTileStar: 'kenney_tile_star',
+  kenneyTileBrick: 'kenney_tile_brick',
   // Character sprites
   charPhaserDude: 'char_phaser_dude',
   charMushroom: 'char_mushroom',

@@ -10,6 +10,8 @@ import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode } from '../systems/gameFlags'
 
 export class PreloadScene extends Phaser.Scene {
+  private loadFailed = false
+
   constructor() { super('PreloadScene') }
 
   preload() {
@@ -71,7 +73,12 @@ export class PreloadScene extends Phaser.Scene {
       barFill.fillRoundedRect(w / 2 - barW / 2 + 4, h / 2 + 12, barW - 8, 20, 8)
     })
 
-    this.load.on('loaderror', (file: any) => console.error('PreloadScene: Load error on', file.src))
+    this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      this.loadFailed = true
+      console.error('PreloadScene: Load error on', file.src)
+      statusText.setText('Load failed — check your connection and refresh.')
+      statusText.setColor(hexColor(COLORS.danger))
+    })
 
     this.load.json('vocab', 'data/vocab.json')
     this.load.json('grammar', 'data/grammar.json')
@@ -114,6 +121,19 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.kenneyCardRed, EXTERNAL_ASSETS.kenneyCardRed)
     this.load.image(TEXTURE_KEYS.kenneyCardBlue, EXTERNAL_ASSETS.kenneyCardBlue)
     this.load.image(TEXTURE_KEYS.kenneyCardGreen, EXTERNAL_ASSETS.kenneyCardGreen)
+    this.load.image(TEXTURE_KEYS.kenneyCardHearts, EXTERNAL_ASSETS.kenneyCardHearts)
+    this.load.image(TEXTURE_KEYS.kenneyCardClubs, EXTERNAL_ASSETS.kenneyCardClubs)
+    this.load.image(TEXTURE_KEYS.kenneyCardDiamonds, EXTERNAL_ASSETS.kenneyCardDiamonds)
+    this.load.image(TEXTURE_KEYS.kenneyTileStart, EXTERNAL_ASSETS.kenneyTileStart)
+    this.load.image(TEXTURE_KEYS.kenneyTileVocab, EXTERNAL_ASSETS.kenneyTileVocab)
+    this.load.image(TEXTURE_KEYS.kenneyTileGrammar, EXTERNAL_ASSETS.kenneyTileGrammar)
+    this.load.image(TEXTURE_KEYS.kenneyTileBonus, EXTERNAL_ASSETS.kenneyTileBonus)
+    this.load.image(TEXTURE_KEYS.kenneyTileMystery, EXTERNAL_ASSETS.kenneyTileMystery)
+    this.load.image(TEXTURE_KEYS.kenneyTileMinigame, EXTERNAL_ASSETS.kenneyTileMinigame)
+    this.load.image(TEXTURE_KEYS.kenneyTileSwap, EXTERNAL_ASSETS.kenneyTileSwap)
+    this.load.image(TEXTURE_KEYS.kenneyTileShop, EXTERNAL_ASSETS.kenneyTileShop)
+    this.load.image(TEXTURE_KEYS.kenneyTileStar, EXTERNAL_ASSETS.kenneyTileStar)
+    this.load.image(TEXTURE_KEYS.kenneyTileBrick, EXTERNAL_ASSETS.kenneyTileBrick)
     this.load.image(TEXTURE_KEYS.charPhaserDude, EXTERNAL_ASSETS.charPhaserDude)
     this.load.image(TEXTURE_KEYS.charMushroom, EXTERNAL_ASSETS.charMushroom)
     this.load.image(TEXTURE_KEYS.charBunny, EXTERNAL_ASSETS.charBunny)
@@ -124,7 +144,18 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.charWizard, EXTERNAL_ASSETS.charWizard)
   }
 
+  private questionDataReady(): boolean {
+    const vocab = this.cache.json.get('vocab')?.questions
+    const grammar = this.cache.json.get('grammar')?.questions
+    return Array.isArray(vocab) && vocab.length > 0 && Array.isArray(grammar) && grammar.length > 0
+  }
+
   create() {
+    if (this.loadFailed || !this.questionDataReady()) {
+      this.showLoadError()
+      return
+    }
+
     generateDiceTextures(this)
     generatePlayerTextures(this)
     generateTileTextures(this)
@@ -136,5 +167,24 @@ export class PreloadScene extends Phaser.Scene {
         this.scene.start('MenuScene')
       })
     })
+  }
+
+  private showLoadError() {
+    const w = this.scale.width
+    const h = this.scale.height
+    this.add.text(w / 2, h / 2 - 20, 'Could not load game data', {
+      fontSize: '28px',
+      fontFamily: FONT.display,
+      color: hexColor(COLORS.danger),
+      stroke: '#000000',
+      strokeThickness: 4,
+    }).setOrigin(0.5)
+    this.add.text(w / 2, h / 2 + 28, 'Refresh the page or check that vocab.json and grammar.json are available.', {
+      fontSize: '16px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+      align: 'center',
+      wordWrap: { width: 560 },
+    }).setOrigin(0.5)
   }
 }

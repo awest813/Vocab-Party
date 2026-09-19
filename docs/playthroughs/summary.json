@@ -5,11 +5,11 @@
     "players": 1,
     "fullMap": false,
     "rounds": 6,
-    "elapsedMs": 20972,
+    "elapsedMs": 20140,
     "reachedResults": true,
     "winner": {
       "name": "Alex",
-      "score": 8,
+      "score": 38,
       "trophies": 0,
       "players": 1
     },
@@ -21,12 +21,12 @@
     "players": 2,
     "fullMap": false,
     "rounds": 8,
-    "elapsedMs": 40735,
+    "elapsedMs": 48545,
     "reachedResults": true,
     "winner": {
-      "name": "Alex",
-      "score": 30,
-      "trophies": 0,
+      "name": "Blake",
+      "score": 57,
+      "trophies": 1,
       "players": 2
     },
     "errors": []
@@ -37,11 +37,11 @@
     "players": 3,
     "fullMap": false,
     "rounds": 7,
-    "elapsedMs": 58981,
+    "elapsedMs": 63647,
     "reachedResults": true,
     "winner": {
-      "name": "Alex",
-      "score": 90,
+      "name": "Blake",
+      "score": 31,
       "trophies": 1,
       "players": 3
     },
@@ -53,12 +53,12 @@
     "players": 4,
     "fullMap": false,
     "rounds": 5,
-    "elapsedMs": 74903,
+    "elapsedMs": 62060,
     "reachedResults": true,
     "winner": {
-      "name": "Alex",
-      "score": 33,
-      "trophies": 1,
+      "name": "Dana",
+      "score": 31,
+      "trophies": 0,
       "players": 4
     },
     "errors": []
@@ -69,11 +69,11 @@
     "players": 4,
     "fullMap": false,
     "rounds": 10,
-    "elapsedMs": 119455,
+    "elapsedMs": 109592,
     "reachedResults": true,
     "winner": {
-      "name": "Blake",
-      "score": 127,
+      "name": "Casey",
+      "score": 122,
       "trophies": 1,
       "players": 4
     },
@@ -85,12 +85,12 @@
     "players": 1,
     "fullMap": true,
     "rounds": 10,
-    "elapsedMs": 29720,
+    "elapsedMs": 26928,
     "reachedResults": true,
     "winner": {
       "name": "Alex",
-      "score": 45,
-      "trophies": 0,
+      "score": 39,
+      "trophies": 1,
       "players": 1
     },
     "errors": []
@@ -101,12 +101,12 @@
     "players": 2,
     "fullMap": true,
     "rounds": 12,
-    "elapsedMs": 58112,
+    "elapsedMs": 67470,
     "reachedResults": true,
     "winner": {
       "name": "Alex",
-      "score": 90,
-      "trophies": 1,
+      "score": 57,
+      "trophies": 0,
       "players": 2
     },
     "errors": []
@@ -117,12 +117,12 @@
     "players": 3,
     "fullMap": true,
     "rounds": 9,
-    "elapsedMs": 77781,
+    "elapsedMs": 77755,
     "reachedResults": true,
     "winner": {
       "name": "Blake",
-      "score": 56,
-      "trophies": 0,
+      "score": 47,
+      "trophies": 1,
       "players": 3
     },
     "errors": []
@@ -133,11 +133,11 @@
     "players": 4,
     "fullMap": true,
     "rounds": 8,
-    "elapsedMs": 111079,
+    "elapsedMs": 85821,
     "reachedResults": true,
     "winner": {
-      "name": "Dana",
-      "score": 67,
+      "name": "Casey",
+      "score": 79,
       "trophies": 0,
       "players": 4
     },

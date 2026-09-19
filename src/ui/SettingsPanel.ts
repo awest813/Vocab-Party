@@ -94,6 +94,19 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   const refreshMute = () => {
     setButtonLabel(muteBtn, settings.muted ? 'MUTED' : 'ON')
     setButtonFill(muteBtn, settings.muted ? COLORS.danger : COLORS.party)
+    const disabled = settings.muted
+    sfxTrack.setAlpha(disabled ? 0.35 : 1)
+    sfxFill.setAlpha(disabled ? 0.35 : 1)
+    sfxValue.setAlpha(disabled ? 0.35 : 1)
+    musicTrack.setAlpha(disabled ? 0.35 : 1)
+    musicFill.setAlpha(disabled ? 0.35 : 1)
+    musicValue.setAlpha(disabled ? 0.35 : 1)
+    sfxTrack.disableInteractive()
+    musicTrack.disableInteractive()
+    if (!disabled) {
+      sfxTrack.setInteractive({ useHandCursor: true })
+      musicTrack.setInteractive({ useHandCursor: true })
+    }
   }
 
   // SFX slider
@@ -124,6 +137,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
     color: number
   ) => {
     const apply = (pointer: Phaser.Input.Pointer) => {
+      if (settings.muted) return
       const local = track.getBounds()
       const t = Phaser.Math.Clamp((pointer.x - local.left) / local.width, 0, 1)
       settings = setSettings({ [key]: t })
@@ -144,6 +158,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   }
   bindSlider(sfxTrack, sfxFill, sfxValue, 'sfxVolume', COLORS.sky)
   bindSlider(musicTrack, musicFill, musicValue, 'musicVolume', COLORS.teal)
+  refreshMute()
 
   // Reduced motion
   makeLabel(115, 'Reduced motion')

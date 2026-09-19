@@ -2,7 +2,7 @@
 
 A Mario Party-style vocabulary and grammar browser game built with **Phaser 3** and **TypeScript**.
 
-Players take turns rolling dice, moving around the board, and landing on tiles that trigger vocabulary questions, grammar challenges, minigames, and surprise events. The player with the most points after 10 rounds wins the trophy!
+Players take turns rolling dice, moving around the board, and landing on tiles that trigger vocabulary questions, grammar challenges, minigames, and surprise events. Collect **5 trophies** to win early, or finish all rounds with the best trophy count (then score).
 
 ---
 
@@ -34,28 +34,40 @@ npm run build
 
 # Preview production build
 npm run preview
+
+# Lint and typecheck
+npm run lint
+npm run typecheck
 ```
 
 ---
 
 ## Game Instructions
 
-1. **4 players** take turns in order (Alex 🔴, Blake 🔵, Casey 🟢, Dana 🟡).
-2. Click **🎲 ROLL DICE** on your turn to roll a die (1–6).
+1. **1–4 players** take turns (human or CPU). Pick characters and a map length in setup:
+   - **Quick** — 5 rounds
+   - **Classic** — 10 rounds
+   - **Full Map** — 44 rounds
+2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher).
 3. Your token moves along the board. The tile you land on determines what happens:
 
 | Tile | Effect |
 |------|--------|
-| 🏠 Start | +3 bonus points |
-| 📖 Vocab | Answer a vocabulary multiple-choice question (+10 pts) |
+| 🏠 Start | +3 bonus score/coins (pass for +5 coins) |
+| 📖 Vocab | Answer a vocabulary question (+10 pts) |
 | ✏️ Grammar | Answer a grammar question (+10 pts) |
-| ⭐ Bonus | Instant +5 points |
+| ⭐ Bonus | Instant +5 score and +4 coins |
+| 💀 Penalty | Lose score and coins (shield blocks) |
 | ❓ Mystery | Random effect: bonus, penalty, or extra roll |
-| 🕹️ Minigame | The player who lands here faces a fast challenge; winning it earns +15 pts / +5 coins |
-| 🔄 Swap | Swap board positions with a random player |
+| 🕹️ Minigame | Fast challenge — winner earns +15 pts / +5 coins |
+| 🔄 Swap | Swap board positions with another player |
+| 🏪 Shop | Buy shops to collect rent (Buy/Pass prompt) |
+| 🌟 Star | Spend 20 coins for a trophy (+12 score, Buy/Pass prompt) |
+| 🧱 Brick | Collect pieces for build bonuses |
+| 🛍️ Item Shop | Pick a power-up card or pass |
 
-4. After **10 rounds** (40 total turns), the **Final Results** screen shows the podium.
-5. Click **🔄 PLAY AGAIN** or **🏠 MAIN MENU** to play again.
+4. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
+5. Click **🔄 PLAY AGAIN** or **🏠 MAIN MENU** from results.
 
 ### Minigames
 
@@ -87,17 +99,29 @@ Vocab-Party/
     ├── main.ts              # Phaser game config & scene list
     ├── scenes/
     │   ├── BootScene.ts     # Initial boot, starts preload
-    │   ├── PreloadScene.ts  # Loading bar, loads JSON data files
+    │   ├── PreloadScene.ts  # Loading bar, JSON + Kenney/phaser assets, texture generation
     │   ├── MenuScene.ts     # Main menu with animated background
+    │   ├── SetupScene.ts    # Character, player count, and map selection
     │   ├── BoardScene.ts    # Core game board, dice rolling, turn management
     │   ├── QuestionScene.ts # Vocabulary & grammar question overlay
     │   ├── MinigameScene.ts # Seven minigame implementations
+    │   ├── BattleScene.ts   # Player encounter battles
+    │   ├── PauseScene.ts    # Pause menu overlay
     │   └── ResultsScene.ts  # Final podium and winner announcement
     ├── systems/
     │   ├── GameState.ts     # Player/state types and factory
-    │   └── DiceSystem.ts    # Dice rolling utilities
+    │   ├── DiceSystem.ts    # Block die rolling utilities
+    │   ├── BoardLayout.ts   # Board node graph
+    │   ├── CpuPolicy.ts     # CPU decision-making
+    │   ├── GameSettings.ts  # Audio and accessibility settings
+    │   ├── SpriteFactory.ts # Procedural tiles, tokens, Kenney compositing
+    │   ├── ExternalAssetKeys.ts
+    │   └── Sfx.ts           # Sound effects and music
     └── ui/
         ├── Button.ts        # Reusable animated button component
+        ├── Panel.ts         # Panels, dimmers, stage chrome
+        ├── Starfield.ts     # Backdrop effects
+        ├── Theme.ts         # Shared palette and depth constants
         ├── PlayerHUD.ts     # Top player score panels
         └── Confetti.ts      # Confetti particle effect
 ```
@@ -139,6 +163,9 @@ Same format as vocab questions. Also supports minigame data:
   "choices": ["Noun", "Verb", "Adjective", "Adverb"],
   "correct": 2
 }
+
+// Other minigame banks in grammar.json / vocab.json:
+// minigame_sentence_fix, minigame_synonyms, minigame_antonyms, minigame_homophones
 ```
 
 ### Context Clue Minigame (`public/data/vocab.json`)

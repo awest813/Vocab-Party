@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState, ITEMS } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS, type Item } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
@@ -90,6 +90,14 @@ export class BoardScene extends Phaser.Scene {
   private turnGlowTween?: Phaser.Tweens.Tween
   /** Tile index → owner player id (Fortune Street–style shops). */
   private shopOwners: Record<number, number> = {}
+  /** Tile index → owner badge on shop tiles. */
+  private shopOwnerDots = new Map<number, Phaser.GameObjects.Arc>()
+  private choiceModal?: Phaser.GameObjects.Container
+  private choiceKeyCleanup?: () => void
+  private itemMenuKeyCleanup?: () => void
+  /** Tile index → board tile sprite (for landing animations). */
+  private tileImages = new Map<number, Phaser.GameObjects.Image>()
+  private activeAnnouncement?: Phaser.GameObjects.Container
 
   private d(ms: number) {
     return scaleAutoSimDelay(ms)
@@ -135,6 +143,8 @@ export class BoardScene extends Phaser.Scene {
         return `Tile ${tileIndex}: BRICK — gather pieces; every ${BRICKS_FOR_BUILD_BONUS} gives +${BUILD_BONUS_SCORE} score.`
       case 'item_shop':
         return `Tile ${tileIndex}: ITEM SHOP — buy powerful cards to use during your turn.`
+      case 'penalty':
+        return `Tile ${tileIndex}: PENALTY — lose score and coins unless shielded.`
     }
   }
 
@@ -177,7 +187,8 @@ export class BoardScene extends Phaser.Scene {
 
     this.hud = new PlayerHUD(this, this.state)
     this.createPauseButton()
-    this.input.keyboard?.on('keydown-ESC', () => this.pauseGame())
+    const escHandler = () => this.pauseGame()
+    this.input.keyboard?.on('keydown-ESC', escHandler)
     Sfx.startMusic()
 
     const touch = isTouchPreferred(this.sys.game)
@@ -211,6 +222,11 @@ export class BoardScene extends Phaser.Scene {
 
     this.rollBtn = createButton(this, w - 118, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 196, 64)
     this.rollBtn.setDepth(DEPTH.chrome)
+    if (this.textures.exists(TEXTURE_KEYS.kenneyDie1)) {
+      this.rollBtn.add(
+        this.add.image(-62, 0, TEXTURE_KEYS.kenneyDie1).setDisplaySize(26, 26).setTint(0xffe8a0)
+      )
+    }
     this.rollBtn.on('pointerdown', () => this.handleRoll())
 
     this.itemBtn = createButton(this, w - 330, h - 56, 'ITEMS', COLORS.teal, COLORS.tealDeep, 176, 64)
@@ -234,6 +250,9 @@ export class BoardScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown', rollKeyHandler)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.keyboard?.off('keydown', rollKeyHandler)
+      this.input.keyboard?.off('keydown-ESC', escHandler)
+      this.closeChoiceModal()
+      this.closeItemMenu()
     })
 
     this.updateStatus()
@@ -349,6 +368,7 @@ export class BoardScene extends Phaser.Scene {
       img.setDepth(0)
       img.setInteractive()
       img.setScale(0)
+      this.tileImages.set(i, img)
 
       this.tweens.add({
         targets: img,
@@ -393,14 +413,8 @@ export class BoardScene extends Phaser.Scene {
         strokeThickness: 2,
       }).setAlpha(0.55).setDepth(1)
 
-      if (type === 'shop' && this.shopOwners[i] !== undefined) {
-        const owner = this.state.players.find(p => p.id === this.shopOwners[i])
-        if (owner) {
-          const ownerColor = characterDef(owner.characterIndex).color
-          const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
-          dot.setDepth(2)
-          dot.setStrokeStyle(1.5, 0xffffff, 0.75)
-        }
+      if (type === 'shop') {
+        this.refreshShopOwnerBadge(i)
       }
     })
 
@@ -463,14 +477,16 @@ export class BoardScene extends Phaser.Scene {
     ring.strokeCircle(0, -2, 15)
 
     const tex = characterTextureKey(player.characterIndex)
-    const sprite = this.add.image(0, -4, tex).setDisplaySize(48, 62)
+    const avatar = this.textures.exists(tex)
+      ? this.add.image(0, -4, tex).setDisplaySize(48, 62)
+      : this.add.text(0, -4, player.emoji, { fontSize: '36px' }).setOrigin(0.5)
 
-    container.add([ring, sprite])
+    container.add([ring, avatar])
     container.setDepth(DEPTH.tokens)
 
     // Idle bob
     this.tweens.add({
-      targets: sprite,
+      targets: avatar,
       y: -7,
       duration: 900 + index * 120,
       yoyo: true,
@@ -510,7 +526,11 @@ export class BoardScene extends Phaser.Scene {
   private async showAnnouncement(msg: string, color: string = '#ffffff') {
     const w = this.scale.width
 
+    this.activeAnnouncement?.destroy()
+    this.activeAnnouncement = undefined
+
     const banner = this.add.container(w / 2, -80).setDepth(DEPTH.banner)
+    this.activeAnnouncement = banner
     const g = this.add.graphics()
     const bw = Math.min(720, 40 + msg.length * 22)
     g.fillStyle(0x000000, 0.28)
@@ -552,6 +572,7 @@ export class BoardScene extends Phaser.Scene {
               ease: 'Cubic.easeIn',
               onComplete: () => {
                 banner.destroy()
+                if (this.activeAnnouncement === banner) this.activeAnnouncement = undefined
                 resolve()
               },
             })
@@ -686,7 +707,8 @@ export class BoardScene extends Phaser.Scene {
     } else if (hadSpeedBoost) {
       player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
     }
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(5, Math.max(1, result) - 1)])
+    const diceFace = Math.min(3, Math.max(1, forcedMove > 0 ? forcedMove : (hadDash && forcedMove <= 0 ? Math.min(3, result) : result)))
+    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[diceFace - 1])
     const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Speed Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash!' : '')
     const forceTag = forcedMove > 0 ? ' 🔑' : ''
     this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${forceTag}${hadDash && forcedMove <= 0 ? ' (2 dice)' : forcedMove > 0 ? ' (Golden Key)' : ' (1-3)'}${surgeText}!`)
@@ -773,7 +795,7 @@ export class BoardScene extends Phaser.Scene {
     if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
     
     // Squash and stretch tile
-    const tileImg = this.children.list.find(c => c instanceof Phaser.GameObjects.Image && c.x === token.x - off.x && c.y === token.y - off.y) as Phaser.GameObjects.Image
+    const tileImg = this.tileImages.get(player.position)
     if (tileImg) {
       this.tweens.add({
         targets: tileImg,
@@ -800,11 +822,32 @@ export class BoardScene extends Phaser.Scene {
     const itemType = player.inventory[inventoryIndex]
     const item = ITEMS[itemType]
 
+    this.closeItemMenu()
+
+    let chosenTarget: number | null = null
+    if (!player.isCpu) {
+      if (itemType === 'swap' || itemType === 'poison_dart') {
+        chosenTarget = await this.promptPlayerChoice(
+          playerIndex,
+          itemType === 'swap' ? 'Swap positions with who?' : 'Poison who?'
+        )
+        if (chosenTarget === null) {
+          this.statusText.setText('🎒 Item use cancelled.')
+          return
+        }
+      } else if (itemType === 'warp') {
+        const warp = await this.promptBinaryChoice('Warp to a random tile?', 'WARP', 'CANCEL')
+        if (!warp) {
+          this.statusText.setText('🎒 Item use cancelled.')
+          return
+        }
+      }
+    }
+
     this.statusText.setText(`🎒 ${player.name} used ${item.name}!`)
     this.showFloatyText(player, `Used ${item.emoji}`, '#ffffff')
     Sfx.item()
     player.inventory.splice(inventoryIndex, 1)
-    this.closeItemMenu()
 
     switch (itemType) {
       case 'dash':
@@ -821,7 +864,7 @@ export class BoardScene extends Phaser.Scene {
               this.nodes.length,
               player.cpuLevel
             )
-          : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+          : chosenTarget!
         const target = this.state.players[targetIndex]
         const temp = player.position
         player.position = target.position
@@ -846,22 +889,22 @@ export class BoardScene extends Phaser.Scene {
       case 'poison_dart': {
         const targetIdx = player.isCpu
           ? cpuChoosePoisonTarget(playerIndex, this.state.players, player.cpuLevel)
-          : (playerIndex + 1) % this.state.players.length
+          : chosenTarget!
         const target = this.state.players[targetIdx]
         target.coins = Math.max(0, target.coins - 8)
         this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
         break
       }
       case 'golden_key':
-        player.forcedMoveValue = 5
-        this.showFloatyText(player, '🔑 Next roll: 5', '#ffee44')
+        player.forcedMoveValue = 3
+        this.showFloatyText(player, '🔑 Next roll: 3', '#ffee44')
         break
     }
 
     await new Promise(r => this.time.delayedCall(this.d(800), r))
   }
 
-  landOnTile(playerIndex: number) {
+  landOnTile(playerIndex: number, opts?: { skipSwap?: boolean }) {
     const player = this.state.players[playerIndex]
     const tileIndex = player.position
     const type = this.getTileTypeAt(tileIndex)
@@ -882,64 +925,14 @@ export class BoardScene extends Phaser.Scene {
     // Check for collision (Battle)
     const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
     if (otherOnTile) {
-      this.statusText.setText('⚔️ ENCOUNTER!')
-      
-      const vsContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setDepth(200)
-      const vsBg = this.add.rectangle(0, 0, 1200, 200, 0x000000, 0.7)
-      const vsText = this.add.text(0, 0, '⚔️ ENCOUNTER ⚔️', {
-        fontSize: '110px', fontFamily: 'Fredoka, Arial Black', color: '#ff4444', stroke: '#ffffff', strokeThickness: 12
-      }).setOrigin(0.5)
-      
-      vsContainer.add([vsBg, vsText])
-      vsContainer.setScale(3).setAlpha(0)
-      
-      this.tweens.add({
-        targets: vsContainer,
-        scaleX: 1, scaleY: 1, alpha: 1,
-        duration: this.d(300),
-        ease: 'Expo.easeOut',
-        onComplete: () => {
-          this.cameras.main.flash(200, 255, 0, 0)
-          this.time.delayedCall(this.d(600), () => {
-            this.tweens.add({ targets: vsContainer, x: -1500, duration: this.d(300), ease: 'Cubic.easeIn', onComplete: () => vsContainer.destroy() })
-            this.scene.launch('BattleScene', {
-              state: this.state,
-              attackerIndex: playerIndex,
-              defenderIndex: this.state.players.indexOf(otherOnTile),
-              onComplete: (result: BattleResult) => {
-                this.scene.stop('BattleScene')
-                this.scene.resume()
-                
-                const attacker = this.state.players[playerIndex]
-                const defender = otherOnTile
-                
-                if (result.winnerIndex === playerIndex) {
-                  attacker.score += result.scoreLost
-                  attacker.coins += result.coinsLost
-                  defender.score = Math.max(0, defender.score - result.scoreLost)
-                  defender.coins = Math.max(0, defender.coins - result.coinsLost)
-                  this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
-                  this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
-                  this.showDamageNumber(defender, -result.scoreLost, 'pts')
-                  if (result.coinsLost > 0) this.showDamageNumber(defender, -result.coinsLost, '🪙')
-                } else {
-                  this.showFloatyText(defender, 'Safe!', '#44ccff')
-                }
-
-                this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex))
-              }
-            })
-            this.scene.pause()
-          })
-        }
-      })
+      this.launchBattle(playerIndex, otherOnTile, type, tileIndex, opts)
       return
     }
 
-    this.handleTileEffect(playerIndex, type, tileIndex)
+    this.handleTileEffect(playerIndex, type, tileIndex, opts)
   }
 
-  private handleTileEffect(playerIndex: number, type: TileType, tileIndex: number) {
+  private handleTileEffect(playerIndex: number, type: TileType, tileIndex: number, opts?: { skipSwap?: boolean }) {
     const player = this.state.players[playerIndex]
     this.time.delayedCall(this.d(700), () => {
       switch (type) {
@@ -972,6 +965,10 @@ export class BoardScene extends Phaser.Scene {
             this.showFloatyText(player, '💀 OUCH! -4 pts -5 coins!', '#ff4444')
             this.showDamageNumber(player, -4, 'pts')
             this.showDamageNumber(player, -5, '🪙', true)
+            {
+              const pos = this.playerTokens[playerIndex]
+              this.burstAt(pos.x, pos.y, TEXTURE_KEYS.particleRed, 0xff4444)
+            }
             this.cameras.main.flash(400, 200, 0, 0, false)
             if (!shouldReduceMotion()) this.cameras.main.shake(400, 0.02)
           }
@@ -1046,19 +1043,23 @@ export class BoardScene extends Phaser.Scene {
           this.handleMystery(player)
           break
         case 'swap':
-          this.handleSwap(player, playerIndex)
+          if (opts?.skipSwap) {
+            this.endTurn()
+          } else {
+            this.handleSwap(player, playerIndex)
+          }
           break
         case 'shop':
-          this.handleShop(player, playerIndex, tileIndex)
+          void this.handleShop(player, playerIndex, tileIndex)
           break
         case 'star':
-          this.handleStarShop(player)
+          void this.handleStarShop(player)
           break
         case 'brick':
           this.handleBrickCollect(player)
           break
         case 'item_shop':
-          this.handleItemShop(player)
+          void this.handleItemShop(player)
           break
         default:
           this.endTurn()
@@ -1134,7 +1135,239 @@ export class BoardScene extends Phaser.Scene {
     }
   }
 
-  handleShop(player: Player, playerIndex: number, tileIndex: number) {
+  private refreshShopOwnerBadge(tileIndex: number) {
+    this.shopOwnerDots.get(tileIndex)?.destroy()
+    this.shopOwnerDots.delete(tileIndex)
+    const ownerId = this.shopOwners[tileIndex]
+    if (ownerId === undefined) return
+    const owner = this.state.players.find(p => p.id === ownerId)
+    if (!owner) return
+    const { x, y } = this.getTileXY(tileIndex)
+    const ownerColor = characterDef(owner.characterIndex).color
+    const dot = this.add.circle(x + TILE_SIZE / 2 - 9, y - TILE_SIZE / 2 + 9, 5, ownerColor, 1)
+    dot.setDepth(2)
+    dot.setStrokeStyle(1.5, 0xffffff, 0.75)
+    this.shopOwnerDots.set(tileIndex, dot)
+  }
+
+  private closeChoiceModal() {
+    this.choiceKeyCleanup?.()
+    this.choiceKeyCleanup = undefined
+    this.choiceModal?.destroy()
+    this.choiceModal = undefined
+  }
+
+  private launchBattle(
+    playerIndex: number,
+    otherOnTile: Player,
+    type: TileType,
+    tileIndex: number,
+    opts?: { skipSwap?: boolean }
+  ) {
+    this.statusText.setText('⚔️ ENCOUNTER!')
+    if (!shouldReduceMotion()) this.cameras.main.flash(200, 255, 0, 0, true)
+
+    this.scene.launch('BattleScene', {
+      state: this.state,
+      attackerIndex: playerIndex,
+      defenderIndex: this.state.players.indexOf(otherOnTile),
+      onComplete: (result: BattleResult) => {
+        this.scene.stop('BattleScene')
+        this.scene.resume()
+
+        const attacker = this.state.players[playerIndex]
+        const defender = otherOnTile
+
+        if (result.winnerIndex === playerIndex) {
+          attacker.score += result.scoreLost
+          attacker.coins += result.coinsLost
+          defender.score = Math.max(0, defender.score - result.scoreLost)
+          defender.coins = Math.max(0, defender.coins - result.coinsLost)
+          this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
+          this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
+          this.showDamageNumber(defender, -result.scoreLost, 'pts')
+          if (result.coinsLost > 0) this.showDamageNumber(defender, -result.coinsLost, '🪙')
+        } else {
+          this.showFloatyText(defender, 'Safe!', '#44ccff')
+        }
+
+        this.time.delayedCall(this.d(600), () => this.handleTileEffect(playerIndex, type, tileIndex, opts))
+      },
+    })
+    this.scene.pause()
+  }
+
+  private promptPlayerChoice(playerIndex: number, title: string): Promise<number | null> {
+    const candidates = this.state.players
+      .map((_, i) => i)
+      .filter(i => i !== playerIndex)
+    if (candidates.length === 0) return Promise.resolve(null)
+    if (candidates.length === 1) return Promise.resolve(candidates[0])
+
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-230, -150, 460, 300, 16)
+      bg.lineStyle(2.5, COLORS.coral, 0.55)
+      bg.strokeRoundedRect(-230, -150, 460, 300, 16)
+      const hdr = this.add.text(0, -118, title, {
+        fontSize: '22px', fontFamily: FONT.display, color: '#ffffff',
+        wordWrap: { width: 400 }, align: 'center',
+      }).setOrigin(0.5)
+      this.choiceModal.add([dim, bg, hdr])
+
+      const finish = (value: number | null) => {
+        this.closeChoiceModal()
+        resolve(value)
+      }
+
+      candidates.forEach((idx, i) => {
+        const rival = this.state.players[idx]
+        const btn = createButton(
+          this, 0, -70 + i * 48,
+          `${rival.name} (${rival.score} pts)`,
+          COLORS.bgPanelAlt, COLORS.chromeDeep, 380, 40
+        )
+        btn.on('pointerdown', () => finish(idx))
+        this.choiceModal?.add(btn)
+      })
+
+      const cancelBtn = createButton(this, 0, 110, 'CANCEL', COLORS.mute, 0x4a5a6e, 140, 40)
+      cancelBtn.on('pointerdown', () => finish(null))
+      dim.on('pointerdown', () => finish(null))
+      this.choiceModal.add(cancelBtn)
+
+      const onKey = (ev: KeyboardEvent) => {
+        const keyToIndex: Record<string, number> = {
+          Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3,
+          Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3,
+        }
+        const pick = keyToIndex[ev.code]
+        if (pick !== undefined && pick < candidates.length) {
+          ev.preventDefault()
+          finish(candidates[pick])
+        } else if (ev.code === 'Escape') {
+          ev.preventDefault()
+          finish(null)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
+  private promptBinaryChoice(message: string, yesLabel: string, noLabel: string): Promise<boolean> {
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-220, -110, 440, 220, 16)
+      bg.lineStyle(2.5, COLORS.gold, 0.55)
+      bg.strokeRoundedRect(-220, -110, 440, 220, 16)
+      const msg = this.add.text(0, -40, message, {
+        fontSize: '20px', fontFamily: FONT.display, color: '#ffffff',
+        wordWrap: { width: 380 }, align: 'center',
+      }).setOrigin(0.5)
+      const yesBtn = createButton(this, -100, 50, yesLabel, COLORS.party, COLORS.partyDeep, 180, 48)
+      const noBtn = createButton(this, 100, 50, noLabel, COLORS.bgPanelAlt, COLORS.chromeDeep, 180, 48)
+      this.choiceModal.add([dim, bg, msg, yesBtn, noBtn])
+
+      const finish = (value: boolean) => {
+        this.closeChoiceModal()
+        resolve(value)
+      }
+      yesBtn.on('pointerdown', () => finish(true))
+      noBtn.on('pointerdown', () => finish(false))
+      dim.on('pointerdown', () => finish(false))
+
+      const onKey = (ev: KeyboardEvent) => {
+        if (ev.code === 'Digit1' || ev.code === 'Numpad1' || ev.code === 'KeyY') {
+          ev.preventDefault()
+          finish(true)
+        } else if (ev.code === 'Digit2' || ev.code === 'Numpad2' || ev.code === 'KeyN' || ev.code === 'Escape') {
+          ev.preventDefault()
+          finish(false)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
+  private promptItemPurchase(player: Player): Promise<Item | null> {
+    const available = Object.values(ITEMS)
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      this.closeChoiceModal()
+      this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const bg = this.add.graphics()
+      bg.fillStyle(COLORS.bgPanel, 0.96)
+      bg.fillRoundedRect(-250, -210, 500, 440, 16)
+      bg.lineStyle(2.5, COLORS.teal, 0.55)
+      bg.strokeRoundedRect(-250, -210, 500, 440, 16)
+      const title = this.add.text(0, -170, 'ITEM SHOP', {
+        fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal),
+      }).setOrigin(0.5)
+      this.choiceModal.add([dim, bg, title])
+
+      const finish = (item: Item | null) => {
+        this.closeChoiceModal()
+        resolve(item)
+      }
+
+      available.forEach((item, i) => {
+        const affordable = player.coins >= item.cost
+        const btn = createButton(
+          this, 0, -90 + i * 52,
+          `${item.emoji} ${item.name} (${item.cost}🪙)`,
+          affordable ? COLORS.bgPanelAlt : COLORS.mute,
+          affordable ? COLORS.chromeDeep : 0x4a5a6e,
+          420, 38
+        )
+        if (affordable) btn.on('pointerdown', () => finish(item))
+        this.choiceModal?.add(btn)
+        this.choiceModal?.add(this.add.text(0, -66 + i * 52, item.description, {
+          fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
+          wordWrap: { width: 400 }, align: 'center',
+        }).setOrigin(0.5))
+      })
+
+      const passBtn = createButton(this, 0, 195, 'PASS', COLORS.mute, 0x4a5a6e, 140, 40)
+      passBtn.on('pointerdown', () => finish(null))
+      dim.on('pointerdown', () => finish(null))
+      this.choiceModal.add(passBtn)
+
+      const onKey = (ev: KeyboardEvent) => {
+        const keyToIndex: Record<string, number> = {
+          Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5, Digit7: 6,
+          Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5, Numpad7: 6,
+        }
+        const idx = keyToIndex[ev.code]
+        if (idx !== undefined && idx < available.length && player.coins >= available[idx].cost) {
+          ev.preventDefault()
+          finish(available[idx])
+        } else if (ev.code === 'Escape' || ev.code === 'Digit0' || ev.code === 'Numpad0') {
+          ev.preventDefault()
+          finish(null)
+        }
+      }
+      this.input.keyboard?.on('keydown', onKey)
+      this.choiceKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
+    })
+  }
+
+  async handleShop(player: Player, playerIndex: number, tileIndex: number) {
     const ownerId = this.shopOwners[tileIndex]
 
     if (ownerId === undefined) {
@@ -1151,11 +1384,29 @@ export class BoardScene extends Phaser.Scene {
         this.time.delayedCall(this.d(1200), () => this.endTurn())
         return
       }
+      if (!player.isCpu && player.coins >= SHOP_PRICE_COINS) {
+        const buy = await this.promptBinaryChoice(
+          `Buy this shop for ${SHOP_PRICE_COINS} coins?`,
+          `BUY (${SHOP_PRICE_COINS}🪙)`,
+          'PASS'
+        )
+        if (!buy) {
+          this.statusText.setText(`🏪 ${player.name} passes on this shop.`)
+          this.showFloatyText(player, 'Saving coins…', '#aaaaaa')
+          this.time.delayedCall(this.d(1200), () => this.endTurn())
+          return
+        }
+      }
       if (player.coins >= SHOP_PRICE_COINS) {
         player.coins -= SHOP_PRICE_COINS
         this.shopOwners[tileIndex] = player.id
+        this.refreshShopOwnerBadge(tileIndex)
         this.statusText.setText(`🏪 ${player.name} bought this shop!`)
         this.showFloatyText(player, `-${SHOP_PRICE_COINS} 🪙 · You own it!`, '#ffaa66')
+        {
+          const pos = this.playerTokens[playerIndex]
+          this.burstAt(pos.x, pos.y - 20, TEXTURE_KEYS.gem, 0xffcc66)
+        }
       } else {
         this.statusText.setText(`🏪 Too pricey! Need ${SHOP_PRICE_COINS} coins.`)
         this.showFloatyText(player, 'Window shopping…', '#aaaaaa')
@@ -1201,7 +1452,7 @@ export class BoardScene extends Phaser.Scene {
     this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
-  handleStarShop(player: Player) {
+  async handleStarShop(player: Player) {
     if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
       round: this.state.round,
       totalRounds: this.roundsPerGame,
@@ -1213,6 +1464,19 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
+    if (!player.isCpu && player.coins >= STAR_COST_COINS) {
+      const buy = await this.promptBinaryChoice(
+        `Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
+        `BUY (${STAR_COST_COINS}🪙)`,
+        'PASS'
+      )
+      if (!buy) {
+        this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
+        this.showFloatyText(player, 'Saving up…', '#aaccff')
+        this.time.delayedCall(this.d(1200), () => this.endTurn())
+        return
+      }
+    }
     if (player.coins >= STAR_COST_COINS) {
       player.coins -= STAR_COST_COINS
       player.trophies += 1
@@ -1220,6 +1484,10 @@ export class BoardScene extends Phaser.Scene {
       this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
       this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
       this.showDamageNumber(player, 12, 'pts')
+      {
+        const pos = this.playerTokens[this.state.players.indexOf(player)]
+        this.burstAt(pos.x, pos.y, TEXTURE_KEYS.starSmall, 0xffee44)
+      }
       this.starPurchaseSplash(player)
     } else {
       player.coins += 2
@@ -1382,6 +1650,7 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(1200), () => {
         this.rolling = false
         this.rollBtn.setAlpha(1)
+        this.itemBtn.setAlpha(1)
         const cpu = this.state.players[this.state.currentPlayer]?.isCpu ?? false
         this.handleRoll(cpu)
       })
@@ -1398,8 +1667,16 @@ export class BoardScene extends Phaser.Scene {
       this.time.delayedCall(this.d(1200), () => this.endTurn())
       return
     }
-    const target = Phaser.Utils.Array.GetRandom(others)
-    const targetIndex = this.state.players.indexOf(target)
+    const targetIndex = player.isCpu
+      ? cpuChooseSwapTarget(
+          playerIndex,
+          this.state.players,
+          TILE_TYPES as string[],
+          this.nodes.length,
+          player.cpuLevel
+        )
+      : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
+    const target = this.state.players[targetIndex]
 
     const tmpPos = player.position
     player.position = target.position
@@ -1417,13 +1694,14 @@ export class BoardScene extends Phaser.Scene {
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
     
     await new Promise(r => this.time.delayedCall(swapDur + 200, r))
-    this.landOnTile(playerIndex)
+    this.landOnTile(playerIndex, { skipSwap: true })
   }
 
   endTurn() {
     this.scene.resume()
     this.rolling = false
     this.rollBtn.setAlpha(1)
+    this.itemBtn.setAlpha(1)
 
     this.state.turn++
     const totalTurns = this.state.players.length * this.roundsPerGame
@@ -1450,9 +1728,9 @@ export class BoardScene extends Phaser.Scene {
     this.updateStatus()
   }
 
-  handleItemShop(player: Player) {
+  async handleItemShop(player: Player) {
     const available = Object.values(ITEMS)
-    let item
+    let item: Item | undefined
     if (player.isCpu) {
       const pick = cpuChooseItemToBuy(
         player.coins,
@@ -1467,10 +1745,22 @@ export class BoardScene extends Phaser.Scene {
         }
       )
       item = pick
-        ? available.find(a => a.type === pick.type) ?? pick
-        : available.find(a => player.coins >= a.cost) ?? Phaser.Utils.Array.GetRandom(available)
+        ? available.find(a => a.type === pick.type)
+        : available.find(a => player.coins >= a.cost)
+      if (!item) item = Phaser.Utils.Array.GetRandom(available)
     } else {
-      item = Phaser.Utils.Array.GetRandom(available)
+      const picked = await this.promptItemPurchase(player)
+      if (!picked) {
+        this.statusText.setText(`🛍️ ${player.name} leaves the item shop.`)
+        this.showFloatyText(player, 'Maybe next time…', '#aaaaaa')
+        this.time.delayedCall(this.d(1200), () => this.endTurn())
+        return
+      }
+      item = picked
+    }
+    if (!item) {
+      this.time.delayedCall(this.d(800), () => this.endTurn())
+      return
     }
     if (player.coins >= item.cost) {
       player.coins -= item.cost
@@ -1526,16 +1816,47 @@ export class BoardScene extends Phaser.Scene {
     const closeBtn = createButton(this, 0, 110, 'CLOSE', COLORS.mute, 0x4a5a6e, 120, 40)
     closeBtn.on('pointerdown', () => this.closeItemMenu())
     this.itemMenu.add(closeBtn)
+
+    const onKey = (ev: KeyboardEvent) => {
+      const keyToIndex: Record<string, number> = {
+        Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5, Digit7: 6,
+        Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5, Numpad7: 6,
+      }
+      const idx = keyToIndex[ev.code]
+      if (idx !== undefined && idx < player.inventory.length) {
+        ev.preventDefault()
+        void this.useItem(this.state.currentPlayer, idx)
+      } else if (ev.code === 'Escape') {
+        ev.preventDefault()
+        this.closeItemMenu()
+      }
+    }
+    this.input.keyboard?.on('keydown', onKey)
+    this.itemMenuKeyCleanup = () => this.input.keyboard?.off('keydown', onKey)
   }
 
   private closeItemMenu() {
+    this.itemMenuKeyCleanup?.()
+    this.itemMenuKeyCleanup = undefined
     this.itemMenu?.destroy()
     this.itemMenu = undefined
   }
 
   private async promptForBranch(player: Player, options: number[]): Promise<number> {
-    this.statusText.setText('🗺️ Choose your path!')
+    this.statusText.setText('🗺️ Choose your path! (1/2 or click)')
     return new Promise<number>(resolve => {
+      let settled = false
+      const finish = (nodeId: number) => {
+        if (settled) return
+        settled = true
+        cleanup()
+        resolve(nodeId)
+      }
+      const cleanup = () => {
+        overlays.forEach(o => o.destroy())
+        this.input.keyboard?.off('keydown', onKeyDown)
+      }
+
       const overlays: Phaser.GameObjects.GameObject[] = []
       options.forEach(nodeId => {
         const { x, y } = this.getTileXY(nodeId)
@@ -1555,11 +1876,23 @@ export class BoardScene extends Phaser.Scene {
           repeat: -1
         })
 
-        highlight.on('pointerdown', () => {
-          overlays.forEach(o => o.destroy())
-          resolve(nodeId)
-        })
+        highlight.on('pointerdown', () => finish(nodeId))
         overlays.push(highlight, arrow)
+      })
+
+      const keyToIndex: Record<string, number> = {
+        Digit1: 0, Digit2: 1, Numpad1: 0, Numpad2: 1,
+      }
+      const onKeyDown = (ev: KeyboardEvent) => {
+        const idx = keyToIndex[ev.code]
+        if (idx !== undefined && idx < options.length) {
+          ev.preventDefault()
+          finish(options[idx])
+        }
+      }
+      this.input.keyboard?.on('keydown', onKeyDown)
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+        if (!settled) cleanup()
       })
     })
   }
@@ -1595,5 +1928,19 @@ export class BoardScene extends Phaser.Scene {
   private getPlayerOffset(index: number) {
     const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
     return offsets[index % 4]
+  }
+
+  private burstAt(x: number, y: number, textureKey: string, tint?: number) {
+    if (isAutoSimMode() || !this.textures.exists(textureKey)) return
+    const burst = this.add.particles(x, y, textureKey, {
+      speed: { min: 40, max: 120 },
+      scale: { start: 0.5, end: 0 },
+      alpha: { start: 0.9, end: 0 },
+      lifespan: 500,
+      quantity: 8,
+      tint: tint ?? 0xffffff,
+      blendMode: 'ADD',
+    }).setDepth(25)
+    this.time.delayedCall(520, () => burst.destroy())
   }
 }

@@ -72,8 +72,8 @@ export const ITEMS: Record<ItemType, Item> = {
   warp: { id: 'warp', type: 'warp', name: 'Warp Card', emoji: '🌀', cost: 8, description: 'Teleport to a random board tile.' },
   shield: { id: 'shield', type: 'shield', name: 'Shield Card', emoji: '🛡️', cost: 6, description: 'Avoid the next penalty or battle loss.' },
   double_score: { id: 'double_score', type: 'double_score', name: 'Double Card', emoji: '📈', cost: 12, description: 'Double the points from your next correct answer.' },
-  poison_dart: { id: 'poison_dart', type: 'poison_dart', name: 'Poison Dart', emoji: '🎯', cost: 7, description: 'The next player you pass or land on loses 8 coins.' },
-  golden_key: { id: 'golden_key', type: 'golden_key', name: 'Golden Key', emoji: '🔑', cost: 15, description: 'Your next roll will be exactly 5.' }
+  poison_dart: { id: 'poison_dart', type: 'poison_dart', name: 'Poison Dart', emoji: '🎯', cost: 7, description: 'Hit a rival — they lose 8 coins immediately.' },
+  golden_key: { id: 'golden_key', type: 'golden_key', name: 'Golden Key', emoji: '🔑', cost: 15, description: 'Your next roll will be exactly 3 (max block die).' }
 }
 
 export function createInitialState(
