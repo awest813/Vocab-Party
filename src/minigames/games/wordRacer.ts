@@ -22,13 +22,13 @@ export const wordRacer: MinigameDef = {
   category: 'Spelling',
   tagline: 'Type the word from its definition to zoom ahead!',
   howTo: [
-    'Read the definition — the first letter is your hint.',
-    'Type the word and press Enter. Every correct word boosts your kart.',
-    'Stuck? Press Tab to skip (you’ll see the answer).',
+    'Read the definition and type the word — the first letter is free.',
+    'Wrong letters bounce off (and slow you down). Finish the word to boost!',
+    'Stuck? Hints reveal letters (💡 or Enter). Tab skips and shows the answer.',
   ],
-  controls: { keys: 'Type · Enter submit · Backspace · Tab skip', touch: 'Tap letters · ✔ submit · ⏭ skip' },
+  controls: { keys: 'Type letters · Enter = hint · Tab = skip', touch: 'Tap letters · 💡 hint · ⏭ skip' },
   durationMs: 45000,
-  cpu: { easy: [2, 4], normal: [4, 7], hard: [7, 10] },
+  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 14] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const goal = wordRacer.cpu.hard[1]
@@ -37,6 +37,13 @@ export const wordRacer: MinigameDef = {
     let busy = false
     let myScore = 0
     let wordObjs: Phaser.GameObjects.GameObject[] = []
+    /** Letters revealed by hints (typed for the player). */
+    let hinted = 0
+    let wordStartedAt = 0
+    let lastProgressAt = 0
+    let lockUntil = 0
+    let elapsed = 0
+    const keyViews = new Map<string, Phaser.GameObjects.Container>()
 
     // ── Track ──
     const trackTop = area.top + 6
@@ -101,6 +108,32 @@ export const wordRacer: MinigameDef = {
       return { c, laneY, shown: 0 }
     }
     const me = makeKart(0, COLORS.player[0], 0, 'YOU')
+    const placeBadge = scene.add.text(0, -40, '', {
+      fontSize: '14px', fontFamily: FONT.display, color: '#0a101c', backgroundColor: '#ffe066', padding: { x: 5, y: 1 },
+    }).setOrigin(0.5)
+    me.c.add(placeBadge)
+    const ORD = ['1st', '2nd', '3rd', '4th']
+    /** My current race position (ties go in my favour), and who I was ahead of last time. */
+    const myPlace = () => 1 + rivals.filter(r => (rivalKarts.get(r.id)?.shown ?? 0) > myScore).length
+    let aheadOf = new Set<number>()
+    const refreshPlace = () => {
+      if (rivals.length === 0) {
+        placeBadge.setVisible(false)
+        return
+      }
+      const pl = myPlace()
+      const tied = rivals.some(r => (rivalKarts.get(r.id)?.shown ?? 0) === myScore)
+      placeBadge.setText(`${tied ? '=' : ''}${ORD[pl - 1] ?? `${pl}th`}`)
+      placeBadge.setBackgroundColor(pl === 1 ? '#ffe066' : '#cfd8e6')
+      const nowAhead = new Set(rivals.filter(r => (rivalKarts.get(r.id)?.shown ?? 0) < myScore).map(r => r.id))
+      for (const id of nowAhead) {
+        if (!aheadOf.has(id)) {
+          const r = rivals.find(x => x.id === id)
+          if (r && myScore > 0) ctx.flash(`💨 PASSED ${r.name.toUpperCase()}!`, '#7dffb0')
+        }
+      }
+      aheadOf = nowAhead
+    }
     const rivalKarts = new Map<number, Kart>()
     rivals.forEach((r: RivalView, i) => rivalKarts.set(r.id, makeKart(i + 1, r.color, r.characterIndex, r.name.slice(0, 8))))
 
@@ -108,38 +141,37 @@ export const wordRacer: MinigameDef = {
       if (k.shown === score) return
       k.shown = score
       scene.tweens.add({ targets: k.c, x: progressX(score), duration: 420, ease: 'Cubic.easeOut' })
+      refreshPlace()
     }
 
     // ── Prompt + input ──
     const cardY = trackTop + trackH + 74
     const inputY = cardY + 92
+    // Letter slots: typed letters in green, hint letters in gold, blanks for the rest.
     const inputText = scene.add.text(area.cx, inputY, '', {
-      fontSize: '40px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 5,
+      fontSize: '40px', fontFamily: FONT.display, color: '#7dffb0', stroke: '#000000', strokeThickness: 5,
     }).setOrigin(0.5)
-    const caret = scene.add.text(area.cx, inputY, '▌', { fontSize: '38px', fontFamily: FONT.display, color: hexColor(accent) }).setOrigin(0, 0.5)
-    root.add([inputText, caret])
-    scene.tweens.add({ targets: caret, alpha: 0.2, duration: 450, yoyo: true, repeat: -1 })
+    root.add(inputText)
 
     const renderInput = () => {
-      const hint = word.word[0].toUpperCase()
-      const shown = typed.length > 0 ? typed.toUpperCase() : `${hint}…`
-      inputText.setText(shown)
-      inputText.setAlpha(typed.length > 0 ? 1 : 0.35)
-      // Green while the typed prefix matches, red as soon as it doesn't.
-      inputText.setColor(typed.length === 0 ? '#ffffff' : word.word.startsWith(typed) ? '#7dffb0' : '#ff8888')
-      caret.setX(inputText.x + inputText.width / 2 + 4)
+      const letters = word.word.split('').map((ch, i) => (i < typed.length ? ch.toUpperCase() : '_'))
+      inputText.setText(letters.join(' '))
+      inputText.setColor(hinted > 0 && typed.length <= hinted ? '#ffd24a' : '#7dffb0')
     }
 
     const nextWord = () => {
       if (ctx.isOver()) return
       wordObjs.forEach(o => o.destroy())
       wordObjs = []
-      typed = ''
       busy = false
+      hinted = 0
       word = ctx.bank.word(w => w.word.length >= 4 && w.word.length <= 10 && /^[a-z]+$/.test(w.word), 'racer')
+      typed = word.word[0]
+      wordStartedAt = elapsed
+      lastProgressAt = elapsed
       const card = scene.add.container(area.cx, cardY)
       card.add(drawCard(scene, Math.min(area.width - 40, 860), 104, accent))
-      card.add(scene.add.text(0, -30, `TYPE THE WORD · ${word.word.length} LETTERS · starts with “${word.word[0].toUpperCase()}”`, {
+      card.add(scene.add.text(0, -30, `TYPE THE WORD · ${word.word.length} LETTERS · ${word.pos.toUpperCase()}`, {
         fontSize: '14px', fontFamily: FONT.display, color: hexColor(accent),
       }).setOrigin(0.5))
       card.add(scene.add.text(0, 12, `“${word.definition}”`, {
@@ -151,30 +183,42 @@ export const wordRacer: MinigameDef = {
       renderInput()
     }
 
-    const submit = () => {
-      if (busy || ctx.isOver() || typed.length === 0) return
-      if (typed === word.word) {
-        busy = true
-        Sfx.correct()
-        myScore++
-        ctx.addScore(1, me.c.x, me.c.y - 30)
-        ctx.recordWord(word.word, true, word.definition)
-        moveKart(me, myScore)
-        if (!ctx.reduceMotion) {
-          const trail = scene.add.text(me.c.x - 40, me.laneY, '💨', { fontSize: '22px' }).setOrigin(0.5)
-          root.add(trail)
-          scene.tweens.add({ targets: trail, x: trail.x - 40, alpha: 0, duration: 500, onComplete: () => trail.destroy() })
-        }
-        if (myScore === goal) ctx.flash('🏁 FINISH LINE!', '#7dffb0')
-        ctx.after(350, nextWord)
-      } else {
-        Sfx.wrong()
-        scene.tweens.killTweensOf(inputText)
-        inputText.x = area.cx
-        if (!ctx.reduceMotion) scene.tweens.add({ targets: inputText, x: area.cx + 8, duration: 40, yoyo: true, repeat: 3 })
-        typed = ''
-        renderInput()
+    const flashKey = (letter: string, color: number) => {
+      const k = keyViews.get(letter)
+      if (!k) return
+      const glow = scene.add.rectangle(0, 0, keyW, keyH, color, 0.55)
+      k.add(glow)
+      scene.tweens.add({ targets: glow, alpha: 0, duration: 220, onComplete: () => glow.destroy() })
+    }
+
+    const complete = () => {
+      busy = true
+      Sfx.correct()
+      myScore++
+      ctx.addScore(1, me.c.x, me.c.y - 30)
+      // Solving with hints still counts, but the Word Book notes it as practice.
+      ctx.recordWord(word.word, hinted === 0, word.definition)
+      moveKart(me, myScore)
+      if (!ctx.reduceMotion) {
+        const trail = scene.add.text(me.c.x - 40, me.laneY, '💨', { fontSize: '22px' }).setOrigin(0.5)
+        root.add(trail)
+        scene.tweens.add({ targets: trail, x: trail.x - 40, alpha: 0, duration: 500, onComplete: () => trail.destroy() })
+        scene.tweens.add({ targets: inputText, scale: 1.15, duration: 90, yoyo: true })
       }
+      if (myScore === goal) ctx.flash('🏁 FINISH LINE!', '#7dffb0')
+      const quick = elapsed - wordStartedAt < 4000 && hinted === 0
+      if (quick && myScore !== goal) ctx.flash('⚡ SPEEDY!', '#ffe066')
+      ctx.after(380, nextWord)
+    }
+
+    /** Reveal the next letter (button, Enter, or automatically when stuck). */
+    const hint = () => {
+      if (busy || ctx.isOver() || typed.length >= word.word.length - 1) return
+      typed += word.word[typed.length]
+      hinted = typed.length
+      lastProgressAt = elapsed
+      Sfx.uiToggle()
+      renderInput()
     }
 
     const skip = () => {
@@ -182,20 +226,34 @@ export const wordRacer: MinigameDef = {
       busy = true
       ctx.recordWord(word.word, false, word.definition)
       Sfx.clunk()
-      inputText.setText(word.word.toUpperCase()).setColor('#ffcc66').setAlpha(1)
-      ctx.after(1000, nextWord)
+      inputText.setText(word.word.toUpperCase().split('').join(' ')).setColor('#ffcc66')
+      ctx.after(1100, nextWord)
     }
 
     const type = (letter: string) => {
-      if (busy || ctx.isOver() || typed.length >= 14) return
-      typed += letter
-      Sfx.uiHover()
-      renderInput()
-      if (typed === word.word) submit()
+      if (busy || ctx.isOver() || elapsed < lockUntil) return
+      const need = word.word[typed.length]
+      if (letter === need) {
+        typed += letter
+        lastProgressAt = elapsed
+        Sfx.uiHover()
+        flashKey(letter, 0x44ff88)
+        renderInput()
+        if (typed === word.word) complete()
+      } else {
+        // Wrong letters bounce off with a short stall, so mashing the keyboard doesn't pay.
+        lockUntil = elapsed + 250
+        Sfx.clunk()
+        flashKey(letter, 0xff4444)
+        scene.tweens.killTweensOf(inputText)
+        inputText.x = area.cx
+        if (!ctx.reduceMotion) scene.tweens.add({ targets: inputText, x: area.cx + 8, duration: 40, yoyo: true, repeat: 2 })
+      }
     }
 
     const backspace = () => {
-      if (busy || typed.length === 0) return
+      // Typed letters are always correct, so Backspace only undoes letters you typed (not free/hint ones).
+      if (busy || typed.length <= Math.max(1, hinted)) return
       typed = typed.slice(0, -1)
       renderInput()
     }
@@ -218,6 +276,7 @@ export const wordRacer: MinigameDef = {
       hit.on('pointerdown', onTap)
       c.add([g, t, hit])
       root.add(c)
+      if (/^[A-Z]$/.test(label)) keyViews.set(label.toLowerCase(), c)
     }
     ROWS.forEach((row, r) => {
       const extra = r === 2 ? 2 : 0
@@ -232,13 +291,13 @@ export const wordRacer: MinigameDef = {
         x += keyW + 6
       })
       if (r === 1) makeKey('⌫', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, backspace, 0x3a2a40)
-      if (r === 2) makeKey('✔', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, submit, 0x1f7a4a)
+      if (r === 2) makeKey('💡', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, hint, 0x5a4a10)
     })
 
     ctx.onKey(ev => {
       if (ev.ctrlKey || ev.metaKey || ev.altKey) return false
       if (ev.key === 'Backspace') { backspace(); return true }
-      if (ev.key === 'Enter') { submit(); return true }
+      if (ev.key === 'Enter') { hint(); return true }
       if (ev.key === 'Tab') { skip(); return true }
       const k = ev.key.toLowerCase()
       if (/^[a-z]$/.test(k)) { type(k); return true }
@@ -246,12 +305,16 @@ export const wordRacer: MinigameDef = {
     })
 
     nextWord()
+    refreshPlace()
     return {
-      update() {
+      update(_time, delta) {
+        elapsed += delta
         for (const r of ctx.rivals()) {
           const k = rivalKarts.get(r.id)
           if (k && r.score !== null) moveKart(k, r.score)
         }
+        // Stuck for a while? A free letter keeps the race moving.
+        if (!busy && elapsed - lastProgressAt > 7000) hint()
       },
       stop() { busy = true },
     }

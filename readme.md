@@ -83,8 +83,8 @@ npm run typecheck
 
 | Game | Skill | Mechanic |
 |------|-------|----------|
-| 🎸 Word Hero | Vocabulary | Guitar Hero–style rhythm game: strum the notes whose words match the target (synonyms or opposites), let decoys pass, build a ×4 multiplier (song tempo follows the word level) |
-| 🏎️ Word Racer | Spelling | Type words from their definitions to race CPU karts to the finish |
+| 🎸 Word Hero | Vocabulary | Guitar Hero–style rhythm game: strum the notes whose words match the target (synonyms or opposites), let decoys pass, build a ×4 multiplier and fill the meter for WORD POWER double points (song tempo follows the word level) |
+| 🏎️ Word Racer | Spelling | Type words from their definitions to race CPU karts — first letter free, hints when stuck, live race position |
 | 🎈 Letter Rescue | Spelling | Guess the hidden word letter by letter before six balloons pop |
 | 🏗️ Compound Crafter | Word parts | Snap two words together (sun + flower) |
 | 🌧️ Synonym Storm | Vocabulary | Catch falling synonyms, dodge opposites |

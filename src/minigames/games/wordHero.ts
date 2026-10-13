@@ -1,8 +1,9 @@
 import Phaser from 'phaser'
 import { getSettings, type WordLevel } from '../../systems/GameSettings'
+import { isAutoSimMode } from '../../systems/gameFlags'
 import { Sfx } from '../../systems/Sfx'
 import { FONT, hexColor } from '../../ui/Theme'
-import { pickDistinct, type LexWord } from '../ContentBank'
+import type { LexWord } from '../ContentBank'
 import type { MinigameDef } from '../types'
 import { drawCard } from '../ui'
 
@@ -45,6 +46,7 @@ interface Note {
   good: boolean
   section: Section
   c: Phaser.GameObjects.Container
+  label: Phaser.GameObjects.Text
   done: boolean
 }
 
@@ -56,13 +58,14 @@ export const wordHero: MinigameDef = {
   category: 'Vocabulary',
   tagline: 'Rock the fretboard — strum only the words that match!',
   howTo: [
-    'Notes slide down 4 lanes. Strum a note as it crosses the line.',
-    'Only strum words that MATCH the target (synonyms or opposites). Let the others pass!',
-    'Build a streak to raise your multiplier up to ×4. Wrong notes break it.',
+    'Strum a note as it crosses the line — but only if its word MATCHES the target.',
+    'Let non-matching words pass. Streaks raise your multiplier up to ×4.',
+    'Fill the meter with clean play to unleash WORD POWER: double points!',
   ],
   controls: { keys: 'D F J K (or 1–4 / arrows) to strum each lane', touch: 'Tap the colored frets' },
   durationMs: 40000,
-  cpu: { easy: [8, 18], normal: [18, 32], hard: [32, 50] },
+  // Simulated: Easy ≈ 70% accuracy, Normal ≈ 80%, Hard ≈ 90% (a flawless song scores 100+).
+  cpu: { easy: [10, 20], normal: [20, 36], hard: [36, 60] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const notes: Note[] = []
@@ -82,6 +85,12 @@ export const wordHero: MinigameDef = {
     let beatCount = 0
     /** Set while the next section's notes are already falling but the old ones haven't landed yet. */
     let pendingSwitch = false
+    let lastWord = ''
+    /** WORD POWER (star power): doubles points until this time. */
+    let powerUntil = -1
+    const stats = { hits: 0, perfects: 0, wrong: 0, missed: 0, bestStreak: 0 }
+    /** Count-in clicks before the first note lands. */
+    const countIn: number[] = []
 
     // Highway geometry (pseudo-3D trapezoid)
     const topY = area.top + 136
@@ -100,7 +109,7 @@ export const wordHero: MinigameDef = {
       const bottomY = strikeY + 60
       const pb = (strikeY + 60 - topY) / (strikeY - topY)
       const wAt = (p: number) => farW + (nearW - farW) * p
-      hwy.fillStyle(0x0b0f1c, 0.95)
+      hwy.fillStyle(powerOn() ? 0x0d2a3a : 0x0b0f1c, 0.95)
       hwy.fillPoints([
         new Phaser.Geom.Point(area.cx - farW / 2, topY),
         new Phaser.Geom.Point(area.cx + farW / 2, topY),
@@ -111,7 +120,8 @@ export const wordHero: MinigameDef = {
       for (let i = 0; i <= 4; i++) {
         const xf = area.cx + (i - 2) * (farW / 4)
         const xn = area.cx + (i - 2) * (wAt(pb) / 4)
-        hwy.lineStyle(i === 0 || i === 4 ? 4 : 2, i === 0 || i === 4 ? accent : 0x2a3a5a, i === 0 || i === 4 ? 0.8 : 0.7)
+        const edge = powerOn() ? 0x6ff7ff : accent
+        hwy.lineStyle(i === 0 || i === 4 ? 4 : 2, i === 0 || i === 4 ? edge : 0x2a3a5a, i === 0 || i === 4 ? 0.8 : 0.7)
         hwy.lineBetween(xf, topY, xn, bottomY)
       }
       // scrolling fret bars: one per scheduled beat still in flight
@@ -158,11 +168,15 @@ export const wordHero: MinigameDef = {
     const banner = scene.add.container(area.cx, area.top + 58)
     banner.add(drawCard(scene, Math.min(area.width - 20, 720), 96, accent))
     const kicker = scene.add.text(0, -20, '', { fontSize: '15px', fontFamily: FONT.display, color: hexColor(accent) }).setOrigin(0.5)
+    // Upcoming target, shown under the banner during a hand-off so the current instruction stays put.
+    const nextText = scene.add.text(area.cx, area.top + 120, '', {
+      fontSize: '16px', fontFamily: FONT.display, color: '#ffe066', stroke: '#000000', strokeThickness: 4,
+    }).setOrigin(0.5)
     const bigWord = scene.add.text(0, 16, '', {
       fontSize: '38px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0.5)
     banner.add([kicker, bigWord])
-    root.add(banner)
+    root.add([banner, nextText])
 
     // HUD: streak, multiplier, rock meter
     const comboText = scene.add.text(area.cx + nearW / 2 + 18, strikeY - 120, '', {
@@ -172,24 +186,27 @@ export const wordHero: MinigameDef = {
       fontSize: '40px', fontFamily: FONT.display, color: hexColor(accent), stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0, 0.5)
     const meter = scene.add.graphics()
-    root.add([comboText, multText, meter])
+    const meterLabel = scene.add.text(area.cx - nearW / 2 - 40, topY - 14, '⚡', { fontSize: '18px' }).setOrigin(0.5)
+    root.add([comboText, multText, meter, meterLabel])
     const drawMeter = () => {
       const x = area.cx - nearW / 2 - 40
       const h = strikeY - topY
       meter.clear()
       meter.fillStyle(0x000000, 0.6)
       meter.fillRoundedRect(x - 10, topY, 20, h, 8)
-      const col = rock > 0.66 ? 0x2ad46a : rock > 0.33 ? 0xf4c430 : 0xe84a4a
+      const col = powerOn() ? 0x6ff7ff : rock > 0.66 ? 0x2ad46a : rock > 0.33 ? 0xf4c430 : 0xe84a4a
       meter.fillStyle(col, 1)
       meter.fillRoundedRect(x - 7, topY + h * (1 - rock) + 3, 14, Math.max(6, h * rock - 6), 6)
     }
 
     const mult = () => Math.min(4, 1 + Math.floor(streak / 8))
+    const powerOn = () => t < powerUntil
     const bpm = () => tempo.start + (tempo.end - tempo.start) * Math.min(1, t / 40000)
 
     const refreshHud = () => {
       comboText.setText(streak >= 2 ? `🔥 ${streak} streak` : '')
-      multText.setText(`×${mult()}`)
+      multText.setText(powerOn() ? `×${mult() * 2}⚡` : `×${mult()}`)
+      multText.setColor(powerOn() ? '#6ff7ff' : hexColor(accent))
       drawMeter()
     }
 
@@ -208,6 +225,7 @@ export const wordHero: MinigameDef = {
       goodHitsForTarget = 0
       targetSince = t
       kicker.setText(sec.mode === 'synonym' ? 'STRUM WORDS THAT MEAN…' : 'STRUM THE OPPOSITES OF…')
+      nextText.setText('')
       bigWord.setText(sec.target.word.toUpperCase())
       if (!ctx.reduceMotion) {
         banner.setScale(1.12)
@@ -220,9 +238,10 @@ export const wordHero: MinigameDef = {
       // Keep good notes a bit more common than decoys so there's always music to play.
       const good = Math.random() < 0.58
       const sec = spawning
-      const word = good
-        ? (Phaser.Utils.Array.GetRandom(sec.goodPool) as string)
-        : (Phaser.Utils.Array.GetRandom(pickDistinct(sec.badPool, 3)) as string)
+      // Avoid the same word twice in a row so every note needs a fresh read.
+      const pool = (good ? sec.goodPool : sec.badPool).filter(x => x !== lastWord)
+      const word = Phaser.Utils.Array.GetRandom(pool.length > 0 ? pool : (good ? sec.goodPool : sec.badPool)) as string
+      lastWord = word
       const c = scene.add.container(laneX(lane, 0), topY)
       const g = scene.add.graphics()
       const col = LANE_COLORS[lane]
@@ -240,7 +259,7 @@ export const wordHero: MinigameDef = {
       c.add([g, label])
       c.setScale(scaleAt(0))
       root.add(c)
-      notes.push({ lane, hitAt, word, good, section: sec, c, done: false })
+      notes.push({ lane, hitAt, word, good, section: sec, c, label, done: false })
     }
 
     const burst = (lane: number, color: number, text: string, textColor: string) => {
@@ -258,6 +277,16 @@ export const wordHero: MinigameDef = {
       root.add(tx)
       scene.tweens.add({ targets: tx, y: tx.y - 30, alpha: 0, duration: 520, onComplete: () => tx.destroy() })
       if (!ctx.reduceMotion) scene.tweens.add({ targets: frets[lane], scale: 1.12, duration: 70, yoyo: true })
+    }
+
+    /** WORD POWER: the full meter drains over ~8 beats while every hit scores double. */
+    const activatePower = () => {
+      const dur = 8 * (60000 / bpm())
+      powerUntil = t + dur
+      Sfx.star()
+      ctx.flash('⚡ WORD POWER! ×2', '#6ff7ff')
+      if (!ctx.reduceMotion) scene.cameras.main.flash(200, 110, 247, 255, true)
+      refreshHud()
     }
 
     const breakStreak = () => {
@@ -288,20 +317,25 @@ export const wordHero: MinigameDef = {
       best.done = true
       if (best.good) {
         streak++
-        const m = mult()
+        stats.hits++
+        stats.bestStreak = Math.max(stats.bestStreak, streak)
+        const m = mult() * (powerOn() ? 2 : 1)
         const perfect = bestDt <= PERFECT_MS
+        if (perfect) stats.perfects++
         Sfx.pluck(RIFF[riffStep++ % RIFF.length], perfect)
         ctx.addScore(m)
-        rock = Math.min(1, rock + 0.04)
+        if (!powerOn()) rock = Math.min(1, rock + (perfect ? 0.05 : 0.035))
         goodHitsForTarget++
-        burst(lane, LANE_COLORS[lane], perfect ? 'PERFECT!' : 'GOOD', perfect ? '#ffe066' : '#ffffff')
+        burst(lane, powerOn() ? 0x6ff7ff : LANE_COLORS[lane], `${perfect ? 'PERFECT' : 'GOOD'} +${m}`, perfect ? '#ffe066' : '#ffffff')
+        if (rock >= 1 && !powerOn()) activatePower()
         const sec = best.section
         ctx.recordWord(sec.target.word, true, `${best.word} ${sec.mode === 'synonym' ? '≈' : '↔'} ${sec.target.word}`)
         if (streak % 8 === 0 && streak <= 24) ctx.flash(`×${mult()} MULTIPLIER!`, '#ff9fd0')
       } else {
         Sfx.clunk()
+        stats.wrong++
         ctx.addScore(-1)
-        rock = Math.max(0, rock - 0.1)
+        if (!powerOn()) rock = Math.max(0, rock - 0.1)
         burst(lane, 0x555555, 'WRONG WORD', '#ff8888')
         const sec = best.section
         ctx.recordWord(sec.target.word, false, `“${best.word}” doesn’t ${sec.mode === 'synonym' ? 'mean' : 'oppose'} ${sec.target.word}`)
@@ -320,14 +354,18 @@ export const wordHero: MinigameDef = {
     })
 
     Sfx.stopMusic(false)
+    {
+      const beat0 = 60000 / tempo.start
+      for (let k = 4; k >= 1; k--) countIn.push(nextBeat - k * beat0)
+    }
     spawning = chooseSection()
     showSection(spawning)
     refreshHud()
     drawHighway(0)
 
-    return {
-      update(_time, delta) {
-        if (ctx.isOver()) return
+    const autoplay = () => isAutoSimMode() || Boolean((window as unknown as { __WORD_HERO_AUTOPLAY__?: boolean }).__WORD_HERO_AUTOPLAY__)
+
+    const tick = (delta: number) => {
         t += delta
         const beatMs = 60000 / bpm()
         // Schedule notes so they reach the strike line exactly on the beat.
@@ -343,6 +381,25 @@ export const wordHero: MinigameDef = {
           lastBeatAt = beatQueue.shift()!
           Sfx.drum(beatCount++ % 2 === 1 ? 'snare' : 'kick')
         }
+        // Count-in: four clicks (and big numbers) leading into the first note.
+        while (countIn.length > 0 && countIn[0] <= t) {
+          countIn.shift()
+          Sfx.drum('hat')
+          const n = countIn.length + 1
+          const num = scene.add.text(area.cx, (topY + strikeY) / 2, String(n), {
+            fontSize: '64px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 8,
+          }).setOrigin(0.5).setAlpha(0.85)
+          root.add(num)
+          scene.tweens.add({ targets: num, alpha: 0, ...(ctx.reduceMotion ? {} : { scale: 1.4 }), duration: 380, onComplete: () => num.destroy() })
+        }
+        if (powerUntil > 0) {
+          if (powerOn()) rock = Math.max(0, (powerUntil - t) / (8 * beatMs))
+          else {
+            powerUntil = -1
+            rock = 0.5
+            refreshHud()
+          }
+        }
         const phase = lastBeatAt < 0 ? 1 : (t - lastBeatAt) / beatMs
         drawHighway(Math.max(0, 1 - phase * 3))
 
@@ -350,13 +407,17 @@ export const wordHero: MinigameDef = {
           if (n.done) continue
           const p = 1 - (n.hitAt - t) / travelMs()
           n.c.setPosition(laneX(n.lane, Math.min(1.15, p)), yAt(Math.min(1.15, p)))
-          n.c.setScale(scaleAt(Math.min(1.15, Math.max(0, p))))
+          const sc = scaleAt(Math.min(1.15, Math.max(0, p)))
+          n.c.setScale(sc)
+          // Keep words readable far up the highway: the label never shrinks below ~85% size.
+          n.label.setScale(Math.max(1, 0.85 / sc))
           n.c.setAlpha(p < 0.08 ? Math.max(0, p / 0.08) : 1)
           if (t - n.hitAt > GOOD_MS) {
             n.done = true
             if (n.good) {
               // Missed a note you should have played.
-              rock = Math.max(0, rock - 0.06)
+              stats.missed++
+              if (!powerOn()) rock = Math.max(0, rock - 0.06)
               if (streak > 0) breakStreak()
               scene.tweens.add({ targets: n.c, alpha: 0, duration: 160, onComplete: () => n.c.destroy() })
             } else {
@@ -364,6 +425,10 @@ export const wordHero: MinigameDef = {
               scene.tweens.add({ targets: n.c, alpha: 0, scale: n.c.scale * 0.6, duration: 160, onComplete: () => n.c.destroy() })
             }
           }
+        }
+        // Test autopilot (?autoSim, or window.__WORD_HERO_AUTOPLAY__): strum every matching note on time.
+        if (autoplay()) {
+          for (const n of notes) if (!n.done && n.good && Math.abs(n.hitAt - t) <= PERFECT_MS / 2) strum(n.lane)
         }
         for (let i = notes.length - 1; i >= 0; i--) if (notes[i].done && !notes[i].c.active) notes.splice(i, 1)
         drawMeter()
@@ -373,7 +438,7 @@ export const wordHero: MinigameDef = {
           pendingSwitch = true
           spawning = chooseSection()
           // Preview the next target so players can read it before its notes arrive.
-          kicker.setText(`NEXT: ${spawning.mode === 'synonym' ? 'MEANS' : 'OPPOSITE OF'} ${spawning.target.word.toUpperCase()}`)
+          nextText.setText(`NEXT ▸ ${spawning.mode === 'synonym' ? 'means' : 'opposite of'} ${spawning.target.word.toUpperCase()}`)
           nextBeat += 60000 / bpm()
         }
         if (pendingSwitch && notes.every(n => n.done || n.section === spawning)) {
@@ -381,10 +446,28 @@ export const wordHero: MinigameDef = {
           ctx.flash('🎸 NEW SONG SECTION!', '#ff9fd0')
           showSection(spawning)
         }
+    }
+
+    return {
+      update(_time, delta) {
+        if (ctx.isOver()) return
+        // Autopilot steps in small slices so it plays correctly even on very slow renderers.
+        if (autoplay()) {
+          for (let left = delta; left > 0 && !ctx.isOver(); left -= 16) tick(Math.min(16, left))
+        } else {
+          tick(delta)
+        }
       },
       stop() {
         notes.forEach(n => { n.done = true })
         Sfx.startMusic('minigame')
+        // Song summary under the runner's TIME'S UP banner.
+        const total = stats.hits + stats.missed
+        const acc = total > 0 ? Math.round((stats.hits / total) * 100) : 0
+        scene.add.text(scene.scale.width / 2, scene.scale.height / 2 + 120,
+          `🎸 ${stats.hits}/${total} notes (${acc}%) · ${stats.perfects} perfect · best streak ${stats.bestStreak}${stats.wrong ? ` · ${stats.wrong} wrong` : ''}`, {
+            fontSize: '22px', fontFamily: FONT.display, color: '#ffe0f0', stroke: '#000000', strokeThickness: 5,
+          }).setOrigin(0.5).setDepth(82)
       },
     }
   },
