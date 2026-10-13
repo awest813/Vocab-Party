@@ -30,7 +30,7 @@ export const CHARACTER_DEFS: CharacterDef[] = [
   { cls: 'wizard',   color: COLORS.player[1], name: 'Blue Wizard',   emoji: '🧙', portraitKey: TEXTURE_KEYS.charWizard },
   { cls: 'knight',   color: COLORS.player[2], name: 'Green Knight',  emoji: '🛡️', portraitKey: TEXTURE_KEYS.charRanger },
   { cls: 'pirate',   color: COLORS.player[3], name: 'Gold Pirate',   emoji: '🏴‍☠️', portraitKey: TEXTURE_KEYS.charRogue },
-  { cls: 'ninja',    color: 0x445566, name: 'Shadow Ninja', emoji: '🥷' },
+  { cls: 'ninja',    color: 0x6a7fa8, name: 'Shadow Ninja', emoji: '🥷' },
   { cls: 'ranger',   color: 0x88aa44, name: 'Forest Ranger', emoji: '🏹', portraitKey: TEXTURE_KEYS.charRanger },
   { cls: 'robot',    color: 0xa8b4c4, name: 'Steel Robot', emoji: '🤖' },
   { cls: 'princess', color: 0xff88cc, name: 'Pink Princess', emoji: '👑' },
@@ -72,22 +72,6 @@ export const TILE_COLORS: Record<string, number> = {
 
 /** Tile types with textures generated at boot. */
 export const BOARD_TILE_TYPES = Object.keys(TILE_COLORS) as (keyof typeof TILE_COLORS)[]
-
-/** Kenney tile face art composited onto the procedural bevel base. */
-export const KENNEY_TILE_FACE_KEYS: Partial<Record<string, string>> = {
-  start: TEXTURE_KEYS.kenneyTileStart,
-  vocab: TEXTURE_KEYS.kenneyTileVocab,
-  grammar: TEXTURE_KEYS.kenneyTileGrammar,
-  bonus: TEXTURE_KEYS.kenneyTileBonus,
-  mystery: TEXTURE_KEYS.kenneyTileMystery,
-  minigame: TEXTURE_KEYS.kenneyTileMinigame,
-  swap: TEXTURE_KEYS.kenneyTileSwap,
-  shop: TEXTURE_KEYS.kenneyTileShop,
-  star: TEXTURE_KEYS.kenneyTileStar,
-  brick: TEXTURE_KEYS.kenneyTileBrick,
-  item_shop: TEXTURE_KEYS.kenneyCart,
-  penalty: TEXTURE_KEYS.kenneyQuestion,
-}
 
 const DICE_DOT_POSITIONS: { x: number; y: number }[][] = [
   [{ x: 32, y: 32 }],
@@ -225,11 +209,15 @@ function drawKnightHelm(g: Phaser.GameObjects.Graphics): void {
 }
 
 function drawNinjaMask(g: Phaser.GameObjects.Graphics): void {
+  // Face wrap below the eyes, headband above them — the eyes stay visible.
   g.fillStyle(0x151820, 0.95)
-  g.fillRoundedRect(CX - 18, CY - 8, 36, 11, 3)
-  g.fillTriangle(CX + 16, CY - 8, CX + 26, CY - 16, CX + 22, CY + 2)
+  g.fillRoundedRect(CX - 17, CY + 3, 34, 12, 5)
   g.fillStyle(0xe84a4a, 1)
-  g.fillCircle(CX, CY - 14, 2.8)
+  g.fillRoundedRect(CX - 19, CY - 14, 38, 6, 3)
+  g.fillTriangle(CX + 17, CY - 13, CX + 29, CY - 19, CX + 27, CY - 8)
+  g.fillTriangle(CX + 17, CY - 11, CX + 28, CY - 4, CX + 23, CY + 1)
+  g.fillStyle(0xffffff, 0.35)
+  g.fillRoundedRect(CX - 15, CY - 13, 20, 2, 1)
 }
 
 function drawPirateHat(g: Phaser.GameObjects.Graphics): void {
@@ -253,13 +241,22 @@ function drawPirateHat(g: Phaser.GameObjects.Graphics): void {
   g.strokeLineShape(new Phaser.Geom.Line(CX - 14, CY - 6, CX - 2, CY - 8))
 }
 
+/** Hood back sits behind the head so the face stays readable. */
+function drawRangerHoodBack(g: Phaser.GameObjects.Graphics, color: number): void {
+  g.fillStyle(shade(color, -45), 1)
+  g.fillCircle(CX, CY - 3, 24)
+  g.fillTriangle(CX - 6, CY - 22, CX + 6, CY - 22, CX + 2, CY - 36)
+}
+
 function drawRangerHood(g: Phaser.GameObjects.Graphics, color: number): void {
-  g.fillStyle(shade(color, -40), 1)
-  g.fillCircle(CX, CY - 14, 18)
-  g.fillStyle(color, 1)
-  g.fillCircle(CX, CY + 2, 15)
+  // Hood brim framing the forehead, plus a feather.
+  g.fillStyle(shade(color, -25), 1)
+  g.slice(CX, CY - 2, 21, Math.PI * 1.08, Math.PI * 1.92, false)
+  g.fillPath()
+  g.fillStyle(0xffffff, 0.25)
+  g.fillEllipse(CX - 6, CY - 17, 10, 4)
   g.fillStyle(0xe8d070, 1)
-  g.fillTriangle(CX + 14, CY - 22, CX + 26, CY - 32, CX + 22, CY - 14)
+  g.fillTriangle(CX + 12, CY - 16, CX + 26, CY - 30, CX + 20, CY - 12)
 }
 
 function drawRobotAntenna(g: Phaser.GameObjects.Graphics): void {
@@ -354,6 +351,7 @@ function generateCharacterTexture(scene: Phaser.Scene, key: string, def: Charact
 
   const g = scene.add.graphics()
   drawTokenPedestal(g, def.color)
+  if (def.cls === 'ranger') drawRangerHoodBack(g, def.color)
   drawChibiBody(g, def.color)
   drawChibiFace(g, {
     eyeColor: def.cls === 'robot' ? 0xff3344 : 0x1a1a22,
@@ -372,184 +370,8 @@ export function generatePlayerTextures(scene: Phaser.Scene): void {
 }
 
 // ---------------------------------------------------------------------------
-// Board tile textures (64 × 64) — chunky party tiles with bold motifs
+// Board tile textures (64 × 64) — chunky bevels; the board adds an emoji glyph on top
 // ---------------------------------------------------------------------------
-
-function drawTileMotif(g: Phaser.GameObjects.Graphics, type: string, cx: number, cy: number): void {
-  switch (type) {
-    case 'vocab': {
-      // Open book
-      g.fillStyle(0xffffff, 0.92)
-      g.fillRoundedRect(cx - 14, cy - 10, 13, 18, 2)
-      g.fillRoundedRect(cx + 1, cy - 10, 13, 18, 2)
-      g.fillStyle(0x1e4a9a, 0.35)
-      g.fillRect(cx - 11, cy - 5, 8, 1.5)
-      g.fillRect(cx - 11, cy, 8, 1.5)
-      g.fillRect(cx + 3, cy - 5, 8, 1.5)
-      g.fillRect(cx + 3, cy, 8, 1.5)
-      break
-    }
-    case 'grammar': {
-      // Pencil
-      g.fillStyle(0xffe08a, 1)
-      g.fillRoundedRect(cx - 3, cy - 14, 6, 22, 1)
-      g.fillStyle(0xff9f1c, 1)
-      g.fillTriangle(cx, cy + 12, cx - 4, cy + 6, cx + 4, cy + 6)
-      g.fillStyle(0x3d8fff, 1)
-      g.fillRect(cx - 3, cy - 14, 6, 4)
-      break
-    }
-    case 'bonus': {
-      // Star
-      const spikes = 5
-      const ro = 12
-      const ri = 5
-      g.fillStyle(0xffffff, 0.95)
-      g.beginPath()
-      for (let i = 0; i < spikes * 2; i++) {
-        const a = (i * Math.PI) / spikes - Math.PI / 2
-        const r = i % 2 === 0 ? ro : ri
-        const px = cx + Math.cos(a) * r
-        const py = cy + Math.sin(a) * r
-        i === 0 ? g.moveTo(px, py) : g.lineTo(px, py)
-      }
-      g.closePath()
-      g.fillPath()
-      g.fillStyle(0xfff3a0, 0.9)
-      g.fillCircle(cx, cy, 3.5)
-      break
-    }
-    case 'mystery': {
-      g.fillStyle(0xffffff, 0.92)
-      g.fillCircle(cx, cy - 2, 11)
-      g.fillStyle(0x5a1a88, 0.55)
-      // Question mark stem
-      g.fillCircle(cx, cy + 10, 2.4)
-      g.fillRoundedRect(cx - 2.2, cy + 1, 4.4, 6, 1)
-      g.fillStyle(0xffffff, 0.92)
-      g.fillCircle(cx - 2, cy - 5, 3)
-      break
-    }
-    case 'minigame': {
-      // Gamepad
-      g.fillStyle(0xffffff, 0.9)
-      g.fillRoundedRect(cx - 14, cy - 8, 28, 16, 5)
-      g.fillStyle(0xff5cad, 0.85)
-      g.fillCircle(cx - 7, cy, 3)
-      g.fillCircle(cx + 7, cy - 2, 2.2)
-      g.fillCircle(cx + 10, cy + 2, 2.2)
-      break
-    }
-    case 'swap': {
-      g.lineStyle(3, 0xffffff, 0.95)
-      // Dual arrows
-      g.beginPath()
-      g.moveTo(cx - 12, cy - 5)
-      g.lineTo(cx + 4, cy - 5)
-      g.lineTo(cx + 4, cy - 10)
-      g.lineTo(cx + 13, cy - 2)
-      g.lineTo(cx + 4, cy + 6)
-      g.lineTo(cx + 4, cy + 1)
-      g.lineTo(cx - 12, cy + 1)
-      g.strokePath()
-      g.beginPath()
-      g.moveTo(cx + 12, cy + 5)
-      g.lineTo(cx - 4, cy + 5)
-      g.lineTo(cx - 4, cy + 10)
-      g.lineTo(cx - 13, cy + 2)
-      g.lineTo(cx - 4, cy - 6)
-      g.lineTo(cx - 4, cy - 1)
-      g.lineTo(cx + 12, cy - 1)
-      g.strokePath()
-      break
-    }
-    case 'start': {
-      // Home
-      g.fillStyle(0xffffff, 0.92)
-      g.beginPath()
-      g.moveTo(cx, cy - 12)
-      g.lineTo(cx + 13, cy)
-      g.lineTo(cx + 8, cy)
-      g.lineTo(cx + 8, cy + 11)
-      g.lineTo(cx - 8, cy + 11)
-      g.lineTo(cx - 8, cy)
-      g.lineTo(cx - 13, cy)
-      g.closePath()
-      g.fillPath()
-      g.fillStyle(0x1a7a40, 0.45)
-      g.fillRect(cx - 3, cy + 2, 6, 9)
-      break
-    }
-    case 'shop': {
-      g.fillStyle(0xffffff, 0.9)
-      g.fillRoundedRect(cx - 13, cy - 4, 26, 16, 2)
-      g.fillStyle(0xc45c26, 1)
-      g.beginPath()
-      g.moveTo(cx - 14, cy - 4)
-      g.lineTo(cx, cy - 14)
-      g.lineTo(cx + 14, cy - 4)
-      g.closePath()
-      g.fillPath()
-      g.fillStyle(0x3d8fff, 0.85)
-      g.fillRoundedRect(cx - 8, cy, 6, 8, 1)
-      g.fillRoundedRect(cx + 2, cy, 6, 8, 1)
-      break
-    }
-    case 'star': {
-      const spikes = 5
-      const ro = 13
-      const ri = 5.5
-      g.fillStyle(0xffe566, 1)
-      g.beginPath()
-      for (let i = 0; i < spikes * 2; i++) {
-        const a = (i * Math.PI) / spikes - Math.PI / 2
-        const r = i % 2 === 0 ? ro : ri
-        const px = cx + Math.cos(a) * r
-        const py = cy + Math.sin(a) * r
-        i === 0 ? g.moveTo(px, py) : g.lineTo(px, py)
-      }
-      g.closePath()
-      g.fillPath()
-      g.lineStyle(1.5, 0xffffff, 0.7)
-      g.strokePath()
-      break
-    }
-    case 'brick': {
-      g.fillStyle(0xffa07a, 1)
-      g.fillRoundedRect(cx - 13, cy - 8, 11, 7, 1)
-      g.fillRoundedRect(cx, cy - 8, 11, 7, 1)
-      g.fillRoundedRect(cx - 13, cy + 1, 11, 7, 1)
-      g.fillRoundedRect(cx, cy + 1, 11, 7, 1)
-      g.lineStyle(1.2, 0x6a2a18, 0.45)
-      g.strokeRoundedRect(cx - 13, cy - 8, 11, 7, 1)
-      g.strokeRoundedRect(cx, cy - 8, 11, 7, 1)
-      g.strokeRoundedRect(cx - 13, cy + 1, 11, 7, 1)
-      g.strokeRoundedRect(cx, cy + 1, 11, 7, 1)
-      break
-    }
-    case 'item_shop': {
-      g.fillStyle(0xffffff, 0.92)
-      g.fillRoundedRect(cx - 11, cy - 4, 22, 16, 3)
-      g.lineStyle(2.5, 0xffffff, 0.9)
-      g.beginPath()
-      g.moveTo(cx - 9, cy - 4)
-      g.lineTo(cx, cy - 14)
-      g.lineTo(cx + 9, cy - 4)
-      g.strokePath()
-      g.fillStyle(0x2a8fd4, 0.9)
-      g.fillCircle(cx, cy + 4, 4.5)
-      break
-    }
-    case 'penalty': {
-      g.fillStyle(0xffffff, 0.92)
-      g.fillRoundedRect(cx - 4, cy - 12, 8, 16, 2)
-      g.fillCircle(cx, cy + 10, 4)
-      break
-    }
-    default:
-      break
-  }
-}
 
 function drawTileBevelBase(g: Phaser.GameObjects.Graphics, color: number, SIZE: number, CORNER: number): void {
   const dark = shade(color, -32)
@@ -582,49 +404,18 @@ function drawTileFinish(g: Phaser.GameObjects.Graphics, color: number, SIZE: num
   g.strokeRoundedRect(5, 4, SIZE - 10, SIZE - 12, CORNER - 3)
 }
 
-function generateProceduralTile(scene: Phaser.Scene, type: string, color: number, key: string): void {
+function generateProceduralTile(scene: Phaser.Scene, color: number, key: string): void {
   const SIZE = 64
   const CORNER = 12
   const g = scene.add.graphics()
   drawTileBevelBase(g, color, SIZE, CORNER)
-  drawTileMotif(g, type, SIZE / 2, SIZE / 2 - 2)
+  g.fillStyle(shade(color, -30), 0.45)
+  g.fillCircle(SIZE / 2, SIZE / 2 - 1, 19)
+  g.fillStyle(0xffffff, 0.12)
+  g.fillCircle(SIZE / 2, SIZE / 2 - 3, 17)
   drawTileFinish(g, color, SIZE, CORNER)
   g.generateTexture(key, SIZE + 2, SIZE + 4)
   g.destroy()
-}
-
-function generateKenneyFaceTile(
-  scene: Phaser.Scene,
-  type: string,
-  color: number,
-  key: string,
-  faceKey: string
-): void {
-  const SIZE = 64
-  const CORNER = 12
-  const W = SIZE + 2
-  const H = SIZE + 4
-
-  const rt = scene.make.renderTexture({ width: W, height: H }, false)
-  const base = scene.make.graphics({ x: 0, y: 0 }, false)
-  drawTileBevelBase(base, color, SIZE, CORNER)
-  rt.draw(base, 0, 0)
-
-  const face = scene.make.image({ x: W / 2, y: H / 2 - 2, key: faceKey }, false)
-  face.setDisplaySize(SIZE - 10, SIZE - 10)
-  face.setTint(Phaser.Display.Color.IntegerToColor(color).color)
-  face.setAlpha(0.96)
-  rt.draw(face, W / 2 - face.displayWidth / 2, H / 2 - 2 - face.displayHeight / 2)
-
-  const finish = scene.make.graphics({ x: 0, y: 0 }, false)
-  drawTileFinish(finish, color, SIZE, CORNER)
-  rt.draw(finish, 0, 0)
-
-  rt.saveTexture(key)
-  rt.destroy()
-  base.destroy()
-  face.destroy()
-  finish.destroy()
 }
 
 export function generateTileTextures(scene: Phaser.Scene): void {
@@ -632,12 +423,10 @@ export function generateTileTextures(scene: Phaser.Scene): void {
     const key = TILE_TEXTURE_KEY(type)
     if (scene.textures.exists(key)) scene.textures.remove(key)
 
-    const faceKey = KENNEY_TILE_FACE_KEYS[type]
-    if (faceKey && scene.textures.exists(faceKey)) {
-      generateKenneyFaceTile(scene, type, color, key, faceKey)
-    } else {
-      generateProceduralTile(scene, type, color, key)
-    }
+    // The board draws an emoji glyph on every tile, so the texture is a clean bevel with a
+    // soft recessed plate for that glyph. (The square Kenney faces poked out past the rounded
+    // corners and doubled up with the glyph.)
+    generateProceduralTile(scene, color, key)
   })
 }
 

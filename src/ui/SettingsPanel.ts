@@ -33,7 +33,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
     x: w / 2,
     y: h / 2,
     width: 520,
-    height: 460,
+    height: 500,
     fill: COLORS.bgPanel,
     border: COLORS.gold,
     borderAlpha: 0.4,
@@ -72,7 +72,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   }
 
   // Mute toggle
-  makeLabel(-95, 'Mute all sound')
+  makeLabel(-95, 'Sound')
   const muteBtn = createButton(
     scene,
     140,
@@ -182,7 +182,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   })
   panel.add(motionBtn)
 
-  const controlsNote = scene.add.text(0, 165, 'Tip: Esc pauses · 1–4 answers questions', {
+  const controlsNote = scene.add.text(0, 158, 'Tip: Esc pauses · 1–4 answers questions', {
     fontSize: '13px',
     fontFamily: FONT.body,
     color: hexColor(COLORS.mute),
@@ -191,7 +191,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   }).setOrigin(0.5)
   panel.add(controlsNote)
 
-  const closeBtn = createButton(scene, 0, 205, '✕  CLOSE', COLORS.danger, COLORS.dangerDeep, 200, 48)
+  const closeBtn = createButton(scene, 0, 214, '✕  CLOSE', COLORS.danger, COLORS.dangerDeep, 200, 48)
   panel.add(closeBtn)
 
   root.add([overlay, panel])

@@ -10,10 +10,10 @@ import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { describeSave, readSave } from '../systems/SaveGame'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
-import { TILE_COLORS, TILE_TEXTURE_KEY } from '../systems/SpriteFactory'
+import { TILE_COLORS } from '../systems/SpriteFactory'
 
 const TILE_PREVIEW_EMOJI: Record<string, string> = {
-  vocab: '📖', grammar: '✏️', bonus: '⭐', mystery: '❓', minigame: '🕹️', swap: '🔄',
+  vocab: '📖', grammar: '✏️', bonus: '⭐', star: '🏆', mystery: '❓', minigame: '🕹️', swap: '🔄',
 }
 
 export class MenuScene extends Phaser.Scene {
@@ -70,8 +70,8 @@ export class MenuScene extends Phaser.Scene {
     titleContainer.setAlpha(0).setY(162)
 
     if (this.textures.exists(TEXTURE_KEYS.kenneyTrophy)) {
-      const leftTrophy = this.add.image(-300, 10, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
-      const rightTrophy = this.add.image(300, 10, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
+      const leftTrophy = this.add.image(-372, 6, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
+      const rightTrophy = this.add.image(372, 6, TEXTURE_KEYS.kenneyTrophy).setDisplaySize(52, 52).setAlpha(0.92)
       titleContainer.add([leftTrophy, rightTrophy])
       if (!reduce) {
         this.tweens.add({
@@ -137,7 +137,7 @@ export class MenuScene extends Phaser.Scene {
       },
     })
 
-    const tagline = this.add.text(w / 2, 228, 'Roll · Learn · Win the party', {
+    const tagline = this.add.text(w / 2, 242, 'Roll · Learn · Win the party', {
       fontSize: '22px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.mist),
@@ -358,7 +358,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   private createTilePreviewRow(cx: number, cy: number, reduce: boolean) {
-    const previewTypes = ['vocab', 'grammar', 'bonus', 'mystery', 'minigame', 'swap'] as const
+    const previewTypes = ['vocab', 'grammar', 'star', 'minigame', 'mystery', 'swap'] as const
     const spacing = 72
     const startX = cx - ((previewTypes.length - 1) * spacing) / 2
 
@@ -375,14 +375,10 @@ export class MenuScene extends Phaser.Scene {
       bg.strokeRoundedRect(-26, -26, 52, 44, 10)
       chip.add(bg)
 
-      const tex = TILE_TEXTURE_KEY(type)
-      if (this.textures.exists(tex)) {
-        chip.add(this.add.image(0, -4, tex).setDisplaySize(40, 40))
-      } else {
-        chip.add(this.add.text(0, -4, TILE_PREVIEW_EMOJI[type] ?? '?', {
-          fontSize: '22px',
-        }).setOrigin(0.5))
-      }
+      // Same glyphs as the board so the menu previews the real tiles.
+      chip.add(this.add.text(0, -4, TILE_PREVIEW_EMOJI[type] ?? '?', {
+        fontSize: '24px',
+      }).setOrigin(0.5))
 
       chip.y += 12
       this.tweens.add({

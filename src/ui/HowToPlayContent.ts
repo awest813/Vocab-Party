@@ -19,7 +19,7 @@ export const HOW_TO_TILES: HowToTile[] = [
   { emoji: '🕹️', label: 'Duel', desc: '1-on-1 minigame — winner steals 6 coins', color: TILE_COLORS.minigame },
   { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: TILE_COLORS.swap },
   { emoji: '🏪', label: 'Shop', desc: 'Buy shops to earn rent from rivals', color: TILE_COLORS.shop },
-  { emoji: '🏆', label: 'Star', desc: 'Spend 20 coins for a trophy (+12 score) — look for the gold glow', color: TILE_COLORS.star },
+  { emoji: '🏆', label: 'Star', desc: '20 coins = a trophy (+12) · land on it or pass it', color: TILE_COLORS.star },
   { emoji: '🧱', label: 'Brick', desc: 'Collect pieces for build bonuses', color: TILE_COLORS.brick },
   { emoji: '🛍️', label: 'Item Shop', desc: 'Buy power-up cards for your turn', color: TILE_COLORS.item_shop },
 ]

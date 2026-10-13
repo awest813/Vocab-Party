@@ -162,8 +162,8 @@ export class SetupScene extends Phaser.Scene {
     headerPanel.add([hShadow, hBg, titleText, subtitle])
 
     // ——— Player count + map presets ———
-    const optionsY = 148
-    createInsetPlate(this, w / 2, optionsY, 1000, 132, {
+    const optionsY = 160
+    createInsetPlate(this, w / 2, optionsY, 1000, 116, {
       fill: COLORS.bgPanel,
       fillAlpha: 0.78,
       border: COLORS.sky,
@@ -200,7 +200,7 @@ export class SetupScene extends Phaser.Scene {
 
     countPanel.add([cpBg, countLabel, this.minusBtn, this.countText, this.plusBtn])
 
-    this.add.text(w / 2 + 80, optionsY - 48, 'MAP LENGTH', {
+    this.add.text(w / 2 + 140, optionsY - 46, 'MAP LENGTH', {
       fontSize: '12px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.gold),

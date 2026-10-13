@@ -39,6 +39,7 @@ export class WordBookScene extends Phaser.Scene {
   private detailLayer?: Phaser.GameObjects.Container
   private tabButtons: Phaser.GameObjects.Container[] = []
   private pageText?: Phaser.GameObjects.Text
+  private pagerButtons: Phaser.GameObjects.Container[] = []
   private bank!: ContentBank
 
   constructor() { super('WordBookScene') }
@@ -49,6 +50,7 @@ export class WordBookScene extends Phaser.Scene {
     this.page = 0
     this.selected = undefined
     this.tabButtons = []
+    this.pagerButtons = []
     this.achLayer = undefined
     this.bank = new ContentBank(this.cache)
 
@@ -110,6 +112,7 @@ export class WordBookScene extends Phaser.Scene {
     prev.on('pointerdown', () => this.turnPage(-1))
     const next = createButton(this, 560, h - 40, '▶', COLORS.bgPanelAlt, COLORS.chromeDeep, 70, 46)
     next.on('pointerdown', () => this.turnPage(1))
+    this.pagerButtons = [prev, next]
     this.pageText = this.add.text(430, h - 40, '', { fontSize: '16px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0.5)
 
     // Only lexicon words can drive the practice game.
@@ -246,6 +249,7 @@ export class WordBookScene extends Phaser.Scene {
     const list = this.entries()
     const pages = Math.max(1, Math.ceil(list.length / PER_PAGE))
     this.pageText?.setText(`Page ${this.page + 1} / ${pages}`)
+    this.pagerButtons.forEach((b, i) => setButtonEnabled(b, i === 0 ? this.page > 0 : this.page < pages - 1))
     const slice = list.slice(this.page * PER_PAGE, (this.page + 1) * PER_PAGE)
 
     if (slice.length === 0) {

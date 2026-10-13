@@ -234,13 +234,7 @@ export class BoardScene extends Phaser.Scene {
     this.drawBoard()
 
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
-    if (resumed) {
-      this.state.players.forEach((p, i) => {
-        const { x, y } = this.getTileXY(p.position)
-        const off = this.getPlayerOffset(i)
-        this.playerTokens[i].setPosition(x + off.x, y + off.y)
-      })
-    }
+    this.updatePlayerTokens(0)
 
     this.hud = new PlayerHUD(this, this.state)
     this.hud.update(this.state)
@@ -671,9 +665,8 @@ export class BoardScene extends Phaser.Scene {
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
-    const { x, y } = this.getTileXY(0)
-    const offsets = [{ x: -12, y: -12 }, { x: 12, y: -12 }, { x: -12, y: 12 }, { x: 12, y: 12 }]
-    const offset = offsets[index] ?? { x: 0, y: 0 }
+    const { x, y } = this.getTileXY(player.position)
+    const offset = this.getPlayerOffset(index)
     const container = this.add.container(x + offset.x, y + offset.y)
 
     const def = characterDef(player.characterIndex)
@@ -967,8 +960,9 @@ export class BoardScene extends Phaser.Scene {
   async movePlayer(playerIndex: number, steps: number) {
     const player = this.state.players[playerIndex]
     const token = this.playerTokens[playerIndex]
-    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
-    const off = offsets[playerIndex]
+    // Hop through tile centres; everyone is re-spread once the move ends.
+    const off = { x: 0, y: -4 }
+    token.setDepth(DEPTH.tokens + 1).setScale(1)
 
     for (let s = 0; s < steps; s++) {
       const currentNode = this.nodes[player.position]
@@ -1092,6 +1086,7 @@ export class BoardScene extends Phaser.Scene {
       yoyo: true,
       onComplete: () => {
         token.setScale(1)
+        this.updatePlayerTokens(250)
         this.landOnTile(playerIndex)
       }
     })
@@ -1963,14 +1958,8 @@ export class BoardScene extends Phaser.Scene {
     player.position = target.position
     target.position = tmpPos
 
-    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
-    const p1 = this.getTileXY(player.position)
-    const p2 = this.getTileXY(target.position)
-    const o1 = offsets[playerIndex]
-    const o2 = offsets[targetIndex]
     const swapDur = isAutoSimMode() ? 60 : 500
-    this.tweens.add({ targets: this.playerTokens[playerIndex], x: p1.x + o1.x, y: p1.y + o1.y, duration: swapDur })
-    this.tweens.add({ targets: this.playerTokens[targetIndex], x: p2.x + o2.x, y: p2.y + o2.y, duration: swapDur })
+    this.updatePlayerTokens(swapDur)
 
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
     
@@ -2495,24 +2484,47 @@ export class BoardScene extends Phaser.Scene {
     this.scene.launch('PauseScene')
   }
 
-  private updatePlayerTokens() {
+  private updatePlayerTokens(duration = 600) {
     this.state.players.forEach((player, i) => {
       const token = this.playerTokens[i]
+      if (!token) return
       const { x, y } = this.getTileXY(player.position)
       const off = this.getPlayerOffset(i)
+      // Lower tokens draw in front so overlapping pawns stack naturally.
+      token.setDepth(DEPTH.tokens + (y + off.y) / 10000)
+      const scale = this.tokenScaleFor(i)
       this.tweens.add({
         targets: token,
         x: x + off.x,
         y: y + off.y,
-        duration: 600,
+        scaleX: scale,
+        scaleY: scale,
+        duration,
         ease: 'Cubic.easeInOut'
       })
     })
   }
 
+  /** Pawns shrink a little in a crowd so a shared tile stays readable. */
+  private tokenScaleFor(index: number) {
+    const pos = this.state.players[index]?.position
+    const sharing = this.state.players.filter(p => p.position === pos).length
+    return sharing >= 3 ? 0.8 : sharing === 2 ? 0.9 : 1
+  }
+
+  /** Spread pawns only when they share a tile; a lone pawn stands centred on its tile. */
   private getPlayerOffset(index: number) {
-    const offsets = [{x:-10,y:-10},{x:10,y:-10},{x:-10,y:10},{x:10,y:10}]
-    return offsets[index % 4]
+    const pos = this.state.players[index]?.position
+    const sharing = this.state.players.map((p, i) => ({ p, i })).filter(o => o.p.position === pos).map(o => o.i)
+    const slot = Math.max(0, sharing.indexOf(index))
+    const layouts: { x: number; y: number }[][] = [
+      [{ x: 0, y: -4 }],
+      [{ x: -12, y: -4 }, { x: 12, y: -4 }],
+      [{ x: -13, y: -9 }, { x: 13, y: -9 }, { x: 0, y: 6 }],
+      [{ x: -12, y: -11 }, { x: 12, y: -11 }, { x: -12, y: 7 }, { x: 12, y: 7 }],
+    ]
+    const layout = layouts[Math.min(sharing.length, layouts.length) - 1] ?? layouts[0]
+    return layout[slot % layout.length]
   }
 
   private burstAt(x: number, y: number, textureKey: string, tint?: number) {
