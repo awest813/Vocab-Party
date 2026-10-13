@@ -215,9 +215,9 @@ export const wordHero: MinigameDef = {
 
     const chooseSection = (): Section => {
       let mode: Mode = Math.random() < 0.7 ? 'synonym' : 'antonym'
-      const target = ctx.bank.word(w => w.synonyms.length >= 3 && (mode === 'synonym' || w.antonyms.length > 0), `hero:${mode}`)
+      const target = ctx.bank.word(w => w.synonyms.length >= 3 && (mode === 'synonym' || w.antonyms.length >= 2), `hero:${mode}`)
       // Guard custom content: fall back to synonyms if this word has no opposites.
-      if (mode === 'antonym' && target.antonyms.length === 0) mode = 'synonym'
+      if (mode === 'antonym' && target.antonyms.length < 2) mode = 'synonym'
       const goodPool = mode === 'synonym' ? [...target.synonyms] : [...target.antonyms]
       const decoys = ctx.bank.unrelatedTo(target, 6, x => x.pos === target.pos).map(x => x.word)
       const badPool = [...decoys, ...(mode === 'antonym' ? target.synonyms : target.antonyms)]
@@ -239,8 +239,9 @@ export const wordHero: MinigameDef = {
     const spawn = (hitAt: number) => {
       const lane = Phaser.Math.Between(0, 3)
       // Keep good notes a bit more common than decoys so there's always music to play.
-      const good = Math.random() < 0.58
+      // Antonym pools are small, so fewer good notes keeps them from repeating every beat.
       const sec = spawning
+      const good = Math.random() < (sec.mode === 'antonym' ? 0.45 : 0.58)
       // Avoid the same word twice in a row so every note needs a fresh read.
       const pool = (good ? sec.goodPool : sec.badPool).filter(x => x !== lastWord)
       const word = Phaser.Utils.Array.GetRandom(pool.length > 0 ? pool : (good ? sec.goodPool : sec.badPool)) as string

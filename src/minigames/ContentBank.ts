@@ -192,7 +192,7 @@ export class ContentBank {
     this.words = validWords.length >= 12 ? filterByLevel(validWords, 40) : FALLBACK_WORDS
     this.affixes = (lex.affixes?.length ?? 0) >= 4 ? filterByLevel(lex.affixes!, 12) : FALLBACK_AFFIXES
     this.spelling = (lex.spelling?.length ?? 0) >= 4 ? filterByLevel(lex.spelling!, 12) : FALLBACK_SPELLING
-    this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 10) : FALLBACK_ROOTS
+    this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 16) : FALLBACK_ROOTS
     const compounds = (lex.compounds ?? []).filter(c =>
       c && typeof c.word === 'string' && c.word === `${c.a}${c.b}` && Array.isArray(c.distractors) && c.distractors.length >= 3)
     this.compounds = compounds.length >= 5 ? filterByLevel(compounds, 12) : FALLBACK_COMPOUNDS
@@ -229,9 +229,10 @@ export class ContentBank {
 
   /** Draw a word; pass a `key` naming the filter so different filters keep separate no-repeat decks. */
   word(filter?: (w: LexWord) => boolean, key = 'filtered'): LexWord {
-    if (this.focus.length > 0 && Math.random() < 0.6) {
+    if (this.focus.length > 0) {
       const pool = filter ? this.focus.filter(filter) : this.focus
-      if (pool.length > 0) return this.draw(`focus:${key}:${pool.length}`, pool)
+      // A handful of weak words shouldn't repeat every other round — scale the focus share with the pool.
+      if (pool.length > 0 && Math.random() < Math.min(0.6, pool.length * 0.12)) return this.draw(`focus:${key}:${pool.length}`, pool)
     }
     if (!filter) return this.draw('words', this.words)
     const pool = this.words.filter(filter)

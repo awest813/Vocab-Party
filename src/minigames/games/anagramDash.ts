@@ -35,7 +35,7 @@ export const anagramDash: MinigameDef = {
     'Long words (7+ letters) are worth double.',
     'Stuck? A hint letter appears — or skip it.',
   ],
-  controls: { keys: 'Type letters · Backspace undo · Space skip', touch: 'Tap letters · ⌫ undo' },
+  controls: { keys: 'Type letters · Backspace undo · Tab skip', touch: 'Tap letters · ⌫ undo' },
   durationMs: 45000,
   cpu: { easy: [2, 4], normal: [4, 6], hard: [6, 9] },
   start(ctx) {
@@ -130,7 +130,17 @@ export const anagramDash: MinigameDef = {
         hintTimer = ctx.after(1000, giveHint)
         return
       }
-      resetPlaced()
+      // Keep a correct start the player already built (lock it in); only clear a wrong one.
+      if (placed.every((t, i) => t.letter === word.word[i])) {
+        for (let i = hinted; i < placed.length; i++) {
+          drawSlot(slots[i].box, 'good')
+          placed[i].c.list.forEach(o => { if (o instanceof Phaser.GameObjects.Rectangle) o.disableInteractive() })
+        }
+        hinted = placed.length
+        if (hinted >= word.word.length - 1) return
+      } else {
+        resetPlaced()
+      }
       const need = word.word[hinted]
       const tile = tiles.find(t => !t.used && t.letter === need)
       if (!tile) return
@@ -252,7 +262,7 @@ export const anagramDash: MinigameDef = {
 
     ctx.onKey(ev => {
       if (ev.key === 'Backspace') { undo(); return true }
-      if (ev.code === 'Space') { skip(); return true }
+      if (ev.code === 'Tab') { skip(); return true }
       const k = ev.key.toLowerCase()
       if (/^[a-z]$/.test(k)) {
         const tile = tiles.find(t => !t.used && t.letter === k)

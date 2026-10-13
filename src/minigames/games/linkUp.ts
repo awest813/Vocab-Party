@@ -29,7 +29,7 @@ export const linkUp: MinigameDef = {
   howTo: [
     'Pick a word on the left, then its synonym on the right.',
     'Each correct link is +1. Clear all five for a +2 bonus.',
-    'Wrong links freeze the board for a moment — think first!',
+    'Wrong links cost a point and freeze the board — think first!',
   ],
   controls: { keys: 'Click a left word, then a right word (or 1–5 then Q–T)', touch: 'Tap a left word, then its match' },
   durationMs: 40000,
@@ -105,6 +105,7 @@ export const linkUp: MinigameDef = {
         paint(a, 'bad')
         paint(n, 'bad')
         Sfx.wrong()
+        ctx.addScore(-1, (a.x + n.x) / 2, (a.y + n.y) / 2 - 30)
         const left = a.side === 'L' ? a : n
         ctx.recordWord(words[left.pair].word, false, `${words[left.pair].word} means “${words[left.pair].definition}”`)
         // Guess-spamming shouldn't pay: a wrong link freezes the board briefly, with a visible ✗.
@@ -113,7 +114,7 @@ export const linkUp: MinigameDef = {
         }).setOrigin(0.5)
         root.add(mark)
         objs.push(mark)
-        ctx.after(900, () => {
+        ctx.after(1500, () => {
           mark.destroy()
           paint(a, 'idle')
           paint(n, 'idle')

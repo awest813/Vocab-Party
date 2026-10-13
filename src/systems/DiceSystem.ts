@@ -2,7 +2,7 @@ export function rollDice(sides = 6): number {
   return Math.floor(Math.random() * sides) + 1
 }
 
-/** Mario Party–style "block" die — small movement, big swings. */
+/** Small 1–3 roll used by the Dash card's bonus move. */
 export function rollBlockDie(): number {
   return rollDice(3)
 }
@@ -23,28 +23,28 @@ export interface DieDef {
 
 const f = (move: number, coins?: number): DieFace => (coins ? { move, coins } : { move })
 
-/** The standard block die everyone can use (1–3, average 2). */
+/** The standard die everyone can use (1–6, average 3.5). */
 export const STANDARD_DIE: DieDef = {
   name: 'Block',
   emoji: '🎲',
-  faces: [f(1), f(2), f(3), f(1), f(2), f(3)],
-  hint: 'Reliable 1–3.',
+  faces: [f(1), f(2), f(3), f(4), f(5), f(6)],
+  hint: 'Classic 1–6.',
 }
 
 /**
- * Character dice (Super Mario Party style). Every die averages about 2 spaces so
- * none is strictly better — they trade reliability for range or coins.
+ * Character dice (Super Mario Party style). They trade reliability for range or coins and are
+ * tuned by simulation so each wins about as often as the standard die (avg move 3.3–3.8).
  * Indexed like CHARACTER_DEFS.
  */
 export const CHARACTER_DICE: DieDef[] = [
-  { name: 'Lucky Block', emoji: '🎉', faces: [f(0, 3), f(1), f(2), f(2), f(3), f(4)], hint: 'Anything can happen — even a 4.' },
-  { name: 'Arcane Block', emoji: '🧙', faces: [f(0, 2), f(1), f(1), f(3), f(3), f(4)], hint: 'Low or high, rarely in between.' },
-  { name: 'Steady Block', emoji: '🛡️', faces: [f(1), f(2), f(2), f(2), f(2), f(3)], hint: 'Almost always 2. Plan your landing.' },
-  { name: 'Plunder Block', emoji: '🏴‍☠️', faces: [f(0, 4), f(0, 4), f(2), f(3), f(3), f(4)], hint: 'Stay and loot 4 coins, or sail far.' },
-  { name: 'Shadow Block', emoji: '🥷', faces: [f(0, -2), f(0, -2), f(0, 2), f(4), f(4), f(4)], hint: 'All or nothing: 4 spaces or none.' },
-  { name: 'Trail Block', emoji: '🏹', faces: [f(1, 2), f(1, 2), f(2), f(2), f(3), f(3)], hint: 'Short steps pay 2 coins.' },
-  { name: 'Calibrated Block', emoji: '🤖', faces: [f(1), f(1), f(1), f(3), f(3), f(3)], hint: 'Exactly 1 or exactly 3.' },
-  { name: 'Royal Block', emoji: '👑', faces: [f(1, 2), f(1, 2), f(2), f(2), f(2), f(4)], hint: 'Coins on 1s, and a royal 4.' },
+  { name: 'Lucky Block', emoji: '🎉', faces: [f(0, 4), f(2, 1), f(3), f(4), f(5), f(7)], hint: 'Anything can happen — even a 7.' },
+  { name: 'Arcane Block', emoji: '🧙', faces: [f(0, 3), f(1, 1), f(2), f(5), f(6), f(7)], hint: 'Low or high, rarely in between.' },
+  { name: 'Steady Block', emoji: '🛡️', faces: [f(3), f(3), f(3), f(4), f(4), f(4)], hint: 'Always 3 or 4. Plan your landing.' },
+  { name: 'Plunder Block', emoji: '🏴‍☠️', faces: [f(0, 5), f(2, 2), f(3), f(5), f(6), f(6)], hint: 'Stay and loot 5 coins, or sail far.' },
+  { name: 'Shadow Block', emoji: '🥷', faces: [f(0, 4), f(2, 1), f(4), f(5), f(5), f(6)], hint: 'Lie low for coins, then strike far.' },
+  { name: 'Trail Block', emoji: '🏹', faces: [f(2, 1), f(2, 1), f(3), f(4), f(5), f(5)], hint: 'Short steps pay a coin.' },
+  { name: 'Calibrated Block', emoji: '🤖', faces: [f(2), f(2), f(2), f(5), f(5), f(5)], hint: 'Exactly 2 or exactly 5.' },
+  { name: 'Royal Block', emoji: '👑', faces: [f(1, 2), f(2, 1), f(3), f(4), f(4), f(6)], hint: 'Coins on low rolls, never a zero.' },
 ]
 
 export function characterDie(characterIndex: number): DieDef {

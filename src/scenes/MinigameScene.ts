@@ -88,6 +88,8 @@ export class MinigameScene extends Phaser.Scene {
   private def!: MinigameDef
   private bank!: ContentBank
   private scores: Record<number, number> = {}
+  /** When each player last raised their score (ms into their round) — breaks score ties. */
+  private reachedAt: Record<number, number> = {}
   private study: Record<number, StudyEntry[]> = {}
   private keyHandlers: ((ev: KeyboardEvent) => boolean | void)[] = []
   private keyListener?: (ev: KeyboardEvent) => void
@@ -110,6 +112,7 @@ export class MinigameScene extends Phaser.Scene {
   create(data: MinigameSceneData) {
     this.data_ = data
     this.scores = {}
+    this.reachedAt = {}
     this.study = {}
     this.keyHandlers = []
     this.timers = []
@@ -642,6 +645,7 @@ export class MinigameScene extends Phaser.Scene {
         if (!this.running) return
         const before = this.scores[player.id]
         this.scores[player.id] = Math.max(0, before + delta)
+        if (this.scores[player.id] > before) this.reachedAt[player.id] = this.elapsed
         const s = String(this.scores[player.id])
         this.liveScoreText?.setText(s)
         this.sidebarTexts.get(player.id)?.setText(s)
@@ -744,6 +748,7 @@ export class MinigameScene extends Phaser.Scene {
   private simulateAllCpu() {
     this.data_.participants.forEach(p => {
       this.scores[p.id] = cpuMinigameScore(this.def, p.cpuLevel)
+      this.reachedAt[p.id] = Math.random() * this.def.durationMs
     })
     this.clearAll()
     this.showResults()
@@ -752,18 +757,24 @@ export class MinigameScene extends Phaser.Scene {
   private finishRound() {
     // CPUs keep the scores their ghosts showed during the human turn(s).
     this.data_.participants.forEach(p => {
-      if (p.isCpu) this.scores[p.id] = this.ghostScores.get(p.id) ?? cpuMinigameScore(this.def, p.cpuLevel)
+      if (!p.isCpu) return
+      this.scores[p.id] = this.ghostScores.get(p.id) ?? cpuMinigameScore(this.def, p.cpuLevel)
+      const ghost = this.ghosts.find(g => g.id === p.id)
+      this.reachedAt[p.id] = ghost && this.scores[p.id] > 0 ? ghost.times[this.scores[p.id] - 1] ?? Infinity : Math.random() * this.def.durationMs
     })
     this.showResults()
   }
 
   private computeResult(): MinigameResult {
     const ps = this.data_.participants
-    const ranking = [...ps].sort((a, b) => (this.scores[b.id] ?? 0) - (this.scores[a.id] ?? 0)).map(p => p.id)
+    const score = (id: number) => this.scores[id] ?? 0
+    // Equal scores go to whoever got there first; only a dead heat on both shares a place.
+    const reached = (id: number) => (score(id) > 0 ? this.reachedAt[id] ?? Infinity : Infinity)
+    const ranking = [...ps].sort((a, b) => score(b.id) - score(a.id) || reached(a.id) - reached(b.id)).map(p => p.id)
     const placements: Record<number, number> = {}
     ranking.forEach((id, i) => {
       const prev = ranking[i - 1]
-      placements[id] = i > 0 && this.scores[prev] === this.scores[id] ? placements[prev] : i + 1
+      placements[id] = i > 0 && score(prev) === score(id) && reached(prev) === reached(id) ? placements[prev] : i + 1
     })
     return { gameId: this.def.id, scores: { ...this.scores }, placements, ranking, study: this.study }
   }
@@ -827,9 +838,18 @@ export class MinigameScene extends Phaser.Scene {
       row.add(this.add.text(110, -1, `${result.scores[p.id]} pts`, {
         fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 4,
       }).setOrigin(0.5))
-      const allTied = rows.every(r => result.placements[r.id] === 1)
+      // A tie on points that was broken by time gets a small note so the result doesn't look arbitrary.
+      const tiedOnPoints = rows.some(r => r.id !== p.id && result.scores[r.id] === result.scores[p.id])
+      if (tiedOnPoints && result.scores[p.id] > 0) {
+        const below = rows.slice(i + 1).some(r => result.scores[r.id] === result.scores[p.id])
+        if (below) {
+          row.add(this.add.text(110, 26, '⏱ got there first', {
+            fontSize: '13px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+          }).setOrigin(0.5))
+        }
+      }
       // The Rival Bot (negative id) never collects board rewards.
-      const reward = allTied && rows.length > 1 ? 'TIE' : p.id < 0 ? '' : this.data_.rewardLabels?.[place - 1]
+      const reward = p.id < 0 ? '' : this.data_.rewardLabels?.[place - 1]
       if (reward) {
         row.add(this.add.text(360, -1, reward, {
           fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 4,

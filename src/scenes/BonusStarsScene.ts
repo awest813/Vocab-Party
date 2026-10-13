@@ -20,7 +20,8 @@ interface AwardDef {
 const AWARDS: AwardDef[] = [
   { icon: '📚', title: 'WORD WIZARD', blurb: v => `Most questions answered correctly (${v})`, stat: p => p.stats.correctAnswers },
   { icon: '🎮', title: 'MINIGAME MASTER', blurb: v => `Most minigame victories (${v})`, stat: p => p.stats.minigameWins },
-  { icon: '🪙', title: 'COIN TYCOON', blurb: v => `Most coins held at once (${v})`, stat: p => p.stats.peakCoins },
+  // A board award balances the two skill awards: minigame winners already earn the most coins.
+  { icon: '🧭', title: 'EXPLORER', blurb: v => `Most spaces travelled (${v})`, stat: p => p.stats.spacesMoved ?? 0 },
 ]
 
 /** Compute and apply bonus trophies (ties all win). Idempotent per state. */

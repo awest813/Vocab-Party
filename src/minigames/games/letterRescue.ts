@@ -19,11 +19,11 @@ export const letterRescue: MinigameDef = {
   howTo: [
     'Read the clue and guess letters to reveal the hidden word.',
     'Each wrong letter pops a balloon — lose all six and the word escapes.',
-    'Solve it for +1 (long words +2). Fewer pops = bonus point!',
+    'Solve it for +1 (long words +2). Pop 1 balloon or fewer for +1 bonus!',
   ],
   controls: { keys: 'Type letters on your keyboard', touch: 'Tap the letter keys' },
   durationMs: 50000,
-  cpu: { easy: [2, 4], normal: [4, 7], hard: [7, 10] },
+  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 14] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let word!: LexWord

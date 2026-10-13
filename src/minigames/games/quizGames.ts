@@ -112,7 +112,7 @@ export const spellingBee: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 14] },
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 15] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const item = ctx.bank.draw('spelling', ctx.bank.spelling)
@@ -257,7 +257,7 @@ export const prefixFactory: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 13] },
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 15] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const a = ctx.bank.draw('affixes', ctx.bank.affixes)
@@ -309,7 +309,7 @@ export const grammarGauntlet: MinigameDef = {
   tagline: 'Commas, agreement, pronouns: pick the polished one.',
   howTo: [
     'Several versions of a sentence appear.',
-    'Choose the one that is written correctly.',
+    'Read the question carefully — some ask you to spot the mistake!',
     'Fewer questions, bigger brains.',
   ],
   controls: RAPID_CONTROLS,

@@ -57,16 +57,18 @@ const TILE_LABELS: Record<TileType, string> = {
 }
 
 const STAR_COST_COINS = 20
-const SHOP_PRICE_COINS = 8
-const SHOP_RENT_COINS = 3
-const SHOP_OWNER_INCOME = 2
+const SHOP_PRICE_COINS = 6
+const SHOP_RENT_COINS = 5
+const SHOP_OWNER_INCOME = 4
+/** Coins each owned shop pays its owner at the start of every round. */
+const SHOP_ROUND_DIVIDEND = 1
 const SHOP_PORTFOLIO_RENT_STEP = 2
 
 const SHOP_PORTFOLIO_INCOME_STEP = 1
 const BRICKS_FOR_BUILD_BONUS = 4
 const BUILD_BONUS_SCORE = 6
 const QUESTION_BASE_POINTS = 10
-const QUESTION_BASE_COINS = 3
+const QUESTION_BASE_COINS = 5
 const QUESTION_STREAK_THRESHOLD = 3
 const QUESTION_STREAK_BONUS_COINS = 4
 const TROPHIES_TO_WIN = 5
@@ -79,12 +81,12 @@ function hasSeenCoach(): boolean {
 function markCoachSeen(): void {
   try { localStorage.setItem(COACH_KEY, '1') } catch { /* ignore */ }
 }
-const LAST_STRETCH_BOOST = 10
+const LAST_STRETCH_BOOST = 15
 /** Party minigame coin payouts by place, keyed by participant count. */
 const PARTY_PAYOUTS: Record<number, number[]> = {
-  2: [10, 3],
-  3: [10, 5, 0],
-  4: [10, 5, 2, 0],
+  2: [6, 2],
+  3: [6, 3, 1],
+  4: [6, 4, 2, 1],
 }
 const PARTY_WIN_POINTS = 10
 const DUEL_STEAL = 6
@@ -920,13 +922,13 @@ export class BoardScene extends Phaser.Scene {
     player.dashActive = false
     if (hadSpeedBoost) player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
 
-    // Show the rolled face: pip texture for 1–6, big label for 0.
-    if (face.move >= 1) {
-      this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(6, face.move) - 1]).setAlpha(1)
+    // Show the rolled face: pip texture for 1–6, big label for 0 and 7+.
+    if (face.move >= 1 && face.move <= 6) {
+      this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face.move - 1]).setAlpha(1)
       this.dieFaceText?.setText('')
     } else {
       this.diceSprite.setAlpha(0.35)
-      this.dieFaceText?.setText('0')
+      this.dieFaceText?.setText(String(face.move))
     }
     if (face.coins) {
       player.coins = Math.max(0, player.coins + face.coins)
@@ -1004,6 +1006,7 @@ export class BoardScene extends Phaser.Scene {
 
       const prev = player.position
       player.position = chosenNextId
+      player.stats.spacesMoved = (player.stats.spacesMoved ?? 0) + 1
       if (prev > 0 && player.position === 0) {
         player.coins += 5
         this.showFloatyText(player, '+5 Lap Coins!', '#ffcc66')
@@ -1055,10 +1058,7 @@ export class BoardScene extends Phaser.Scene {
         const tile = this.tileImages.get(player.position)
         if (tile && !shouldReduceMotion()) this.tweens.add({ targets: tile, scale: tile.scale * 1.2, duration: 160, yoyo: true })
         if (player.isCpu) await new Promise(r => this.time.delayedCall(this.d(500), r))
-        if (await this.wantsStar(player, true)) {
-          this.buyStar(player)
-          await new Promise(r => this.time.delayedCall(this.d(1600), r))
-        } else {
+        if (await this.offerStars(player, true) === 0) {
           this.statusText.setText(`🏆 ${player.name} walks past the star.`)
         }
       }
@@ -1172,8 +1172,8 @@ export class BoardScene extends Phaser.Scene {
         break
       }
       case 'golden_key':
-        player.forcedMoveValue = 3
-        this.showFloatyText(player, '🔑 Next roll: 3', '#ffee44')
+        player.forcedMoveValue = 6
+        this.showFloatyText(player, '🔑 Next roll: 6', '#ffee44')
         break
     }
 
@@ -1281,11 +1281,12 @@ export class BoardScene extends Phaser.Scene {
                   : 0
                 const scoreGainRaw = QUESTION_BASE_POINTS + result.timeBonus
                 let scoreGain = scoreGainRaw
+                let coinGain = QUESTION_BASE_COINS + Math.floor(result.timeBonus / 2) + streakBonusCoins
                 if (player.doubleScoreActive) {
                   scoreGain *= 2
+                  coinGain *= 2
                   player.doubleScoreActive = false
                 }
-                const coinGain = QUESTION_BASE_COINS + Math.floor(result.timeBonus / 2) + streakBonusCoins
                 player.score += scoreGain
                 player.coins += coinGain
                 if (result.speedSurge) {
@@ -1454,10 +1455,12 @@ export class BoardScene extends Phaser.Scene {
         const defender = otherOnTile
 
         if (result.winnerIndex === playerIndex) {
+          // The winner only takes what the loser actually had — no coins from thin air.
+          const coinsTaken = Math.min(defender.coins, result.coinsLost)
           attacker.score += result.scoreLost
-          attacker.coins += result.coinsLost
+          attacker.coins += coinsTaken
           defender.score = Math.max(0, defender.score - result.scoreLost)
-          defender.coins = Math.max(0, defender.coins - result.coinsLost)
+          defender.coins -= coinsTaken
           this.showFloatyText(attacker, `Win! +${result.scoreLost} pts`, '#44ff88')
           this.showFloatyText(defender, `Loss! -${result.scoreLost} pts`, '#ff4444')
           this.showDamageNumber(defender, -result.scoreLost, 'pts')
@@ -1728,7 +1731,23 @@ export class BoardScene extends Phaser.Scene {
   }
 
   /** Ask (human) or decide (CPU) whether to buy a star now. Only called when affordable. */
-  private async wantsStar(player: Player, passing: boolean): Promise<boolean> {
+  /**
+   * Offer stars until the player stops or runs short — a rich player can buy several in one visit,
+   * which keeps hoarded coins meaningful. Returns how many were bought.
+   */
+  private async offerStars(player: Player, passing: boolean): Promise<number> {
+    let bought = 0
+    while (player.coins >= STAR_COST_COINS && player.trophies < TROPHIES_TO_WIN) {
+      if (player.isCpu) await new Promise(r => this.time.delayedCall(this.d(bought > 0 ? 400 : 0), r))
+      if (!(await this.wantsStar(player, passing, bought > 0))) break
+      this.buyStar(player)
+      bought++
+      await new Promise(r => this.time.delayedCall(this.d(1600), r))
+    }
+    return bought
+  }
+
+  private async wantsStar(player: Player, passing: boolean, again = false): Promise<boolean> {
     if (player.isCpu) {
       return cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
         round: this.state.round,
@@ -1738,7 +1757,9 @@ export class BoardScene extends Phaser.Scene {
       })
     }
     return this.promptBinaryChoice(
-      `${passing ? 'Passing a Star! ' : ''}Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
+      again
+        ? `Buy another Star Trophy for ${STAR_COST_COINS} coins? (you have ${player.coins})`
+        : `${passing ? 'Passing a Star! ' : ''}Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
       `BUY (${STAR_COST_COINS}🪙)`,
       'PASS'
     )
@@ -1763,8 +1784,8 @@ export class BoardScene extends Phaser.Scene {
       player.coins += 2
       this.statusText.setText(`🏆 Save up! Stars cost ${STAR_COST_COINS} coins.`)
       this.showFloatyText(player, '+2 pity coins', '#aaccff')
-    } else if (await this.wantsStar(player, false)) {
-      this.buyStar(player)
+    } else if (await this.offerStars(player, false) > 0) {
+      // Bought — the splash already played.
     } else {
       this.statusText.setText(`🏆 ${player.name} saves coins for later.`)
       this.showFloatyText(player, 'Saving up…', '#aaccff')
@@ -2007,6 +2028,7 @@ export class BoardScene extends Phaser.Scene {
     this.state.currentPlayer = (this.state.currentPlayer + 1) % this.state.players.length
     if (this.state.currentPlayer === 0) {
       this.state.round++
+      this.payShopDividends()
       // Rounds remaining including the one starting now.
       const roundsLeft = this.roundsPerGame - this.state.round + 1
       if (!this.state.lastStretchDone && this.state.round >= this.lastStretchStartRound()) {
@@ -2021,6 +2043,17 @@ export class BoardScene extends Phaser.Scene {
       }
     }
     this.updateStatus()
+  }
+
+  /** Owned shops pay their owner a little every round, so a shop is an investment, not a gamble. */
+  private payShopDividends() {
+    for (const p of this.state.players) {
+      const owned = this.countOwnedShops(p.id)
+      if (owned === 0) continue
+      p.coins += owned * SHOP_ROUND_DIVIDEND
+      this.showFloatyText(p, `🏪 +${owned * SHOP_ROUND_DIVIDEND} 🪙 shop income`, '#ffd24a')
+    }
+    this.hud.update(this.state)
   }
 
   private goToResults(earlyWin: boolean) {

@@ -66,7 +66,7 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     shopBuyChance: 0.62,
     starBuyThreshold: 0.62,
     coinReserve: 10,
-    preferredItems: ['shield', 'double_score', 'dash', 'golden_key', 'poison_dart', 'swap', 'warp'],
+    preferredItems: ['shield', 'double_score', 'golden_key', 'dash', 'poison_dart', 'swap', 'warp'],
     roundBonus: 0.015,
     smartChance: 0.72,
     branchLookahead: 4
@@ -97,7 +97,7 @@ export function cpuPolicyForLevel(level: CpuLevel | undefined): CpuLevelProfile 
  * Returns the effective question correct chance for a CPU at a given round.
  * Caps at 0.95 to keep some challenge.
  */
-const ACCURACY_CAP: Record<CpuLevel, number> = { easy: 0.55, normal: 0.75, hard: 0.88 }
+const ACCURACY_CAP: Record<CpuLevel, number> = { easy: 0.55, normal: 0.75, hard: 0.82 }
 
 /**
  * Effective question accuracy: CPUs warm up a little over the game, based on progress through
@@ -166,7 +166,8 @@ export type CpuBoardContext = {
 }
 
 /** Golden Key forces a roll of exactly 3. */
-const GOLDEN_KEY_STEPS = 3
+/** The Golden Key fixes the next roll at 6 (the standard die's max). */
+const GOLDEN_KEY_STEPS = 6
 const DEFAULT_STAR_COST = 20
 const DEFAULT_SHOP_PRICE = 8
 
@@ -264,8 +265,9 @@ export function cpuChooseItem(
   const canAffordStar = coins >= starCost
   // Real path distance to the nearest star (a star you're standing on doesn't count).
   const starDist = stepsToNearest(next, position, stars)
-  // Golden Key lands exactly 3 steps ahead — only worth it if that IS a star and we can pay.
-  const keyLandsOnStar = [...nodesAfterExactly(next, position, GOLDEN_KEY_STEPS)].some(id => stars.has(id))
+  // Stars can be bought in passing, so the key pays off when a star is 4–6 steps out: a normal
+  // roll might fall short, a guaranteed 6 can't.
+  const keyReachesStar = starDist >= 4 && starDist <= GOLDEN_KEY_STEPS
   const nearStar = starDist <= 6
   const behind = rankAmongPlayers > 1 || isLastPlace
   const leading = rankAmongPlayers === 0
@@ -286,14 +288,14 @@ export function cpuChooseItem(
     if (idx >= 0 && value > 0) scored.push({ idx, score: value })
   }
 
-  // Golden Key: guaranteed 3 — use it when that lands exactly on a star we can afford.
-  if (keyLandsOnStar && canAffordStar) push('golden_key', 110)
+  // Golden Key: guaranteed 6 — use it when that's what it takes to reach a star we can afford.
+  if (keyReachesStar && canAffordStar) push('golden_key', 110)
 
   // Shield / Double: pointless while one is already active.
+  // A shield only protects once it's raised, so a CPU holding one raises it.
   if (!ctx?.shieldActive) {
     if (lowOnCoins) push('shield', 72)
-    else if (pressure > 0.7 && coins < 14) push('shield', 55)
-    else if (coins < 12 && Math.random() < 0.25) push('shield', 30)
+    else push('shield', 50)
   }
   if (!ctx?.doubleScoreActive) {
     if (trophies >= 3) push('double_score', 85)
@@ -301,10 +303,10 @@ export function cpuChooseItem(
     else if (score > 12) push('double_score', 45)
   }
 
-  // Dash (2–6 steps): useful when the star is too far for one die, never when it's 1–3 away.
-  if (starDist >= 4 && starDist <= 6 && canAffordStar) push('dash', 80)
-  else if (behind && starDist > 6) push('dash', 62)
-  else if (!leading && starDist > 6 && Math.random() < 0.2) push('dash', 28)
+  // Dash (+1–3 steps): useful when a star is just past one die's reach.
+  if (starDist >= 6 && starDist <= 9 && canAffordStar) push('dash', 80)
+  else if (behind && starDist > 9) push('dash', 62)
+  else if (!leading && starDist > 9 && Math.random() < 0.2) push('dash', 28)
 
   // Swap: last place / far behind — hope for a better tile
   if (isLastPlace && starDist > 8) push('swap', 68)
@@ -668,9 +670,9 @@ export function cpuChooseItemToBuy(
 
   if (affordable.length === 0) return null
 
-  // Avoid stacking duplicates unless hard and it's golden_key/shield
-  const fresh = affordable.filter(a => !inventory.includes(a.type as never) || a.type === 'shield' || a.type === 'dash')
-  const pool = fresh.length > 0 ? fresh : affordable
+  // Never stack duplicates (a second shield or key just sits in the bag); dashes are cheap enough to double up.
+  const pool = affordable.filter(a => !inventory.includes(a.type as never) || a.type === 'dash')
+  if (pool.length === 0) return null
 
   for (const pref of p.preferredItems) {
     const hit = pool.find(a => a.type === pref)

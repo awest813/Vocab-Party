@@ -24,7 +24,7 @@ export const wordRacer: MinigameDef = {
   howTo: [
     'Read the definition and type the word — the first letter is free.',
     'Wrong letters bounce off (and slow you down). Finish the word to boost!',
-    'Stuck? Hints reveal letters (💡 or Enter). Tab skips and shows the answer.',
+    'Stuck? Hints reveal letters (💡 or Enter) — lean on them too much and the word scores nothing. Tab skips.',
   ],
   controls: { keys: 'Type letters · Enter = hint · Tab = skip', touch: 'Tap letters · 💡 hint · ⏭ skip' },
   durationMs: 45000,
@@ -39,6 +39,9 @@ export const wordRacer: MinigameDef = {
     let wordObjs: Phaser.GameObjects.GameObject[] = []
     /** Letters revealed by hints (typed for the player). */
     let hinted = 0
+    /** How many letters hints gave away on this word (manual or automatic). */
+    let hintCount = 0
+    let lastHintAt = -Infinity
     let wordStartedAt = 0
     let lastProgressAt = 0
     let lockUntil = 0
@@ -176,6 +179,7 @@ export const wordRacer: MinigameDef = {
       wordObjs = []
       busy = false
       hinted = 0
+      hintCount = 0
       word = ctx.bank.word(w => w.word.length >= 4 && w.word.length <= 10 && /^[a-z]+$/.test(w.word), 'racer')
       typed = word.word[0]
       wordStartedAt = elapsed
@@ -205,8 +209,14 @@ export const wordRacer: MinigameDef = {
     const complete = () => {
       busy = true
       Sfx.correct()
-      myScore++
-      ctx.addScore(1, me.c.x, me.c.y - 30)
+      // A word mostly spelled by hints is practice, not a point — otherwise Enter-spam wins races.
+      const earned = hintCount * 2 < word.word.length
+      if (earned) {
+        myScore++
+        ctx.addScore(1, me.c.x, me.c.y - 30)
+      } else {
+        callout(0, '💡 Hint-built — no point', '#ffd24a')
+      }
       // Solving with hints still counts, but the Word Book notes it as practice.
       ctx.recordWord(word.word, hinted === 0, word.definition)
       moveKart(me, myScore)
@@ -222,8 +232,13 @@ export const wordRacer: MinigameDef = {
     }
 
     /** Reveal the next letter (button, Enter, or automatically when stuck). */
-    const hint = () => {
+    const hint = (manual = true) => {
       if (busy || ctx.isOver()) return
+      // Give the player a real try first, and rate-limit manual hints.
+      if (manual && (elapsed - wordStartedAt < 2500 || elapsed - lastHintAt < 1200)) {
+        Sfx.clunk()
+        return
+      }
       if (typed.length >= word.word.length - 1) {
         // Hints never give away the final letter.
         lastProgressAt = elapsed
@@ -237,6 +252,8 @@ export const wordRacer: MinigameDef = {
       }
       typed += word.word[typed.length]
       hinted = typed.length
+      hintCount++
+      lastHintAt = elapsed
       lastProgressAt = elapsed
       Sfx.uiToggle()
       renderInput()
@@ -312,7 +329,7 @@ export const wordRacer: MinigameDef = {
         x += keyW + 6
       })
       if (r === 1) makeKey('⌫', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, backspace, 0x3a2a40)
-      if (r === 2) makeKey('💡', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, hint, 0x5a4a10)
+      if (r === 2) makeKey('💡', x + keyW * 0.75, kbTop + keyH / 2 + r * (keyH + 6), keyW * 1.5, () => hint(), 0x5a4a10)
     })
 
     ctx.onKey(ev => {
@@ -344,7 +361,7 @@ export const wordRacer: MinigameDef = {
           pendingCallout = null
         }
         // Stuck for a while? A free letter keeps the race moving.
-        if (!busy && elapsed - lastProgressAt > 7000) hint()
+        if (!busy && elapsed - lastProgressAt > 7000) hint(false)
       },
       stop() { busy = true },
     }

@@ -57,7 +57,7 @@ export const whackAWord: MinigameDef = {
   ],
   controls: { keys: 'Click · or Q W E / A S D / Z X C (numpad 1–9 too)', touch: 'Tap the words' },
   durationMs: 30000,
-  cpu: { easy: [5, 9], normal: [8, 12], hard: [11, 16] },
+  cpu: { easy: [5, 9], normal: [8, 12], hard: [13, 19] },
   start(ctx) {
     const { scene, root, area } = ctx
     let targetPos: PartOfSpeech = Phaser.Utils.Array.GetRandom(POS_LIST) as PartOfSpeech
@@ -350,7 +350,8 @@ export const wordSorter: MinigameDef = {
         drawBin(chosen.g, chosen.pos, 'good')
         ctx.addScore(1, binX(i), binY - 90)
         if (streak % 5 === 0) {
-          ctx.after(100, () => ctx.addScore(1, binX(i) + 60, binY - 120))
+          // Award now so the buzzer can't swallow it; only the flash is cosmetic.
+          ctx.addScore(1, binX(i) + 60, binY - 120)
           ctx.flash(`🔥 STREAK ×${streak}`, '#ffb84a')
         }
         ctx.recordWord(w.word, true, `${w.pos}: ${w.definition}`)

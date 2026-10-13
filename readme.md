@@ -50,7 +50,7 @@ npm run typecheck
    - **Words:** All levels, Starter (grades 3–5), Standard (6–8), or Challenge (9–12) — applies to board questions and every minigame
    - **Minigames:** every round (default), every other round, or duel tiles only
    - **Bonus Stars:** on/off
-2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher). Every character also has a **special die** (press **D** or tap the die to switch): e.g. 🛡️ Steady Block (almost always 2), 🥷 Shadow Block (0 or 4), 🏴‍☠️ Plunder Block (stay and loot coins, or sail far). All dice average 2 spaces.
+2. Click **ROLL** on your turn to roll the standard die (**1–6**; a Dash card adds 1–3 more). Every character also has a **special die** (press **D** or tap the die to switch): e.g. 🛡️ Steady Block (always 3 or 4), 🤖 Calibrated Block (2 or 5), 🏴‍☠️ Plunder Block (stay and loot 5 coins, or sail far). All dice average 3.5 spaces.
 3. Your token moves along the board. The tile you land on determines what happens:
 
 | Tile | Effect |
@@ -63,14 +63,14 @@ npm run typecheck
 | ❓ Mystery | Random effect: bonus, penalty, or extra roll |
 | 🕹️ Duel | Challenge a rival to a 1-on-1 minigame — winner steals up to 6 coins |
 | 🔄 Swap | Swap board positions with another player |
-| 🏪 Shop | Buy shops to collect rent (Buy/Pass prompt) |
-| 🏆 Star | Spend 20 coins for a trophy (+12 score). You can also buy one when you walk past a star tile; if you can't afford it, you get +2 pity coins |
+| 🏪 Shop | Buy for 6 coins: rivals who land pay you rent, and each shop pays you +1 coin every round |
+| 🏆 Star | Spend 20 coins for a trophy (+12 score). You can also buy when you walk past a star tile, and you can buy several in one visit if you can afford them; if you can't afford it, you get +2 pity coins |
 | 🧱 Brick | Collect pieces for build bonuses |
 | 🛍️ Item Shop | Pick a power-up card or pass |
 
 4. **Party minigames:** after every round, all players compete in a randomly chosen minigame (a roulette picks it). Placement pays coins: 1st +10, 2nd +5, 3rd +2. Several humans take turns on the same device (hot-seat); CPUs play alongside with live "ghost" scores.
 5. **Last Stretch:** in the final rounds, bonus and penalty tiles double and the last-place player gets a +10 coin comeback boost.
-6. **Bonus Stars:** when the rounds run out, three extra trophies are awarded — 📚 Word Wizard (most correct answers), 🎮 Minigame Master (most minigame wins), 🪙 Coin Tycoon (most coins held at once).
+6. **Bonus Stars:** when the rounds run out, three extra trophies are awarded — 📚 Word Wizard (most correct answers), 🎮 Minigame Master (most minigame wins), 🧭 Explorer (most spaces travelled).
 7. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
 8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
 9. Games **autosave** at the start of every turn — pick **Continue Party** on the main menu to resume.

@@ -34,7 +34,7 @@ export const sentenceScramble: MinigameDef = {
     'Tap the words in the right order to rebuild it.',
     'Long sentences (10+ words) are worth double.',
   ],
-  controls: { keys: 'Press each word’s letter key (or click) in order · Backspace undo · Space skip', touch: 'Tap words in order · ⌫ undo' },
+  controls: { keys: 'Press each word’s letter key (or click) in order · Backspace undo · Tab skip', touch: 'Tap words in order · ⌫ undo' },
   durationMs: 45000,
   cpu: { easy: [1, 3], normal: [3, 5], hard: [5, 7] },
   start(ctx) {
@@ -248,7 +248,7 @@ export const sentenceScramble: MinigameDef = {
 
     ctx.onKey(ev => {
       if (ev.key === 'Backspace') { undo(); return true }
-      if (ev.code === 'Space') { skip(); return true }
+      if (ev.code === 'Tab') { skip(); return true }
       const k = ev.key.toLowerCase()
       if (!ev.ctrlKey && !ev.metaKey && /^[a-z]$/.test(k)) {
         const tile = tiles.find(t => !t.used && t.key === k)

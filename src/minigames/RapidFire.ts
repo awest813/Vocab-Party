@@ -171,6 +171,8 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
       }
       if (q.word) ctx.recordWord(q.word, false, q.note)
       missRun++
+      // Three misses in a row looks like guessing: from then on each miss costs a point.
+      if (missRun >= 3) ctx.addScore(-1, tile.x, tile.y - 30)
       ctx.after(missPause + Math.min(2, missRun - 1) * 600, () => { clear(); show() })
     }
   }

@@ -63,17 +63,24 @@ export function pickPartyMinigame(): MinigameDef {
   const last = recent[recent.length - 1]
   // Never two quiz-style games back to back, so party rounds keep changing feel.
   const pool = MINIGAMES.filter(m => !recent.includes(m.id) && !(last && QUIZ_IDS.has(last) && QUIZ_IDS.has(m.id)))
-  const choice = pool[Math.floor(Math.random() * pool.length)] ?? MINIGAMES[0]
+  // Half the roster shares the quiz engine, so weight quizzes down to keep action games common.
+  const weightOf = (m: MinigameDef) => (QUIZ_IDS.has(m.id) ? 0.5 : 1)
+  let roll = Math.random() * pool.reduce((sum, m) => sum + weightOf(m), 0)
+  const choice = pool.find(m => (roll -= weightOf(m)) < 0) ?? pool[pool.length - 1] ?? MINIGAMES[0]
   recent.push(choice.id)
   while (recent.length > Math.min(6, MINIGAMES.length - 1)) recent.shift()
   return choice
 }
 
-/** Simulated CPU final score: uniform within the level range, with a light bell curve. */
+/**
+ * Simulated CPU final score: a bell curve centred on the level's range that spills past it on
+ * off days and hot streaks, so a Normal CPU can occasionally beat a Hard one.
+ */
 export function cpuMinigameScore(def: MinigameDef, level: CpuLevel): number {
   const [lo, hi] = def.cpu[level]
-  const r = (Math.random() + Math.random()) / 2
-  return Math.round(lo + r * (hi - lo))
+  const spread = (hi - lo) / 2
+  const r = (Math.random() + Math.random() + Math.random()) / 3
+  return Math.max(0, Math.round(lo - spread + r * (hi - lo + spread * 2)))
 }
 
 const BEST_KEY = 'vocab-party-bests'
