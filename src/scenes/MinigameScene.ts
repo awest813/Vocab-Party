@@ -655,7 +655,7 @@ export class MinigameScene extends Phaser.Scene {
           let score: number | null = null
           if (r.isCpu) {
             const g = this.ghosts.find(x => x.id === r.id)
-            score = g ? this.ghostShown(g) : 0
+            score = g ? this.ghostShown(g) : null
           } else if (this.playedIds.has(r.id)) {
             score = this.scores[r.id] ?? 0
           }

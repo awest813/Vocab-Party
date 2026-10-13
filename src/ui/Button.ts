@@ -64,12 +64,9 @@ export function createButton(
   const hit = scene.add.rectangle(0, 0, width, height, 0x000000, 0.001)
   hit.setInteractive({
     useHandCursor: true,
-    hitArea: new Phaser.Geom.Rectangle(
-      -width / 2 - hitPad,
-      -height / 2 - hitPad,
-      width + hitPad * 2,
-      height + hitPad * 2
-    ),
+    // Hit areas are measured from the hit rectangle's top-left corner (Phaser adds displayOrigin),
+    // so the padded area starts at -hitPad, not -width/2 - hitPad.
+    hitArea: new Phaser.Geom.Rectangle(-hitPad, -hitPad, width + hitPad * 2, height + hitPad * 2),
     hitAreaCallback: Phaser.Geom.Rectangle.Contains,
   })
 
@@ -94,12 +91,7 @@ export function createButton(
   const enableHit = () => {
     hit.setInteractive({
       useHandCursor: true,
-      hitArea: new Phaser.Geom.Rectangle(
-        -width / 2 - hitPad,
-        -height / 2 - hitPad,
-        width + hitPad * 2,
-        height + hitPad * 2
-      ),
+      hitArea: new Phaser.Geom.Rectangle(-hitPad, -hitPad, width + hitPad * 2, height + hitPad * 2),
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
     })
   }

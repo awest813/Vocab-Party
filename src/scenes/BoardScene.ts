@@ -962,6 +962,8 @@ export class BoardScene extends Phaser.Scene {
           chosenNextId = options[idx]
           this.statusText.setText(`${player.emoji} ${player.name} picks a path…`)
         } else {
+          this.stepBubble?.destroy()
+          this.stepBubble = undefined
           chosenNextId = await this.promptForBranch(player, options)
         }
       } else {
@@ -1003,6 +1005,7 @@ export class BoardScene extends Phaser.Scene {
           onUpdate: tw => {
             const k = tw.getValue() ?? 0
             token.setPosition(fromX + (toX - fromX) * k, fromY + (toY - fromY) * k - Math.sin(Math.PI * k) * hop)
+            this.stepBubble?.setPosition(token.x, token.y - 52)
           },
           onComplete: () => {
             token.setPosition(toX, toY)

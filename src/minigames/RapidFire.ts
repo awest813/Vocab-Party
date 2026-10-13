@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { Sfx } from '../systems/Sfx'
 import { FONT, hexColor } from '../ui/Theme'
 import type { MinigameContext, MinigameInstance } from './types'
-import { createChoiceTile, drawCard, KEY_TO_INDEX, type ChoiceTile } from './ui'
+import { choiceFontPx, createChoiceTile, drawCard, KEY_TO_INDEX, type ChoiceTile } from './ui'
 
 export interface RapidQuestion {
   /** Small label above the prompt, e.g. "WHAT DOES IT MEAN?" */
@@ -91,6 +91,8 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
     }
 
     const tiles: ChoiceTile[] = []
+    // One font size per question, sized for its longest answer, so tiles look uniform.
+    const fontPx = choiceFontPx(Math.max(...q.choices.map(c => c.length)))
     const startY = cardY + cardH / 2 + 26
     const n = q.choices.length
     q.choices.forEach((choice, i) => {
@@ -109,7 +111,7 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
         if (n === 3 && i === 2) x = area.cx
         y = startY + h / 2 + row * (h + 16)
       }
-      const tile = createChoiceTile(scene, x, y, w, h, choice, String(i + 1), accent, () => pick(i))
+      const tile = createChoiceTile(scene, x, y, w, h, choice, String(i + 1), accent, () => pick(i), fontPx)
       tile.choiceIndex = i
       root.add(tile)
       tiles.push(tile)

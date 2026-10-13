@@ -93,9 +93,10 @@ export const wordRacer: MinigameDef = {
       c.add(g)
       const tex = characterTextureKey(characterIndex)
       if (characterIndex >= 0 && scene.textures.exists(tex)) c.add(scene.add.image(-2, -16, tex).setDisplaySize(26, 32))
-      c.add(scene.add.text(-40, 0, label, {
-        fontSize: '12px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(1, 0.5))
+      // Name rides on the kart's bumper so it never leaves the track.
+      c.add(scene.add.text(-2, 2, label, {
+        fontSize: '10px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+      }).setOrigin(0.5))
       root.add(c)
       return { c, laneY, shown: 0 }
     }
@@ -168,7 +169,9 @@ export const wordRacer: MinigameDef = {
         ctx.after(350, nextWord)
       } else {
         Sfx.wrong()
-        if (!ctx.reduceMotion) scene.tweens.add({ targets: inputText, x: inputText.x + 8, duration: 40, yoyo: true, repeat: 3 })
+        scene.tweens.killTweensOf(inputText)
+        inputText.x = area.cx
+        if (!ctx.reduceMotion) scene.tweens.add({ targets: inputText, x: area.cx + 8, duration: 40, yoyo: true, repeat: 3 })
         typed = ''
         renderInput()
       }

@@ -666,7 +666,7 @@ export class SetupScene extends Phaser.Scene {
     }).setOrigin(0, 0.5)
     cpuToggle.setInteractive({
       useHandCursor: true,
-      hitArea: new Phaser.Geom.Rectangle(-8, -18, 168, 36),
+      hitArea: new Phaser.Geom.Rectangle(-8, -4, 168, 36),
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
     })
     cpuToggle.on('pointerdown', () => {
@@ -768,7 +768,7 @@ export class SetupScene extends Phaser.Scene {
         if (enabled) {
           cpuT.setInteractive({
             useHandCursor: true,
-            hitArea: new Phaser.Geom.Rectangle(-8, -18, 168, 36),
+            hitArea: new Phaser.Geom.Rectangle(-8, -4, 168, 36),
             hitAreaCallback: Phaser.Geom.Rectangle.Contains,
           })
         } else {

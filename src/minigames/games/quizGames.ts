@@ -149,7 +149,9 @@ export const antonymAttack: MinigameDef = {
       }
       const w = ctx.bank.word(x => x.antonyms.length > 0, 'antonym')
       const trap = pickDistinct(w.synonyms, 1)
-      const filler = ctx.bank.unrelatedTo(w, 3 - trap.length).map(o => o.word)
+      // Same part of speech, so fillers can't be ruled out on grammar alone.
+      const samePos = ctx.bank.unrelatedTo(w, 3 - trap.length, x => x.pos === w.pos && !w.antonyms.includes(x.word))
+      const filler = (samePos.length === 3 - trap.length ? samePos : ctx.bank.unrelatedTo(w, 3 - trap.length)).map(o => o.word)
       return {
         kicker: 'OPPOSITE OF…',
         prompt: w.word.toUpperCase(),

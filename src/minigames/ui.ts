@@ -31,6 +31,8 @@ export function createChoiceTile(
   badge: string,
   accent: number,
   onPick: () => void,
+  /** Force a font size (so every answer in a question matches). */
+  fontPx?: number,
 ): ChoiceTile {
   const c = scene.add.container(x, y) as ChoiceTile
   const g = scene.add.graphics()
@@ -59,9 +61,8 @@ export function createChoiceTile(
     fontSize: '16px', fontFamily: FONT.display, color: '#0a101c',
   }).setOrigin(0.5)
 
-  const long = label.length > 46
   const text = scene.add.text(14, 0, label, {
-    fontSize: long ? '17px' : label.length > 26 ? '20px' : '24px',
+    fontSize: `${fontPx ?? choiceFontPx(label.length)}px`,
     fontFamily: FONT.display,
     color: '#ffffff',
     align: 'center',
@@ -89,6 +90,11 @@ export function createChoiceTile(
   }
   draw()
   return c
+}
+
+/** Font size that fits a choice label of this length in a standard tile. */
+export function choiceFontPx(length: number): number {
+  return length > 46 ? 18 : length > 26 ? 20 : 24
 }
 
 /** Floating "+1" style popup. */
@@ -122,10 +128,11 @@ export function drawCard(
   g.fillRoundedRect(-width / 2 + 3, -height / 2 + 7, width, height, 20)
   // Accent cap: a rounded-top band, then the body drawn over all but its top 8px.
   // (A 20px corner radius on an 8px-tall rect renders far too tall in Phaser.)
+  const r = Math.min(20, (height - 8) / 2)
   g.fillStyle(accent, 0.9)
-  g.fillRoundedRect(-width / 2, -height / 2, width, 40, { tl: 20, tr: 20, bl: 0, br: 0 })
+  g.fillRoundedRect(-width / 2, -height / 2, width, Math.min(40, height), { tl: r, tr: r, bl: 0, br: 0 })
   g.fillStyle(fill, 0.96)
-  g.fillRoundedRect(-width / 2, -height / 2 + 8, width, height - 8, { tl: 0, tr: 0, bl: 20, br: 20 })
+  g.fillRoundedRect(-width / 2, -height / 2 + 8, width, height - 8, { tl: 0, tr: 0, bl: r, br: r })
   g.lineStyle(2.5, accent, 0.55)
   g.strokeRoundedRect(-width / 2 + 1, -height / 2 + 1, width - 2, height - 2, 20)
   return g
