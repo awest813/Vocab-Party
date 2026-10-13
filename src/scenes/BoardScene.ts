@@ -68,6 +68,15 @@ const QUESTION_BASE_COINS = 3
 const QUESTION_STREAK_THRESHOLD = 3
 const QUESTION_STREAK_BONUS_COINS = 4
 const TROPHIES_TO_WIN = 5
+const COACH_KEY = 'vocab-party-coach-seen'
+
+function hasSeenCoach(): boolean {
+  try { return localStorage.getItem(COACH_KEY) === '1' } catch { return true }
+}
+
+function markCoachSeen(): void {
+  try { localStorage.setItem(COACH_KEY, '1') } catch { /* ignore */ }
+}
 const LAST_STRETCH_BOOST = 10
 /** Party minigame coin payouts by place, keyed by participant count. */
 const PARTY_PAYOUTS: Record<number, number[]> = {
@@ -310,6 +319,52 @@ export class BoardScene extends Phaser.Scene {
     void this.openingSequence(Boolean(resumed))
   }
 
+  /** First-party primer: the core loop in five lines, shown once per device. */
+  private showCoachCard(): Promise<void> {
+    return new Promise(resolve => {
+      const w = this.scale.width
+      const h = this.scale.height
+      const c = this.add.container(w / 2, h / 2).setDepth(DEPTH.banner + 5)
+      const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.6).setInteractive()
+      const g = this.add.graphics()
+      g.fillStyle(COLORS.bgPanel, 0.98)
+      g.fillRoundedRect(-330, -220, 660, 440, 20)
+      g.lineStyle(3, COLORS.gold, 0.8)
+      g.strokeRoundedRect(-330, -220, 660, 440, 20)
+      c.add([dim, g])
+      c.add(this.add.text(0, -180, 'HOW A PARTY WORKS', {
+        fontSize: '30px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 5,
+      }).setOrigin(0.5))
+      const tips = [
+        `🎲  Roll and move — ${isTouchPreferred(this.sys.game) ? 'tap ROLL' : 'press Space or click ROLL'}`,
+        '📖  Land on tiles: answer questions, shop, duel, and more',
+        '🌟  Reach a ⭐ Star tile with 20 coins to buy a 🏆 trophy',
+        this.state.options.minigames === 'tiles'
+          ? '🕹️  Land on a Duel tile to challenge a rival to a minigame'
+          : `🎉  ${this.state.options.minigames === 'every' ? 'Every round' : 'Every other round'} ends in a vocab minigame — win coins!`,
+        `🏆  First to ${TROPHIES_TO_WIN} trophies (or most at the end) wins`,
+      ]
+      tips.forEach((t, i) => c.add(this.add.text(-290, -110 + i * 50, t, {
+        fontSize: '20px', fontFamily: FONT.body, color: '#ffffff', wordWrap: { width: 590 },
+      }).setOrigin(0, 0.5)))
+      const btn = createButton(this, 0, 168, "GOT IT — LET'S GO!", COLORS.party, COLORS.partyDeep, 320, 56)
+      c.add(btn)
+      let done = false
+      const close = () => {
+        if (done) return
+        done = true
+        markCoachSeen()
+        this.input.keyboard?.off('keydown', onKey)
+        c.destroy()
+        resolve()
+      }
+      const onKey = (ev: KeyboardEvent) => { if (ev.code === 'Enter' || ev.code === 'Space' || ev.code === 'Escape') close() }
+      btn.on('pointerdown', close)
+      this.time.delayedCall(400, () => this.input.keyboard?.on('keydown', onKey))
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', onKey))
+    })
+  }
+
   /** One-time "let's party" splash before the first turn. */
   private async openingSequence(resumed: boolean) {
     this.rolling = true
@@ -319,7 +374,8 @@ export class BoardScene extends Phaser.Scene {
     } else if (!isAutoSimMode()) {
       Sfx.splash()
       await this.showAnnouncement("🎉 LET'S PARTY! 🎉", hexColor(COLORS.gold))
-      await this.showAnnouncement(`First to ${TROPHIES_TO_WIN} 🏆 wins!`, hexColor(COLORS.sky))
+      if (this.state.players.some(p => !p.isCpu) && !hasSeenCoach()) await this.showCoachCard()
+      else await this.showAnnouncement(`First to ${TROPHIES_TO_WIN} 🏆 wins!`, hexColor(COLORS.sky))
     }
     this.rolling = false
     this.updateStatus()
