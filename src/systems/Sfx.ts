@@ -218,6 +218,13 @@ class SfxSystem {
     else this.noiseBurst(0.03, 0.035, 7000)
   }
 
+  /** Board step blip; pitch rises as the remaining steps run down. */
+  boardStep(remaining: number) {
+    if (this.sfxGain() <= 0) return
+    const freq = 520 + Math.max(0, 6 - remaining) * 60
+    this.tone({ freq, type: 'triangle', duration: 0.07, gain: 0.07 })
+  }
+
   /** Muted "clunk" for a missed or wrong rhythm note. */
   clunk() {
     this.unlock()

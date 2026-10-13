@@ -200,6 +200,7 @@ export class BoardScene extends Phaser.Scene {
     this.turnGlowTween = undefined
     this._shakeTokenContainer = null
     this.coachOpen = false
+    this.stepBubble = undefined
 
     const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
     const emojis = data?.playerEmojis ?? ['🎉', '🧙', '🛡️', '🏴‍☠️']
@@ -985,17 +986,34 @@ export class BoardScene extends Phaser.Scene {
         this.time.delayedCall(200, () => dust.destroy())
       }
 
+      // Hop along an arc to the next tile, counting down the remaining steps.
+      const remaining = steps - s - 1
+      Sfx.boardStep(remaining)
+      const fromX = token.x
+      const fromY = token.y
+      const toX = x + off.x
+      const toY = y + off.y
+      const hop = shouldReduceMotion() ? 0 : 22
       await new Promise<void>(res => {
-        this.tweens.add({
-          targets: token,
-          x: x + off.x,
-          y: y + off.y,
-          duration: isAutoSimMode() ? 28 : 180,
-          ease: 'Cubic.easeOut',
-          onComplete: () => res()
+        this.tweens.addCounter({
+          from: 0,
+          to: 1,
+          duration: isAutoSimMode() ? 28 : 200,
+          ease: 'Sine.easeInOut',
+          onUpdate: tw => {
+            const k = tw.getValue() ?? 0
+            token.setPosition(fromX + (toX - fromX) * k, fromY + (toY - fromY) * k - Math.sin(Math.PI * k) * hop)
+          },
+          onComplete: () => {
+            token.setPosition(toX, toY)
+            res()
+          },
         })
       })
+      this.showStepsLeft(token, remaining)
     }
+    this.stepBubble?.destroy()
+    this.stepBubble = undefined
 
     if (!shouldReduceMotion()) this.cameras.main.shake(100, 0.005)
     
@@ -2327,6 +2345,26 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private coachOpen = false
+  private stepBubble?: Phaser.GameObjects.Container
+
+  /** Floating "steps left" counter above the moving token. */
+  private showStepsLeft(token: Phaser.GameObjects.Container, remaining: number) {
+    this.stepBubble?.destroy()
+    this.stepBubble = undefined
+    if (remaining <= 0 || isAutoSimMode()) return
+    const b = this.add.container(token.x, token.y - 52).setDepth(DEPTH.tokens + 5)
+    const g = this.add.graphics()
+    g.fillStyle(0xffffff, 1)
+    g.fillCircle(0, 0, 17)
+    g.lineStyle(3, COLORS.gold, 1)
+    g.strokeCircle(0, 0, 17)
+    b.add([g, this.add.text(0, 0, String(remaining), { fontSize: '20px', fontFamily: FONT.display, color: '#1a1a2e' }).setOrigin(0.5)])
+    if (!shouldReduceMotion()) {
+      b.setScale(0.6)
+      this.tweens.add({ targets: b, scale: 1, duration: 120, ease: 'Back.easeOut' })
+    }
+    this.stepBubble = b
+  }
   private dieLabel?: Phaser.GameObjects.Text
   private dieFaceText?: Phaser.GameObjects.Text
 
