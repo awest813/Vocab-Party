@@ -732,10 +732,10 @@ export class MinigameScene extends Phaser.Scene {
       recordWords(result.study[p.id] ?? [])
       const won = competitive && result.placements[p.id] === 1
       recordMinigame(won)
-      if (won) unlock('minigame_win', this)
+      if (won) unlock('minigame_win')
     }
-    if (getProgress().minigamesWon >= 10) unlock('minigame_10', this)
-    checkWordAchievements(this)
+    if (getProgress().minigamesWon >= 10) unlock('minigame_10')
+    checkWordAchievements()
   }
 
   private showResults() {
@@ -832,9 +832,9 @@ export class MinigameScene extends Phaser.Scene {
     const prevBest = getPersonalBests()[this.def.id] ?? 0
     const isBest = recordPersonalBest(this.def.id, score)
     if (!isAutoSimMode()) {
-      if (score >= this.def.cpu.hard[1]) unlock('gold_medal', this)
+      if (score >= this.def.cpu.hard[1]) unlock('gold_medal')
       const bests = getPersonalBests()
-      if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all', this)
+      if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all')
     }
 
     const panel = createPanel(this, {

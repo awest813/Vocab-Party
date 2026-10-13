@@ -182,7 +182,13 @@ export const sentenceScramble: MinigameDef = {
       let order = shuffled(target)
       for (let i = 0; i < 6 && order.join(' ') === target.join(' '); i++) order = shuffled(target)
       tiles = order.map(makeTile)
-      flow(tiles, poolTop, area.width - 60).forEach(({ t, x, y }, i) => {
+      // Reserve as many answer rows as the full sentence needs, then start the pool below them.
+      const answerRows = new Set(flow(tiles, lineY, area.width - 80).map(p => p.y)).size
+      const top = Math.max(poolTop, lineY + answerRows * 58 + 40)
+      guide.clear()
+      guide.lineStyle(2, accent, 0.4)
+      guide.lineBetween(area.left + 40, top - 46, area.right - 40, top - 46)
+      flow(tiles, top, area.width - 60).forEach(({ t, x, y }, i) => {
         t.homeX = x
         t.homeY = y
         t.c.setPosition(x, y)

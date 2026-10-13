@@ -272,8 +272,8 @@ export class BoardScene extends Phaser.Scene {
     this.dieFaceText = this.add.text(w / 2 + 80, h - 60, '', {
       fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0.5).setDepth(DEPTH.chrome + 1)
-    this.dieLabel = this.add.text(w / 2 + 80, h - 20, '', {
-      fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+    this.dieLabel = this.add.text(w / 2 + 20, h - 20, '', {
+      fontSize: '11px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
     }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
     this.roundText = this.add.text(w - 16, 18, '', {
@@ -884,13 +884,14 @@ export class BoardScene extends Phaser.Scene {
     let result = face.move
     const hadSpeedBoost = player.speedBoostTurns > 0
     const hadDash = player.dashActive
+    // Surge boosts the base roll (capped at the die's max); Dash adds a second block roll on top.
+    if (hadSpeedBoost && forcedMove <= 0) {
+      result = Math.min(Math.max(3, maxMove(die)), result + 1)
+    }
     if (hadDash && forcedMove <= 0) {
       result += rollBlockDie()
     }
     player.dashActive = false
-    if (hadSpeedBoost && forcedMove <= 0) {
-      result = Math.min(Math.max(3, maxMove(die)), result + 1)
-    }
     if (hadSpeedBoost) player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
 
     // Show the rolled face: pip texture for 1–6, big label for 0.
@@ -1195,12 +1196,12 @@ export class BoardScene extends Phaser.Scene {
               if (!player.isCpu && !isAutoSimMode() && type === 'vocab' && result.question) {
                 const word = wordFromQuestion(result.question)
                 if (word) recordWords([{ word, correct: result.correct, note: result.explanation }])
-                checkWordAchievements(this)
+                checkWordAchievements()
               }
               if (result.correct) {
                 player.stats.correctAnswers += 1
                 player.answerStreak += 1
-                if (!player.isCpu && !isAutoSimMode() && player.answerStreak >= 5) unlock('streak_5', this)
+                if (!player.isCpu && !isAutoSimMode() && player.answerStreak >= 5) unlock('streak_5')
                 const streakBonusCoins = player.answerStreak % QUESTION_STREAK_THRESHOLD === 0
                   ? QUESTION_STREAK_BONUS_COINS
                   : 0
@@ -1963,7 +1964,7 @@ export class BoardScene extends Phaser.Scene {
   private trackPeakCoins() {
     this.state.players.forEach(p => {
       p.stats.peakCoins = Math.max(p.stats.peakCoins, p.coins)
-      if (!p.isCpu && !isAutoSimMode() && p.coins >= 50) unlock('coins_50', this)
+      if (!p.isCpu && !isAutoSimMode() && p.coins >= 50) unlock('coins_50')
     })
   }
 
@@ -2347,18 +2348,13 @@ export class BoardScene extends Phaser.Scene {
     const p = this.state.players[this.state.currentPlayer]
     if (!p || !this.dieLabel) return
     const die = this.dieFor(p)
-    const charDie = characterDie(p.characterIndex)
-    this.dieLabel.setText(`${die.emoji} ${die.name}: ${faceSummary(die)}`)
+    const swap = p.isCpu ? '' : isTouchPreferred(this.sys.game) ? '   (tap die ⇄)' : '   (D ⇄)'
+    this.dieLabel.setText(`${die.emoji} ${die.name}: ${faceSummary(die)}${swap}`)
     // Lightened tint keeps dark character colors (e.g. the ninja) readable on the die.
     if (p.useCharacterDie) this.diceSprite.setTint(Phaser.Display.Color.IntegerToColor(characterDef(p.characterIndex).color).lighten(35).color)
     else this.diceSprite.clearTint()
     this.dieFaceText?.setText('')
     this.diceSprite.setAlpha(1)
-    if (!p.isCpu) {
-      this.tileHintText?.setText(isTouchPreferred(this.sys.game)
-        ? `Tap the die to switch to ${p.useCharacterDie ? 'the standard block' : `${charDie.emoji} ${charDie.name}`}`
-        : `D = switch die (${p.useCharacterDie ? 'standard block' : `${charDie.emoji} ${charDie.name}: ${charDie.hint}`})`)
-    }
   }
 
   /** CPU die choice: coin dice when short on star money, long dice when far behind, else a coin flip. */

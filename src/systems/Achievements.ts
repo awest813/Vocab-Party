@@ -1,4 +1,3 @@
-import Phaser from 'phaser'
 import { Sfx } from './Sfx'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { getProgress, masteryOf, saveProgress } from './Progress'
@@ -34,8 +33,8 @@ export function isUnlocked(id: string): boolean {
   return Boolean(getProgress().achievements?.[id])
 }
 
-/** Unlock an achievement; shows a toast in `scene` when it is new. Returns true if newly unlocked. */
-export function unlock(id: string, scene?: Phaser.Scene): boolean {
+/** Unlock an achievement; shows a toast when it is new. Returns true if newly unlocked. */
+export function unlock(id: string): boolean {
   const def = ACHIEVEMENTS.find(a => a.id === id)
   if (!def) return false
   const p = getProgress()
@@ -43,81 +42,68 @@ export function unlock(id: string, scene?: Phaser.Scene): boolean {
   if (p.achievements[id]) return false
   p.achievements[id] = Date.now()
   saveProgress()
-  if (scene) showAchievementToast(scene, def)
+  showAchievementToast(def)
   return true
 }
 
 /** Re-check the word-count achievements after progress changes. */
-export function checkWordAchievements(scene?: Phaser.Scene): void {
+export function checkWordAchievements(): void {
   const records = Object.values(getProgress().words)
   const mastered = records.filter(r => masteryOf(r) === 'mastered').length
-  if (records.length >= 25) unlock('words_25', scene)
-  if (records.length >= 100) unlock('words_100', scene)
-  if (mastered >= 10) unlock('master_10', scene)
-  if (mastered >= 50) unlock('master_50', scene)
+  if (records.length >= 25) unlock('words_25')
+  if (records.length >= 100) unlock('words_100')
+  if (mastered >= 10) unlock('master_10')
+  if (mastered >= 50) unlock('master_50')
 }
 
-const toastQueue: { scene: Phaser.Scene; def: AchievementDef }[] = []
+const toastQueue: AchievementDef[] = []
 let toastBusy = false
 
-/** Slide-in badge in the top-right corner; queued so several unlocks play in turn. */
-export function showAchievementToast(scene: Phaser.Scene, def: AchievementDef): void {
-  toastQueue.push({ scene, def })
+/**
+ * Slide-in badge in the top-right corner. Rendered as a DOM overlay so it survives
+ * scene changes, pauses and restarts; queued so several unlocks play in turn.
+ */
+export function showAchievementToast(def: AchievementDef): void {
+  if (typeof document === 'undefined') return
+  toastQueue.push(def)
   if (!toastBusy) playNextToast()
 }
 
 function playNextToast() {
-  const next = toastQueue.shift()
-  if (!next) {
+  const def = toastQueue.shift()
+  if (!def) {
     toastBusy = false
     return
   }
-  const { scene, def } = next
-  if (!scene.sys?.isActive() && !scene.sys?.isVisible()) {
-    playNextToast()
-    return
-  }
   toastBusy = true
-  const w = scene.scale.width
-  const tw = 360
-  const c = scene.add.container(w + tw / 2, 150).setDepth(5000)
-  const g = scene.add.graphics()
-  g.fillStyle(0x000000, 0.45)
-  g.fillRoundedRect(-tw / 2 + 3, -38, tw, 80, 16)
-  g.fillStyle(COLORS.bgPanel, 0.98)
-  g.fillRoundedRect(-tw / 2, -42, tw, 80, 16)
-  g.lineStyle(3, COLORS.gold, 0.9)
-  g.strokeRoundedRect(-tw / 2, -42, tw, 80, 16)
-  c.add(g)
-  c.add(scene.add.text(-tw / 2 + 40, -2, def.icon, { fontSize: '36px' }).setOrigin(0.5))
-  c.add(scene.add.text(-tw / 2 + 74, -20, 'ACHIEVEMENT UNLOCKED', {
-    fontSize: '12px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
-  }).setOrigin(0, 0.5))
-  c.add(scene.add.text(-tw / 2 + 74, 2, def.title, {
-    fontSize: '22px', fontFamily: FONT.display, color: '#ffffff',
-  }).setOrigin(0, 0.5))
-  c.add(scene.add.text(-tw / 2 + 74, 24, def.desc, {
-    fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mist), wordWrap: { width: tw - 90 },
-  }).setOrigin(0, 0.5))
+  const el = document.createElement('div')
+  el.setAttribute('role', 'status')
+  el.style.cssText = [
+    'position:fixed', 'top:16px', 'right:16px', 'z-index:1000', 'display:flex', 'align-items:center', 'gap:12px',
+    'max-width:min(360px,calc(100vw - 32px))', 'padding:10px 16px', 'border-radius:14px',
+    `background:${hexColor(COLORS.bgPanel)}`, `border:3px solid ${hexColor(COLORS.gold)}`,
+    'box-shadow:0 6px 18px rgba(0,0,0,.45)', `font-family:${FONT.body}`, 'color:#fff', 'pointer-events:none',
+    `transition:transform ${shouldReduceMotion() ? 0 : 380}ms cubic-bezier(.2,1.4,.4,1), opacity 300ms`,
+    'transform:translateX(120%)', 'opacity:0',
+  ].join(';')
+  el.innerHTML = `<div style="font-size:34px;line-height:1"></div><div><div style="font-size:11px;letter-spacing:1px;color:${hexColor(COLORS.gold)};font-family:${FONT.display}">ACHIEVEMENT UNLOCKED</div><div style="font-size:20px;font-family:${FONT.display}"></div><div style="font-size:12px;color:${hexColor(COLORS.mist)}"></div></div>`
+  const [iconEl, textBox] = Array.from(el.children) as HTMLElement[]
+  iconEl.textContent = def.icon
+  const lines = Array.from(textBox.children) as HTMLElement[]
+  lines[1].textContent = def.title
+  lines[2].textContent = def.desc
+  document.body.appendChild(el)
   Sfx.star()
-  const finish = () => {
-    c.destroy()
-    playNextToast()
-  }
-  scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => { if (c.active) finish() })
-  const inX = w - tw / 2 - 16
-  if (shouldReduceMotion()) {
-    c.setX(inX)
-    scene.time.delayedCall(2600, () => { if (c.active) finish() })
-    return
-  }
-  scene.tweens.add({
-    targets: c, x: inX, duration: 380, ease: 'Back.easeOut',
-    onComplete: () => {
-      scene.time.delayedCall(2400, () => {
-        if (!c.active) return
-        scene.tweens.add({ targets: c, x: w + tw / 2, duration: 280, ease: 'Cubic.easeIn', onComplete: () => { if (c.active) finish() } })
-      })
-    },
+  requestAnimationFrame(() => {
+    el.style.transform = 'translateX(0)'
+    el.style.opacity = '1'
   })
+  window.setTimeout(() => {
+    el.style.transform = 'translateX(120%)'
+    el.style.opacity = '0'
+    window.setTimeout(() => {
+      el.remove()
+      playNextToast()
+    }, 360)
+  }, 2800)
 }
