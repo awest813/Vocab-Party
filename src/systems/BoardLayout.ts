@@ -1,3 +1,5 @@
+import type { TileType } from './GameState'
+
 export interface BoardNode {
   id: number
   col: number
@@ -8,7 +10,7 @@ export interface BoardNode {
 export const BOARD_COLS = 12
 export const BOARD_ROWS = 8
 
-export const BOARD_NODES: BoardNode[] = [
+const LOOP_NODES: BoardNode[] = [
   { id: 0, col: 0, row: 0, next: [1] },
   { id: 1, col: 1, row: 0, next: [2] },
   { id: 2, col: 2, row: 0, next: [3] },
@@ -55,4 +57,209 @@ export const BOARD_NODES: BoardNode[] = [
   { id: 43, col: 0, row: 1, next: [0] },
 ]
 
-export const BOARD_PATH_LENGTH = BOARD_NODES.length
+/** Original tile pattern; tile i uses LEGACY_PATTERN[i % length] (tile 0 is Start). */
+const LEGACY_PATTERN: TileType[] = [
+  'shop','vocab','penalty','grammar','bonus','star','item_shop','minigame','vocab','brick','penalty','mystery','vocab','shop',
+  'vocab','grammar','item_shop','minigame','grammar','penalty','star','bonus','mystery','brick','vocab','grammar','swap',
+  'penalty','bonus','vocab','item_shop','grammar','mystery','brick','vocab','minigame','penalty','grammar','star','bonus','vocab',
+]
+const LOOP_TILES: TileType[] = LOOP_NODES.map((_, i) => (i === 0 ? 'start' : LEGACY_PATTERN[i % LEGACY_PATTERN.length]))
+
+const GARDEN_NODES: BoardNode[] = [
+  { id: 0, col: 0, row: 0, next: [1] },
+  { id: 1, col: 1, row: 0, next: [2] },
+  { id: 2, col: 2, row: 0, next: [3] },
+  { id: 3, col: 3, row: 0, next: [4] },
+  { id: 4, col: 4, row: 0, next: [5] },
+  { id: 5, col: 5, row: 0, next: [6] },
+  { id: 6, col: 6, row: 0, next: [7, 36] },
+  { id: 7, col: 7, row: 0, next: [8] },
+  { id: 8, col: 8, row: 0, next: [9] },
+  { id: 9, col: 9, row: 0, next: [10] },
+  { id: 10, col: 10, row: 0, next: [11] },
+  { id: 11, col: 11, row: 0, next: [12] },
+  { id: 12, col: 11, row: 1, next: [13] },
+  { id: 13, col: 11, row: 2, next: [14] },
+  { id: 14, col: 11, row: 3, next: [15] },
+  { id: 15, col: 11, row: 4, next: [16] },
+  { id: 16, col: 11, row: 5, next: [17] },
+  { id: 17, col: 11, row: 6, next: [18] },
+  { id: 18, col: 11, row: 7, next: [19] },
+  { id: 19, col: 10, row: 7, next: [20] },
+  { id: 20, col: 9, row: 7, next: [21] },
+  { id: 21, col: 8, row: 7, next: [22] },
+  { id: 22, col: 7, row: 7, next: [23] },
+  { id: 23, col: 6, row: 7, next: [24] },
+  { id: 24, col: 5, row: 7, next: [25] },
+  { id: 25, col: 4, row: 7, next: [26] },
+  { id: 26, col: 3, row: 7, next: [27] },
+  { id: 27, col: 2, row: 7, next: [28] },
+  { id: 28, col: 1, row: 7, next: [29] },
+  { id: 29, col: 0, row: 7, next: [30] },
+  { id: 30, col: 0, row: 6, next: [31] },
+  { id: 31, col: 0, row: 5, next: [32] },
+  { id: 32, col: 0, row: 4, next: [33] },
+  { id: 33, col: 0, row: 3, next: [34] },
+  { id: 34, col: 0, row: 2, next: [35] },
+  { id: 35, col: 0, row: 1, next: [0] },
+  { id: 36, col: 6, row: 1, next: [37] },
+  { id: 37, col: 6, row: 2, next: [38] },
+  { id: 38, col: 6, row: 3, next: [39] },
+  { id: 39, col: 6, row: 4, next: [40] },
+  { id: 40, col: 6, row: 5, next: [41] },
+  { id: 41, col: 6, row: 6, next: [23] },
+]
+
+const GARDEN_TILES: TileType[] = [
+  'start', 'grammar', 'vocab', 'penalty', 'vocab', 'swap', 'bonus', 'grammar', 'bonus', 'grammar',
+  'item_shop', 'item_shop', 'minigame', 'vocab', 'vocab', 'penalty', 'star', 'grammar', 'penalty', 'brick',
+  'star', 'bonus', 'shop', 'mystery', 'bonus', 'mystery', 'vocab', 'shop', 'mystery', 'shop',
+  'vocab', 'vocab', 'grammar', 'brick', 'minigame', 'vocab', 'star', 'vocab', 'vocab', 'minigame',
+  'grammar', 'penalty',
+]
+
+const SUMMIT_NODES: BoardNode[] = [
+  { id: 0, col: 0, row: 7, next: [1] },
+  { id: 1, col: 0, row: 6, next: [2] },
+  { id: 2, col: 0, row: 5, next: [3] },
+  { id: 3, col: 0, row: 4, next: [4] },
+  { id: 4, col: 0, row: 3, next: [5] },
+  { id: 5, col: 0, row: 2, next: [6] },
+  { id: 6, col: 0, row: 1, next: [7] },
+  { id: 7, col: 0, row: 0, next: [8] },
+  { id: 8, col: 1, row: 0, next: [9] },
+  { id: 9, col: 2, row: 0, next: [10] },
+  { id: 10, col: 3, row: 0, next: [11] },
+  { id: 11, col: 4, row: 0, next: [12] },
+  { id: 12, col: 5, row: 0, next: [13] },
+  { id: 13, col: 6, row: 0, next: [14] },
+  { id: 14, col: 7, row: 0, next: [15] },
+  { id: 15, col: 8, row: 0, next: [16] },
+  { id: 16, col: 9, row: 0, next: [17] },
+  { id: 17, col: 10, row: 0, next: [18] },
+  { id: 18, col: 11, row: 0, next: [19] },
+  { id: 19, col: 11, row: 1, next: [20] },
+  { id: 20, col: 11, row: 2, next: [21, 54] },
+  { id: 21, col: 10, row: 2, next: [22] },
+  { id: 22, col: 9, row: 2, next: [23] },
+  { id: 23, col: 8, row: 2, next: [24] },
+  { id: 24, col: 7, row: 2, next: [25] },
+  { id: 25, col: 6, row: 2, next: [26] },
+  { id: 26, col: 5, row: 2, next: [27] },
+  { id: 27, col: 4, row: 2, next: [28] },
+  { id: 28, col: 3, row: 2, next: [29] },
+  { id: 29, col: 2, row: 2, next: [30] },
+  { id: 30, col: 2, row: 3, next: [31] },
+  { id: 31, col: 2, row: 4, next: [32] },
+  { id: 32, col: 3, row: 4, next: [33] },
+  { id: 33, col: 4, row: 4, next: [34] },
+  { id: 34, col: 5, row: 4, next: [35] },
+  { id: 35, col: 6, row: 4, next: [36] },
+  { id: 36, col: 7, row: 4, next: [37] },
+  { id: 37, col: 8, row: 4, next: [38] },
+  { id: 38, col: 9, row: 4, next: [39] },
+  { id: 39, col: 10, row: 4, next: [40] },
+  { id: 40, col: 11, row: 4, next: [41] },
+  { id: 41, col: 11, row: 5, next: [42] },
+  { id: 42, col: 11, row: 6, next: [43] },
+  { id: 43, col: 11, row: 7, next: [44] },
+  { id: 44, col: 10, row: 7, next: [45] },
+  { id: 45, col: 9, row: 7, next: [46] },
+  { id: 46, col: 8, row: 7, next: [47] },
+  { id: 47, col: 7, row: 7, next: [48] },
+  { id: 48, col: 6, row: 7, next: [49] },
+  { id: 49, col: 5, row: 7, next: [50] },
+  { id: 50, col: 4, row: 7, next: [51] },
+  { id: 51, col: 3, row: 7, next: [52] },
+  { id: 52, col: 2, row: 7, next: [53] },
+  { id: 53, col: 1, row: 7, next: [0] },
+  { id: 54, col: 11, row: 3, next: [40] },
+]
+
+const SUMMIT_TILES: TileType[] = [
+  'start', 'vocab', 'vocab', 'penalty', 'swap', 'minigame', 'star', 'grammar', 'mystery', 'penalty',
+  'brick', 'shop', 'brick', 'shop', 'minigame', 'grammar', 'star', 'vocab', 'vocab', 'vocab',
+  'mystery', 'star', 'grammar', 'grammar', 'vocab', 'item_shop', 'vocab', 'vocab', 'mystery', 'grammar',
+  'penalty', 'mystery', 'grammar', 'shop', 'bonus', 'item_shop', 'grammar', 'penalty', 'minigame', 'shop',
+  'vocab', 'minigame', 'bonus', 'star', 'vocab', 'bonus', 'vocab', 'swap', 'grammar', 'bonus',
+  'vocab', 'penalty', 'bonus', 'item_shop', 'brick',
+]
+
+export interface BoardTheme {
+  stageTop: number
+  stageBottom: number
+  /** Fill for empty interior cells. */
+  cell: number
+  cellLine: number
+  /** Outer frame stroke. */
+  frame: number
+  /** Path glow tint. */
+  glow: number
+}
+
+export interface BoardDef {
+  id: BoardId
+  name: string
+  emoji: string
+  tagline: string
+  nodes: BoardNode[]
+  /** One tile type per node; index 0 is always 'start'. */
+  tiles: TileType[]
+  theme: BoardTheme
+  /** Brand plate placement in tile units (center), so it never covers path tiles. */
+  logo: { cx: number; cy: number; w: number; h: number; compact?: boolean }
+  /** Ambient decorations placed in empty cells. */
+  decor: { col: number; row: number; emoji: string }[]
+}
+
+export type BoardId = 'loop' | 'garden' | 'summit'
+
+export const BOARDS: BoardDef[] = [
+  {
+    id: 'loop',
+    name: 'Lexicon Loop',
+    emoji: '📚',
+    tagline: 'The classic ring with an inner shortcut. Balanced and quick.',
+    nodes: LOOP_NODES,
+    tiles: LOOP_TILES,
+    theme: { stageTop: 0x070b14, stageBottom: 0x10182a, cell: 0x0a1c14, cellLine: 0x1a3a28, frame: 0xf4c430, glow: 0x2ec4b6 },
+    logo: { cx: 7.5, cy: 2.5, w: 300, h: 124 },
+    decor: [],
+  },
+  {
+    id: 'garden',
+    name: 'Grammar Garden',
+    emoji: '🌷',
+    tagline: 'A blooming ring split by a straight garden path. Take the shortcut — or stop and smell the stars.',
+    nodes: GARDEN_NODES,
+    tiles: GARDEN_TILES,
+    theme: { stageTop: 0x06120c, stageBottom: 0x10291b, cell: 0x0e2617, cellLine: 0x2a5a36, frame: 0x7bd88f, glow: 0x9be36b },
+    logo: { cx: 3.5, cy: 4, w: 264, h: 124 },
+    decor: [
+      { col: 8, row: 2, emoji: '🌻' }, { col: 9, row: 5, emoji: '🌷' }, { col: 7, row: 4, emoji: '🌿' },
+      { col: 10, row: 3, emoji: '🍄' }, { col: 2, row: 6, emoji: '🌼' }, { col: 4, row: 1, emoji: '🌱' },
+    ],
+  },
+  {
+    id: 'summit',
+    name: 'Spelling Summit',
+    emoji: '🏔️',
+    tagline: 'A long switchback climb. A risky ledge skips the whole middle — if you can reach it.',
+    nodes: SUMMIT_NODES,
+    tiles: SUMMIT_TILES,
+    theme: { stageTop: 0x0a0f1e, stageBottom: 0x222a44, cell: 0x16203a, cellLine: 0x3a4a6a, frame: 0xbfe3ff, glow: 0x9fd4ff },
+    logo: { cx: 6, cy: 6, w: 440, h: 100, compact: true },
+    decor: [
+      { col: 4, row: 1, emoji: '❄️' }, { col: 8, row: 1, emoji: '🏔️' }, { col: 6, row: 3, emoji: '⛰️' },
+      { col: 9, row: 3, emoji: '❄️' }, { col: 1, row: 3, emoji: '🌲' }, { col: 1, row: 5, emoji: '🌲' },
+    ],
+  },
+]
+
+export function getBoard(id: string | undefined): BoardDef {
+  return BOARDS.find(b => b.id === id) ?? BOARDS[0]
+}
+
+/** Default board (legacy exports kept for callers that only need the classic layout). */
+export const BOARD_NODES = LOOP_NODES
+export const BOARD_PATH_LENGTH = LOOP_NODES.length

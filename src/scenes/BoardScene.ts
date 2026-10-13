@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
-import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
+import { BOARD_COLS, BOARD_ROWS, BoardNode, getBoard, type BoardDef } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
@@ -30,17 +30,13 @@ import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
+import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
 import type { BattleResult } from './BattleScene'
 import type { MinigameParticipant, MinigameResult, MinigameSceneData } from './MinigameScene'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
 
-const TILE_TYPES: TileType[] = [
-  'shop','vocab','penalty','grammar','bonus','star','item_shop','minigame','vocab','brick','penalty','mystery','vocab','shop',
-  'vocab','grammar','item_shop','minigame','grammar','penalty','star','bonus','mystery','brick','vocab','grammar','swap',
-  'penalty','bonus','vocab','item_shop','grammar','mystery','brick','vocab','minigame','penalty','grammar','star','bonus','vocab',
-]
 
 const TILE_LABELS: Record<TileType, string> = {
   vocab: '📖',
@@ -85,6 +81,7 @@ const DUEL_WIN_POINTS = 10
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
   private nodes!: BoardNode[]
+  private board!: BoardDef
   private roundsPerGame = DEFAULT_ROUNDS_PER_GAME
   private boardOriginX!: number
   private boardOriginY!: number
@@ -119,7 +116,7 @@ export class BoardScene extends Phaser.Scene {
   constructor() { super('BoardScene') }
 
   private getTileTypeAt(tileIndex: number): TileType {
-    return tileIndex === 0 ? 'start' : TILE_TYPES[tileIndex % TILE_TYPES.length]
+    return this.board.tiles[tileIndex] ?? 'vocab'
   }
 
   private countOwnedShops(ownerId: number): number {
@@ -175,9 +172,22 @@ export class BoardScene extends Phaser.Scene {
     playerCpuLevels?: CpuLevel[]
     playerCharacters?: number[]
     partyOptions?: PartyOptions
+    resume?: SaveData
   }) {
     const w = this.scale.width
     const h = this.scale.height
+
+    // Phaser reuses scene instances: reset all per-game fields (Play Again used to keep old shop owners).
+    this.shopOwners = {}
+    this.shopOwnerDots = new Map()
+    this.tileImages = new Map()
+    this.rolling = false
+    this.choiceModal = undefined
+    this.itemMenu = undefined
+    this.activeAnnouncement = undefined
+    this.turnGlow = undefined
+    this.turnGlowTween = undefined
+    this._shakeTokenContainer = null
 
     const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
     const emojis = data?.playerEmojis ?? ['🎉', '🧙', '🛡️', '🏴‍☠️']
@@ -187,7 +197,15 @@ export class BoardScene extends Phaser.Scene {
     const characters = data?.playerCharacters ?? names.map((_, i) => i)
 
     this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters, data?.partyOptions ?? DEFAULT_PARTY_OPTIONS)
-    this.nodes = BOARD_NODES
+    const resumed = data?.resume
+    if (resumed) {
+      this.state = resumed.state
+      this.state.options = { ...DEFAULT_PARTY_OPTIONS, ...resumed.state.options }
+      this.roundsPerGame = resumed.roundsPerGame
+      this.shopOwners = { ...resumed.shopOwners }
+    }
+    this.board = getBoard(this.state.options.board)
+    this.nodes = this.board.nodes
 
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
@@ -201,8 +219,16 @@ export class BoardScene extends Phaser.Scene {
     this.drawBoard()
 
     this.playerTokens = this.state.players.map((p, i) => this.createToken(p, i))
+    if (resumed) {
+      this.state.players.forEach((p, i) => {
+        const { x, y } = this.getTileXY(p.position)
+        const off = this.getPlayerOffset(i)
+        this.playerTokens[i].setPosition(x + off.x, y + off.y)
+      })
+    }
 
     this.hud = new PlayerHUD(this, this.state)
+    this.hud.update(this.state)
     this.createPauseButton()
     const escHandler = () => this.pauseGame()
     this.input.keyboard?.on('keydown-ESC', escHandler)
@@ -280,13 +306,16 @@ export class BoardScene extends Phaser.Scene {
       this.closeItemMenu()
     })
 
-    void this.openingSequence()
+    void this.openingSequence(Boolean(resumed))
   }
 
   /** One-time "let's party" splash before the first turn. */
-  private async openingSequence() {
+  private async openingSequence(resumed: boolean) {
     this.rolling = true
-    if (!isAutoSimMode()) {
+    if (resumed) {
+      Sfx.splash()
+      await this.showAnnouncement(`▶ WELCOME BACK — ROUND ${this.state.round}!`, hexColor(COLORS.gold))
+    } else if (!isAutoSimMode()) {
       Sfx.splash()
       await this.showAnnouncement("🎉 LET'S PARTY! 🎉", hexColor(COLORS.gold))
       await this.showAnnouncement(`First to ${TROPHIES_TO_WIN} 🏆 wins!`, hexColor(COLORS.sky))
@@ -319,7 +348,7 @@ export class BoardScene extends Phaser.Scene {
 
   private cpuBoardCtx() {
     return {
-      tileTypes: TILE_TYPES as string[],
+      tileTypes: this.board.tiles as string[],
       boardLength: this.nodes.length,
       nextByNode: this.nodes.map(n => n.next),
       round: this.state.round,
@@ -330,7 +359,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   drawBackdrop() {
-    paintStage(this)
+    paintStage(this, { topColor: this.board.theme.stageTop, bottomColor: this.board.theme.stageBottom })
     addStarfieldBackdrop(this, 0.42)
     addAmbientMotes(this, 26)
   }
@@ -346,10 +375,10 @@ export class BoardScene extends Phaser.Scene {
 
     // Ornate outer frame
     const outer = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW + 12, frameH + 12, COLORS.bgDeep).setDepth(-3)
-    outer.setStrokeStyle(4, COLORS.gold, 0.45)
+    outer.setStrokeStyle(4, this.board.theme.frame, 0.55)
 
     const inner = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, frameW, frameH, COLORS.bgMid).setDepth(-2)
-    inner.setStrokeStyle(2, COLORS.teal, 0.35)
+    inner.setStrokeStyle(2, this.board.theme.glow, 0.35)
 
     const felt = this.add.rectangle(fx + frameW / 2, fy + frameH / 2, boardW + 16, boardH + 16, COLORS.bgPanel)
     felt.setStrokeStyle(1, 0x3a4f6a, 0.5).setDepth(-1)
@@ -374,16 +403,16 @@ export class BoardScene extends Phaser.Scene {
         const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
         const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
         const cell = this.add.graphics().setDepth(-1)
-        cell.fillStyle(0x0a1c14, 0.88)
+        cell.fillStyle(this.board.theme.cell, 0.88)
         cell.fillRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
-        cell.lineStyle(1, 0x1a3a28, 0.35)
+        cell.lineStyle(1, this.board.theme.cellLine, 0.35)
         cell.strokeRoundedRect(x - TILE_SIZE / 2 + 4, y - TILE_SIZE / 2 + 4, TILE_SIZE - 8, TILE_SIZE - 8, 8)
       }
     }
 
     // Path underlay glow connecting tiles
     const pathGlow = this.add.graphics().setDepth(-1)
-    pathGlow.lineStyle(10, COLORS.teal, 0.08)
+    pathGlow.lineStyle(10, this.board.theme.glow, 0.1)
     // Follow the real graph edges (index order jumps across the board at the fork).
     this.nodes.forEach(node => {
       const x1 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
@@ -485,38 +514,47 @@ export class BoardScene extends Phaser.Scene {
       }
     })
 
-    // Brand plate sits in the open interior (cols 4–10, rows 1–3) so it never covers path tiles.
-    const cx = this.boardOriginX + 7 * TILE_SIZE + TILE_SIZE / 2
-    const cy = this.boardOriginY + 2 * TILE_SIZE + TILE_SIZE / 2
+    // Brand plate sits in open interior space defined per board, so it never covers path tiles.
+    const logo = this.board.logo
+    const cx = this.boardOriginX + logo.cx * TILE_SIZE
+    const cy = this.boardOriginY + logo.cy * TILE_SIZE
     const titlePanel = this.add.graphics().setDepth(2)
     titlePanel.fillStyle(COLORS.bgPanel, 0.9)
-    titlePanel.fillRoundedRect(cx - 150, cy - 62, 300, 124, 16)
-    titlePanel.lineStyle(2, COLORS.sky, 0.55)
-    titlePanel.strokeRoundedRect(cx - 150, cy - 62, 300, 124, 16)
-
-    if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
-      this.add.image(cx - 104, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
-      this.add.image(cx + 104, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
+    titlePanel.fillRoundedRect(cx - logo.w / 2, cy - logo.h / 2, logo.w, logo.h, 16)
+    titlePanel.lineStyle(2, this.board.theme.frame, 0.55)
+    titlePanel.strokeRoundedRect(cx - logo.w / 2, cy - logo.h / 2, logo.w, logo.h, 16)
+    const brandStyle = (color: number, stroke: string): Phaser.Types.GameObjects.Text.TextStyle => ({
+      fontSize: '30px', fontFamily: FONT.display, color: hexColor(color), stroke, strokeThickness: 4,
+    })
+    if (logo.compact) {
+      const row = this.add.container(cx, cy - 16).setDepth(3)
+      const v = this.add.text(0, 0, 'VOCAB ', brandStyle(COLORS.frost, '#102040')).setOrigin(1, 0.5)
+      const pt = this.add.text(0, 0, 'PARTY', brandStyle(COLORS.gold, '#553300')).setOrigin(0, 0.5)
+      row.add([v, pt])
+      this.add.text(cx, cy + 22, `${this.board.emoji} ${this.board.name}  ·  First to ${TROPHIES_TO_WIN} 🏆`, {
+        fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+      }).setOrigin(0.5).setDepth(3)
+    } else {
+      if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
+        this.add.image(cx - logo.w / 2 + 46, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
+        this.add.image(cx + logo.w / 2 - 46, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
+      }
+      this.add.text(cx, cy - 26, 'VOCAB', brandStyle(COLORS.frost, '#102040')).setOrigin(0.5).setDepth(3)
+      this.add.text(cx, cy + 8, 'PARTY', brandStyle(COLORS.gold, '#553300')).setOrigin(0.5).setDepth(3)
+      this.add.text(cx, cy + 42, `${this.board.emoji} ${this.board.name}`, {
+        fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+      }).setOrigin(0.5).setDepth(3)
     }
-    this.add.text(cx, cy - 26, 'VOCAB', {
-      fontSize: '30px',
-      fontFamily: FONT.display,
-      color: hexColor(COLORS.frost),
-      stroke: '#102040',
-      strokeThickness: 4,
-    }).setOrigin(0.5).setDepth(3)
-    this.add.text(cx, cy + 8, 'PARTY', {
-      fontSize: '30px',
-      fontFamily: FONT.display,
-      color: hexColor(COLORS.gold),
-      stroke: '#553300',
-      strokeThickness: 4,
-    }).setOrigin(0.5).setDepth(3)
-    this.add.text(cx, cy + 42, `First to ${TROPHIES_TO_WIN} 🏆 wins!`, {
-      fontSize: '15px',
-      fontFamily: FONT.body,
-      color: hexColor(COLORS.mist),
-    }).setOrigin(0.5).setDepth(3)
+
+    // Ambient decorations in empty cells
+    this.board.decor.forEach((d, i) => {
+      const x = this.boardOriginX + d.col * TILE_SIZE + TILE_SIZE / 2
+      const y = this.boardOriginY + d.row * TILE_SIZE + TILE_SIZE / 2
+      const t = this.add.text(x, y, d.emoji, { fontSize: '30px' }).setOrigin(0.5).setDepth(0).setAlpha(0.55)
+      if (!shouldReduceMotion()) {
+        this.tweens.add({ targets: t, y: y - 4, duration: 1600 + i * 170, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+      }
+    })
 
     this.tileHintText = this.add.text(24, this.scale.height - 90, this.tileInspectHint(), {
       fontSize: '14px',
@@ -657,6 +695,9 @@ export class BoardScene extends Phaser.Scene {
 
   async updateStatus() {
     const p = this.state.players[this.state.currentPlayer]
+    if (!this.rolling && !isAutoSimMode()) {
+      writeSave({ roundsPerGame: this.roundsPerGame, state: this.state, shopOwners: this.shopOwners })
+    }
 
     if (!this.rolling && !isAutoSimMode()) {
       await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, hexColor(characterDef(p.characterIndex).color))
@@ -816,7 +857,7 @@ export class BoardScene extends Phaser.Scene {
           const idx = cpuChooseBranch(
             player.position,
             options,
-            TILE_TYPES as string[],
+            this.board.tiles as string[],
             player.coins,
             player.trophies,
             player.cpuLevel,
@@ -934,7 +975,7 @@ export class BoardScene extends Phaser.Scene {
           ? cpuChooseSwapTarget(
               playerIndex,
               this.state.players,
-              TILE_TYPES as string[],
+              this.board.tiles as string[],
               this.nodes.length,
               player.cpuLevel
             )
@@ -949,7 +990,7 @@ export class BoardScene extends Phaser.Scene {
       }
       case 'warp':
         player.position = player.isCpu
-          ? cpuChooseWarpPosition(this.nodes.length, TILE_TYPES as string[], player.cpuLevel)
+          ? cpuChooseWarpPosition(this.nodes.length, this.board.tiles as string[], player.cpuLevel)
           : Phaser.Math.Between(0, this.nodes.length - 1)
         this.updatePlayerTokens()
         this.showFloatyText(player, '🌀 Warped!', '#88ccff')
@@ -1735,7 +1776,7 @@ export class BoardScene extends Phaser.Scene {
       ? cpuChooseSwapTarget(
           playerIndex,
           this.state.players,
-          TILE_TYPES as string[],
+          this.board.tiles as string[],
           this.nodes.length,
           player.cpuLevel
         )
@@ -1818,6 +1859,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private goToResults(earlyWin: boolean) {
+    clearSave()
     this.trackPeakCoins()
     const next = this.state.options.bonusStars && !earlyWin ? 'BonusStarsScene' : 'ResultsScene'
     this.scene.start(next, { state: this.state })

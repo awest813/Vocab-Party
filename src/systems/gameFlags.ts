@@ -7,6 +7,7 @@ let autoSim = false
 let autoSimRounds: number | null = null
 let autoSimFullMap = false
 let autoSimPlayers = 4
+let autoSimBoard = 'loop'
 let autoSimMinigames: 'every' | 'alternate' | 'tiles' = 'every'
 
 export function initGameFlagsFromLocation(): void {
@@ -21,6 +22,7 @@ export function initGameFlagsFromLocation(): void {
   } else {
     autoSimRounds = null
   }
+  autoSimBoard = q.get('board') ?? 'loop'
   const mg = q.get('minigames')
   autoSimMinigames = mg === 'alternate' || mg === 'tiles' ? mg : 'every'
   const playersRaw = q.get('players')
@@ -56,4 +58,8 @@ export function scaleAutoSimDelay(ms: number): number {
 
 export function getAutoSimMinigames(): 'every' | 'alternate' | 'tiles' {
   return autoSimMinigames
+}
+
+export function getAutoSimBoard(): string {
+  return autoSimBoard
 }

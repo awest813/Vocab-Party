@@ -3,7 +3,7 @@ import { createButton, setButtonEnabled, setButtonLabel } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
 import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
-import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
+import { BOARDS, getBoard } from '../systems/BoardLayout'
 import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
 import {
   CHARACTER_DEFS,
@@ -14,7 +14,7 @@ import {
 } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
-import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers, getAutoSimMinigames } from '../systems/gameFlags'
+import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers, getAutoSimMinigames, getAutoSimBoard } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 
@@ -35,7 +35,7 @@ interface MapPreset {
 const MAP_PRESETS: MapPreset[] = [
   { id: 'quick', rounds: 5, label: 'QUICK', blurb: '5 rounds · short party' },
   { id: 'classic', rounds: 10, label: 'CLASSIC', blurb: '10 rounds · standard' },
-  { id: 'full', rounds: BOARD_PATH_LENGTH, label: 'FULL MAP', blurb: `${BOARD_PATH_LENGTH} rounds · full lap` },
+  { id: 'full', rounds: 0, label: 'FULL MAP', blurb: '1 round per tile' },
 ]
 
 interface InputRow {
@@ -70,6 +70,7 @@ function loadPartyOptions(): PartyOptions {
       return {
         minigames: FREQ_ORDER.includes(p.minigames as MinigameFrequency) ? p.minigames as MinigameFrequency : DEFAULT_PARTY_OPTIONS.minigames,
         bonusStars: typeof p.bonusStars === 'boolean' ? p.bonusStars : DEFAULT_PARTY_OPTIONS.bonusStars,
+        board: getBoard(p.board).id,
       }
     }
   } catch { /* ignore */ }
@@ -106,6 +107,8 @@ export class SetupScene extends Phaser.Scene {
   private partyOptions: PartyOptions = { ...DEFAULT_PARTY_OPTIONS }
   private freqBtn?: Phaser.GameObjects.Container
   private bonusBtn?: Phaser.GameObjects.Container
+  private boardBtn?: Phaser.GameObjects.Container
+  private fullBlurb?: Phaser.GameObjects.Text
 
   constructor() { super('SetupScene') }
 
@@ -230,7 +233,7 @@ export class SetupScene extends Phaser.Scene {
 
     this.add.text(w / 2, rosterTop + 24, touch
       ? 'Tap portrait or name tag to change character  ·  Tap START'
-      : 'Click portrait to change character  ·  1–3 map  ·  M minigames  ·  B bonus stars  ·  Enter to start', {
+      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  M minigames  ·  B bonus  ·  Enter to start', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -268,13 +271,13 @@ export class SetupScene extends Phaser.Scene {
     // ——— Party rules ———
     this.partyOptions = loadPartyOptions()
     const rulesY = 596
-    this.add.text(w / 2 - 470, rulesY, 'PARTY RULES', {
-      fontSize: '12px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
-    }).setOrigin(0, 0.5).setDepth(4)
-    this.freqBtn = createButton(this, w / 2 - 110, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 360, 44)
+    this.boardBtn = createButton(this, w / 2 - 300, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 340, 44)
+    this.boardBtn.setDepth(6)
+    this.boardBtn.on('pointerdown', () => this.cycleBoard())
+    this.freqBtn = createButton(this, w / 2 + 60, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 350, 44)
     this.freqBtn.setDepth(6)
     this.freqBtn.on('pointerdown', () => this.cycleMinigameFrequency())
-    this.bonusBtn = createButton(this, w / 2 + 275, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 330, 44)
+    this.bonusBtn = createButton(this, w / 2 + 352, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 214, 44)
     this.bonusBtn.setDepth(6)
     this.bonusBtn.on('pointerdown', () => this.toggleBonusStars())
     this.refreshPartyOptions()
@@ -313,7 +316,7 @@ export class SetupScene extends Phaser.Scene {
       this.mapPreset = getAutoSimFullMap() ? 'full' : 'classic'
       this.refreshMapCards()
       this.cpuModeByRow = ['normal', 'normal', 'normal', 'normal']
-      this.partyOptions = { minigames: getAutoSimMinigames(), bonusStars: true }
+      this.partyOptions = { minigames: getAutoSimMinigames(), bonusStars: true, board: getAutoSimBoard() }
       for (let i = 0; i < MAX_PLAYERS; i++) this.refreshCpuToggle(i)
       this.refreshRows()
       this.refreshCountButtons()
@@ -330,6 +333,7 @@ export class SetupScene extends Phaser.Scene {
     const onRules = (ev: KeyboardEvent) => {
       if (this.activeRow >= 0) return
       if (ev.code === 'KeyM') this.cycleMinigameFrequency()
+      else if (ev.code === 'KeyG') this.cycleBoard()
       else if (ev.code === 'KeyB') this.toggleBonusStars()
     }
     this.input.keyboard?.on('keydown', onRules)
@@ -365,7 +369,19 @@ export class SetupScene extends Phaser.Scene {
 
   private refreshPartyOptions() {
     if (this.freqBtn) setButtonLabel(this.freqBtn, `🎮 Minigames: ${FREQ_LABEL[this.partyOptions.minigames]}`)
-    if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus Stars: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
+    if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
+    const board = getBoard(this.partyOptions.board)
+    if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} Board: ${board.name}`)
+    this.fullBlurb?.setText(`${board.nodes.length} rounds · full lap`)
+  }
+
+  private cycleBoard() {
+    if (this.leaving) return
+    const i = BOARDS.findIndex(b => b.id === this.partyOptions.board)
+    this.partyOptions.board = BOARDS[(i + 1) % BOARDS.length].id
+    savePartyOptions(this.partyOptions)
+    this.refreshPartyOptions()
+    Sfx.uiToggle()
   }
 
   private cycleMinigameFrequency() {
@@ -386,6 +402,7 @@ export class SetupScene extends Phaser.Scene {
   }
 
   private currentMapRounds(): number {
+    if (this.mapPreset === 'full') return getBoard(this.partyOptions.board).nodes.length
     return MAP_PRESETS.find(p => p.id === this.mapPreset)?.rounds ?? 10
   }
 
@@ -418,6 +435,7 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.mist),
     }).setOrigin(0.5)
     root.add([title, blurb])
+    if (preset.id === 'full') this.fullBlurb = blurb
 
     const hit = this.add.rectangle(0, 0, width, height, 0x000000, 0.001)
       .setInteractive({ useHandCursor: true })

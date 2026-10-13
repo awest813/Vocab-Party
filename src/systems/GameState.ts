@@ -85,9 +85,11 @@ export type MinigameFrequency = 'every' | 'alternate' | 'tiles'
 export interface PartyOptions {
   minigames: MinigameFrequency
   bonusStars: boolean
+  /** Board id from BoardLayout.BOARDS. */
+  board: string
 }
 
-export const DEFAULT_PARTY_OPTIONS: PartyOptions = { minigames: 'every', bonusStars: true }
+export const DEFAULT_PARTY_OPTIONS: PartyOptions = { minigames: 'every', bonusStars: true, board: 'loop' }
 
 export interface GameState {
   players: Player[]
