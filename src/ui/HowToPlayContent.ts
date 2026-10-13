@@ -13,10 +13,10 @@ export const HOW_TO_TILES: HowToTile[] = [
   { emoji: '🏠', label: 'Start', desc: 'Pass for +5 coins · land for +3 score/coins', color: TILE_COLORS.start },
   { emoji: '📖', label: 'Vocab', desc: 'Answer a vocabulary question (+10)', color: TILE_COLORS.vocab },
   { emoji: '✏️', label: 'Grammar', desc: 'Fix a grammar problem (+10)', color: TILE_COLORS.grammar },
-  { emoji: '⭐', label: 'Bonus', desc: 'Earn +5 score and +4 coins!', color: TILE_COLORS.bonus },
+  { emoji: '⭐', label: 'Bonus', desc: '+5 score, +4 coins (doubled in the Last Stretch)', color: TILE_COLORS.bonus },
   { emoji: '💀', label: 'Penalty', desc: 'Lose score and coins (shield blocks it)', color: TILE_COLORS.penalty },
   { emoji: '❓', label: 'Mystery', desc: 'Random surprise effect!', color: TILE_COLORS.mystery },
-  { emoji: '🕹️', label: 'Minigame', desc: 'Quick challenge — winner gets +15', color: TILE_COLORS.minigame },
+  { emoji: '🕹️', label: 'Duel', desc: '1-on-1 minigame — winner steals 6 coins', color: TILE_COLORS.minigame },
   { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: TILE_COLORS.swap },
   { emoji: '🏪', label: 'Shop', desc: 'Buy shops to earn rent from rivals', color: TILE_COLORS.shop },
   { emoji: '🌟', label: 'Star', desc: 'Spend 20 coins for a trophy (+12 score)', color: TILE_COLORS.star },
@@ -31,12 +31,15 @@ export const HOW_TO_RULES = [
   '🌟 Star & 🏪 shop tiles: choose Buy or Pass when you land',
   '🛍️ Item shops let you pick a card or pass · use ITEMS on your turn',
   '⚔️ Landing on another player starts a battle',
+  '🎉 After each round everyone plays a vocab minigame — 1st place wins 10 coins',
+  '🔥 Last Stretch: final rounds double bonus/penalty tiles; last place gets a boost',
+  '🌟 Bonus Stars at the end: Word Wizard, Minigame Master, Coin Tycoon (+1 🏆 each)',
   '🎯 First to 5 trophies wins — or most trophies (then score) when rounds end',
 ]
 
 export const HOW_TO_CONTROLS_DESKTOP = [
   'Board: Space / Enter / R = Roll · Esc = Pause · 1/2 = fork paths',
-  'Questions & minigames: 1–4 or A–D',
+  'Questions: 1–4 or A–D · Minigames: see each game\'s rules card',
   'Shops & item cards: 1 = yes/buy · 2 or Esc = pass/cancel',
   'Item backpack: 1–7 use a card · Esc closes',
   'Battle: 1 = Defend · 2 = Evade',
@@ -51,4 +54,4 @@ export const HOW_TO_CONTROLS_TOUCH = [
 ]
 
 export const HOW_TO_INTRO =
-  'Take turns rolling and racing around the board. Answer questions, grab stars, and outplay your rivals!'
+  'Roll, race, and answer your way to 5 trophies. Every round ends in a vocab minigame — and the Minigame Arcade lets you practice any of them solo!'

@@ -1,0 +1,4457 @@
+{
+  "words": [
+    {
+      "word": "hypothesis",
+      "pos": "noun",
+      "definition": "a proposed explanation that can be tested",
+      "synonyms": [
+        "theory",
+        "guess",
+        "premise"
+      ],
+      "antonyms": [
+        "fact",
+        "certainty"
+      ],
+      "sentence": "Her hypothesis predicted that plants grow faster in warm light."
+    },
+    {
+      "word": "ambition",
+      "pos": "noun",
+      "definition": "a strong desire to achieve something",
+      "synonyms": [
+        "drive",
+        "aspiration",
+        "goal"
+      ],
+      "antonyms": [
+        "apathy",
+        "laziness"
+      ],
+      "sentence": "Her ambition is to design a bridge one day."
+    },
+    {
+      "word": "catastrophe",
+      "pos": "noun",
+      "definition": "a sudden event causing great damage",
+      "synonyms": [
+        "disaster",
+        "calamity",
+        "debacle"
+      ],
+      "antonyms": [
+        "blessing",
+        "triumph"
+      ],
+      "sentence": "The flooded gym was a catastrophe for the school dance."
+    },
+    {
+      "word": "dilemma",
+      "pos": "noun",
+      "definition": "a hard choice between two options",
+      "synonyms": [
+        "predicament",
+        "quandary",
+        "bind"
+      ],
+      "antonyms": [
+        "solution",
+        "answer"
+      ],
+      "sentence": "Choosing between soccer and band was a real dilemma."
+    },
+    {
+      "word": "courage",
+      "pos": "noun",
+      "definition": "the ability to face danger or fear",
+      "synonyms": [
+        "bravery",
+        "valor",
+        "nerve"
+      ],
+      "antonyms": [
+        "cowardice",
+        "fear"
+      ],
+      "sentence": "It took courage to sing alone on the stage."
+    },
+    {
+      "word": "curiosity",
+      "pos": "noun",
+      "definition": "a strong wish to know or learn",
+      "synonyms": [
+        "interest",
+        "wonder",
+        "nosiness"
+      ],
+      "antonyms": [
+        "indifference",
+        "apathy"
+      ],
+      "sentence": "Her curiosity led her to take apart the old radio."
+    },
+    {
+      "word": "evidence",
+      "pos": "noun",
+      "definition": "facts or signs that show something is true",
+      "synonyms": [
+        "proof",
+        "data",
+        "testimony"
+      ],
+      "antonyms": [
+        "disproof"
+      ],
+      "sentence": "The muddy footprints were evidence that the dog had been inside."
+    },
+    {
+      "word": "harmony",
+      "pos": "noun",
+      "definition": "a pleasing agreement or peaceful state",
+      "synonyms": [
+        "accord",
+        "unity",
+        "peace"
+      ],
+      "antonyms": [
+        "conflict",
+        "discord"
+      ],
+      "sentence": "The two cats lived in harmony after a few weeks."
+    },
+    {
+      "word": "obstacle",
+      "pos": "noun",
+      "definition": "something that blocks progress",
+      "synonyms": [
+        "barrier",
+        "hurdle",
+        "obstruction"
+      ],
+      "antonyms": [
+        "aid",
+        "help"
+      ],
+      "sentence": "A fallen tree was the biggest obstacle on the trail."
+    },
+    {
+      "word": "prosperity",
+      "pos": "noun",
+      "definition": "a state of success and wealth",
+      "synonyms": [
+        "wealth",
+        "affluence",
+        "success"
+      ],
+      "antonyms": [
+        "poverty",
+        "hardship"
+      ],
+      "sentence": "The new factory brought prosperity to the small town."
+    },
+    {
+      "word": "resilience",
+      "pos": "noun",
+      "definition": "the ability to recover quickly from setbacks",
+      "synonyms": [
+        "toughness",
+        "grit",
+        "durability"
+      ],
+      "antonyms": [
+        "fragility",
+        "weakness"
+      ],
+      "sentence": "The team showed resilience after losing the first game."
+    },
+    {
+      "word": "anomaly",
+      "pos": "noun",
+      "definition": "something that differs from what is normal",
+      "synonyms": [
+        "oddity",
+        "irregularity",
+        "exception"
+      ],
+      "antonyms": [
+        "norm",
+        "rule"
+      ],
+      "sentence": "A snowstorm in May was an anomaly for the region."
+    },
+    {
+      "word": "consensus",
+      "pos": "noun",
+      "definition": "general agreement among a group",
+      "synonyms": [
+        "agreement",
+        "concord",
+        "unanimity"
+      ],
+      "antonyms": [
+        "disagreement",
+        "dissent"
+      ],
+      "sentence": "The class reached a consensus on the field trip."
+    },
+    {
+      "word": "empathy",
+      "pos": "noun",
+      "definition": "the ability to share another's feelings",
+      "synonyms": [
+        "compassion",
+        "sympathy",
+        "understanding"
+      ],
+      "antonyms": [
+        "indifference",
+        "coldness"
+      ],
+      "sentence": "Her empathy made her a great peer mentor."
+    },
+    {
+      "word": "fatigue",
+      "pos": "noun",
+      "definition": "extreme tiredness",
+      "synonyms": [
+        "exhaustion",
+        "weariness",
+        "tiredness"
+      ],
+      "antonyms": [
+        "energy",
+        "vigor"
+      ],
+      "sentence": "After the long hike, fatigue set in quickly."
+    },
+    {
+      "word": "integrity",
+      "pos": "noun",
+      "definition": "the quality of being honest and fair",
+      "synonyms": [
+        "honesty",
+        "honor",
+        "principle"
+      ],
+      "antonyms": [
+        "dishonesty",
+        "deceit"
+      ],
+      "sentence": "He showed integrity by returning the lost wallet."
+    },
+    {
+      "word": "chaos",
+      "pos": "noun",
+      "definition": "complete disorder and confusion",
+      "synonyms": [
+        "disorder",
+        "mayhem",
+        "turmoil"
+      ],
+      "antonyms": [
+        "order",
+        "calm"
+      ],
+      "sentence": "The kitchen was chaos during the bake sale."
+    },
+    {
+      "word": "myth",
+      "pos": "noun",
+      "definition": "a widely believed but false story",
+      "synonyms": [
+        "legend",
+        "fable",
+        "fiction"
+      ],
+      "antonyms": [
+        "fact",
+        "truth"
+      ],
+      "sentence": "It is a myth that goldfish forget everything in seconds."
+    },
+    {
+      "word": "novice",
+      "pos": "noun",
+      "definition": "a person who is new to an activity",
+      "synonyms": [
+        "beginner",
+        "newcomer",
+        "rookie"
+      ],
+      "antonyms": [
+        "expert",
+        "veteran"
+      ],
+      "sentence": "As a novice, she practiced her scales every day."
+    },
+    {
+      "word": "paradox",
+      "pos": "noun",
+      "definition": "a statement that seems to contradict itself",
+      "synonyms": [
+        "contradiction",
+        "riddle",
+        "enigma"
+      ],
+      "antonyms": [
+        "truism"
+      ],
+      "sentence": "It is a paradox that resting too much can make you tired."
+    },
+    {
+      "word": "scarcity",
+      "pos": "noun",
+      "definition": "a shortage of something needed",
+      "synonyms": [
+        "shortage",
+        "lack",
+        "dearth"
+      ],
+      "antonyms": [
+        "abundance",
+        "plenty"
+      ],
+      "sentence": "The drought caused a scarcity of fresh water."
+    },
+    {
+      "word": "triumph",
+      "pos": "noun",
+      "definition": "a great victory or success",
+      "synonyms": [
+        "victory",
+        "conquest",
+        "win"
+      ],
+      "antonyms": [
+        "defeat",
+        "failure"
+      ],
+      "sentence": "Finishing the marathon was a triumph for her."
+    },
+    {
+      "word": "vigor",
+      "pos": "noun",
+      "definition": "physical strength and energy",
+      "synonyms": [
+        "vitality",
+        "stamina",
+        "liveliness"
+      ],
+      "antonyms": [
+        "weakness",
+        "lethargy"
+      ],
+      "sentence": "The puppy chased the ball with great vigor."
+    },
+    {
+      "word": "clarity",
+      "pos": "noun",
+      "definition": "the quality of being easy to see or understand",
+      "synonyms": [
+        "lucidity",
+        "transparency",
+        "plainness"
+      ],
+      "antonyms": [
+        "confusion",
+        "vagueness"
+      ],
+      "sentence": "The teacher explained the rule with great clarity."
+    },
+    {
+      "word": "diligence",
+      "pos": "noun",
+      "definition": "careful and steady effort",
+      "synonyms": [
+        "dedication",
+        "persistence",
+        "thoroughness"
+      ],
+      "antonyms": [
+        "laziness",
+        "neglect"
+      ],
+      "sentence": "Her diligence paid off on the final exam."
+    },
+    {
+      "word": "enthusiasm",
+      "pos": "noun",
+      "definition": "eager enjoyment and interest",
+      "synonyms": [
+        "eagerness",
+        "zeal",
+        "passion"
+      ],
+      "antonyms": [
+        "apathy",
+        "boredom"
+      ],
+      "sentence": "The crowd cheered with enthusiasm for the band."
+    },
+    {
+      "word": "fortitude",
+      "pos": "noun",
+      "definition": "strength of mind during hard times",
+      "synonyms": [
+        "endurance",
+        "backbone",
+        "strength"
+      ],
+      "antonyms": [
+        "weakness",
+        "timidity"
+      ],
+      "sentence": "Climbing the last steep hill took real fortitude."
+    },
+    {
+      "word": "gratitude",
+      "pos": "noun",
+      "definition": "a feeling of being thankful",
+      "synonyms": [
+        "thankfulness",
+        "appreciation",
+        "thanks"
+      ],
+      "antonyms": [
+        "ingratitude"
+      ],
+      "sentence": "She wrote a note of gratitude to her coach."
+    },
+    {
+      "word": "humility",
+      "pos": "noun",
+      "definition": "a modest view of one's own importance",
+      "synonyms": [
+        "modesty",
+        "meekness",
+        "humbleness"
+      ],
+      "antonyms": [
+        "arrogance",
+        "pride"
+      ],
+      "sentence": "Despite winning, she accepted the trophy with humility."
+    },
+    {
+      "word": "insight",
+      "pos": "noun",
+      "definition": "a deep understanding of something",
+      "synonyms": [
+        "perception",
+        "intuition",
+        "discernment"
+      ],
+      "antonyms": [
+        "ignorance"
+      ],
+      "sentence": "Her insight helped the group solve the riddle."
+    },
+    {
+      "word": "luxury",
+      "pos": "noun",
+      "definition": "something costly that is not essential",
+      "synonyms": [
+        "extravagance",
+        "indulgence",
+        "treat"
+      ],
+      "antonyms": [
+        "necessity"
+      ],
+      "sentence": "A hot bath felt like a luxury after camping."
+    },
+    {
+      "word": "nuisance",
+      "pos": "noun",
+      "definition": "something annoying or bothersome",
+      "synonyms": [
+        "annoyance",
+        "pest",
+        "irritation"
+      ],
+      "antonyms": [
+        "pleasure",
+        "delight"
+      ],
+      "sentence": "The buzzing fly was a nuisance during the test."
+    },
+    {
+      "word": "opponent",
+      "pos": "noun",
+      "definition": "someone who competes against you",
+      "synonyms": [
+        "rival",
+        "adversary",
+        "competitor"
+      ],
+      "antonyms": [
+        "ally",
+        "teammate"
+      ],
+      "sentence": "Her opponent shook her hand after the match."
+    },
+    {
+      "word": "precision",
+      "pos": "noun",
+      "definition": "the quality of being exact",
+      "synonyms": [
+        "accuracy",
+        "exactness",
+        "correctness"
+      ],
+      "antonyms": [
+        "inaccuracy",
+        "error"
+      ],
+      "sentence": "The robot cut the wood with amazing precision."
+    },
+    {
+      "word": "remedy",
+      "pos": "noun",
+      "definition": "a cure or solution for a problem",
+      "synonyms": [
+        "cure",
+        "treatment",
+        "antidote"
+      ],
+      "antonyms": [
+        "ailment",
+        "problem"
+      ],
+      "sentence": "Warm tea is her favorite remedy for a sore throat."
+    },
+    {
+      "word": "strategy",
+      "pos": "noun",
+      "definition": "a plan to achieve a goal",
+      "synonyms": [
+        "plan",
+        "tactic",
+        "scheme"
+      ],
+      "antonyms": [
+        "improvisation"
+      ],
+      "sentence": "Our strategy was to pass the ball quickly."
+    },
+    {
+      "word": "tradition",
+      "pos": "noun",
+      "definition": "a custom passed down over time",
+      "synonyms": [
+        "custom",
+        "practice",
+        "ritual"
+      ],
+      "antonyms": [
+        "innovation",
+        "novelty"
+      ],
+      "sentence": "Baking pies on Sunday is a family tradition."
+    },
+    {
+      "word": "vendor",
+      "pos": "noun",
+      "definition": "a person who sells things",
+      "synonyms": [
+        "seller",
+        "merchant",
+        "trader"
+      ],
+      "antonyms": [
+        "buyer",
+        "customer"
+      ],
+      "sentence": "The vendor sold warm pretzels outside the stadium."
+    },
+    {
+      "word": "wisdom",
+      "pos": "noun",
+      "definition": "good judgment from knowledge and experience",
+      "synonyms": [
+        "prudence",
+        "sagacity",
+        "judgment"
+      ],
+      "antonyms": [
+        "folly",
+        "foolishness"
+      ],
+      "sentence": "Grandpa shared his wisdom about saving money."
+    },
+    {
+      "word": "adversity",
+      "pos": "noun",
+      "definition": "hard times or misfortune",
+      "synonyms": [
+        "hardship",
+        "misfortune",
+        "trouble"
+      ],
+      "antonyms": [
+        "prosperity",
+        "fortune"
+      ],
+      "sentence": "She faced adversity with a calm smile."
+    },
+    {
+      "word": "benefit",
+      "pos": "noun",
+      "definition": "an advantage or helpful result",
+      "synonyms": [
+        "advantage",
+        "gain",
+        "profit"
+      ],
+      "antonyms": [
+        "drawback",
+        "disadvantage"
+      ],
+      "sentence": "One benefit of walking to school is the fresh air."
+    },
+    {
+      "word": "conflict",
+      "pos": "noun",
+      "definition": "a serious disagreement or struggle",
+      "synonyms": [
+        "dispute",
+        "clash",
+        "friction"
+      ],
+      "antonyms": [
+        "harmony",
+        "peace"
+      ],
+      "sentence": "The two clubs settled their conflict with a compromise."
+    },
+    {
+      "word": "fragment",
+      "pos": "noun",
+      "definition": "a small broken piece",
+      "synonyms": [
+        "piece",
+        "shard",
+        "scrap"
+      ],
+      "antonyms": [
+        "whole"
+      ],
+      "sentence": "She found a fragment of blue pottery in the sand."
+    },
+    {
+      "word": "ovation",
+      "pos": "noun",
+      "definition": "long and loud applause",
+      "synonyms": [
+        "applause",
+        "acclaim",
+        "cheers"
+      ],
+      "antonyms": [
+        "jeers",
+        "silence"
+      ],
+      "sentence": "The cast received a standing ovation on opening night."
+    },
+    {
+      "word": "persevere",
+      "pos": "verb",
+      "definition": "to keep going despite difficulty",
+      "synonyms": [
+        "persist",
+        "endure",
+        "continue"
+      ],
+      "antonyms": [
+        "quit",
+        "surrender"
+      ],
+      "sentence": "She chose to persevere until the puzzle was solved."
+    },
+    {
+      "word": "abandon",
+      "pos": "verb",
+      "definition": "to leave behind completely",
+      "synonyms": [
+        "desert",
+        "forsake",
+        "ditch"
+      ],
+      "antonyms": [
+        "keep",
+        "retain"
+      ],
+      "sentence": "The sailors had to abandon the leaky rowboat."
+    },
+    {
+      "word": "accelerate",
+      "pos": "verb",
+      "definition": "to increase speed",
+      "synonyms": [
+        "speed",
+        "quicken",
+        "hasten"
+      ],
+      "antonyms": [
+        "decelerate",
+        "slow"
+      ],
+      "sentence": "The car began to accelerate down the ramp."
+    },
+    {
+      "word": "admire",
+      "pos": "verb",
+      "definition": "to regard with respect or approval",
+      "synonyms": [
+        "respect",
+        "esteem",
+        "revere"
+      ],
+      "antonyms": [
+        "despise",
+        "scorn"
+      ],
+      "sentence": "I admire how calmly she handles pressure."
+    },
+    {
+      "word": "analyze",
+      "pos": "verb",
+      "definition": "to examine something in detail",
+      "synonyms": [
+        "examine",
+        "study",
+        "dissect"
+      ],
+      "antonyms": [
+        "ignore",
+        "overlook"
+      ],
+      "sentence": "We will analyze the data from our experiment."
+    },
+    {
+      "word": "bewilder",
+      "pos": "verb",
+      "definition": "to confuse someone completely",
+      "synonyms": [
+        "confuse",
+        "baffle",
+        "perplex"
+      ],
+      "antonyms": [
+        "enlighten",
+        "clarify"
+      ],
+      "sentence": "The hedge maze was designed to bewilder visitors."
+    },
+    {
+      "word": "collaborate",
+      "pos": "verb",
+      "definition": "to work together on a task",
+      "synonyms": [
+        "cooperate",
+        "partner",
+        "coordinate"
+      ],
+      "antonyms": [
+        "compete"
+      ],
+      "sentence": "The students collaborate on a science poster."
+    },
+    {
+      "word": "conceal",
+      "pos": "verb",
+      "definition": "to hide something from view",
+      "synonyms": [
+        "hide",
+        "cover",
+        "mask"
+      ],
+      "antonyms": [
+        "reveal",
+        "expose"
+      ],
+      "sentence": "He tried to conceal the surprise gift under his coat."
+    },
+    {
+      "word": "deteriorate",
+      "pos": "verb",
+      "definition": "to become worse over time",
+      "synonyms": [
+        "decline",
+        "worsen",
+        "degrade"
+      ],
+      "antonyms": [
+        "improve",
+        "recover"
+      ],
+      "sentence": "The old bridge began to deteriorate after years of rain."
+    },
+    {
+      "word": "diminish",
+      "pos": "verb",
+      "definition": "to make or become smaller",
+      "synonyms": [
+        "decrease",
+        "lessen",
+        "shrink"
+      ],
+      "antonyms": [
+        "increase",
+        "grow"
+      ],
+      "sentence": "The noise began to diminish as the parade moved on."
+    },
+    {
+      "word": "emerge",
+      "pos": "verb",
+      "definition": "to come out into view",
+      "synonyms": [
+        "appear",
+        "surface",
+        "arise"
+      ],
+      "antonyms": [
+        "vanish",
+        "disappear"
+      ],
+      "sentence": "A rainbow began to emerge after the storm."
+    },
+    {
+      "word": "endorse",
+      "pos": "verb",
+      "definition": "to publicly support or approve",
+      "synonyms": [
+        "support",
+        "back",
+        "champion"
+      ],
+      "antonyms": [
+        "oppose",
+        "reject"
+      ],
+      "sentence": "The principal agreed to endorse the recycling plan."
+    },
+    {
+      "word": "evaluate",
+      "pos": "verb",
+      "definition": "to judge the quality or worth of",
+      "synonyms": [
+        "assess",
+        "appraise",
+        "rate"
+      ],
+      "antonyms": [
+        "neglect"
+      ],
+      "sentence": "Judges will evaluate each project at the science fair."
+    },
+    {
+      "word": "fabricate",
+      "pos": "verb",
+      "definition": "to make up a false story",
+      "synonyms": [
+        "invent",
+        "concoct",
+        "falsify"
+      ],
+      "antonyms": [
+        "verify"
+      ],
+      "sentence": "He tried to fabricate an excuse for being late."
+    },
+    {
+      "word": "hesitate",
+      "pos": "verb",
+      "definition": "to pause before acting",
+      "synonyms": [
+        "pause",
+        "waver",
+        "falter"
+      ],
+      "antonyms": [
+        "proceed",
+        "act"
+      ],
+      "sentence": "Do not hesitate to ask for help."
+    },
+    {
+      "word": "illuminate",
+      "pos": "verb",
+      "definition": "to light up or make bright",
+      "synonyms": [
+        "brighten",
+        "light",
+        "floodlight"
+      ],
+      "antonyms": [
+        "darken",
+        "dim"
+      ],
+      "sentence": "Lanterns illuminate the path to the cabin."
+    },
+    {
+      "word": "imitate",
+      "pos": "verb",
+      "definition": "to copy the actions of someone",
+      "synonyms": [
+        "copy",
+        "mimic",
+        "mirror"
+      ],
+      "antonyms": [
+        "originate"
+      ],
+      "sentence": "My parrot can imitate the doorbell perfectly."
+    },
+    {
+      "word": "inspire",
+      "pos": "verb",
+      "definition": "to fill someone with the urge to act",
+      "synonyms": [
+        "motivate",
+        "encourage",
+        "stimulate"
+      ],
+      "antonyms": [
+        "discourage",
+        "deter"
+      ],
+      "sentence": "Her speech will inspire the team to train harder."
+    },
+    {
+      "word": "modify",
+      "pos": "verb",
+      "definition": "to change something slightly",
+      "synonyms": [
+        "alter",
+        "adjust",
+        "revise"
+      ],
+      "antonyms": [
+        "preserve",
+        "maintain"
+      ],
+      "sentence": "We had to modify the recipe because we had no eggs."
+    },
+    {
+      "word": "negotiate",
+      "pos": "verb",
+      "definition": "to discuss in order to reach a deal",
+      "synonyms": [
+        "bargain",
+        "haggle",
+        "mediate"
+      ],
+      "antonyms": [
+        "dictate"
+      ],
+      "sentence": "The kids tried to negotiate a later bedtime."
+    },
+    {
+      "word": "obtain",
+      "pos": "verb",
+      "definition": "to get or acquire something",
+      "synonyms": [
+        "acquire",
+        "secure",
+        "procure"
+      ],
+      "antonyms": [
+        "lose",
+        "forfeit"
+      ],
+      "sentence": "You must obtain a permit to fish in this lake."
+    },
+    {
+      "word": "persuade",
+      "pos": "verb",
+      "definition": "to get someone to agree by reasoning",
+      "synonyms": [
+        "convince",
+        "coax",
+        "sway"
+      ],
+      "antonyms": [
+        "dissuade"
+      ],
+      "sentence": "She managed to persuade her parents to adopt a cat."
+    },
+    {
+      "word": "prohibit",
+      "pos": "verb",
+      "definition": "to forbid by rule or law",
+      "synonyms": [
+        "forbid",
+        "ban",
+        "bar"
+      ],
+      "antonyms": [
+        "allow",
+        "permit"
+      ],
+      "sentence": "The pool rules prohibit running on the deck."
+    },
+    {
+      "word": "reinforce",
+      "pos": "verb",
+      "definition": "to make stronger",
+      "synonyms": [
+        "strengthen",
+        "fortify",
+        "bolster"
+      ],
+      "antonyms": [
+        "weaken",
+        "undermine"
+      ],
+      "sentence": "Extra beams reinforce the treehouse floor."
+    },
+    {
+      "word": "scrutinize",
+      "pos": "verb",
+      "definition": "to examine very closely",
+      "synonyms": [
+        "inspect",
+        "scan",
+        "probe"
+      ],
+      "antonyms": [
+        "skim",
+        "overlook"
+      ],
+      "sentence": "Editors scrutinize every sentence before printing."
+    },
+    {
+      "word": "soothe",
+      "pos": "verb",
+      "definition": "to calm or comfort",
+      "synonyms": [
+        "calm",
+        "comfort",
+        "pacify"
+      ],
+      "antonyms": [
+        "agitate",
+        "upset"
+      ],
+      "sentence": "Soft music can soothe a crying baby."
+    },
+    {
+      "word": "tolerate",
+      "pos": "verb",
+      "definition": "to allow or put up with",
+      "synonyms": [
+        "bear",
+        "stand",
+        "accept"
+      ],
+      "antonyms": [
+        "resist",
+        "refuse"
+      ],
+      "sentence": "I can tolerate the cold for a short walk."
+    },
+    {
+      "word": "undermine",
+      "pos": "verb",
+      "definition": "to weaken gradually or secretly",
+      "synonyms": [
+        "weaken",
+        "sabotage",
+        "subvert"
+      ],
+      "antonyms": [
+        "strengthen",
+        "bolster"
+      ],
+      "sentence": "Gossip can undermine trust within a team."
+    },
+    {
+      "word": "venture",
+      "pos": "verb",
+      "definition": "to go somewhere risky or unknown",
+      "synonyms": [
+        "dare",
+        "risk",
+        "brave"
+      ],
+      "antonyms": [
+        "retreat"
+      ],
+      "sentence": "We decided to venture into the dark cave with flashlights."
+    },
+    {
+      "word": "withdraw",
+      "pos": "verb",
+      "definition": "to pull back or move away",
+      "synonyms": [
+        "retreat",
+        "retract",
+        "recede"
+      ],
+      "antonyms": [
+        "advance",
+        "deposit"
+      ],
+      "sentence": "The snail will withdraw into its shell when touched."
+    },
+    {
+      "word": "yearn",
+      "pos": "verb",
+      "definition": "to have a strong longing",
+      "synonyms": [
+        "long",
+        "crave",
+        "pine"
+      ],
+      "antonyms": [
+        "loathe"
+      ],
+      "sentence": "Sailors yearn for home after months at sea."
+    },
+    {
+      "word": "comprehend",
+      "pos": "verb",
+      "definition": "to understand fully",
+      "synonyms": [
+        "grasp",
+        "understand",
+        "fathom"
+      ],
+      "antonyms": [
+        "misunderstand"
+      ],
+      "sentence": "It took me a while to comprehend the new math rule."
+    },
+    {
+      "word": "contemplate",
+      "pos": "verb",
+      "definition": "to think deeply about something",
+      "synonyms": [
+        "ponder",
+        "consider",
+        "reflect"
+      ],
+      "antonyms": [
+        "disregard"
+      ],
+      "sentence": "She sat on the dock to contemplate her future."
+    },
+    {
+      "word": "demolish",
+      "pos": "verb",
+      "definition": "to tear down completely",
+      "synonyms": [
+        "destroy",
+        "raze",
+        "wreck"
+      ],
+      "antonyms": [
+        "build",
+        "construct"
+      ],
+      "sentence": "Workers will demolish the old mall next month."
+    },
+    {
+      "word": "disrupt",
+      "pos": "verb",
+      "definition": "to interrupt the normal flow of",
+      "synonyms": [
+        "disturb",
+        "interrupt",
+        "unsettle"
+      ],
+      "antonyms": [
+        "steady",
+        "settle"
+      ],
+      "sentence": "A fire drill can disrupt the whole school day."
+    },
+    {
+      "word": "enhance",
+      "pos": "verb",
+      "definition": "to improve the quality of",
+      "synonyms": [
+        "improve",
+        "boost",
+        "enrich"
+      ],
+      "antonyms": [
+        "diminish",
+        "worsen"
+      ],
+      "sentence": "Fresh herbs enhance the flavor of the soup."
+    },
+    {
+      "word": "exaggerate",
+      "pos": "verb",
+      "definition": "to make something seem bigger than it is",
+      "synonyms": [
+        "overstate",
+        "embellish",
+        "inflate"
+      ],
+      "antonyms": [
+        "understate",
+        "minimize"
+      ],
+      "sentence": "He tends to exaggerate the size of the fish he caught."
+    },
+    {
+      "word": "flourish",
+      "pos": "verb",
+      "definition": "to grow or develop well",
+      "synonyms": [
+        "thrive",
+        "prosper",
+        "bloom"
+      ],
+      "antonyms": [
+        "wither",
+        "fail"
+      ],
+      "sentence": "Tomatoes flourish in warm, sunny gardens."
+    },
+    {
+      "word": "hinder",
+      "pos": "verb",
+      "definition": "to make it hard to do something",
+      "synonyms": [
+        "impede",
+        "hamper",
+        "obstruct"
+      ],
+      "antonyms": [
+        "help",
+        "aid"
+      ],
+      "sentence": "Heavy rain will hinder the search for the lost kite."
+    },
+    {
+      "word": "interpret",
+      "pos": "verb",
+      "definition": "to explain the meaning of",
+      "synonyms": [
+        "explain",
+        "decode",
+        "translate"
+      ],
+      "antonyms": [
+        "misread"
+      ],
+      "sentence": "Only Mia could interpret the strange symbol on the map."
+    },
+    {
+      "word": "nurture",
+      "pos": "verb",
+      "definition": "to care for and help grow",
+      "synonyms": [
+        "foster",
+        "cultivate",
+        "nourish"
+      ],
+      "antonyms": [
+        "neglect"
+      ],
+      "sentence": "Gardeners nurture young seedlings with patience."
+    },
+    {
+      "word": "rejoice",
+      "pos": "verb",
+      "definition": "to feel or show great joy",
+      "synonyms": [
+        "celebrate",
+        "exult",
+        "cheer"
+      ],
+      "antonyms": [
+        "grieve",
+        "lament"
+      ],
+      "sentence": "The town will rejoice when the team comes home."
+    },
+    {
+      "word": "salvage",
+      "pos": "verb",
+      "definition": "to save something from loss or ruin",
+      "synonyms": [
+        "rescue",
+        "save",
+        "retrieve"
+      ],
+      "antonyms": [
+        "discard",
+        "lose"
+      ],
+      "sentence": "We managed to salvage most of the books from the leak."
+    },
+    {
+      "word": "distribute",
+      "pos": "verb",
+      "definition": "to give out shares of something",
+      "synonyms": [
+        "allocate",
+        "dispense",
+        "issue"
+      ],
+      "antonyms": [
+        "collect",
+        "gather"
+      ],
+      "sentence": "Volunteers distribute water to the runners."
+    },
+    {
+      "word": "benevolent",
+      "pos": "adjective",
+      "definition": "kind and generous toward others",
+      "synonyms": [
+        "kind",
+        "generous",
+        "charitable"
+      ],
+      "antonyms": [
+        "cruel",
+        "selfish"
+      ],
+      "sentence": "The benevolent neighbor shoveled every driveway on the street."
+    },
+    {
+      "word": "ambiguous",
+      "pos": "adjective",
+      "definition": "open to more than one meaning",
+      "synonyms": [
+        "unclear",
+        "vague",
+        "equivocal"
+      ],
+      "antonyms": [
+        "clear",
+        "definite"
+      ],
+      "sentence": "The ending of the movie was ambiguous."
+    },
+    {
+      "word": "eloquent",
+      "pos": "adjective",
+      "definition": "able to speak or write clearly and powerfully",
+      "synonyms": [
+        "articulate",
+        "expressive",
+        "fluent"
+      ],
+      "antonyms": [
+        "inarticulate"
+      ],
+      "sentence": "The eloquent speaker held the audience's attention."
+    },
+    {
+      "word": "rapid",
+      "pos": "adjective",
+      "definition": "happening very quickly",
+      "synonyms": [
+        "fast",
+        "swift",
+        "speedy"
+      ],
+      "antonyms": [
+        "slow",
+        "sluggish"
+      ],
+      "sentence": "The river's rapid current carried the leaves away."
+    },
+    {
+      "word": "fragile",
+      "pos": "adjective",
+      "definition": "easily broken or damaged",
+      "synonyms": [
+        "delicate",
+        "breakable",
+        "frail"
+      ],
+      "antonyms": [
+        "sturdy",
+        "durable"
+      ],
+      "sentence": "The fragile vase was wrapped in bubble wrap."
+    },
+    {
+      "word": "ubiquitous",
+      "pos": "adjective",
+      "definition": "found everywhere",
+      "synonyms": [
+        "omnipresent",
+        "pervasive",
+        "universal"
+      ],
+      "antonyms": [
+        "rare",
+        "scarce"
+      ],
+      "sentence": "Smartphones have become ubiquitous in modern life."
+    },
+    {
+      "word": "meticulous",
+      "pos": "adjective",
+      "definition": "showing great attention to detail",
+      "synonyms": [
+        "careful",
+        "thorough",
+        "precise"
+      ],
+      "antonyms": [
+        "careless",
+        "sloppy"
+      ],
+      "sentence": "She kept meticulous notes in her lab journal."
+    },
+    {
+      "word": "ancient",
+      "pos": "adjective",
+      "definition": "very old, from long ago",
+      "synonyms": [
+        "old",
+        "antique",
+        "archaic"
+      ],
+      "antonyms": [
+        "modern",
+        "new"
+      ],
+      "sentence": "We visited the ruins of an ancient temple."
+    },
+    {
+      "word": "anxious",
+      "pos": "adjective",
+      "definition": "feeling worried or nervous",
+      "synonyms": [
+        "worried",
+        "nervous",
+        "uneasy"
+      ],
+      "antonyms": [
+        "calm",
+        "relaxed"
+      ],
+      "sentence": "He felt anxious before his piano recital."
+    },
+    {
+      "word": "arrogant",
+      "pos": "adjective",
+      "definition": "having too much pride in oneself",
+      "synonyms": [
+        "conceited",
+        "haughty",
+        "smug"
+      ],
+      "antonyms": [
+        "humble",
+        "modest"
+      ],
+      "sentence": "The arrogant player refused to pass the ball."
+    },
+    {
+      "word": "candid",
+      "pos": "adjective",
+      "definition": "honest and direct",
+      "synonyms": [
+        "frank",
+        "blunt",
+        "forthright"
+      ],
+      "antonyms": [
+        "guarded",
+        "evasive"
+      ],
+      "sentence": "She gave a candid answer about her mistake."
+    },
+    {
+      "word": "cautious",
+      "pos": "adjective",
+      "definition": "careful to avoid danger",
+      "synonyms": [
+        "wary",
+        "prudent",
+        "vigilant"
+      ],
+      "antonyms": [
+        "reckless",
+        "careless"
+      ],
+      "sentence": "A cautious driver slows down in thick fog."
+    },
+    {
+      "word": "diverse",
+      "pos": "adjective",
+      "definition": "showing a lot of variety",
+      "synonyms": [
+        "varied",
+        "assorted",
+        "mixed"
+      ],
+      "antonyms": [
+        "uniform",
+        "similar"
+      ],
+      "sentence": "Our school has a diverse group of clubs."
+    },
+    {
+      "word": "durable",
+      "pos": "adjective",
+      "definition": "able to last a long time",
+      "synonyms": [
+        "sturdy",
+        "lasting",
+        "tough"
+      ],
+      "antonyms": [
+        "flimsy",
+        "fragile"
+      ],
+      "sentence": "These hiking boots are durable enough for any trail."
+    },
+    {
+      "word": "eager",
+      "pos": "adjective",
+      "definition": "wanting to do something very much",
+      "synonyms": [
+        "keen",
+        "avid",
+        "enthusiastic"
+      ],
+      "antonyms": [
+        "reluctant",
+        "unwilling"
+      ],
+      "sentence": "The eager students lined up for the field trip."
+    },
+    {
+      "word": "feasible",
+      "pos": "adjective",
+      "definition": "able to be done or achieved",
+      "synonyms": [
+        "possible",
+        "practical",
+        "workable"
+      ],
+      "antonyms": [
+        "impossible",
+        "impractical"
+      ],
+      "sentence": "Building a robot by Friday is not feasible."
+    },
+    {
+      "word": "frugal",
+      "pos": "adjective",
+      "definition": "careful about spending money",
+      "synonyms": [
+        "thrifty",
+        "economical",
+        "sparing"
+      ],
+      "antonyms": [
+        "wasteful",
+        "lavish"
+      ],
+      "sentence": "My frugal aunt reuses every gift bag."
+    },
+    {
+      "word": "gigantic",
+      "pos": "adjective",
+      "definition": "extremely large",
+      "synonyms": [
+        "huge",
+        "enormous",
+        "massive"
+      ],
+      "antonyms": [
+        "tiny",
+        "small"
+      ],
+      "sentence": "A gigantic whale surfaced near the boat."
+    },
+    {
+      "word": "hostile",
+      "pos": "adjective",
+      "definition": "unfriendly and ready to argue",
+      "synonyms": [
+        "antagonistic",
+        "belligerent",
+        "unwelcoming"
+      ],
+      "antonyms": [
+        "friendly",
+        "welcoming"
+      ],
+      "sentence": "The hostile cat hissed at the new puppy."
+    },
+    {
+      "word": "obsolete",
+      "pos": "adjective",
+      "definition": "no longer used or out of date",
+      "synonyms": [
+        "outdated",
+        "outmoded",
+        "antiquated"
+      ],
+      "antonyms": [
+        "current",
+        "modern"
+      ],
+      "sentence": "Floppy disks are obsolete technology."
+    },
+    {
+      "word": "lenient",
+      "pos": "adjective",
+      "definition": "not strict about rules or punishment",
+      "synonyms": [
+        "tolerant",
+        "permissive",
+        "forgiving"
+      ],
+      "antonyms": [
+        "strict",
+        "harsh"
+      ],
+      "sentence": "The lenient teacher allowed extra time on the quiz."
+    },
+    {
+      "word": "lethargic",
+      "pos": "adjective",
+      "definition": "lacking energy and slow to move",
+      "synonyms": [
+        "sluggish",
+        "listless",
+        "drowsy"
+      ],
+      "antonyms": [
+        "energetic",
+        "lively"
+      ],
+      "sentence": "The summer heat made the dog feel lethargic."
+    },
+    {
+      "word": "naive",
+      "pos": "adjective",
+      "definition": "lacking experience of the world",
+      "synonyms": [
+        "innocent",
+        "gullible",
+        "trusting"
+      ],
+      "antonyms": [
+        "worldly",
+        "sophisticated"
+      ],
+      "sentence": "The naive tourist believed the tall tale."
+    },
+    {
+      "word": "notorious",
+      "pos": "adjective",
+      "definition": "famous for something bad",
+      "synonyms": [
+        "infamous",
+        "disreputable",
+        "scandalous"
+      ],
+      "antonyms": [
+        "reputable"
+      ],
+      "sentence": "The intersection is notorious for traffic jams."
+    },
+    {
+      "word": "obscure",
+      "pos": "adjective",
+      "definition": "not well known",
+      "synonyms": [
+        "unknown",
+        "unfamiliar",
+        "forgotten"
+      ],
+      "antonyms": [
+        "famous",
+        "renowned"
+      ],
+      "sentence": "He collects records by obscure bands."
+    },
+    {
+      "word": "optimistic",
+      "pos": "adjective",
+      "definition": "expecting good things to happen",
+      "synonyms": [
+        "hopeful",
+        "positive",
+        "upbeat"
+      ],
+      "antonyms": [
+        "pessimistic",
+        "gloomy"
+      ],
+      "sentence": "She stayed optimistic even after the rainout."
+    },
+    {
+      "word": "peculiar",
+      "pos": "adjective",
+      "definition": "strange or unusual",
+      "synonyms": [
+        "odd",
+        "bizarre",
+        "quirky"
+      ],
+      "antonyms": [
+        "normal",
+        "ordinary"
+      ],
+      "sentence": "A peculiar smell came from the science lab."
+    },
+    {
+      "word": "reluctant",
+      "pos": "adjective",
+      "definition": "slow to agree because of doubt",
+      "synonyms": [
+        "hesitant",
+        "unwilling",
+        "loath"
+      ],
+      "antonyms": [
+        "eager",
+        "willing"
+      ],
+      "sentence": "He was reluctant to jump into the cold lake."
+    },
+    {
+      "word": "serene",
+      "pos": "adjective",
+      "definition": "calm and peaceful",
+      "synonyms": [
+        "tranquil",
+        "placid",
+        "peaceful"
+      ],
+      "antonyms": [
+        "turbulent",
+        "agitated"
+      ],
+      "sentence": "The lake looked serene at sunrise."
+    },
+    {
+      "word": "tedious",
+      "pos": "adjective",
+      "definition": "long and boring",
+      "synonyms": [
+        "monotonous",
+        "dull",
+        "tiresome"
+      ],
+      "antonyms": [
+        "exciting",
+        "interesting"
+      ],
+      "sentence": "Sorting the socks was a tedious chore."
+    },
+    {
+      "word": "vivid",
+      "pos": "adjective",
+      "definition": "bright and full of detail",
+      "synonyms": [
+        "brilliant",
+        "colorful",
+        "graphic"
+      ],
+      "antonyms": [
+        "dull",
+        "faded"
+      ],
+      "sentence": "She painted a vivid picture of the sunset."
+    },
+    {
+      "word": "vulnerable",
+      "pos": "adjective",
+      "definition": "easily hurt or attacked",
+      "synonyms": [
+        "exposed",
+        "defenseless",
+        "unprotected"
+      ],
+      "antonyms": [
+        "secure",
+        "guarded"
+      ],
+      "sentence": "Baby turtles are vulnerable on the open beach."
+    },
+    {
+      "word": "genuine",
+      "pos": "adjective",
+      "definition": "real and not fake",
+      "synonyms": [
+        "authentic",
+        "real",
+        "sincere"
+      ],
+      "antonyms": [
+        "fake",
+        "counterfeit"
+      ],
+      "sentence": "The museum confirmed the painting was genuine."
+    },
+    {
+      "word": "abundant",
+      "pos": "adjective",
+      "definition": "existing in large amounts",
+      "synonyms": [
+        "plentiful",
+        "ample",
+        "copious"
+      ],
+      "antonyms": [
+        "scarce",
+        "sparse"
+      ],
+      "sentence": "Berries are abundant in the forest in July."
+    },
+    {
+      "word": "adequate",
+      "pos": "adjective",
+      "definition": "good enough for a purpose",
+      "synonyms": [
+        "sufficient",
+        "satisfactory",
+        "acceptable"
+      ],
+      "antonyms": [
+        "inadequate",
+        "insufficient"
+      ],
+      "sentence": "The tent offered adequate shelter from the rain."
+    },
+    {
+      "word": "coherent",
+      "pos": "adjective",
+      "definition": "organized in a way that makes sense",
+      "synonyms": [
+        "logical",
+        "consistent",
+        "rational"
+      ],
+      "antonyms": [
+        "incoherent",
+        "confused"
+      ],
+      "sentence": "Her essay presented a coherent argument."
+    },
+    {
+      "word": "conspicuous",
+      "pos": "adjective",
+      "definition": "easy to notice",
+      "synonyms": [
+        "noticeable",
+        "obvious",
+        "prominent"
+      ],
+      "antonyms": [
+        "hidden",
+        "inconspicuous"
+      ],
+      "sentence": "Her bright orange hat was conspicuous in the crowd."
+    },
+    {
+      "word": "dubious",
+      "pos": "adjective",
+      "definition": "causing doubt or distrust",
+      "synonyms": [
+        "doubtful",
+        "suspicious",
+        "questionable"
+      ],
+      "antonyms": [
+        "certain",
+        "reliable"
+      ],
+      "sentence": "He gave a dubious excuse about the missing homework."
+    },
+    {
+      "word": "imminent",
+      "pos": "adjective",
+      "definition": "about to happen very soon",
+      "synonyms": [
+        "impending",
+        "approaching",
+        "looming"
+      ],
+      "antonyms": [
+        "distant",
+        "remote"
+      ],
+      "sentence": "Dark clouds showed that rain was imminent."
+    },
+    {
+      "word": "indifferent",
+      "pos": "adjective",
+      "definition": "having no interest or concern",
+      "synonyms": [
+        "unconcerned",
+        "uninterested",
+        "detached"
+      ],
+      "antonyms": [
+        "concerned",
+        "caring"
+      ],
+      "sentence": "The cat seemed indifferent to the new toy."
+    },
+    {
+      "word": "tenacious",
+      "pos": "adjective",
+      "definition": "holding firmly and not giving up",
+      "synonyms": [
+        "persistent",
+        "determined",
+        "stubborn"
+      ],
+      "antonyms": [
+        "yielding",
+        "irresolute"
+      ],
+      "sentence": "The tenacious climber finally reached the summit."
+    },
+    {
+      "word": "versatile",
+      "pos": "adjective",
+      "definition": "able to do many different things",
+      "synonyms": [
+        "adaptable",
+        "flexible",
+        "resourceful"
+      ],
+      "antonyms": [
+        "limited",
+        "rigid"
+      ],
+      "sentence": "A versatile player can fill any position."
+    },
+    {
+      "word": "trivial",
+      "pos": "adjective",
+      "definition": "of little importance",
+      "synonyms": [
+        "minor",
+        "petty",
+        "insignificant"
+      ],
+      "antonyms": [
+        "important",
+        "significant"
+      ],
+      "sentence": "They argued over a trivial detail."
+    },
+    {
+      "word": "vast",
+      "pos": "adjective",
+      "definition": "very large in area or extent",
+      "synonyms": [
+        "expansive",
+        "boundless",
+        "sweeping"
+      ],
+      "antonyms": [
+        "narrow",
+        "cramped"
+      ],
+      "sentence": "We gazed out at the vast desert."
+    },
+    {
+      "word": "abruptly",
+      "pos": "adverb",
+      "definition": "in a sudden and unexpected way",
+      "synonyms": [
+        "suddenly",
+        "unexpectedly",
+        "sharply"
+      ],
+      "antonyms": [
+        "gradually",
+        "slowly"
+      ],
+      "sentence": "The music stopped abruptly when the power went out."
+    },
+    {
+      "word": "cautiously",
+      "pos": "adverb",
+      "definition": "in a careful way to avoid risk",
+      "synonyms": [
+        "carefully",
+        "warily",
+        "gingerly"
+      ],
+      "antonyms": [
+        "recklessly",
+        "carelessly"
+      ],
+      "sentence": "She stepped cautiously across the icy bridge."
+    },
+    {
+      "word": "diligently",
+      "pos": "adverb",
+      "definition": "with steady and careful effort",
+      "synonyms": [
+        "industriously",
+        "earnestly",
+        "painstakingly"
+      ],
+      "antonyms": [
+        "lazily",
+        "carelessly"
+      ],
+      "sentence": "He worked diligently on his science fair board."
+    },
+    {
+      "word": "eagerly",
+      "pos": "adverb",
+      "definition": "with keen interest or excitement",
+      "synonyms": [
+        "keenly",
+        "avidly",
+        "enthusiastically"
+      ],
+      "antonyms": [
+        "reluctantly",
+        "unwillingly"
+      ],
+      "sentence": "The kids eagerly opened their presents."
+    },
+    {
+      "word": "frequently",
+      "pos": "adverb",
+      "definition": "many times; often",
+      "synonyms": [
+        "often",
+        "regularly",
+        "repeatedly"
+      ],
+      "antonyms": [
+        "rarely",
+        "seldom"
+      ],
+      "sentence": "We frequently visit the library on Saturdays."
+    },
+    {
+      "word": "gradually",
+      "pos": "adverb",
+      "definition": "slowly over a period of time",
+      "synonyms": [
+        "steadily",
+        "progressively",
+        "incrementally"
+      ],
+      "antonyms": [
+        "suddenly",
+        "abruptly"
+      ],
+      "sentence": "The sky gradually turned from pink to gray."
+    },
+    {
+      "word": "honestly",
+      "pos": "adverb",
+      "definition": "in a truthful way",
+      "synonyms": [
+        "truthfully",
+        "sincerely",
+        "frankly"
+      ],
+      "antonyms": [
+        "dishonestly",
+        "deceitfully"
+      ],
+      "sentence": "Please answer the survey questions honestly."
+    },
+    {
+      "word": "reluctantly",
+      "pos": "adverb",
+      "definition": "in an unwilling or hesitant way",
+      "synonyms": [
+        "unwillingly",
+        "grudgingly",
+        "hesitantly"
+      ],
+      "antonyms": [
+        "willingly",
+        "gladly"
+      ],
+      "sentence": "He reluctantly handed over the last cookie."
+    },
+    {
+      "word": "silently",
+      "pos": "adverb",
+      "definition": "without making any sound",
+      "synonyms": [
+        "quietly",
+        "noiselessly",
+        "soundlessly"
+      ],
+      "antonyms": [
+        "loudly",
+        "noisily"
+      ],
+      "sentence": "The cat crept silently toward the bird feeder."
+    },
+    {
+      "word": "thoroughly",
+      "pos": "adverb",
+      "definition": "in a complete and careful way",
+      "synonyms": [
+        "completely",
+        "fully",
+        "exhaustively"
+      ],
+      "antonyms": [
+        "partially",
+        "superficially"
+      ],
+      "sentence": "Rinse the vegetables thoroughly before cooking."
+    },
+    {
+      "word": "vaguely",
+      "pos": "adverb",
+      "definition": "in an unclear or uncertain way",
+      "synonyms": [
+        "dimly",
+        "faintly",
+        "hazily"
+      ],
+      "antonyms": [
+        "clearly",
+        "precisely"
+      ],
+      "sentence": "I vaguely remember my third birthday party."
+    },
+    {
+      "word": "briskly",
+      "pos": "adverb",
+      "definition": "in a quick and energetic way",
+      "synonyms": [
+        "quickly",
+        "swiftly",
+        "smartly"
+      ],
+      "antonyms": [
+        "sluggishly",
+        "slowly"
+      ],
+      "sentence": "We walked briskly to stay warm."
+    },
+    {
+      "word": "calmly",
+      "pos": "adverb",
+      "definition": "in a peaceful and relaxed way",
+      "synonyms": [
+        "serenely",
+        "tranquilly",
+        "coolly"
+      ],
+      "antonyms": [
+        "frantically",
+        "nervously"
+      ],
+      "sentence": "She calmly explained the rules again."
+    },
+    {
+      "word": "intently",
+      "pos": "adverb",
+      "definition": "with close and focused attention",
+      "synonyms": [
+        "attentively",
+        "closely",
+        "fixedly"
+      ],
+      "antonyms": [
+        "distractedly",
+        "absently"
+      ],
+      "sentence": "The owl watched the dark field intently."
+    },
+    {
+      "word": "fiercely",
+      "pos": "adverb",
+      "definition": "in an intense or forceful way",
+      "synonyms": [
+        "intensely",
+        "vehemently",
+        "ferociously"
+      ],
+      "antonyms": [
+        "gently",
+        "mildly"
+      ],
+      "sentence": "The two teams competed fiercely for the trophy."
+    },
+    {
+      "word": "generously",
+      "pos": "adverb",
+      "definition": "in a way that gives freely",
+      "synonyms": [
+        "lavishly",
+        "liberally",
+        "unselfishly"
+      ],
+      "antonyms": [
+        "stingily",
+        "meanly"
+      ],
+      "sentence": "She generously shared her snacks with everyone."
+    },
+    {
+      "word": "gracefully",
+      "pos": "adverb",
+      "definition": "in a smooth and elegant way",
+      "synonyms": [
+        "elegantly",
+        "smoothly",
+        "fluidly"
+      ],
+      "antonyms": [
+        "clumsily",
+        "awkwardly"
+      ],
+      "sentence": "The dancer moved gracefully across the stage."
+    },
+    {
+      "word": "hastily",
+      "pos": "adverb",
+      "definition": "in a hurried way",
+      "synonyms": [
+        "hurriedly",
+        "rashly",
+        "speedily"
+      ],
+      "antonyms": [
+        "slowly",
+        "carefully"
+      ],
+      "sentence": "He hastily scribbled his name on the form."
+    },
+    {
+      "word": "immensely",
+      "pos": "adverb",
+      "definition": "to a very great degree",
+      "synonyms": [
+        "enormously",
+        "hugely",
+        "tremendously"
+      ],
+      "antonyms": [
+        "slightly",
+        "barely"
+      ],
+      "sentence": "She enjoyed the concert immensely."
+    },
+    {
+      "word": "precisely",
+      "pos": "adverb",
+      "definition": "in an exact way",
+      "synonyms": [
+        "exactly",
+        "accurately",
+        "correctly"
+      ],
+      "antonyms": [
+        "roughly",
+        "approximately"
+      ],
+      "sentence": "The train arrived at precisely noon."
+    },
+    {
+      "word": "obediently",
+      "pos": "adverb",
+      "definition": "in a way that follows orders",
+      "synonyms": [
+        "dutifully",
+        "compliantly",
+        "submissively"
+      ],
+      "antonyms": [
+        "defiantly",
+        "rebelliously"
+      ],
+      "sentence": "The puppy sat obediently by the door."
+    },
+    {
+      "word": "patiently",
+      "pos": "adverb",
+      "definition": "in a calm way without complaining",
+      "synonyms": [
+        "tolerantly",
+        "uncomplainingly",
+        "stoically"
+      ],
+      "antonyms": [
+        "impatiently",
+        "restlessly"
+      ],
+      "sentence": "We waited patiently for the fireworks to begin."
+    },
+    {
+      "word": "scarcely",
+      "pos": "adverb",
+      "definition": "almost not at all",
+      "synonyms": [
+        "barely",
+        "hardly",
+        "narrowly"
+      ],
+      "antonyms": [
+        "plentifully",
+        "amply"
+      ],
+      "sentence": "I could scarcely see the stage from the back row."
+    },
+    {
+      "word": "seldom",
+      "pos": "adverb",
+      "definition": "not often",
+      "synonyms": [
+        "rarely",
+        "infrequently",
+        "sporadically"
+      ],
+      "antonyms": [
+        "often",
+        "frequently"
+      ],
+      "sentence": "We seldom see snow in this part of the state."
+    },
+    {
+      "word": "ultimately",
+      "pos": "adverb",
+      "definition": "in the end; at last",
+      "synonyms": [
+        "finally",
+        "eventually",
+        "lastly"
+      ],
+      "antonyms": [
+        "initially",
+        "firstly"
+      ],
+      "sentence": "The team ultimately decided to change its name."
+    },
+    {
+      "word": "vigorously",
+      "pos": "adverb",
+      "definition": "with great energy and force",
+      "synonyms": [
+        "energetically",
+        "forcefully",
+        "strenuously"
+      ],
+      "antonyms": [
+        "feebly",
+        "weakly"
+      ],
+      "sentence": "She scrubbed the muddy pan vigorously."
+    },
+    {
+      "word": "willingly",
+      "pos": "adverb",
+      "definition": "by one's own free choice",
+      "synonyms": [
+        "gladly",
+        "readily",
+        "voluntarily"
+      ],
+      "antonyms": [
+        "reluctantly",
+        "unwillingly"
+      ],
+      "sentence": "He willingly volunteered to clean the fish tank."
+    },
+    {
+      "word": "nearly",
+      "pos": "adverb",
+      "definition": "almost but not quite",
+      "synonyms": [
+        "almost",
+        "practically",
+        "virtually"
+      ],
+      "antonyms": [
+        "fully",
+        "entirely"
+      ],
+      "sentence": "The bus was nearly empty this morning."
+    },
+    {
+      "word": "sternly",
+      "pos": "adverb",
+      "definition": "in a strict and serious way",
+      "synonyms": [
+        "severely",
+        "strictly",
+        "harshly"
+      ],
+      "antonyms": [
+        "gently",
+        "kindly"
+      ],
+      "sentence": "The coach sternly reminded us to stretch."
+    },
+    {
+      "word": "boldly",
+      "pos": "adverb",
+      "definition": "in a brave and confident way",
+      "synonyms": [
+        "bravely",
+        "daringly",
+        "fearlessly"
+      ],
+      "antonyms": [
+        "timidly",
+        "meekly"
+      ],
+      "sentence": "She boldly raised her hand to answer first."
+    },
+    {
+      "word": "cheerfully",
+      "pos": "adverb",
+      "definition": "in a happy and bright way",
+      "synonyms": [
+        "happily",
+        "merrily",
+        "gleefully"
+      ],
+      "antonyms": [
+        "gloomily",
+        "sadly"
+      ],
+      "sentence": "He cheerfully greeted every customer."
+    },
+    {
+      "word": "constantly",
+      "pos": "adverb",
+      "definition": "all the time without stopping",
+      "synonyms": [
+        "continually",
+        "perpetually",
+        "incessantly"
+      ],
+      "antonyms": [
+        "occasionally",
+        "intermittently"
+      ],
+      "sentence": "My little brother constantly asks questions."
+    },
+    {
+      "word": "fortunately",
+      "pos": "adverb",
+      "definition": "by good luck",
+      "synonyms": [
+        "luckily",
+        "thankfully",
+        "fortuitously"
+      ],
+      "antonyms": [
+        "unfortunately"
+      ],
+      "sentence": "The rain stopped and, fortunately, the game went on."
+    },
+    {
+      "word": "loyally",
+      "pos": "adverb",
+      "definition": "in a faithful and devoted way",
+      "synonyms": [
+        "faithfully",
+        "devotedly",
+        "steadfastly"
+      ],
+      "antonyms": [
+        "disloyally",
+        "treacherously"
+      ],
+      "sentence": "The dog loyally waited for its owner at the gate."
+    },
+    {
+      "word": "modestly",
+      "pos": "adverb",
+      "definition": "without bragging about oneself",
+      "synonyms": [
+        "humbly",
+        "unassumingly",
+        "demurely"
+      ],
+      "antonyms": [
+        "boastfully",
+        "arrogantly"
+      ],
+      "sentence": "She modestly thanked the crowd for the award."
+    },
+    {
+      "word": "promptly",
+      "pos": "adverb",
+      "definition": "without delay; right away",
+      "synonyms": [
+        "immediately",
+        "punctually",
+        "instantly"
+      ],
+      "antonyms": [
+        "slowly",
+        "belatedly"
+      ],
+      "sentence": "The class promptly lined up at the bell."
+    },
+    {
+      "word": "afterward",
+      "pos": "adverb",
+      "definition": "at a later time",
+      "synonyms": [
+        "later",
+        "subsequently",
+        "thereafter"
+      ],
+      "antonyms": [
+        "beforehand",
+        "previously"
+      ],
+      "sentence": "We went out for ice cream afterward."
+    },
+    {
+      "word": "abroad",
+      "pos": "adverb",
+      "definition": "in or to a foreign country",
+      "synonyms": [
+        "overseas",
+        "away",
+        "afar"
+      ],
+      "antonyms": [
+        "home",
+        "locally"
+      ],
+      "sentence": "She hopes to study abroad in Japan."
+    },
+    {
+      "word": "gently",
+      "pos": "adverb",
+      "definition": "in a soft or careful way",
+      "synonyms": [
+        "softly",
+        "tenderly",
+        "delicately"
+      ],
+      "antonyms": [
+        "roughly",
+        "harshly"
+      ],
+      "sentence": "Hold the baby chick gently in your palms."
+    },
+    {
+      "word": "obviously",
+      "pos": "adverb",
+      "definition": "in a way that is easy to see",
+      "synonyms": [
+        "clearly",
+        "plainly",
+        "evidently"
+      ],
+      "antonyms": [
+        "subtly",
+        "obscurely"
+      ],
+      "sentence": "He was obviously excited about the trip."
+    },
+    {
+      "word": "firmly",
+      "pos": "adverb",
+      "definition": "in a strong and steady way",
+      "synonyms": [
+        "securely",
+        "tightly",
+        "solidly"
+      ],
+      "antonyms": [
+        "loosely",
+        "limply"
+      ],
+      "sentence": "Hold the rope firmly as you climb."
+    },
+    {
+      "word": "openly",
+      "pos": "adverb",
+      "definition": "without hiding anything",
+      "synonyms": [
+        "publicly",
+        "overtly",
+        "candidly"
+      ],
+      "antonyms": [
+        "secretly",
+        "covertly"
+      ],
+      "sentence": "The friends openly shared their ideas."
+    },
+    {
+      "word": "secretly",
+      "pos": "adverb",
+      "definition": "in a hidden way",
+      "synonyms": [
+        "covertly",
+        "privately",
+        "stealthily"
+      ],
+      "antonyms": [
+        "openly",
+        "publicly"
+      ],
+      "sentence": "She secretly planned a surprise party."
+    }
+  ],
+  "affixes": [
+    {
+      "kind": "prefix",
+      "affix": "im",
+      "base": "possible",
+      "word": "impossible",
+      "definition": "not able to happen",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "un",
+      "base": "happy",
+      "word": "unhappy",
+      "definition": "not feeling joy",
+      "distractors": [
+        "dis",
+        "mis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "un",
+      "base": "lock",
+      "word": "unlock",
+      "definition": "to open with a key",
+      "distractors": [
+        "dis",
+        "mis",
+        "pre"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "re",
+      "base": "build",
+      "word": "rebuild",
+      "definition": "to construct again",
+      "distractors": [
+        "dis",
+        "mis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "re",
+      "base": "write",
+      "word": "rewrite",
+      "definition": "to put into words again",
+      "distractors": [
+        "un",
+        "dis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "dis",
+      "base": "agree",
+      "word": "disagree",
+      "definition": "to have a different opinion",
+      "distractors": [
+        "un",
+        "mis",
+        "pre"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "dis",
+      "base": "honest",
+      "word": "dishonest",
+      "definition": "not truthful",
+      "distractors": [
+        "un",
+        "mis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "dis",
+      "base": "appear",
+      "word": "disappear",
+      "definition": "to vanish from sight",
+      "distractors": [
+        "un",
+        "mis",
+        "pre"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "mis",
+      "base": "spell",
+      "word": "misspell",
+      "definition": "to get the letters of a word wrong",
+      "distractors": [
+        "dis",
+        "un",
+        "pre"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "mis",
+      "base": "understand",
+      "word": "misunderstand",
+      "definition": "to get the wrong meaning",
+      "distractors": [
+        "dis",
+        "non",
+        "pre"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "mis",
+      "base": "place",
+      "word": "misplace",
+      "definition": "to put in the wrong spot and lose",
+      "distractors": [
+        "dis",
+        "un",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "pre",
+      "base": "view",
+      "word": "preview",
+      "definition": "to see beforehand",
+      "distractors": [
+        "mis",
+        "dis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "pre",
+      "base": "heat",
+      "word": "preheat",
+      "definition": "to warm up beforehand",
+      "distractors": [
+        "mis",
+        "dis",
+        "sub"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "pre",
+      "base": "historic",
+      "word": "prehistoric",
+      "definition": "from the time before written records",
+      "distractors": [
+        "mis",
+        "anti",
+        "sub"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "im",
+      "base": "patient",
+      "word": "impatient",
+      "definition": "unwilling to wait calmly",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "im",
+      "base": "mature",
+      "word": "immature",
+      "definition": "not fully grown or developed",
+      "distractors": [
+        "un",
+        "dis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "in",
+      "base": "visible",
+      "word": "invisible",
+      "definition": "unable to be seen",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "in",
+      "base": "complete",
+      "word": "incomplete",
+      "definition": "not finished",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "in",
+      "base": "accurate",
+      "word": "inaccurate",
+      "definition": "not correct",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "non",
+      "base": "fiction",
+      "word": "nonfiction",
+      "definition": "writing about real events",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "non",
+      "base": "stop",
+      "word": "nonstop",
+      "definition": "without pausing",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "over",
+      "base": "cook",
+      "word": "overcook",
+      "definition": "to cook for too long",
+      "distractors": [
+        "sub",
+        "dis",
+        "un"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "over",
+      "base": "sleep",
+      "word": "oversleep",
+      "definition": "to sleep past the planned time",
+      "distractors": [
+        "sub",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "sub",
+      "base": "marine",
+      "word": "submarine",
+      "definition": "a ship that travels underwater",
+      "distractors": [
+        "inter",
+        "super",
+        "anti"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "sub",
+      "base": "way",
+      "word": "subway",
+      "definition": "an underground train",
+      "distractors": [
+        "inter",
+        "trans",
+        "over"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "inter",
+      "base": "national",
+      "word": "international",
+      "definition": "between or among countries",
+      "distractors": [
+        "sub",
+        "super",
+        "anti"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "inter",
+      "base": "act",
+      "word": "interact",
+      "definition": "to act with each other",
+      "distractors": [
+        "sub",
+        "mis",
+        "anti"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "anti",
+      "base": "freeze",
+      "word": "antifreeze",
+      "definition": "liquid that stops engines from icing",
+      "distractors": [
+        "sub",
+        "inter",
+        "super"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "anti",
+      "base": "social",
+      "word": "antisocial",
+      "definition": "avoiding the company of others",
+      "distractors": [
+        "super",
+        "trans",
+        "mis"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "super",
+      "base": "hero",
+      "word": "superhero",
+      "definition": "a hero with special powers",
+      "distractors": [
+        "sub",
+        "inter",
+        "trans"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "super",
+      "base": "market",
+      "word": "supermarket",
+      "definition": "a large grocery store",
+      "distractors": [
+        "sub",
+        "inter",
+        "anti"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "trans",
+      "base": "port",
+      "word": "transport",
+      "definition": "to carry from place to place",
+      "distractors": [
+        "sub",
+        "inter",
+        "super"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "trans",
+      "base": "form",
+      "word": "transform",
+      "definition": "to change completely",
+      "distractors": [
+        "inter",
+        "sub",
+        "super"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "mid",
+      "base": "night",
+      "word": "midnight",
+      "definition": "twelve o'clock at night",
+      "distractors": [
+        "sub",
+        "inter",
+        "anti"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "mid",
+      "base": "way",
+      "word": "midway",
+      "definition": "halfway between two points",
+      "distractors": [
+        "anti",
+        "super",
+        "trans"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "un",
+      "base": "fair",
+      "word": "unfair",
+      "definition": "not just or equal",
+      "distractors": [
+        "dis",
+        "mis",
+        "non"
+      ]
+    },
+    {
+      "kind": "prefix",
+      "affix": "re",
+      "base": "fill",
+      "word": "refill",
+      "definition": "to fill again",
+      "distractors": [
+        "un",
+        "dis",
+        "mis"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "less",
+      "base": "fear",
+      "word": "fearless",
+      "definition": "without fear",
+      "distractors": [
+        "ment",
+        "ist",
+        "ive"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ful",
+      "base": "hope",
+      "word": "hopeful",
+      "definition": "full of hope",
+      "distractors": [
+        "ment",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ness",
+      "base": "kind",
+      "word": "kindness",
+      "definition": "the quality of being kind",
+      "distractors": [
+        "ment",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "able",
+      "base": "read",
+      "word": "readable",
+      "definition": "easy to read",
+      "distractors": [
+        "ment",
+        "ous",
+        "ive"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "able",
+      "base": "wash",
+      "word": "washable",
+      "definition": "able to be cleaned in water",
+      "distractors": [
+        "ment",
+        "ful",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ment",
+      "base": "enjoy",
+      "word": "enjoyment",
+      "definition": "the state of having fun",
+      "distractors": [
+        "ness",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ment",
+      "base": "move",
+      "word": "movement",
+      "definition": "the act of changing position",
+      "distractors": [
+        "ness",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ly",
+      "base": "quick",
+      "word": "quickly",
+      "definition": "in a fast way",
+      "distractors": [
+        "ment",
+        "ful",
+        "ist"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "er",
+      "base": "teach",
+      "word": "teacher",
+      "definition": "a person who instructs others",
+      "distractors": [
+        "ment",
+        "ness",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "er",
+      "base": "paint",
+      "word": "painter",
+      "definition": "a person who makes art with color",
+      "distractors": [
+        "ment",
+        "ful",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ist",
+      "base": "art",
+      "word": "artist",
+      "definition": "a person who creates art",
+      "distractors": [
+        "ment",
+        "ness",
+        "able"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ist",
+      "base": "cycle",
+      "word": "cyclist",
+      "definition": "a person who rides a bike",
+      "distractors": [
+        "ment",
+        "ness",
+        "ful"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ous",
+      "base": "danger",
+      "word": "dangerous",
+      "definition": "full of risk",
+      "distractors": [
+        "ment",
+        "ness",
+        "ist"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ous",
+      "base": "joy",
+      "word": "joyous",
+      "definition": "full of happiness",
+      "distractors": [
+        "ment",
+        "ist",
+        "able"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ive",
+      "base": "act",
+      "word": "active",
+      "definition": "busy and full of energy",
+      "distractors": [
+        "ment",
+        "ous",
+        "ful"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ive",
+      "base": "create",
+      "word": "creative",
+      "definition": "good at making new things",
+      "distractors": [
+        "ment",
+        "ness",
+        "ful"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "tion",
+      "base": "invent",
+      "word": "invention",
+      "definition": "something newly made",
+      "distractors": [
+        "ment",
+        "ness",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "tion",
+      "base": "protect",
+      "word": "protection",
+      "definition": "the act of keeping safe",
+      "distractors": [
+        "ment",
+        "ness",
+        "ful"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ful",
+      "base": "care",
+      "word": "careful",
+      "definition": "paying close attention",
+      "distractors": [
+        "ment",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "less",
+      "base": "help",
+      "word": "helpless",
+      "definition": "unable to manage alone",
+      "distractors": [
+        "ment",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ness",
+      "base": "dark",
+      "word": "darkness",
+      "definition": "the state of having no light",
+      "distractors": [
+        "ment",
+        "ful",
+        "ist"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ly",
+      "base": "brave",
+      "word": "bravely",
+      "definition": "in a courageous way",
+      "distractors": [
+        "ment",
+        "ful",
+        "ist"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "able",
+      "base": "comfort",
+      "word": "comfortable",
+      "definition": "giving physical ease",
+      "distractors": [
+        "ment",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ment",
+      "base": "agree",
+      "word": "agreement",
+      "definition": "a shared decision",
+      "distractors": [
+        "ness",
+        "ist",
+        "ous"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "er",
+      "base": "bake",
+      "word": "baker",
+      "definition": "a person who makes bread",
+      "distractors": [
+        "ment",
+        "ness",
+        "ist"
+      ]
+    },
+    {
+      "kind": "suffix",
+      "affix": "ist",
+      "base": "piano",
+      "word": "pianist",
+      "definition": "a person who plays the keys",
+      "distractors": [
+        "ment",
+        "ness",
+        "ous"
+      ]
+    }
+  ],
+  "spelling": [
+    {
+      "correct": "separate",
+      "misspellings": [
+        "seperate",
+        "separete",
+        "seprate"
+      ]
+    },
+    {
+      "correct": "definitely",
+      "misspellings": [
+        "definately",
+        "definitly",
+        "defenitely"
+      ]
+    },
+    {
+      "correct": "rhythm",
+      "misspellings": [
+        "rythm",
+        "rhythym",
+        "rhytm"
+      ]
+    },
+    {
+      "correct": "accommodate",
+      "misspellings": [
+        "accomodate",
+        "acommodate",
+        "accommadate"
+      ]
+    },
+    {
+      "correct": "embarrass",
+      "misspellings": [
+        "embarass",
+        "embarras",
+        "embaress"
+      ]
+    },
+    {
+      "correct": "receive",
+      "misspellings": [
+        "recieve",
+        "receeve",
+        "receve"
+      ]
+    },
+    {
+      "correct": "believe",
+      "misspellings": [
+        "beleive",
+        "belive",
+        "beleve"
+      ]
+    },
+    {
+      "correct": "occurrence",
+      "misspellings": [
+        "occurence",
+        "occurrance",
+        "ocurrence"
+      ]
+    },
+    {
+      "correct": "conscience",
+      "misspellings": [
+        "concience",
+        "conscence",
+        "consience"
+      ]
+    },
+    {
+      "correct": "necessary",
+      "misspellings": [
+        "neccessary",
+        "necesary",
+        "neccesary"
+      ]
+    },
+    {
+      "correct": "privilege",
+      "misspellings": [
+        "priviledge",
+        "privelege",
+        "privilige"
+      ]
+    },
+    {
+      "correct": "government",
+      "misspellings": [
+        "goverment",
+        "governmant",
+        "govenment"
+      ]
+    },
+    {
+      "correct": "environment",
+      "misspellings": [
+        "enviroment",
+        "environmant",
+        "envirnment"
+      ]
+    },
+    {
+      "correct": "february",
+      "misspellings": [
+        "febuary",
+        "februrary",
+        "febrary"
+      ]
+    },
+    {
+      "correct": "library",
+      "misspellings": [
+        "libary",
+        "liberry",
+        "librery"
+      ]
+    },
+    {
+      "correct": "calendar",
+      "misspellings": [
+        "calender",
+        "calandar",
+        "calander"
+      ]
+    },
+    {
+      "correct": "license",
+      "misspellings": [
+        "lisense",
+        "licanse",
+        "lycense"
+      ]
+    },
+    {
+      "correct": "neighbor",
+      "misspellings": [
+        "nieghbor",
+        "nayber",
+        "neigbor"
+      ]
+    },
+    {
+      "correct": "weird",
+      "misspellings": [
+        "wierd",
+        "weard",
+        "wiered"
+      ]
+    },
+    {
+      "correct": "friend",
+      "misspellings": [
+        "freind",
+        "frend",
+        "friennd"
+      ]
+    },
+    {
+      "correct": "achieve",
+      "misspellings": [
+        "acheive",
+        "acheve",
+        "achive"
+      ]
+    },
+    {
+      "correct": "argument",
+      "misspellings": [
+        "arguement",
+        "argumant",
+        "arguemant"
+      ]
+    },
+    {
+      "correct": "beginning",
+      "misspellings": [
+        "begining",
+        "beggining",
+        "beginnig"
+      ]
+    },
+    {
+      "correct": "business",
+      "misspellings": [
+        "buisness",
+        "busness",
+        "bussiness"
+      ]
+    },
+    {
+      "correct": "cemetery",
+      "misspellings": [
+        "cemetary",
+        "cematery",
+        "semetery"
+      ]
+    },
+    {
+      "correct": "changeable",
+      "misspellings": [
+        "changable",
+        "chanegable",
+        "changeble"
+      ]
+    },
+    {
+      "correct": "committee",
+      "misspellings": [
+        "commitee",
+        "comittee",
+        "committe"
+      ]
+    },
+    {
+      "correct": "conscious",
+      "misspellings": [
+        "concious",
+        "consious",
+        "conscous"
+      ]
+    },
+    {
+      "correct": "discipline",
+      "misspellings": [
+        "dicipline",
+        "disciplin",
+        "discipine"
+      ]
+    },
+    {
+      "correct": "exaggerate",
+      "misspellings": [
+        "exagerate",
+        "exxagerate",
+        "exaggarate"
+      ]
+    },
+    {
+      "correct": "existence",
+      "misspellings": [
+        "existance",
+        "existense",
+        "exsistence"
+      ]
+    },
+    {
+      "correct": "experience",
+      "misspellings": [
+        "experiance",
+        "expierience",
+        "experiense"
+      ]
+    },
+    {
+      "correct": "fascinate",
+      "misspellings": [
+        "facinate",
+        "fasinate",
+        "fascinait"
+      ]
+    },
+    {
+      "correct": "foreign",
+      "misspellings": [
+        "foriegn",
+        "forein",
+        "foreighn"
+      ]
+    },
+    {
+      "correct": "gauge",
+      "misspellings": [
+        "guage",
+        "gaugue",
+        "gauje"
+      ]
+    },
+    {
+      "correct": "grammar",
+      "misspellings": [
+        "grammer",
+        "gramar",
+        "grammmar"
+      ]
+    },
+    {
+      "correct": "guarantee",
+      "misspellings": [
+        "garantee",
+        "guarentee",
+        "guarantie"
+      ]
+    },
+    {
+      "correct": "harass",
+      "misspellings": [
+        "harrass",
+        "harras",
+        "hairass"
+      ]
+    },
+    {
+      "correct": "humorous",
+      "misspellings": [
+        "humourous",
+        "humerous",
+        "humorus"
+      ]
+    },
+    {
+      "correct": "immediately",
+      "misspellings": [
+        "immediatly",
+        "imediately",
+        "immediatley"
+      ]
+    },
+    {
+      "correct": "independent",
+      "misspellings": [
+        "independant",
+        "indepedent",
+        "independint"
+      ]
+    },
+    {
+      "correct": "intelligence",
+      "misspellings": [
+        "inteligence",
+        "intelligance",
+        "intellegence"
+      ]
+    },
+    {
+      "correct": "jewelry",
+      "misspellings": [
+        "jewlery",
+        "jewelery",
+        "jewlry"
+      ]
+    },
+    {
+      "correct": "knowledge",
+      "misspellings": [
+        "knowlege",
+        "knoledge",
+        "knowladge"
+      ]
+    },
+    {
+      "correct": "maintenance",
+      "misspellings": [
+        "maintainance",
+        "maintenence",
+        "maintanance"
+      ]
+    },
+    {
+      "correct": "millennium",
+      "misspellings": [
+        "millenium",
+        "milennium",
+        "millennim"
+      ]
+    },
+    {
+      "correct": "mischievous",
+      "misspellings": [
+        "mischievious",
+        "mischevous",
+        "mischivous"
+      ]
+    },
+    {
+      "correct": "noticeable",
+      "misspellings": [
+        "noticable",
+        "noticeble",
+        "notecable"
+      ]
+    },
+    {
+      "correct": "occasion",
+      "misspellings": [
+        "occassion",
+        "ocasion",
+        "occaision"
+      ]
+    },
+    {
+      "correct": "parallel",
+      "misspellings": [
+        "paralell",
+        "parralel",
+        "paralel"
+      ]
+    },
+    {
+      "correct": "perseverance",
+      "misspellings": [
+        "perseverence",
+        "perserverance",
+        "persevereance"
+      ]
+    },
+    {
+      "correct": "possession",
+      "misspellings": [
+        "posession",
+        "possesion",
+        "posesion"
+      ]
+    },
+    {
+      "correct": "publicly",
+      "misspellings": [
+        "publically",
+        "publicaly",
+        "publickly"
+      ]
+    },
+    {
+      "correct": "questionnaire",
+      "misspellings": [
+        "questionaire",
+        "questionnare",
+        "questionnair"
+      ]
+    },
+    {
+      "correct": "recommend",
+      "misspellings": [
+        "reccommend",
+        "recomend",
+        "reccomend"
+      ]
+    },
+    {
+      "correct": "restaurant",
+      "misspellings": [
+        "restaraunt",
+        "resturant",
+        "restarant"
+      ]
+    },
+    {
+      "correct": "schedule",
+      "misspellings": [
+        "schedual",
+        "shedule",
+        "scedule"
+      ]
+    },
+    {
+      "correct": "sincerely",
+      "misspellings": [
+        "sincerly",
+        "sincerley",
+        "sinserely"
+      ]
+    },
+    {
+      "correct": "succeed",
+      "misspellings": [
+        "succede",
+        "suceed",
+        "sucseed"
+      ]
+    },
+    {
+      "correct": "surprise",
+      "misspellings": [
+        "suprise",
+        "surprize",
+        "surprice"
+      ]
+    },
+    {
+      "correct": "tomorrow",
+      "misspellings": [
+        "tommorow",
+        "tomorow",
+        "tommorrow"
+      ]
+    },
+    {
+      "correct": "until",
+      "misspellings": [
+        "untill",
+        "untile",
+        "untl"
+      ]
+    },
+    {
+      "correct": "vacuum",
+      "misspellings": [
+        "vaccum",
+        "vacume",
+        "vacum"
+      ]
+    },
+    {
+      "correct": "wednesday",
+      "misspellings": [
+        "wenesday",
+        "wensday",
+        "wednsday"
+      ]
+    },
+    {
+      "correct": "whether",
+      "misspellings": [
+        "wheather",
+        "whethar",
+        "wheter"
+      ]
+    },
+    {
+      "correct": "truly",
+      "misspellings": [
+        "truely",
+        "truley",
+        "trully"
+      ]
+    },
+    {
+      "correct": "pronunciation",
+      "misspellings": [
+        "pronounciation",
+        "pronunsiation",
+        "pronuncation"
+      ]
+    },
+    {
+      "correct": "accidentally",
+      "misspellings": [
+        "accidently",
+        "accidentaly",
+        "accidentilly"
+      ]
+    },
+    {
+      "correct": "apparent",
+      "misspellings": [
+        "apparant",
+        "aparent",
+        "apparrent"
+      ]
+    },
+    {
+      "correct": "category",
+      "misspellings": [
+        "catagory",
+        "categorie",
+        "catergory"
+      ]
+    },
+    {
+      "correct": "column",
+      "misspellings": [
+        "colum",
+        "collumn",
+        "colomn"
+      ]
+    },
+    {
+      "correct": "convenient",
+      "misspellings": [
+        "convinient",
+        "conveniant",
+        "convienient"
+      ]
+    },
+    {
+      "correct": "desperate",
+      "misspellings": [
+        "desparate",
+        "desperite",
+        "desprate"
+      ]
+    },
+    {
+      "correct": "disappoint",
+      "misspellings": [
+        "dissapoint",
+        "disapoint",
+        "dissappoint"
+      ]
+    },
+    {
+      "correct": "equipment",
+      "misspellings": [
+        "equiptment",
+        "equipmant",
+        "equippment"
+      ]
+    },
+    {
+      "correct": "height",
+      "misspellings": [
+        "heighth",
+        "hieght",
+        "hight"
+      ]
+    }
+  ],
+  "roots": [
+    {
+      "root": "bio",
+      "meaning": "life",
+      "example": "biology",
+      "distractors": [
+        "water",
+        "earth",
+        "light"
+      ]
+    },
+    {
+      "root": "geo",
+      "meaning": "earth",
+      "example": "geography",
+      "distractors": [
+        "life",
+        "water",
+        "star"
+      ]
+    },
+    {
+      "root": "hydr",
+      "meaning": "water",
+      "example": "hydrant",
+      "distractors": [
+        "fire",
+        "air",
+        "stone"
+      ]
+    },
+    {
+      "root": "aqua",
+      "meaning": "water",
+      "example": "aquarium",
+      "distractors": [
+        "air",
+        "earth",
+        "sound"
+      ]
+    },
+    {
+      "root": "photo",
+      "meaning": "light",
+      "example": "photograph",
+      "distractors": [
+        "sound",
+        "heat",
+        "time"
+      ]
+    },
+    {
+      "root": "phon",
+      "meaning": "sound",
+      "example": "telephone",
+      "distractors": [
+        "light",
+        "sight",
+        "word"
+      ]
+    },
+    {
+      "root": "graph",
+      "meaning": "write",
+      "example": "autograph",
+      "distractors": [
+        "read",
+        "speak",
+        "listen"
+      ]
+    },
+    {
+      "root": "script",
+      "meaning": "write",
+      "example": "transcript",
+      "distractors": [
+        "read",
+        "speak",
+        "sing"
+      ]
+    },
+    {
+      "root": "tele",
+      "meaning": "far",
+      "example": "television",
+      "distractors": [
+        "near",
+        "fast",
+        "small"
+      ]
+    },
+    {
+      "root": "micro",
+      "meaning": "small",
+      "example": "microscope",
+      "distractors": [
+        "large",
+        "far",
+        "many"
+      ]
+    },
+    {
+      "root": "scope",
+      "meaning": "view",
+      "example": "periscope",
+      "distractors": [
+        "hear",
+        "write",
+        "carry"
+      ]
+    },
+    {
+      "root": "chron",
+      "meaning": "time",
+      "example": "chronology",
+      "distractors": [
+        "place",
+        "color",
+        "number"
+      ]
+    },
+    {
+      "root": "auto",
+      "meaning": "self",
+      "example": "autobiography",
+      "distractors": [
+        "other",
+        "many",
+        "first"
+      ]
+    },
+    {
+      "root": "port",
+      "meaning": "carry",
+      "example": "portable",
+      "distractors": [
+        "break",
+        "see",
+        "push"
+      ]
+    },
+    {
+      "root": "dict",
+      "meaning": "say",
+      "example": "dictionary",
+      "distractors": [
+        "write",
+        "hear",
+        "lead"
+      ]
+    },
+    {
+      "root": "spect",
+      "meaning": "look",
+      "example": "inspect",
+      "distractors": [
+        "touch",
+        "speak",
+        "carry"
+      ]
+    },
+    {
+      "root": "vis",
+      "meaning": "see",
+      "example": "visible",
+      "distractors": [
+        "hear",
+        "feel",
+        "speak"
+      ]
+    },
+    {
+      "root": "rupt",
+      "meaning": "break",
+      "example": "erupt",
+      "distractors": [
+        "build",
+        "bend",
+        "join"
+      ]
+    },
+    {
+      "root": "struct",
+      "meaning": "build",
+      "example": "construct",
+      "distractors": [
+        "break",
+        "move",
+        "stretch"
+      ]
+    },
+    {
+      "root": "ject",
+      "meaning": "throw",
+      "example": "eject",
+      "distractors": [
+        "catch",
+        "pull",
+        "hold"
+      ]
+    },
+    {
+      "root": "tract",
+      "meaning": "pull",
+      "example": "tractor",
+      "distractors": [
+        "push",
+        "throw",
+        "break"
+      ]
+    },
+    {
+      "root": "aud",
+      "meaning": "hear",
+      "example": "audience",
+      "distractors": [
+        "see",
+        "speak",
+        "touch"
+      ]
+    },
+    {
+      "root": "manu",
+      "meaning": "hand",
+      "example": "manual",
+      "distractors": [
+        "foot",
+        "head",
+        "mind"
+      ]
+    },
+    {
+      "root": "ped",
+      "meaning": "foot",
+      "example": "pedal",
+      "distractors": [
+        "hand",
+        "road",
+        "wheel"
+      ]
+    },
+    {
+      "root": "cred",
+      "meaning": "believe",
+      "example": "credible",
+      "distractors": [
+        "deny",
+        "forget",
+        "question"
+      ]
+    },
+    {
+      "root": "terr",
+      "meaning": "earth",
+      "example": "territory",
+      "distractors": [
+        "sky",
+        "sea",
+        "fire"
+      ]
+    },
+    {
+      "root": "astro",
+      "meaning": "star",
+      "example": "astronaut",
+      "distractors": [
+        "moon",
+        "sun",
+        "ship"
+      ]
+    },
+    {
+      "root": "therm",
+      "meaning": "heat",
+      "example": "thermometer",
+      "distractors": [
+        "cold",
+        "light",
+        "pressure"
+      ]
+    },
+    {
+      "root": "meter",
+      "meaning": "measure",
+      "example": "perimeter",
+      "distractors": [
+        "count",
+        "cut",
+        "mix"
+      ]
+    },
+    {
+      "root": "logy",
+      "meaning": "study of",
+      "example": "biology",
+      "distractors": [
+        "love of",
+        "fear of",
+        "list of"
+      ]
+    },
+    {
+      "root": "phobia",
+      "meaning": "fear",
+      "example": "claustrophobia",
+      "distractors": [
+        "love",
+        "study",
+        "anger"
+      ]
+    },
+    {
+      "root": "phil",
+      "meaning": "love",
+      "example": "philosophy",
+      "distractors": [
+        "hate",
+        "fear",
+        "study"
+      ]
+    },
+    {
+      "root": "anthrop",
+      "meaning": "human",
+      "example": "anthropology",
+      "distractors": [
+        "animal",
+        "plant",
+        "ancient"
+      ]
+    },
+    {
+      "root": "poly",
+      "meaning": "many",
+      "example": "polygon",
+      "distractors": [
+        "few",
+        "one",
+        "round"
+      ]
+    },
+    {
+      "root": "mono",
+      "meaning": "one",
+      "example": "monologue",
+      "distractors": [
+        "two",
+        "many",
+        "half"
+      ]
+    },
+    {
+      "root": "bi",
+      "meaning": "two",
+      "example": "bicycle",
+      "distractors": [
+        "three",
+        "half",
+        "wheel"
+      ]
+    },
+    {
+      "root": "tri",
+      "meaning": "three",
+      "example": "triangle",
+      "distractors": [
+        "two",
+        "four",
+        "many"
+      ]
+    },
+    {
+      "root": "cent",
+      "meaning": "hundred",
+      "example": "century",
+      "distractors": [
+        "thousand",
+        "ten",
+        "half"
+      ]
+    },
+    {
+      "root": "mal",
+      "meaning": "bad",
+      "example": "malfunction",
+      "distractors": [
+        "good",
+        "small",
+        "new"
+      ]
+    },
+    {
+      "root": "bene",
+      "meaning": "good",
+      "example": "benefit",
+      "distractors": [
+        "bad",
+        "large",
+        "old"
+      ]
+    },
+    {
+      "root": "voc",
+      "meaning": "voice",
+      "example": "vocal",
+      "distractors": [
+        "hand",
+        "light",
+        "sight"
+      ]
+    },
+    {
+      "root": "loc",
+      "meaning": "place",
+      "example": "location",
+      "distractors": [
+        "time",
+        "move",
+        "people"
+      ]
+    },
+    {
+      "root": "mit",
+      "meaning": "send",
+      "example": "transmit",
+      "distractors": [
+        "receive",
+        "keep",
+        "write"
+      ]
+    },
+    {
+      "root": "pend",
+      "meaning": "hang",
+      "example": "pendant",
+      "distractors": [
+        "fall",
+        "spin",
+        "cut"
+      ]
+    },
+    {
+      "root": "duct",
+      "meaning": "lead",
+      "example": "conduct",
+      "distractors": [
+        "push",
+        "break",
+        "build"
+      ]
+    },
+    {
+      "root": "cycl",
+      "meaning": "circle",
+      "example": "bicycle",
+      "distractors": [
+        "line",
+        "square",
+        "point"
+      ]
+    },
+    {
+      "root": "sol",
+      "meaning": "sun",
+      "example": "solar",
+      "distractors": [
+        "moon",
+        "star",
+        "earth"
+      ]
+    },
+    {
+      "root": "hemi",
+      "meaning": "half",
+      "example": "hemisphere",
+      "distractors": [
+        "whole",
+        "round",
+        "double"
+      ]
+    }
+  ]
+}

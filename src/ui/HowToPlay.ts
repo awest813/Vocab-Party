@@ -34,8 +34,8 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
   const vig = addVignette(scene, 0.5, 3900)
   root.add(vig)
 
-  const panelW = mode === 'tiles' ? 780 : 640
-  const panelH = mode === 'tiles' ? 540 : 460
+  const panelW = mode === 'tiles' ? 780 : 760
+  const panelH = mode === 'tiles' ? 620 : 680
   const panel = createPanel(scene, {
     x: w / 2,
     y: h / 2,
@@ -85,7 +85,7 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
     })
   } else {
     HOW_TO_RULES.forEach((rule, i) => {
-      const t = scene.add.text(0, -panelH / 2 + 110 + i * 34, rule, {
+      const t = scene.add.text(0, -panelH / 2 + 118 + i * 31, rule, {
         fontSize: '16px',
         fontFamily: FONT.body,
         color: hexColor(COLORS.frost),
@@ -97,7 +97,8 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
   }
 
   const controls = touch ? HOW_TO_CONTROLS_TOUCH : HOW_TO_CONTROLS_DESKTOP
-  const controlsY = panelH / 2 - 110
+  // Stack the controls block directly above the close button so they never overlap.
+  const controlsY = panelH / 2 - 72 - controls.length * 18 - 22
   const controlsTitle = scene.add.text(0, controlsY, touch ? 'TOUCH CONTROLS' : 'KEYBOARD CONTROLS', {
     fontSize: '13px',
     fontFamily: FONT.display,

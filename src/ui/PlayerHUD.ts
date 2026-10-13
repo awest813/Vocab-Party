@@ -41,21 +41,28 @@ export class PlayerHUD {
 
       const children: Phaser.GameObjects.GameObject[] = [frame]
 
+      // Portrait medallion
+      const medal = this.scene.add.graphics()
+      medal.fillStyle(accent, 0.9)
+      medal.fillCircle(-panelW / 2 + 34, 2, 27)
+      medal.fillStyle(0x0c1424, 1)
+      medal.fillCircle(-panelW / 2 + 34, 2, 24)
+      children.push(medal)
       const tex = characterTextureKey(player.characterIndex)
       if (this.scene.textures.exists(tex)) {
         children.push(
-          this.scene.add.image(-panelW / 2 + 34, 2, tex)
-            .setDisplaySize(38, 48)
+          this.scene.add.image(-panelW / 2 + 34, 4, tex)
+            .setDisplaySize(36, 46)
         )
       } else {
         children.push(
           this.scene.add.text(-panelW / 2 + 34, 2, player.emoji, {
-            fontSize: '28px',
+            fontSize: '26px',
           }).setOrigin(0.5)
         )
       }
 
-      const nameText = this.scene.add.text(-panelW / 2 + 58, -30, player.name, {
+      const nameText = this.scene.add.text(-panelW / 2 + 68, -38, player.name, {
         fontSize: '17px',
         fontFamily: FONT.display,
         color: '#ffffff',
@@ -65,35 +72,34 @@ export class PlayerHUD {
       children.push(nameText)
 
       if (player.isCpu) {
-        const lvl = player.cpuLevel === 'hard' ? 'H' : player.cpuLevel === 'easy' ? 'E' : 'N'
+        const lvl = player.cpuLevel === 'hard' ? 'Hard' : player.cpuLevel === 'easy' ? 'Easy' : 'Normal'
         children.push(
-          this.scene.add.text(panelW / 2 - 12, -30, `CPU·${lvl}`, {
+          this.scene.add.text(-panelW / 2 + 68, -8, `CPU · ${lvl}`, {
             fontSize: '11px',
             fontFamily: FONT.display,
             color: player.cpuLevel === 'hard' ? '#ffb4a2' : player.cpuLevel === 'easy' ? '#b8f0c8' : '#9ad4ff',
-            stroke: '#001830',
-            strokeThickness: 2,
-          }).setOrigin(1, 0)
+          }).setOrigin(0, 0.5)
         )
       }
 
-      const scoreText = this.scene.add.text(-panelW / 2 + 12, 0, `${player.score} pts`, {
+      // Trophies are the win condition, so they get the biggest number.
+      const scoreText = this.scene.add.text(-panelW / 2 + 68, 14, '', {
         fontSize: '22px',
         fontFamily: FONT.display,
         color: hexColor(COLORS.gold),
         stroke: '#3a2800',
         strokeThickness: 3,
       }).setOrigin(0, 0.5)
-      this.lastScores[i] = player.score
+      this.lastScores[i] = -1
 
-      const metaText = this.scene.add.text(-panelW / 2 + 12, 28, '', {
-        fontSize: '14px',
-        fontFamily: FONT.display,
+      const metaText = this.scene.add.text(-panelW / 2 + 68, 35, '', {
+        fontSize: '12px',
+        fontFamily: FONT.body,
         color: '#c5d8ec',
       }).setOrigin(0, 0.5)
 
-      const rankText = this.scene.add.text(panelW / 2 - 10, -panelH / 2 + 8, '', {
-        fontSize: '13px',
+      const rankText = this.scene.add.text(panelW / 2 - 10, -38, '', {
+        fontSize: '14px',
         fontFamily: FONT.display,
         color: '#ffffff',
         align: 'right',
@@ -101,7 +107,7 @@ export class PlayerHUD {
         strokeThickness: 3,
       }).setOrigin(1, 0)
 
-      const statusGroup = this.scene.add.container(panelW / 2 - 10, panelH / 2 - 14)
+      const statusGroup = this.scene.add.container(panelW / 2 - 10, -4)
       this.statusGroups.push(statusGroup)
 
       children.push(scoreText, metaText, rankText, statusGroup)
@@ -179,14 +185,17 @@ export class PlayerHUD {
       }
 
       const scoreText = this.scoreTexts[i]
-      if (scoreText && this.lastScores[i] !== player.score) {
-        scoreText.setText(`${player.score} pts`)
-        this.scene.tweens.add({
-          targets: scoreText,
-          scaleX: 1.18, scaleY: 1.18,
-          duration: 140, yoyo: true,
-        })
-        this.lastScores[i] = player.score
+      const key = player.trophies * 100000 + player.coins
+      if (scoreText && this.lastScores[i] !== key) {
+        scoreText.setText(`🏆 ${player.trophies}   🪙 ${player.coins}`)
+        if (this.lastScores[i] !== -1) {
+          this.scene.tweens.add({
+            targets: scoreText,
+            scaleX: 1.12, scaleY: 1.12,
+            duration: 140, yoyo: true,
+          })
+        }
+        this.lastScores[i] = key
       }
 
       const inventory = player.inventory.map(t => {
@@ -204,7 +213,7 @@ export class PlayerHUD {
 
       const metaText = this.metaTexts[i]
       if (metaText) {
-        metaText.setText(`${player.coins} coins · ${player.trophies} stars${inventory ? ' · ' + inventory : ''}`)
+        metaText.setText(`${player.score} pts${inventory ? '  ·  ' + inventory : ''}`)
       }
 
       const rankText = this.rankTexts[i]

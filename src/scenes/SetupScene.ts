@@ -1,10 +1,10 @@
 import Phaser from 'phaser'
-import { createButton, setButtonEnabled } from '../ui/Button'
+import { createButton, setButtonEnabled, setButtonLabel } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
 import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { BOARD_PATH_LENGTH } from '../systems/BoardLayout'
-import { CHARACTER_COUNT } from '../systems/GameState'
+import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
 import {
   CHARACTER_DEFS,
   CHARACTER_COUNT as SPRITE_CHARACTER_COUNT,
@@ -14,7 +14,7 @@ import {
 } from '../systems/SpriteFactory'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
-import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers } from '../systems/gameFlags'
+import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers, getAutoSimMinigames } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 
@@ -54,9 +54,35 @@ interface InputRow {
 
 type CpuSlotMode = 'off' | CpuLevel
 
+const OPTIONS_KEY = 'vocab-party-options'
+const FREQ_ORDER: MinigameFrequency[] = ['every', 'alternate', 'tiles']
+const FREQ_LABEL: Record<MinigameFrequency, string> = {
+  every: 'Every round',
+  alternate: 'Every other round',
+  tiles: 'Duel tiles only',
+}
+
+function loadPartyOptions(): PartyOptions {
+  try {
+    const raw = localStorage.getItem(OPTIONS_KEY)
+    if (raw) {
+      const p = JSON.parse(raw) as Partial<PartyOptions>
+      return {
+        minigames: FREQ_ORDER.includes(p.minigames as MinigameFrequency) ? p.minigames as MinigameFrequency : DEFAULT_PARTY_OPTIONS.minigames,
+        bonusStars: typeof p.bonusStars === 'boolean' ? p.bonusStars : DEFAULT_PARTY_OPTIONS.bonusStars,
+      }
+    }
+  } catch { /* ignore */ }
+  return { ...DEFAULT_PARTY_OPTIONS }
+}
+
+function savePartyOptions(o: PartyOptions) {
+  try { localStorage.setItem(OPTIONS_KEY, JSON.stringify(o)) } catch { /* ignore */ }
+}
+
 export class SetupScene extends Phaser.Scene {
   private playerCount = 4
-  private cpuModeByRow: CpuSlotMode[] = ['off', 'off', 'off', 'off']
+  private cpuModeByRow: CpuSlotMode[] = ['off', 'normal', 'normal', 'normal']
   private cpuToggleTexts: Phaser.GameObjects.Text[] = []
   /** Selected character index per roster slot (into CHARACTER_DEFS). */
   private characterByRow: number[] = [0, 1, 2, 3]
@@ -77,6 +103,9 @@ export class SetupScene extends Phaser.Scene {
   private rowContainers: Phaser.GameObjects.Container[] = []
   private cursorTimers: Phaser.Time.TimerEvent[] = []
   private leaving = false
+  private partyOptions: PartyOptions = { ...DEFAULT_PARTY_OPTIONS }
+  private freqBtn?: Phaser.GameObjects.Container
+  private bonusBtn?: Phaser.GameObjects.Container
 
   constructor() { super('SetupScene') }
 
@@ -94,7 +123,7 @@ export class SetupScene extends Phaser.Scene {
     driftStarfield(this, stars, reduce)
     addVignette(this, 0.5, -4)
     if (!reduce) addAmbientMotes(this, 18)
-    Sfx.startMusic()
+    Sfx.startMusic('menu')
 
     const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 48)
     backBtn.setDepth(10)
@@ -201,7 +230,7 @@ export class SetupScene extends Phaser.Scene {
 
     this.add.text(w / 2, rosterTop + 24, touch
       ? 'Tap portrait or name tag to change character  ·  Tap START'
-      : 'Click portrait to change character  ·  1–3 pick map  ·  Enter to start', {
+      : 'Click portrait to change character  ·  1–3 map  ·  M minigames  ·  B bonus stars  ·  Enter to start', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -235,6 +264,20 @@ export class SetupScene extends Phaser.Scene {
         ease: 'Cubic.easeOut',
       })
     }
+
+    // ——— Party rules ———
+    this.partyOptions = loadPartyOptions()
+    const rulesY = 596
+    this.add.text(w / 2 - 470, rulesY, 'PARTY RULES', {
+      fontSize: '12px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
+    }).setOrigin(0, 0.5).setDepth(4)
+    this.freqBtn = createButton(this, w / 2 - 110, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 360, 44)
+    this.freqBtn.setDepth(6)
+    this.freqBtn.on('pointerdown', () => this.cycleMinigameFrequency())
+    this.bonusBtn = createButton(this, w / 2 + 275, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 330, 44)
+    this.bonusBtn.setDepth(6)
+    this.bonusBtn.on('pointerdown', () => this.toggleBonusStars())
+    this.refreshPartyOptions()
 
     const startGlow = this.add.ellipse(w / 2, h - 52, 420, 80, COLORS.mint, 0.12).setDepth(4)
     if (!reduce) {
@@ -270,6 +313,7 @@ export class SetupScene extends Phaser.Scene {
       this.mapPreset = getAutoSimFullMap() ? 'full' : 'classic'
       this.refreshMapCards()
       this.cpuModeByRow = ['normal', 'normal', 'normal', 'normal']
+      this.partyOptions = { minigames: getAutoSimMinigames(), bonusStars: true }
       for (let i = 0; i < MAX_PLAYERS; i++) this.refreshCpuToggle(i)
       this.refreshRows()
       this.refreshCountButtons()
@@ -283,6 +327,13 @@ export class SetupScene extends Phaser.Scene {
     const onOne = () => { if (this.activeRow < 0) this.selectMapPreset('quick') }
     const onTwo = () => { if (this.activeRow < 0) this.selectMapPreset('classic') }
     const onThree = () => { if (this.activeRow < 0) this.selectMapPreset('full') }
+    const onRules = (ev: KeyboardEvent) => {
+      if (this.activeRow >= 0) return
+      if (ev.code === 'KeyM') this.cycleMinigameFrequency()
+      else if (ev.code === 'KeyB') this.toggleBonusStars()
+    }
+    this.input.keyboard?.on('keydown', onRules)
+    this.events.once('shutdown', () => this.input.keyboard?.off('keydown', onRules))
     const onEsc = () => {
       if (this.activeRow >= 0) this.setActiveRow(-1)
       else this.scene.start('MenuScene')
@@ -310,6 +361,28 @@ export class SetupScene extends Phaser.Scene {
     })
 
     this.cameras.main.fadeIn(360, 7, 11, 20)
+  }
+
+  private refreshPartyOptions() {
+    if (this.freqBtn) setButtonLabel(this.freqBtn, `🎮 Minigames: ${FREQ_LABEL[this.partyOptions.minigames]}`)
+    if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus Stars: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
+  }
+
+  private cycleMinigameFrequency() {
+    if (this.leaving) return
+    const i = FREQ_ORDER.indexOf(this.partyOptions.minigames)
+    this.partyOptions.minigames = FREQ_ORDER[(i + 1) % FREQ_ORDER.length]
+    savePartyOptions(this.partyOptions)
+    this.refreshPartyOptions()
+    Sfx.uiToggle()
+  }
+
+  private toggleBonusStars() {
+    if (this.leaving) return
+    this.partyOptions.bonusStars = !this.partyOptions.bonusStars
+    savePartyOptions(this.partyOptions)
+    this.refreshPartyOptions()
+    Sfx.uiToggle()
   }
 
   private currentMapRounds(): number {
@@ -761,6 +834,7 @@ export class SetupScene extends Phaser.Scene {
           roundsPerGame,
           playerCpu,
           playerCpuLevels,
+          partyOptions: { ...this.partyOptions },
         })
       })
     }

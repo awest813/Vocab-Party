@@ -7,7 +7,7 @@ import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
-import { characterTextureKey } from '../systems/SpriteFactory'
+import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import { Sfx } from '../systems/Sfx'
 
 export class ResultsScene extends Phaser.Scene {
@@ -19,12 +19,14 @@ export class ResultsScene extends Phaser.Scene {
 
   create(data: { state: GameState }) {
     const { state } = data
+    this.studySheet = undefined
     const w = this.scale.width
     const h = this.scale.height
 
     paintStage(this, { topColor: COLORS.bgDeep, bottomColor: 0x152038 })
     addStarfieldBackdrop(this, 0.4)
     addAmbientMotes(this, 32)
+    Sfx.startMusic('results')
 
     // Soft gold stage light
     const beams = this.add.graphics().setDepth(-1)
@@ -212,7 +214,16 @@ export class ResultsScene extends Phaser.Scene {
       }
     })
 
-    const playAgainBtn = createButton(this, w / 2 - 180, h - 52, 'PLAY AGAIN', COLORS.party, COLORS.partyDeep, 280, 56)
+    const awards = state.bonusAwards ?? []
+    if (awards.length > 0) {
+      const line = awards.map(a => `${a.icon} ${a.title.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}: ${a.winners.map(id => state.players.find(p => p.id === id)?.name ?? '?').join(' & ')}`).join('   ·   ')
+      this.add.text(w / 2, 186, line, { fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mist) }).setOrigin(0.5)
+    }
+
+    const studyBtn = createButton(this, w / 2, h - 52, '📖 STUDY SHEET', COLORS.warning, 0xd9800f, 260, 56)
+    studyBtn.on('pointerdown', () => this.openStudySheet(state))
+
+    const playAgainBtn = createButton(this, w / 2 - 300, h - 52, 'PLAY AGAIN', COLORS.party, COLORS.partyDeep, 280, 56)
     playAgainBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(280, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
@@ -220,7 +231,7 @@ export class ResultsScene extends Phaser.Scene {
       })
     })
 
-    const menuBtn = createButton(this, w / 2 + 180, h - 52, 'MAIN MENU', COLORS.skyDeep, COLORS.skyBtnDeep, 280, 56)
+    const menuBtn = createButton(this, w / 2 + 300, h - 52, 'MAIN MENU', COLORS.skyDeep, COLORS.skyBtnDeep, 280, 56)
     menuBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(280, 0, 0, 0)
       this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
@@ -229,9 +240,14 @@ export class ResultsScene extends Phaser.Scene {
     })
 
     const onEnter = () => {
+      if (this.studySheet) return
       this.scene.start('SetupScene')
     }
     const onEsc = () => {
+      if (this.studySheet) {
+        this.closeStudySheet()
+        return
+      }
       this.scene.start('MenuScene')
     }
     this.input.keyboard?.on('keydown-ENTER', onEnter)
@@ -240,6 +256,93 @@ export class ResultsScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown-ENTER', onEnter)
       this.input.keyboard?.off('keydown-ESC', onEsc)
     })
+  }
+
+  private studySheet?: Phaser.GameObjects.Container
+
+  private closeStudySheet() {
+    this.studySheet?.destroy()
+    this.studySheet = undefined
+  }
+
+  /** Per-player accuracy, minigame record, and the words/questions they should review. */
+  private openStudySheet(state: GameState) {
+    this.closeStudySheet()
+    const w = this.scale.width
+    const h = this.scale.height
+    const c = this.add.container(0, 0).setDepth(500)
+    this.studySheet = c
+    const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.72).setOrigin(0).setInteractive()
+    dim.on('pointerdown', () => this.closeStudySheet())
+    c.add(dim)
+    const panelW = 1200
+    const panelH = 620
+    const g = this.add.graphics()
+    g.fillStyle(COLORS.bgPanel, 0.98)
+    g.fillRoundedRect(w / 2 - panelW / 2, h / 2 - panelH / 2, panelW, panelH, 20)
+    g.lineStyle(3, COLORS.warning, 0.8)
+    g.strokeRoundedRect(w / 2 - panelW / 2, h / 2 - panelH / 2, panelW, panelH, 20)
+    // swallow clicks on the panel itself
+    const block = this.add.rectangle(w / 2, h / 2, panelW, panelH, 0, 0.001).setInteractive()
+    c.add([g, block])
+    c.add(this.add.text(w / 2, h / 2 - panelH / 2 + 38, '📖 STUDY SHEET', {
+      fontSize: '34px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 5,
+    }).setOrigin(0.5))
+    c.add(this.add.text(w / 2, h / 2 - panelH / 2 + 74, 'Words and questions worth another look — practice them in the Minigame Arcade!', {
+      fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+    }).setOrigin(0.5))
+
+    const players = [...state.players].sort((a, b) => Number(a.isCpu) - Number(b.isCpu))
+    const colW = (panelW - 40) / players.length
+    players.forEach((p, i) => {
+      const x = w / 2 - panelW / 2 + 20 + colW * i + colW / 2
+      const top = h / 2 - panelH / 2 + 110
+      const col = characterDef(p.characterIndex).color
+      const cg = this.add.graphics()
+      cg.fillStyle(0x0b1222, 0.9)
+      cg.fillRoundedRect(x - colW / 2 + 6, top, colW - 12, panelH - 190, 14)
+      cg.lineStyle(2, col, 0.6)
+      cg.strokeRoundedRect(x - colW / 2 + 6, top, colW - 12, panelH - 190, 14)
+      c.add(cg)
+      c.add(this.add.text(x, top + 24, `${p.name}${p.isCpu ? ' 🤖' : ''}`, { fontSize: '22px', fontFamily: FONT.display, color: hexColor(col) }).setOrigin(0.5))
+      const answered = p.stats.correctAnswers + p.stats.wrongAnswers
+      const acc = answered > 0 ? Math.round((p.stats.correctAnswers / answered) * 100) : 0
+      c.add(this.add.text(x, top + 56, answered > 0 ? `Board questions: ${p.stats.correctAnswers}/${answered} (${acc}%)` : 'Board questions: —', {
+        fontSize: '14px', fontFamily: FONT.body, color: '#ffffff',
+      }).setOrigin(0.5))
+      c.add(this.add.text(x, top + 78, `Minigame wins: ${p.stats.minigameWins}  ·  Words practiced: ${p.stats.wordsPracticed}`, {
+        fontSize: '13px', fontFamily: FONT.body, color: hexColor(COLORS.mist), align: 'center', wordWrap: { width: colW - 30 },
+      }).setOrigin(0.5))
+      const missed = [...p.stats.missed].reverse().slice(0, players.length > 2 ? 6 : 8)
+      if (missed.length === 0) {
+        c.add(this.add.text(x, top + 150, p.isCpu ? '—' : 'Nothing to review — great job! ✨', {
+          fontSize: '16px', fontFamily: FONT.display, color: '#44ff88', align: 'center', wordWrap: { width: colW - 40 },
+        }).setOrigin(0.5))
+        return
+      }
+      c.add(this.add.text(x, top + 108, 'REVIEW', { fontSize: '13px', fontFamily: FONT.display, color: hexColor(COLORS.coral) }).setOrigin(0.5))
+      let y = top + 126
+      const maxY = top + panelH - 200
+      for (const m of missed) {
+        if (y > maxY) break
+        const head = this.add.text(x - colW / 2 + 20, y, `• ${m.word}`, {
+          fontSize: '15px', fontFamily: FONT.display, color: '#ffffff', wordWrap: { width: colW - 44 },
+        })
+        c.add(head)
+        y += head.height + 1
+        if (m.note) {
+          const note = this.add.text(x - colW / 2 + 32, y, m.note, {
+            fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mist), wordWrap: { width: colW - 56 },
+          })
+          c.add(note)
+          y += note.height
+        }
+        y += 8
+      }
+    })
+    const close = createButton(this, w / 2, h / 2 + panelH / 2 - 40, 'CLOSE', COLORS.chrome, COLORS.chromeDeep, 200, 50)
+    close.on('pointerdown', () => this.closeStudySheet())
+    c.add(close)
   }
 
   /** Left-to-right display ranks for a balanced podium. */

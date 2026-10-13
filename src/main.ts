@@ -11,6 +11,8 @@ import { MinigameScene } from './scenes/MinigameScene'
 import { ResultsScene } from './scenes/ResultsScene'
 import { BattleScene } from './scenes/BattleScene'
 import { PauseScene } from './scenes/PauseScene'
+import { ArcadeScene } from './scenes/ArcadeScene'
+import { BonusStarsScene } from './scenes/BonusStarsScene'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -36,13 +38,15 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene],
+  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene, ArcadeScene, BonusStarsScene],
 }
 
 initGameFlagsFromLocation()
 installAudioUnlock()
 
 const game = new Phaser.Game(config)
+// Handle for headless capture scripts / debugging.
+;(window as unknown as { __VOCAB_PARTY_GAME__?: Phaser.Game }).__VOCAB_PARTY_GAME__ = game
 
 // Keep canvas sharp on resize / orientation changes (FIT already handles layout).
 window.addEventListener('orientationchange', () => {

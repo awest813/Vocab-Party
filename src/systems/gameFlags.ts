@@ -7,6 +7,7 @@ let autoSim = false
 let autoSimRounds: number | null = null
 let autoSimFullMap = false
 let autoSimPlayers = 4
+let autoSimMinigames: 'every' | 'alternate' | 'tiles' = 'every'
 
 export function initGameFlagsFromLocation(): void {
   if (typeof window === 'undefined') return
@@ -20,6 +21,8 @@ export function initGameFlagsFromLocation(): void {
   } else {
     autoSimRounds = null
   }
+  const mg = q.get('minigames')
+  autoSimMinigames = mg === 'alternate' || mg === 'tiles' ? mg : 'every'
   const playersRaw = q.get('players')
   if (playersRaw) {
     const n = Number.parseInt(playersRaw, 10)
@@ -49,4 +52,8 @@ export function getAutoSimPlayers(): number {
 export function scaleAutoSimDelay(ms: number): number {
   if (!autoSim) return ms
   return Math.max(0, Math.round(ms * 0.04))
+}
+
+export function getAutoSimMinigames(): 'every' | 'alternate' | 'tiles' {
+  return autoSimMinigames
 }

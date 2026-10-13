@@ -8,6 +8,7 @@ import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
+import { drawFromDeck } from '../minigames/ContentBank'
 
 interface QuestionData {
   question: string
@@ -20,6 +21,9 @@ export interface QuestionResolution {
   correct: boolean
   timeBonus: number
   speedSurge: boolean
+  /** The question text (for the end-of-game study sheet). */
+  question?: string
+  explanation?: string
 }
 
 interface QuestionSceneData {
@@ -52,6 +56,7 @@ const FALLBACK_QUESTIONS: Record<'vocab' | 'grammar', QuestionData> = {
 }
 
 export class QuestionScene extends Phaser.Scene {
+  private currentQuestion?: string
   constructor() { super('QuestionScene') }
 
   private d(ms: number) {
@@ -73,8 +78,9 @@ export class QuestionScene extends Phaser.Scene {
       : this.cache.json.get('grammar')?.questions as QuestionData[] | undefined
     const questions = Array.isArray(bank) ? bank : []
     const raw: QuestionData = questions.length > 0
-      ? Phaser.Utils.Array.GetRandom(questions)
+      ? drawFromDeck(`board-${data.type}`, questions)
       : FALLBACK_QUESTIONS[type]
+    this.currentQuestion = raw.question
     // Shuffle answer order each time so players (and CPUs) can't learn a key pattern.
     const order = raw.answers.map((_, i) => i)
     Phaser.Utils.Array.Shuffle(order)
@@ -197,6 +203,13 @@ export class QuestionScene extends Phaser.Scene {
       const btn = createButton(this, bx, by, `${labels[i]}: ${ans}`, answerColors[i], answerColors[i], 380, 64)
       btn.setAlpha(0).setDepth(45)
       btn.setName(`btn_${i}`)
+      // Long answers: wrap and shrink so text never spills past the button.
+      const label = btn.list.find(c => c instanceof Phaser.GameObjects.Text) as Phaser.GameObjects.Text | undefined
+      if (label) {
+        label.setWordWrapWidth(350).setAlign('center')
+        const len = ans.length + 3
+        label.setFontSize(len > 44 ? 15 : len > 32 ? 18 : 22)
+      }
       this.answerContainers.push(btn)
       this.tweens.add({
         targets: btn,
@@ -374,7 +387,9 @@ export class QuestionScene extends Phaser.Scene {
     this.time.delayedCall(this.d(2200), () => onComplete({
       correct,
       timeBonus,
-      speedSurge: correct && speedSurge
+      speedSurge: correct && speedSurge,
+      question: this.currentQuestion,
+      explanation,
     }))
   }
 }

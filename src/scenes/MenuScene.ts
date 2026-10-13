@@ -39,7 +39,7 @@ export class MenuScene extends Phaser.Scene {
     if (!reduce) addAmbientMotes(this, 28)
     if (!reduce) this.createParallaxStars()
 
-    Sfx.startMusic()
+    Sfx.startMusic('menu')
 
     // Soft gold key-light behind the brand
     const spotlight = this.add.ellipse(w / 2, 168, 780, 260, COLORS.gold, 0.08).setDepth(0)
@@ -178,16 +178,28 @@ export class MenuScene extends Phaser.Scene {
     startBtn.setDepth(6)
     startBtn.on('pointerdown', goSetup)
 
-    const howBtn = createButton(this, w / 2, 458, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 360, 56)
+    const goArcade = () => {
+      if (this.modalOpen || leaving) return
+      leaving = true
+      this.cameras.main.fadeOut(300, 0, 0, 0)
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+        this.scene.start('ArcadeScene')
+      })
+    }
+    const arcadeBtn = createButton(this, w / 2, 456, '🕹️  MINIGAME ARCADE', COLORS.warning, 0xd9800f, 360, 60)
+    arcadeBtn.setDepth(6)
+    arcadeBtn.on('pointerdown', goArcade)
+
+    const howBtn = createButton(this, w / 2 - 92, 532, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 176, 52)
     howBtn.setDepth(6)
     howBtn.on('pointerdown', () => this.openHowTo())
 
-    const settingsBtn = createButton(this, w / 2, 530, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 360, 56)
+    const settingsBtn = createButton(this, w / 2 + 92, 532, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 176, 52)
     settingsBtn.setDepth(6)
     settingsBtn.on('pointerdown', () => this.openSettings())
 
     // Stagger CTA entrance
-    ;[startBtn, howBtn, settingsBtn].forEach((btn, i) => {
+    ;[startBtn, arcadeBtn, howBtn, settingsBtn].forEach((btn, i) => {
       btn.setAlpha(0)
       btn.y += 18
       this.tweens.add({
@@ -206,7 +218,7 @@ export class MenuScene extends Phaser.Scene {
 
     const hint = this.add.text(w / 2, h - 48, touch
       ? 'Tap ENTER PARTY to begin  ·  Rotate landscape for the best view'
-      : 'Enter = Start  ·  Esc closes panels  ·  ? opens How to Play', {
+      : 'Enter = Start  ·  A = Arcade  ·  ? = How to Play  ·  Esc closes panels', {
       fontSize: '14px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -242,11 +254,13 @@ export class MenuScene extends Phaser.Scene {
     }
     this.input.keyboard?.on('keydown-ESC', onEsc)
     this.input.keyboard?.on('keydown-ENTER', goSetup)
+    this.input.keyboard?.on('keydown-A', goArcade)
     this.input.keyboard?.on('keydown', openHowToFromKeyboard)
     this.input.keyboard?.on('keydown-KeyH', onHelpKey)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.keyboard?.off('keydown-ESC', onEsc)
       this.input.keyboard?.off('keydown-ENTER', goSetup)
+      this.input.keyboard?.off('keydown-A', goArcade)
       this.input.keyboard?.off('keydown', openHowToFromKeyboard)
       this.input.keyboard?.off('keydown-KeyH', onHelpKey)
     })
@@ -296,7 +310,7 @@ export class MenuScene extends Phaser.Scene {
       },
       onChange: (s) => {
         if (s.muted || s.musicVolume <= 0.01) Sfx.stopMusic()
-        else Sfx.startMusic()
+        else Sfx.startMusic('menu')
       },
     })
   }

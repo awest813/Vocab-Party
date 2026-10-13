@@ -22,10 +22,6 @@ type CpuLevelProfile = {
   rollDelayMsMax: number
   itemThinkDelayMsMin: number
   itemThinkDelayMsMax: number
-  minigameGuessCorrectChance: number
-  minigameMaxGuessAttempts: number
-  minigameThinkDelayMsMin: number
-  minigameThinkDelayMsMax: number
   /** 0-1: how likely to buy a shop when affordable */
   shopBuyChance: number
   /** 0-1: how likely to buy a star immediately vs save */
@@ -51,10 +47,6 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     rollDelayMsMax: 1400,
     itemThinkDelayMsMin: 500,
     itemThinkDelayMsMax: 1100,
-    minigameGuessCorrectChance: 0.42,
-    minigameMaxGuessAttempts: 14,
-    minigameThinkDelayMsMin: 280,
-    minigameThinkDelayMsMax: 560,
     shopBuyChance: 0.28,
     starBuyThreshold: 0.35,
     coinReserve: 4,
@@ -71,10 +63,6 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     rollDelayMsMax: 1100,
     itemThinkDelayMsMin: 400,
     itemThinkDelayMsMax: 850,
-    minigameGuessCorrectChance: 0.58,
-    minigameMaxGuessAttempts: 18,
-    minigameThinkDelayMsMin: 220,
-    minigameThinkDelayMsMax: 480,
     shopBuyChance: 0.62,
     starBuyThreshold: 0.62,
     coinReserve: 10,
@@ -91,10 +79,6 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     rollDelayMsMax: 750,
     itemThinkDelayMsMin: 280,
     itemThinkDelayMsMax: 600,
-    minigameGuessCorrectChance: 0.74,
-    minigameMaxGuessAttempts: 24,
-    minigameThinkDelayMsMin: 140,
-    minigameThinkDelayMsMax: 320,
     shopBuyChance: 0.88,
     starBuyThreshold: 0.9,
     coinReserve: 16,
@@ -140,25 +124,6 @@ export function cpuRollDelayMs(math: CpuPhaserMath, level?: CpuLevel) {
 export function cpuItemThinkDelayMs(math: CpuPhaserMath, level?: CpuLevel) {
   const p = cpuPolicyForLevel(level)
   return math.Between(p.itemThinkDelayMsMin, p.itemThinkDelayMsMax)
-}
-
-/**
- * Simulates CPU playing a single-answer minigame (wrong answers can be retried).
- * Returns whether the current player won and total simulated "thinking" delay.
- */
-export function simulateCpuMinigameGuesses(
-  math: CpuPhaserMath,
-  level?: CpuLevel
-): { currentPlayerWins: boolean; totalDelayMs: number } {
-  const p = cpuPolicyForLevel(level)
-  let totalDelayMs = 0
-  for (let a = 0; a < p.minigameMaxGuessAttempts; a++) {
-    totalDelayMs += math.Between(p.minigameThinkDelayMsMin, p.minigameThinkDelayMsMax)
-    if (math.FloatBetween(0, 1) < p.minigameGuessCorrectChance) {
-      return { currentPlayerWins: true, totalDelayMs }
-    }
-  }
-  return { currentPlayerWins: false, totalDelayMs }
 }
 
 /** Minimal player fields the CPU needs for decisions. */

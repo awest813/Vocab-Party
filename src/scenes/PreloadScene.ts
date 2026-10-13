@@ -74,6 +74,8 @@ export class PreloadScene extends Phaser.Scene {
     })
 
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
+      // The minigame lexicon has a built-in fallback, so it never blocks the game.
+      if (file.key === 'lexicon') return
       this.loadFailed = true
       console.error('PreloadScene: Load error on', file.src)
       statusText.setText('Load failed — check your connection and refresh.')
@@ -82,6 +84,7 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.json('vocab', 'data/vocab.json')
     this.load.json('grammar', 'data/grammar.json')
+    this.load.json('lexicon', 'data/lexicon.json')
 
     this.load.image(TEXTURE_KEYS.starfield, EXTERNAL_ASSETS.starfield)
     this.load.image(TEXTURE_KEYS.particleYellow, EXTERNAL_ASSETS.particleYellow)

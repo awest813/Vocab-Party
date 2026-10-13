@@ -44,10 +44,10 @@ npm run typecheck
 
 ## Game Instructions
 
-1. **1–4 players** take turns (human or CPU). Pick characters and a map length in setup:
-   - **Quick** — 5 rounds
-   - **Classic** — 10 rounds
-   - **Full Map** — 44 rounds
+1. **1–4 players** take turns (human or CPU). Pick characters, a map length, and party rules in setup:
+   - **Quick** — 5 rounds · **Classic** — 10 rounds · **Full Map** — 44 rounds
+   - **Minigames:** every round (default), every other round, or duel tiles only
+   - **Bonus Stars:** on/off
 2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher).
 3. Your token moves along the board. The tile you land on determines what happens:
 
@@ -56,30 +56,42 @@ npm run typecheck
 | 🏠 Start | +3 bonus score/coins (pass for +5 coins) |
 | 📖 Vocab | Answer a vocabulary question (+10 pts) |
 | ✏️ Grammar | Answer a grammar question (+10 pts) |
-| ⭐ Bonus | Instant +5 score and +4 coins |
-| 💀 Penalty | Lose score and coins (shield blocks) |
+| ⭐ Bonus | Instant +5 score and +4 coins (doubled in the Last Stretch) |
+| 💀 Penalty | Lose score and coins (shield blocks; doubled in the Last Stretch) |
 | ❓ Mystery | Random effect: bonus, penalty, or extra roll |
-| 🕹️ Minigame | Fast challenge — winner earns +15 pts / +5 coins |
+| 🕹️ Duel | Challenge a rival to a 1-on-1 minigame — winner steals up to 6 coins |
 | 🔄 Swap | Swap board positions with another player |
 | 🏪 Shop | Buy shops to collect rent (Buy/Pass prompt) |
 | 🌟 Star | Spend 20 coins for a trophy (+12 score, Buy/Pass prompt) |
 | 🧱 Brick | Collect pieces for build bonuses |
 | 🛍️ Item Shop | Pick a power-up card or pass |
 
-4. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
-5. Click **🔄 PLAY AGAIN** or **🏠 MAIN MENU** from results.
+4. **Party minigames:** after every round, all players compete in a randomly chosen minigame (a roulette picks it). Placement pays coins: 1st +10, 2nd +5, 3rd +2. Several humans take turns on the same device (hot-seat); CPUs play alongside with live "ghost" scores.
+5. **Last Stretch:** in the final rounds, bonus and penalty tiles double and the last-place player gets a +10 coin comeback boost.
+6. **Bonus Stars:** when the rounds run out, three extra trophies are awarded — 📚 Word Wizard (most correct answers), 🎮 Minigame Master (most minigame wins), 🪙 Coin Tycoon (most coins held at once).
+7. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
+8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
 
 ### Minigames
 
-One is chosen at random each time a player lands on a 🕹️ Minigame tile:
+14 vocabulary-and-grammar minigames, each 30–50 seconds. All of them can be practiced solo from **🕹️ Minigame Arcade** on the main menu, with personal bests and CPU-tier medals.
 
-- **🔍 Context Clue Clash** — Fill in the blank using context clues
-- **😱 Comma Crisis** — Pick the sentence with correct comma placement
-- **🗣️ Parts of Speech** — Identify the part of speech of the featured word
-- **⚡ Synonym Blitz** — Pick the word that means almost the same thing
-- **✨ Sentence Fix** — Choose the best-written sentence
-- **🔄 Antonym Attack** — Pick the opposite of the given word
-- **🔊 Homophone Hunt** — Choose the correct word for the blank
+| Game | Skill | Mechanic |
+|------|-------|----------|
+| 🌧️ Synonym Storm | Vocabulary | Catch falling synonyms, dodge opposites |
+| 🔤 Anagram Dash | Spelling | Rebuild a scrambled word from its definition |
+| 🃏 Memory Match | Vocabulary | Flip cards to pair words with meanings |
+| 🔨 Whack-a-Word | Grammar | Whack words of the part of speech on the sign |
+| 📦 Word Sorter | Grammar | Sort words into noun/verb/adjective/adverb bins |
+| 📘 Definition Dash | Vocabulary | Rapid-fire word ↔ definition |
+| 🧩 Odd One Out | Vocabulary | Find the word that doesn't share the meaning |
+| 🐝 Spelling Bee | Spelling | Pick the correct spelling (words read aloud) |
+| 🔄 Antonym Attack | Vocabulary | Pick the opposite — synonym traps included |
+| 🔎 Context Clues | Vocabulary | Fill the blank from sentence context |
+| 🏭 Prefix Factory | Word parts | Add the prefix/suffix that builds the word |
+| 🌱 Root Detective | Word parts | Match Greek/Latin roots to meanings |
+| 🔊 Homophone Hunt | Spelling | their/there/they're and friends |
+| ✏️ Grammar Gauntlet | Grammar | Pick the correctly written sentence |
 
 ---
 
@@ -94,7 +106,8 @@ Vocab-Party/
 ├── public/
 │   └── data/
 │       ├── vocab.json       # Vocabulary questions & context clue minigame data
-│       └── grammar.json     # Grammar questions, comma & parts-of-speech minigame data
+│       ├── grammar.json     # Grammar questions, comma & parts-of-speech minigame data
+│       └── lexicon.json     # Word bank (definitions, synonyms, antonyms, POS), affixes, spelling, roots
 └── src/
     ├── main.ts              # Phaser game config & scene list
     ├── scenes/
@@ -104,10 +117,18 @@ Vocab-Party/
     │   ├── SetupScene.ts    # Character, player count, and map selection
     │   ├── BoardScene.ts    # Core game board, dice rolling, turn management
     │   ├── QuestionScene.ts # Vocabulary & grammar question overlay
-    │   ├── MinigameScene.ts # Seven minigame implementations
+    │   ├── MinigameScene.ts # Minigame runner: roulette, rules, hot-seat turns, results
+    │   ├── ArcadeScene.ts   # Free-play minigame menu with personal bests
+    │   ├── BonusStarsScene.ts # End-of-game bonus trophy ceremony
     │   ├── BattleScene.ts   # Player encounter battles
     │   ├── PauseScene.ts    # Pause menu overlay
     │   └── ResultsScene.ts  # Final podium and winner announcement
+    ├── minigames/
+    │   ├── types.ts         # MinigameDef / MinigameContext contracts
+    │   ├── ContentBank.ts   # Typed access to all word banks + no-repeat decks
+    │   ├── RapidFire.ts     # Shared rapid-fire quiz engine
+    │   ├── registry.ts      # Minigame list, CPU scoring, personal bests
+    │   └── games/           # Individual minigames
     ├── systems/
     │   ├── GameState.ts     # Player/state types and factory
     │   ├── DiceSystem.ts    # Block die rolling utilities
@@ -167,6 +188,23 @@ Same format as vocab questions. Also supports minigame data:
 // Other minigame banks in grammar.json / vocab.json:
 // minigame_sentence_fix, minigame_synonyms, minigame_antonyms, minigame_homophones
 ```
+
+### Word Bank (`public/data/lexicon.json`)
+
+Most minigames draw from the lexicon. Each entry in `words` needs a part of speech, a short definition (that doesn't contain the word), exactly three synonyms, one or two antonyms, and an example sentence that uses the word:
+
+```json
+{
+  "word": "benevolent",
+  "pos": "adjective",
+  "definition": "kind and generous toward others",
+  "synonyms": ["kind", "generous", "charitable"],
+  "antonyms": ["cruel", "selfish"],
+  "sentence": "The benevolent neighbor shoveled every driveway on the street."
+}
+```
+
+`affixes`, `spelling`, and `roots` feed Prefix Factory, Spelling Bee, and Root Detective.
 
 ### Context Clue Minigame (`public/data/vocab.json`)
 

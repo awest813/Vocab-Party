@@ -203,6 +203,25 @@ class SfxSystem {
     this.noiseBurst(0.1, 0.06, 1400)
   }
 
+  /** Countdown beep; `final` is the higher GO tone. */
+  tick(final = false) {
+    this.unlock()
+    this.tone({ freq: final ? 1046.5 : 659.25, type: 'square', duration: final ? 0.22 : 0.09, gain: 0.07 })
+  }
+
+  /** Minigame clock expired. */
+  timeUp() {
+    this.unlock()
+    this.tone({ freq: 880, endFreq: 440, type: 'square', duration: 0.18, gain: 0.08 })
+    this.tone({ freq: 660, endFreq: 330, type: 'square', duration: 0.24, gain: 0.07, delay: 0.16 })
+  }
+
+  /** Slot-reel tick for the minigame roulette. */
+  reel() {
+    if (this.sfxGain() <= 0) return
+    this.tone({ freq: 1200, type: 'triangle', duration: 0.03, gain: 0.05 })
+  }
+
   /** Item activated from inventory. */
   item() {
     this.unlock()
@@ -210,62 +229,251 @@ class SfxSystem {
     this.tone({ freq: 390, type: 'triangle', duration: 0.12, gain: 0.06, delay: 0.06 })
   }
 
-  /** Soft looping ambient pad for menus / board. */
-  startMusic() {
-    this.unlock()
-    const ctx = this.ensure()
-    if (!ctx || !this.musicGain || this.musicPlaying) return
-    if (getSettings().muted || getSettings().musicVolume <= 0.01) return
+  // ───────────────────────── procedural music ─────────────────────────
 
+  /** Start (or switch to) a looping chiptune track. No-arg resumes the last track. */
+  startMusic(track?: MusicTrack) {
+    this.unlock()
+    const next = track ?? this.currentTrack
+    const ctx = this.ensure()
+    if (!ctx || !this.musicGain) return
+    if (getSettings().muted || getSettings().musicVolume <= 0.01) {
+      this.currentTrack = next
+      return
+    }
+    if (this.musicPlaying && this.currentTrack === next) return
+    if (this.musicPlaying) this.stopMusic(true)
+    this.currentTrack = next
     this.musicPlaying = true
-    const now = ctx.currentTime
-    const freqs = [110, 164.81, 196]
-    freqs.forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const g = ctx.createGain()
-      const filter = ctx.createBiquadFilter()
-      osc.type = i === 0 ? 'sine' : 'triangle'
-      osc.frequency.value = freq
-      filter.type = 'lowpass'
-      filter.frequency.value = 480
-      g.gain.setValueAtTime(0.0001, now)
-      g.gain.linearRampToValueAtTime(0.045 / freqs.length, now + 1.2)
-      osc.connect(filter)
-      filter.connect(g)
-      g.connect(this.musicGain!)
-      osc.start(now)
-      this.musicNodes.push(osc, g, filter)
-    })
+    this.applyVolumes()
+    this.step = 0
+    this.nextStepTime = ctx.currentTime + 0.08
+    const tick = () => this.scheduleMusic()
+    tick()
+    this.schedulerId = window.setInterval(tick, 25)
   }
 
   stopMusic(fade = true) {
+    if (this.schedulerId !== undefined) {
+      window.clearInterval(this.schedulerId)
+      this.schedulerId = undefined
+    }
     const ctx = this.ctx
+    this.musicPlaying = false
     if (!ctx || !this.musicGain) {
-      this.musicPlaying = false
       this.musicNodes = []
       return
     }
     const now = ctx.currentTime
+    const nodes = [...this.musicNodes]
+    this.musicNodes = []
     if (fade) {
       this.musicGain.gain.cancelScheduledValues(now)
       this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, now)
-      this.musicGain.gain.linearRampToValueAtTime(0.0001, now + 0.4)
+      this.musicGain.gain.linearRampToValueAtTime(0.0001, now + 0.3)
     }
-    const nodes = [...this.musicNodes]
-    this.musicNodes = []
-    this.musicPlaying = false
     window.setTimeout(() => {
       nodes.forEach(n => {
         try {
-          if ('stop' in n && typeof (n as OscillatorNode).stop === 'function') {
-            (n as OscillatorNode).stop()
-          }
+          if ('stop' in n && typeof (n as OscillatorNode).stop === 'function') (n as OscillatorNode).stop()
           n.disconnect()
         } catch { /* already stopped */ }
       })
-      this.applyVolumes()
-    }, fade ? 450 : 0)
+      if (!this.musicPlaying) this.applyVolumes()
+    }, fade ? 320 : 0)
+    if (fade) {
+      // Restore the bus level for the next track once the fade is done.
+      window.setTimeout(() => this.applyVolumes(), 340)
+    }
   }
+
+  private currentTrack: MusicTrack = 'menu'
+  private schedulerId?: number
+  private step = 0
+  private nextStepTime = 0
+
+  private scheduleMusic() {
+    const ctx = this.ctx
+    if (!ctx || !this.musicGain || !this.musicPlaying) return
+    const def = MUSIC_TRACKS[this.currentTrack]
+    const stepDur = 60 / def.bpm / 4
+    // Drop stale nodes so the list doesn't grow forever.
+    if (this.musicNodes.length > 400) this.musicNodes.splice(0, this.musicNodes.length - 200)
+    while (this.nextStepTime < ctx.currentTime + 0.14) {
+      this.playStep(def, this.step, this.nextStepTime, stepDur)
+      this.nextStepTime += stepDur
+      this.step = (this.step + 1) % (16 * def.chords.length)
+    }
+  }
+
+  private playStep(def: TrackDef, step: number, t: number, stepDur: number) {
+    const bar = Math.floor(step / 16)
+    const s = step % 16
+    const chord = def.chords[bar]
+    if (def.bass.includes(s)) {
+      this.musicVoice(midiFreq(chord[0] - 12), t, stepDur * 1.8, 'triangle', 0.32, 900)
+    }
+    if (s % 2 === 0) {
+      const tone = chord[def.arp[(s / 2) % def.arp.length] % chord.length] + 12
+      this.musicVoice(midiFreq(tone), t, stepDur * 0.9, 'square', 0.05, 2200)
+    }
+    const lead = def.lead[bar]?.[s]
+    if (lead !== undefined && lead !== null) {
+      this.musicVoice(midiFreq(lead), t, stepDur * 1.6, 'triangle', 0.13, 3200)
+    }
+    if (def.kick.includes(s)) this.musicKick(t)
+    if (def.snare.includes(s)) this.musicNoise(t, 0.09, 0.12, 1800, 'bandpass')
+    if (def.hat.includes(s)) this.musicNoise(t, 0.03, 0.05, 7000, 'highpass')
+  }
+
+  private musicVoice(freq: number, t: number, dur: number, type: OscillatorType, gain: number, cutoff: number) {
+    const ctx = this.ctx!
+    const osc = ctx.createOscillator()
+    const g = ctx.createGain()
+    const f = ctx.createBiquadFilter()
+    osc.type = type
+    osc.frequency.setValueAtTime(freq, t)
+    f.type = 'lowpass'
+    f.frequency.value = cutoff
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(gain, t + 0.012)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+    osc.connect(f)
+    f.connect(g)
+    g.connect(this.musicGain!)
+    osc.start(t)
+    osc.stop(t + dur + 0.02)
+    this.musicNodes.push(osc, g, f)
+  }
+
+  private musicKick(t: number) {
+    const ctx = this.ctx!
+    const osc = ctx.createOscillator()
+    const g = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(140, t)
+    osc.frequency.exponentialRampToValueAtTime(45, t + 0.12)
+    g.gain.setValueAtTime(0.42, t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16)
+    osc.connect(g)
+    g.connect(this.musicGain!)
+    osc.start(t)
+    osc.stop(t + 0.18)
+    this.musicNodes.push(osc, g)
+  }
+
+  private noiseBuffer?: AudioBuffer
+  private musicNoise(t: number, dur: number, gain: number, freq: number, type: BiquadFilterType) {
+    const ctx = this.ctx!
+    if (!this.noiseBuffer) {
+      const n = Math.floor(ctx.sampleRate * 0.2)
+      this.noiseBuffer = ctx.createBuffer(1, n, ctx.sampleRate)
+      const data = this.noiseBuffer.getChannelData(0)
+      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1
+    }
+    const src = ctx.createBufferSource()
+    src.buffer = this.noiseBuffer
+    const f = ctx.createBiquadFilter()
+    f.type = type
+    f.frequency.value = freq
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(gain, t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+    src.connect(f)
+    f.connect(g)
+    g.connect(this.musicGain!)
+    src.start(t)
+    src.stop(t + dur + 0.02)
+    this.musicNodes.push(src, f, g)
+  }
+}
+
+export type MusicTrack = 'menu' | 'board' | 'minigame' | 'results'
+
+interface TrackDef {
+  bpm: number
+  /** One chord (MIDI notes, root first) per bar. */
+  chords: number[][]
+  /** Chord-tone indices cycled on eighth notes. */
+  arp: number[]
+  /** Optional lead line: per bar, 16 steps of MIDI notes (null = rest). */
+  lead: (number | null)[][]
+  bass: number[]
+  kick: number[]
+  snare: number[]
+  hat: number[]
+}
+
+const _ = null
+const MUSIC_TRACKS: Record<MusicTrack, TrackDef> = {
+  // Breezy C – Am – F – G
+  menu: {
+    bpm: 104,
+    chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
+    arp: [0, 1, 2, 1, 0, 2, 1, 2],
+    lead: [
+      [76, _, _, 74, _, _, 72, _, 74, _, 76, _, 79, _, _, _],
+      [76, _, _, 74, _, _, 72, _, 69, _, _, _, 72, _, _, _],
+      [77, _, _, 76, _, _, 74, _, 72, _, 74, _, 77, _, _, _],
+      [79, _, _, 77, _, _, 76, _, 74, _, _, _, 71, _, 74, _],
+    ],
+    bass: [0, 6, 8, 14],
+    kick: [0, 8],
+    snare: [4, 12],
+    hat: [2, 6, 10, 14],
+  },
+  // Bouncy F – G – Em – Am board groove
+  board: {
+    bpm: 112,
+    chords: [[53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64]],
+    arp: [0, 2, 1, 2, 0, 2, 1, 2],
+    lead: [
+      [72, _, 74, _, 76, _, _, _, 77, _, 76, _, 74, _, _, _],
+      [74, _, 76, _, 77, _, _, _, 79, _, 77, _, 76, _, _, _],
+      [76, _, _, _, 74, _, 72, _, 71, _, _, _, 72, _, 74, _],
+      [76, _, _, _, _, _, _, _, 72, _, 74, _, 76, _, _, _],
+    ],
+    bass: [0, 3, 8, 11],
+    kick: [0, 8, 10],
+    snare: [4, 12],
+    hat: [2, 6, 10, 14],
+  },
+  // Driving Am – F – C – G for minigames
+  minigame: {
+    bpm: 138,
+    chords: [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]],
+    arp: [0, 1, 2, 1, 2, 1, 0, 1],
+    lead: [
+      [81, _, 79, _, 76, _, 79, _, 81, _, _, 84, _, 81, _, _],
+      [81, _, 79, _, 77, _, 76, _, 77, _, _, 72, _, _, _, _],
+      [79, _, 76, _, 72, _, 76, _, 79, _, _, 84, _, 79, _, _],
+      [79, _, 77, _, 74, _, 71, _, 74, _, 77, _, 79, _, 83, _],
+    ],
+    bass: [0, 2, 4, 6, 8, 10, 12, 14],
+    kick: [0, 4, 8, 12],
+    snare: [4, 12],
+    hat: [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15],
+  },
+  // Triumphant C – F – G – C
+  results: {
+    bpm: 96,
+    chords: [[60, 64, 67], [53, 57, 60], [55, 59, 62], [60, 64, 67]],
+    arp: [0, 1, 2, 1, 0, 1, 2, 1],
+    lead: [
+      [72, _, _, _, 76, _, _, _, 79, _, _, _, 84, _, _, _],
+      [81, _, _, _, 77, _, _, _, 72, _, _, _, 77, _, _, _],
+      [79, _, _, _, 74, _, _, _, 71, _, _, _, 74, _, 79, _],
+      [84, _, _, _, _, _, _, _, 79, _, _, _, 84, _, _, _],
+    ],
+    bass: [0, 8],
+    kick: [0, 8],
+    snare: [12],
+    hat: [4, 12],
+  },
+}
+
+function midiFreq(m: number): number {
+  return 440 * Math.pow(2, (m - 69) / 12)
 }
 
 export const Sfx = new SfxSystem()

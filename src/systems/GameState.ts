@@ -29,6 +29,25 @@ export interface Item {
   description: string
 }
 
+export interface StudyNote {
+  word: string
+  note?: string
+}
+
+/** Running tallies used for end-of-game bonus stars and the study sheet. */
+export interface PlayerStats {
+  correctAnswers: number
+  wrongAnswers: number
+  minigameWins: number
+  minigamePoints: number
+  /** Highest coin total held at any point (Coin Star). */
+  peakCoins: number
+  /** Words / questions this player missed, newest last (deduped). */
+  missed: StudyNote[]
+  /** Distinct words practised in minigames. */
+  wordsPracticed: number
+}
+
 export interface Player {
   id: number
   name: string
@@ -57,13 +76,47 @@ export interface Player {
   isCpu: boolean
   /** Difficulty for `isCpu` players; ignored for humans (kept at default). */
   cpuLevel: CpuLevel
+  stats: PlayerStats
 }
+
+/** How often an all-player party minigame runs between rounds. */
+export type MinigameFrequency = 'every' | 'alternate' | 'tiles'
+
+export interface PartyOptions {
+  minigames: MinigameFrequency
+  bonusStars: boolean
+}
+
+export const DEFAULT_PARTY_OPTIONS: PartyOptions = { minigames: 'every', bonusStars: true }
 
 export interface GameState {
   players: Player[]
   currentPlayer: number
   turn: number
   round: number
+  options: PartyOptions
+  /** Set once the "Last Stretch" comeback event has fired. */
+  lastStretchDone: boolean
+  /** Filled in by the bonus-star ceremony at game end. */
+  bonusAwards?: BonusAward[]
+}
+
+export interface BonusAward {
+  icon: string
+  title: string
+  blurb: string
+  /** Player ids who received the trophy. */
+  winners: number[]
+  /** The stat value that won it. */
+  value: number
+}
+
+export function addStudyMiss(player: Player, word: string, note?: string): void {
+  const list = player.stats.missed
+  const i = list.findIndex(n => n.word.toLowerCase() === word.toLowerCase())
+  if (i >= 0) list.splice(i, 1)
+  list.push({ word, note })
+  if (list.length > 30) list.shift()
 }
 
 export const ITEMS: Record<ItemType, Item> = {
@@ -81,7 +134,8 @@ export function createInitialState(
   emojis: string[],
   cpuFlags?: boolean[],
   cpuLevels?: CpuLevel[],
-  characterIndices?: number[]
+  characterIndices?: number[],
+  options: PartyOptions = DEFAULT_PARTY_OPTIONS
 ): GameState {
   return {
     players: names.map((name, i) => ({
@@ -109,11 +163,22 @@ export function createInitialState(
       speedBoostTurns: 0,
       isCpu: cpuFlags?.[i] ?? false,
       cpuLevel: cpuLevels?.[i] ?? DEFAULT_CPU_LEVEL,
-      forcedMoveValue: 0
+      forcedMoveValue: 0,
+      stats: {
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        minigameWins: 0,
+        minigamePoints: 0,
+        peakCoins: 18,
+        missed: [],
+        wordsPracticed: 0,
+      },
     })),
     currentPlayer: 0,
     turn: 0,
-    round: 1
+    round: 1,
+    options: { ...options },
+    lastStretchDone: false,
   }
 }
 

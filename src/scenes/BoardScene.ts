@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState, ITEMS, type Item } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS } from '../systems/GameState'
 import { rollBlockDie } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BOARD_NODES, BoardNode } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
@@ -31,6 +31,7 @@ import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import type { BattleResult } from './BattleScene'
+import type { MinigameParticipant, MinigameResult, MinigameSceneData } from './MinigameScene'
 
 const TILE_SIZE = 56
 const DEFAULT_ROUNDS_PER_GAME = 10
@@ -69,6 +70,17 @@ const QUESTION_BASE_POINTS = 10
 const QUESTION_BASE_COINS = 3
 const QUESTION_STREAK_THRESHOLD = 3
 const QUESTION_STREAK_BONUS_COINS = 4
+const TROPHIES_TO_WIN = 5
+const LAST_STRETCH_BOOST = 10
+/** Party minigame coin payouts by place, keyed by participant count. */
+const PARTY_PAYOUTS: Record<number, number[]> = {
+  2: [10, 3],
+  3: [10, 5, 0],
+  4: [10, 5, 2, 0],
+}
+const PARTY_WIN_POINTS = 10
+const DUEL_STEAL = 6
+const DUEL_WIN_POINTS = 10
 
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
@@ -161,6 +173,7 @@ export class BoardScene extends Phaser.Scene {
     playerCpu?: boolean[]
     playerCpuLevels?: CpuLevel[]
     playerCharacters?: number[]
+    partyOptions?: PartyOptions
   }) {
     const w = this.scale.width
     const h = this.scale.height
@@ -172,13 +185,16 @@ export class BoardScene extends Phaser.Scene {
     const cpuLevels = data?.playerCpuLevels
     const characters = data?.playerCharacters ?? names.map((_, i) => i)
 
-    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters)
+    this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters, data?.partyOptions ?? DEFAULT_PARTY_OPTIONS)
     this.nodes = BOARD_NODES
 
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
     this.boardOriginX = (w - boardW) / 2
-    this.boardOriginY = (h - boardH) / 2 + 50
+    // Fit between the HUD strip (~110px) and the bottom control bar (108px).
+    const topBand = 112
+    const bottomBand = 108
+    this.boardOriginY = topBand + (h - topBand - bottomBand - boardH) / 2
 
     this.drawBackdrop()
     this.drawBoard()
@@ -189,7 +205,7 @@ export class BoardScene extends Phaser.Scene {
     this.createPauseButton()
     const escHandler = () => this.pauseGame()
     this.input.keyboard?.on('keydown-ESC', escHandler)
-    Sfx.startMusic()
+    Sfx.startMusic('board')
 
     const touch = isTouchPreferred(this.sys.game)
 
@@ -348,14 +364,40 @@ export class BoardScene extends Phaser.Scene {
     // Path underlay glow connecting tiles
     const pathGlow = this.add.graphics().setDepth(-1)
     pathGlow.lineStyle(10, COLORS.teal, 0.08)
-    this.nodes.forEach((node, i) => {
-      if (i === 0) return
-      const prev = this.nodes[i - 1]
-      const x1 = this.boardOriginX + prev.col * TILE_SIZE + TILE_SIZE / 2
-      const y1 = this.boardOriginY + prev.row * TILE_SIZE + TILE_SIZE / 2
-      const x2 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
-      const y2 = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
-      pathGlow.lineBetween(x1, y1, x2, y2)
+    // Follow the real graph edges (index order jumps across the board at the fork).
+    this.nodes.forEach(node => {
+      const x1 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
+      const y1 = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
+      node.next.forEach(nextId => {
+        const to = this.nodes[nextId]
+        if (!to) return
+        const x2 = this.boardOriginX + to.col * TILE_SIZE + TILE_SIZE / 2
+        const y2 = this.boardOriginY + to.row * TILE_SIZE + TILE_SIZE / 2
+        // Only draw links between adjacent cells; long jumps are teleport-style connections.
+        if (Math.abs(to.col - node.col) + Math.abs(to.row - node.row) === 1) {
+          pathGlow.lineBetween(x1, y1, x2, y2)
+          return
+        }
+        // Dashed warp link for shortcut jumps so players can see where a branch rejoins.
+        const warp = this.add.graphics().setDepth(-1)
+        warp.lineStyle(3, COLORS.gold, 0.35)
+        const dist = Phaser.Math.Distance.Between(x1, y1, x2, y2)
+        const steps = Math.floor(dist / 14)
+        for (let k = 0; k < steps; k += 2) {
+          const a = k / steps
+          const b = Math.min(1, (k + 1) / steps)
+          warp.lineBetween(x1 + (x2 - x1) * a, y1 + (y2 - y1) * a, x1 + (x2 - x1) * b, y1 + (y2 - y1) * b)
+        }
+        const ang = Math.atan2(y2 - y1, x2 - x1)
+        const ax = x2 - Math.cos(ang) * 30
+        const ay = y2 - Math.sin(ang) * 30
+        warp.fillStyle(COLORS.gold, 0.55)
+        warp.fillTriangle(
+          ax + Math.cos(ang) * 10, ay + Math.sin(ang) * 10,
+          ax + Math.cos(ang + 2.5) * 10, ay + Math.sin(ang + 2.5) * 10,
+          ax + Math.cos(ang - 2.5) * 10, ay + Math.sin(ang - 2.5) * 10,
+        )
+      })
     })
 
     this.nodes.forEach((node, i) => {
@@ -404,6 +446,11 @@ export class BoardScene extends Phaser.Scene {
         Sfx.uiHover()
       })
 
+      // Center glyph so tile types read at a glance.
+      const glyph = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '24px' }).setOrigin(0.5).setDepth(1)
+      glyph.setScale(0)
+      this.tweens.add({ targets: glyph, scale: 1, duration: 400, delay: i * 18 + 120, ease: 'Back.easeOut' })
+
       // Tiny index badge (readable, not competing with motif)
       this.add.text(x - TILE_SIZE / 2 + 7, y - TILE_SIZE / 2 + 5, String(i), {
         fontSize: '9px',
@@ -418,40 +465,46 @@ export class BoardScene extends Phaser.Scene {
       }
     })
 
-    const cx = this.boardOriginX + BOARD_COLS * TILE_SIZE / 2
-    const cy = this.boardOriginY + BOARD_ROWS * TILE_SIZE / 2
+    // Brand plate sits in the open interior (cols 4–10, rows 1–3) so it never covers path tiles.
+    const cx = this.boardOriginX + 7 * TILE_SIZE + TILE_SIZE / 2
+    const cy = this.boardOriginY + 2 * TILE_SIZE + TILE_SIZE / 2
     const titlePanel = this.add.graphics().setDepth(2)
     titlePanel.fillStyle(COLORS.bgPanel, 0.9)
-    titlePanel.fillRoundedRect(cx - 120, cy - 50, 240, 100, 14)
+    titlePanel.fillRoundedRect(cx - 150, cy - 62, 300, 124, 16)
     titlePanel.lineStyle(2, COLORS.sky, 0.55)
-    titlePanel.strokeRoundedRect(cx - 120, cy - 50, 240, 100, 14)
+    titlePanel.strokeRoundedRect(cx - 150, cy - 62, 300, 124, 16)
 
     if (this.textures.exists(TEXTURE_KEYS.kenneyStar)) {
-      this.add.image(cx - 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
-      this.add.image(cx + 80, cy - 18, TEXTURE_KEYS.kenneyStar).setDisplaySize(20, 20).setDepth(3)
+      this.add.image(cx - 104, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
+      this.add.image(cx + 104, cy - 26, TEXTURE_KEYS.kenneyStar).setDisplaySize(22, 22).setDepth(3)
     }
-    this.add.text(cx, cy - 18, 'VOCAB', {
-      fontSize: '28px',
+    this.add.text(cx, cy - 26, 'VOCAB', {
+      fontSize: '30px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.frost),
       stroke: '#102040',
       strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
-    this.add.text(cx, cy + 18, 'PARTY', {
-      fontSize: '28px',
+    this.add.text(cx, cy + 8, 'PARTY', {
+      fontSize: '30px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.gold),
       stroke: '#553300',
       strokeThickness: 4,
     }).setOrigin(0.5).setDepth(3)
-
-    this.tileHintText = this.add.text(cx, this.boardOriginY + BOARD_ROWS * TILE_SIZE + 14, this.tileInspectHint(), {
+    this.add.text(cx, cy + 42, `First to ${TROPHIES_TO_WIN} 🏆 wins!`, {
       fontSize: '15px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0.5).setDepth(3)
+
+    this.tileHintText = this.add.text(24, this.scale.height - 90, this.tileInspectHint(), {
+      fontSize: '14px',
       fontFamily: FONT.body,
       color: '#d7e8ff',
       stroke: '#0a1520',
       strokeThickness: 3,
-    }).setOrigin(0.5, 0).setDepth(3)
+    }).setOrigin(0, 0.5).setDepth(DEPTH.chrome + 1)
   }
 
   private tileInspectHint() {
@@ -942,29 +995,32 @@ export class BoardScene extends Phaser.Scene {
           this.showFloatyText(player, '+3 Bonus & coins!', '#FFD700')
           this.endTurn()
           break
-        case 'bonus':
-          player.score += 5
-          player.coins += 4
-          this.showImpactText(this.scale.width / 2, this.scale.height / 2, '⭐ NICE! ⭐', '#FFD700')
-          this.showFloatyText(player, '⭐ NICE! +5 pts +4 coins!', '#FFD700')
-          this.showDamageNumber(player, 5, 'pts')
-          this.showDamageNumber(player, 4, '🪙')
+        case 'bonus': {
+          const mult = this.isLastStretch() ? 2 : 1
+          player.score += 5 * mult
+          player.coins += 4 * mult
+          this.showImpactText(this.scale.width / 2, this.scale.height / 2, mult > 1 ? '⭐ DOUBLE! ⭐' : '⭐ NICE! ⭐', '#FFD700')
+          this.showFloatyText(player, `⭐ +${5 * mult} pts +${4 * mult} coins!`, '#FFD700')
+          this.showDamageNumber(player, 5 * mult, 'pts')
+          this.showDamageNumber(player, 4 * mult, '🪙')
           this.cameras.main.flash(400, 255, 215, 0, false)
           if (!shouldReduceMotion()) this.cameras.main.shake(200, 0.005)
           showConfetti(this)
           this.endTurn()
           break
-        case 'penalty':
+        }
+        case 'penalty': {
+          const mult = this.isLastStretch() ? 2 : 1
           if (player.shieldActive) {
             player.shieldActive = false
             this.showFloatyText(player, '🛡️ Shield Block!', '#44ccff')
           } else {
-            player.score = Math.max(0, player.score - 4)
-            player.coins = Math.max(0, player.coins - 5)
+            player.score = Math.max(0, player.score - 4 * mult)
+            player.coins = Math.max(0, player.coins - 5 * mult)
             this.showImpactText(this.scale.width / 2, this.scale.height / 2, '💀 OUCH! 💀', '#ff4444')
-            this.showFloatyText(player, '💀 OUCH! -4 pts -5 coins!', '#ff4444')
-            this.showDamageNumber(player, -4, 'pts')
-            this.showDamageNumber(player, -5, '🪙', true)
+            this.showFloatyText(player, `💀 OUCH! -${4 * mult} pts -${5 * mult} coins!`, '#ff4444')
+            this.showDamageNumber(player, -4 * mult, 'pts')
+            this.showDamageNumber(player, -5 * mult, '🪙', true)
             {
               const pos = this.playerTokens[playerIndex]
               this.burstAt(pos.x, pos.y, TEXTURE_KEYS.particleRed, 0xff4444)
@@ -974,6 +1030,7 @@ export class BoardScene extends Phaser.Scene {
           }
           this.endTurn()
           break
+        }
         case 'vocab':
         case 'grammar':
           this.scene.launch('QuestionScene', {
@@ -985,6 +1042,7 @@ export class BoardScene extends Phaser.Scene {
               this.scene.stop('QuestionScene')
               this.scene.resume()
               if (result.correct) {
+                player.stats.correctAnswers += 1
                 player.answerStreak += 1
                 const streakBonusCoins = player.answerStreak % QUESTION_STREAK_THRESHOLD === 0
                   ? QUESTION_STREAK_BONUS_COINS
@@ -1011,6 +1069,8 @@ export class BoardScene extends Phaser.Scene {
               } else {
                 const lostStreak = player.answerStreak
                 player.answerStreak = 0
+                player.stats.wrongAnswers += 1
+                if (result.question) addStudyMiss(player, result.question, result.explanation)
                 const missMsg = lostStreak >= 2 ? `Missed! Streak reset (${lostStreak})` : 'Missed!'
                 this.showFloatyText(player, missMsg, '#ff4444')
               }
@@ -1020,24 +1080,7 @@ export class BoardScene extends Phaser.Scene {
           this.scene.pause()
           break
         case 'minigame':
-          this.scene.launch('MinigameScene', {
-            state: this.state,
-            cpuMode: player.isCpu,
-            cpuLevel: player.cpuLevel,
-            onComplete: (winnerId: number) => {
-              this.scene.stop('MinigameScene')
-              this.scene.resume()
-              if (winnerId >= 0) {
-                const w = this.state.players[winnerId]
-                w.score += 15
-                w.coins += 5
-                this.showFloatyText(w, '+15 pts +5 coins!', '#ff88ff')
-                showConfetti(this)
-              }
-              this.time.delayedCall(this.d(600), () => this.endTurn())
-            }
-          })
-          this.scene.pause()
+          void this.handleDuelTile(player, playerIndex)
           break
         case 'mystery':
           this.handleMystery(player)
@@ -1704,13 +1747,33 @@ export class BoardScene extends Phaser.Scene {
     this.itemBtn.setAlpha(1)
 
     this.state.turn++
+    this.trackPeakCoins()
+    this.hud.update(this.state)
+
+    if (this.state.players.some(p => p.trophies >= TROPHIES_TO_WIN)) {
+      this.time.delayedCall(this.d(500), () => this.goToResults(true))
+      return
+    }
+
+    const roundOver = this.state.turn % this.state.players.length === 0
+    if (roundOver && this.shouldRunPartyMinigame()) {
+      this.rolling = true
+      this.rollBtn.setAlpha(0.42)
+      this.itemBtn.setAlpha(0.42)
+      this.time.delayedCall(this.d(700), () => this.runPartyMinigame(() => this.advanceTurn()))
+      return
+    }
+    this.advanceTurn()
+  }
+
+  /** Move to the next player (and round), or finish the game. */
+  private advanceTurn() {
+    this.rolling = false
+    this.rollBtn.setAlpha(1)
+    this.itemBtn.setAlpha(1)
     const totalTurns = this.state.players.length * this.roundsPerGame
-    const normaWinner = this.state.players.find(p => p.trophies >= 5)
-    
-    if (normaWinner || this.state.turn >= totalTurns) {
-      this.time.delayedCall(this.d(500), () => {
-        this.scene.start('ResultsScene', { state: this.state })
-      })
+    if (this.state.turn >= totalTurns || this.state.players.some(p => p.trophies >= TROPHIES_TO_WIN)) {
+      this.time.delayedCall(this.d(500), () => this.goToResults(this.state.players.some(p => p.trophies >= TROPHIES_TO_WIN)))
       return
     }
 
@@ -1718,14 +1781,204 @@ export class BoardScene extends Phaser.Scene {
     if (this.state.currentPlayer === 0) {
       this.state.round++
       const roundsLeft = this.roundsPerGame - this.state.round
+      if (!this.state.lastStretchDone && this.state.round >= this.lastStretchStartRound()) {
+        void this.startLastStretch()
+        return
+      }
       if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
         const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
         if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
         this.cameras.main.flash(400, 255, 100, 0, true)
         this.showAnnouncement(warning, '#ff8800')
+      } else if (roundsLeft === 0 && !isAutoSimMode()) {
+        this.showAnnouncement('⚠️ FINAL ROUND! ⚠️', '#ff8800')
       }
     }
     this.updateStatus()
+  }
+
+  private goToResults(earlyWin: boolean) {
+    this.trackPeakCoins()
+    const next = this.state.options.bonusStars && !earlyWin ? 'BonusStarsScene' : 'ResultsScene'
+    this.scene.start(next, { state: this.state })
+  }
+
+  private trackPeakCoins() {
+    this.state.players.forEach(p => {
+      p.stats.peakCoins = Math.max(p.stats.peakCoins, p.coins)
+    })
+  }
+
+  /** Round on which the comeback "Last Stretch" event fires. */
+  private lastStretchStartRound(): number {
+    const stretch = this.roundsPerGame >= 20 ? 5 : this.roundsPerGame >= 10 ? 3 : 2
+    return Math.max(2, this.roundsPerGame - stretch + 1)
+  }
+
+  private isLastStretch(): boolean {
+    return this.state.lastStretchDone
+  }
+
+  /** Mario Party–style "last turns" event: the trailing player gets a comeback boost. */
+  private async startLastStretch() {
+    this.state.lastStretchDone = true
+    const ranked = [...this.state.players].sort((a, b) => (a.trophies - b.trophies) || (a.score - b.score))
+    const trailing = ranked[0]
+    const roundsLeft = this.roundsPerGame - this.state.round + 1
+    if (!shouldReduceMotion()) this.cameras.main.shake(320, 0.008)
+    this.cameras.main.flash(400, 255, 120, 0, true)
+    Sfx.splash()
+    await this.showAnnouncement(`🔥 LAST STRETCH — ${roundsLeft} ROUNDS LEFT! 🔥`, '#ff8800')
+    if (this.state.players.length > 1 && trailing) {
+      trailing.coins += LAST_STRETCH_BOOST
+      this.trackPeakCoins()
+      Sfx.coin()
+      const tok = this.playerTokens[this.state.players.indexOf(trailing)]
+      if (tok) playCoinBurst(this, tok.x, tok.y)
+      this.showFloatyText(trailing, `Comeback boost! +${LAST_STRETCH_BOOST} 🪙`, '#ffd24a')
+      await this.showAnnouncement(`💪 ${trailing.name} gets +${LAST_STRETCH_BOOST} coins!`, '#ffd24a')
+    }
+    if (!isAutoSimMode()) await this.showAnnouncement('⭐ Bonus & penalty tiles now DOUBLE! ⭐', '#ffd24a')
+    this.updateStatus()
+  }
+
+  private shouldRunPartyMinigame(): boolean {
+    switch (this.state.options.minigames) {
+      case 'every': return true
+      case 'alternate': return this.state.round % 2 === 0 || this.state.round === this.roundsPerGame
+      case 'tiles': return false
+    }
+  }
+
+  private participantFor(p: Player): MinigameParticipant {
+    return {
+      id: p.id,
+      name: p.name,
+      characterIndex: p.characterIndex,
+      color: characterDef(p.characterIndex).color,
+      isCpu: p.isCpu,
+      cpuLevel: p.cpuLevel,
+    }
+  }
+
+  private rivalGhost(): MinigameParticipant {
+    return { id: -1, name: 'Rival Bot', characterIndex: 0, color: 0x8899aa, isCpu: true, cpuLevel: 'normal' }
+  }
+
+  /** Apply study notes and stats from a finished minigame. */
+  private absorbMinigameStudy(result: MinigameResult) {
+    for (const p of this.state.players) {
+      const entries = result.study[p.id] ?? []
+      p.stats.wordsPracticed += entries.length
+      p.stats.minigamePoints += result.scores[p.id] ?? 0
+      entries.filter(e => !e.correct).forEach(e => addStudyMiss(p, e.word, e.note))
+    }
+  }
+
+  private launchMinigame(data: MinigameSceneData, done: (r: MinigameResult) => void) {
+    this.scene.launch('MinigameScene', {
+      ...data,
+      onComplete: (result: MinigameResult) => {
+        this.scene.stop('MinigameScene')
+        this.scene.resume()
+        Sfx.startMusic('board')
+        this.absorbMinigameStudy(result)
+        done(result)
+      },
+    } satisfies MinigameSceneData)
+    this.scene.pause()
+  }
+
+  /** All-player free-for-all between rounds; coins by placement. */
+  private runPartyMinigame(next: () => void) {
+    const players = this.state.players
+    const participants = players.map(p => this.participantFor(p))
+    if (participants.length === 1) participants.push(this.rivalGhost())
+    const payouts = PARTY_PAYOUTS[participants.length] ?? PARTY_PAYOUTS[4]
+    const labels = payouts.map((c, i) => (c > 0 ? `+${c} 🪙${i === 0 ? ` +${PARTY_WIN_POINTS} pts` : ''}` : '—'))
+    this.statusText.setText('🎉 Minigame time!')
+    this.launchMinigame({
+      mode: 'party',
+      participants,
+      stakes: `Prizes: ${payouts.filter(c => c > 0).map((c, i) => `${['1st', '2nd', '3rd'][i]} +${c} 🪙`).join(' · ')}`,
+      rewardLabels: labels,
+    }, (result) => {
+      let delay = 0
+      for (const p of players) {
+        const place = result.placements[p.id]
+        const coins = payouts[place - 1] ?? 0
+        if (place === 1) {
+          p.stats.minigameWins += 1
+          p.score += PARTY_WIN_POINTS
+        }
+        if (coins > 0) {
+          p.coins += coins
+          this.time.delayedCall(this.d(delay), () => {
+            this.showFloatyText(p, `${place === 1 ? '🏆 ' : ''}+${coins} 🪙`, '#ffd24a')
+            const tok = this.playerTokens[players.indexOf(p)]
+            if (tok) playCoinBurst(this, tok.x, tok.y)
+          })
+          delay += 260
+        }
+      }
+      this.trackPeakCoins()
+      this.hud.update(this.state)
+      this.time.delayedCall(this.d(900 + delay), next)
+    })
+  }
+
+  /** Minigame tile: challenge a rival to a 1-on-1 duel; winner steals coins. */
+  private async handleDuelTile(player: Player, playerIndex: number) {
+    let opponent: Player | null = null
+    if (this.state.players.length > 1) {
+      if (player.isCpu) {
+        const rivals = this.state.players.filter(p => p.id !== player.id)
+        opponent = [...rivals].sort((a, b) => (b.trophies - a.trophies) || (b.coins - a.coins))[0]
+        await new Promise(r => this.time.delayedCall(this.d(cpuItemThinkDelayMs(Phaser.Math, player.cpuLevel)), r))
+      } else {
+        const pick = await this.promptPlayerChoice(playerIndex, `⚔️ DUEL! Pick a rival.\nWinner steals up to ${DUEL_STEAL} 🪙`)
+        opponent = pick !== null ? this.state.players[pick] : (Phaser.Utils.Array.GetRandom(this.state.players.filter(p => p.id !== player.id)) as Player)
+      }
+    }
+    const participants = [this.participantFor(player), opponent ? this.participantFor(opponent) : this.rivalGhost()]
+    this.statusText.setText(`⚔️ ${player.name} vs ${opponent?.name ?? 'Rival Bot'}!`)
+    await this.showAnnouncement(`⚔️ ${player.name.toUpperCase()} vs ${(opponent?.name ?? 'Rival Bot').toUpperCase()}`, '#ff6b6b')
+    this.launchMinigame({
+      mode: 'duel',
+      participants,
+      stakes: opponent ? `Winner steals up to ${DUEL_STEAL} 🪙 and gains +${DUEL_WIN_POINTS} pts` : `Beat the Rival Bot for +${DUEL_STEAL} 🪙`,
+      rewardLabels: [opponent ? `steals ${DUEL_STEAL} 🪙` : `+${DUEL_STEAL} 🪙`, ''],
+    }, (result) => {
+      const winnerId = result.ranking[0]
+      const tie = result.placements[participants[0].id] === result.placements[participants[1].id]
+      if (tie) {
+        this.showFloatyText(player, "Tie — nobody's coins move!", '#aaccff')
+      } else if (winnerId === player.id) {
+        player.stats.minigameWins += 1
+        player.score += DUEL_WIN_POINTS
+        const stolen = opponent ? Math.min(DUEL_STEAL, opponent.coins) : DUEL_STEAL
+        if (opponent) {
+          opponent.coins -= stolen
+          this.showDamageNumber(opponent, -stolen, '🪙', true)
+        }
+        player.coins += stolen
+        this.showFloatyText(player, `Duel won! +${stolen} 🪙`, '#44ff88')
+        showConfetti(this)
+      } else if (opponent && winnerId === opponent.id) {
+        opponent.stats.minigameWins += 1
+        opponent.score += DUEL_WIN_POINTS
+        const stolen = Math.min(DUEL_STEAL, player.coins)
+        player.coins -= stolen
+        opponent.coins += stolen
+        this.showDamageNumber(player, -stolen, '🪙', true)
+        this.showFloatyText(opponent, `Duel won! +${stolen} 🪙`, '#44ff88')
+      } else {
+        this.showFloatyText(player, 'The Rival Bot wins this one…', '#ff8888')
+      }
+      this.trackPeakCoins()
+      this.hud.update(this.state)
+      this.time.delayedCall(this.d(900), () => this.endTurn())
+    })
   }
 
   async handleItemShop(player: Player) {
