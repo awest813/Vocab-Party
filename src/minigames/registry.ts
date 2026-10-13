@@ -12,19 +12,24 @@ import {
   prefixFactory,
   rootDetective,
   spellingBee,
+  compoundCrafter,
 } from './games/quizGames'
 import { synonymStorm } from './games/synonymStorm'
 import { linkUp } from './games/linkUp'
+import { wordHero } from './games/wordHero'
+import { letterRescue } from './games/letterRescue'
 import { sentenceScramble } from './games/sentenceScramble'
 import type { MinigameDef } from './types'
 
 export const MINIGAMES: MinigameDef[] = [
+  wordHero,
   synonymStorm,
   anagramDash,
   memoryMatch,
   linkUp,
   whackAWord,
   sentenceScramble,
+  letterRescue,
   wordSorter,
   definitionDash,
   oddOneOut,
@@ -33,6 +38,7 @@ export const MINIGAMES: MinigameDef[] = [
   contextClues,
   prefixFactory,
   rootDetective,
+  compoundCrafter,
   homophoneHunt,
   grammarGauntlet,
 ]

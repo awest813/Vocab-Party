@@ -317,3 +317,34 @@ export const grammarGauntlet: MinigameDef = {
     }, { missPauseMs: 1500 })
   },
 }
+
+export const compoundCrafter: MinigameDef = {
+  id: 'compound-crafter',
+  title: 'Compound Crafter',
+  icon: '🏗️',
+  accent: 0x44c4ff,
+  category: 'Word Parts',
+  tagline: 'Snap two words together to build a brand-new one.',
+  howTo: [
+    'You get the first half of a compound word and a clue.',
+    'Pick the word that completes it: sun + flower = sunflower!',
+    'Build as many as you can before time runs out.',
+  ],
+  controls: RAPID_CONTROLS,
+  durationMs: 30000,
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 14] },
+  start(ctx) {
+    return runRapidFire(ctx, () => {
+      const c = ctx.bank.draw('compounds', ctx.bank.compounds)
+      return {
+        kicker: 'BUILD THE COMPOUND WORD',
+        prompt: `${c.a.toUpperCase()} + ▢▢▢`,
+        detail: `clue: “${c.definition}”`,
+        choices: [c.b, ...c.distractors.slice(0, 3)],
+        correct: 0,
+        word: c.word,
+        note: `${c.a} + ${c.b} = ${c.word}`,
+      }
+    })
+  },
+}

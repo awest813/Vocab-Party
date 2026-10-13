@@ -37,6 +37,15 @@ export interface RootItem {
   level?: number
 }
 
+export interface CompoundItem {
+  a: string
+  b: string
+  word: string
+  definition: string
+  distractors: string[]
+  level?: number
+}
+
 export interface LegacyChoiceItem {
   prompt: string
   choices: string[]
@@ -48,6 +57,7 @@ interface LexiconJson {
   affixes?: AffixItem[]
   spelling?: SpellingItem[]
   roots?: RootItem[]
+  compounds?: CompoundItem[]
 }
 
 /** Small built-in fallback so every minigame still works if lexicon.json fails to load. */
@@ -78,6 +88,14 @@ const FALLBACK_AFFIXES: AffixItem[] = [
   { kind: 'prefix', affix: 're', base: 'build', word: 'rebuild', definition: 'build again', distractors: ['un', 'dis', 'non'] },
   { kind: 'suffix', affix: 'less', base: 'fear', word: 'fearless', definition: 'without fear', distractors: ['ful', 'ness', 'ly'] },
   { kind: 'suffix', affix: 'ful', base: 'hope', word: 'hopeful', definition: 'full of hope', distractors: ['less', 'ment', 'ist'] },
+]
+
+const FALLBACK_COMPOUNDS: CompoundItem[] = [
+  { a: 'sun', b: 'flower', word: 'sunflower', definition: 'a tall plant with a big yellow bloom', distractors: ['shine', 'cloud', 'rain'] },
+  { a: 'rain', b: 'bow', word: 'rainbow', definition: 'an arc of colors in the sky', distractors: ['coat', 'drop', 'fall'] },
+  { a: 'foot', b: 'ball', word: 'football', definition: 'a game played by kicking a ball', distractors: ['step', 'print', 'path'] },
+  { a: 'tooth', b: 'brush', word: 'toothbrush', definition: 'a tool for cleaning your teeth', distractors: ['paste', 'pick', 'ache'] },
+  { a: 'butter', b: 'fly', word: 'butterfly', definition: 'an insect with colorful wings', distractors: ['milk', 'cup', 'nut'] },
 ]
 
 const FALLBACK_ROOTS: RootItem[] = [
@@ -152,6 +170,7 @@ export class ContentBank {
   readonly affixes: AffixItem[]
   readonly spelling: SpellingItem[]
   readonly roots: RootItem[]
+  readonly compounds: CompoundItem[]
   readonly contextClues: LegacyChoiceItem[]
   readonly homophones: LegacyChoiceItem[]
   readonly antonyms: LegacyChoiceItem[]
@@ -174,6 +193,9 @@ export class ContentBank {
     this.affixes = (lex.affixes?.length ?? 0) >= 4 ? filterByLevel(lex.affixes!, 12) : FALLBACK_AFFIXES
     this.spelling = (lex.spelling?.length ?? 0) >= 4 ? filterByLevel(lex.spelling!, 12) : FALLBACK_SPELLING
     this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 10) : FALLBACK_ROOTS
+    const compounds = (lex.compounds ?? []).filter(c =>
+      c && typeof c.word === 'string' && c.word === `${c.a}${c.b}` && Array.isArray(c.distractors) && c.distractors.length >= 3)
+    this.compounds = compounds.length >= 5 ? filterByLevel(compounds, 12) : FALLBACK_COMPOUNDS
     if (focusWords && focusWords.length > 0) {
       const set = new Set(focusWords.map(w => w.toLowerCase()))
       this.focus = this.allWords.filter(w => set.has(w.word))

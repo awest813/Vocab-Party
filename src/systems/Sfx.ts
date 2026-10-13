@@ -203,6 +203,27 @@ class SfxSystem {
     this.noiseBurst(0.1, 0.06, 1400)
   }
 
+  /** Pluck a guitar-ish note (rhythm minigame). `midi` is a MIDI note number. */
+  pluck(midi: number, strong = false) {
+    const freq = 440 * Math.pow(2, (midi - 69) / 12)
+    this.tone({ freq, type: 'sawtooth', duration: strong ? 0.32 : 0.22, gain: strong ? 0.11 : 0.08, filterFreq: 2400 })
+    this.tone({ freq: freq * 2, type: 'square', duration: 0.12, gain: 0.03, filterFreq: 3200 })
+  }
+
+  /** Drum hit for the rhythm minigame groove: kick, snare or hat. */
+  drum(kind: 'kick' | 'snare' | 'hat') {
+    if (this.sfxGain() <= 0) return
+    if (kind === 'kick') this.tone({ freq: 140, endFreq: 45, type: 'sine', duration: 0.14, gain: 0.32 })
+    else if (kind === 'snare') this.noiseBurst(0.1, 0.1, 1800)
+    else this.noiseBurst(0.03, 0.035, 7000)
+  }
+
+  /** Muted "clunk" for a missed or wrong rhythm note. */
+  clunk() {
+    this.unlock()
+    this.tone({ freq: 110, endFreq: 70, type: 'square', duration: 0.12, gain: 0.07, filterFreq: 500 })
+  }
+
   /** Countdown beep; `final` is the higher GO tone. */
   tick(final = false) {
     this.unlock()
