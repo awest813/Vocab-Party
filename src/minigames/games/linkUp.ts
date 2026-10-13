@@ -33,7 +33,7 @@ export const linkUp: MinigameDef = {
   ],
   controls: { keys: 'Click a left word, then a right word (or 1–5 then Q–T)', touch: 'Tap a left word, then its match' },
   durationMs: 40000,
-  cpu: { easy: [5, 9], normal: [9, 14], hard: [14, 20] },
+  cpu: { easy: [5, 9], normal: [9, 14], hard: [14, 18] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let nodes: Node[] = []

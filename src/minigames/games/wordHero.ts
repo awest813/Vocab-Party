@@ -65,7 +65,7 @@ export const wordHero: MinigameDef = {
   controls: { keys: 'D F J K (or 1–4 / arrows) to strum each lane', touch: 'Tap the colored frets' },
   durationMs: 40000,
   // Simulated: Easy ≈ 70% accuracy, Normal ≈ 80%, Hard ≈ 90% (a flawless song scores 100+).
-  cpu: { easy: [10, 20], normal: [20, 36], hard: [36, 60] },
+  cpu: { easy: [10, 20], normal: [20, 36], hard: [34, 52] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const notes: Note[] = []

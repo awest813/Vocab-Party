@@ -30,7 +30,7 @@ export const memoryMatch: MinigameDef = {
   ],
   controls: { keys: 'Arrows move · Space/Enter flips · or click', touch: 'Tap cards to flip' },
   durationMs: 50000,
-  cpu: { easy: [6, 9], normal: [10, 14], hard: [14, 19] },
+  cpu: { easy: [6, 9], normal: [10, 14], hard: [14, 17] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let cards: Card[] = []

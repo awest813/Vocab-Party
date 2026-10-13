@@ -28,7 +28,7 @@ export const wordRacer: MinigameDef = {
   ],
   controls: { keys: 'Type letters · Enter = hint · Tab = skip', touch: 'Tap letters · 💡 hint · ⏭ skip' },
   durationMs: 45000,
-  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 14] },
+  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 13] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const goal = wordRacer.cpu.hard[1]

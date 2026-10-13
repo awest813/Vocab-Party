@@ -57,7 +57,7 @@ export const whackAWord: MinigameDef = {
   ],
   controls: { keys: 'Click · or Q W E / A S D / Z X C (numpad 1–9 too)', touch: 'Tap the words' },
   durationMs: 30000,
-  cpu: { easy: [5, 9], normal: [8, 12], hard: [13, 19] },
+  cpu: { easy: [5, 9], normal: [8, 12], hard: [13, 17] },
   start(ctx) {
     const { scene, root, area } = ctx
     let targetPos: PartOfSpeech = Phaser.Utils.Array.GetRandom(POS_LIST) as PartOfSpeech
@@ -259,7 +259,7 @@ export const wordSorter: MinigameDef = {
   ],
   controls: { keys: 'Keys 1–4 or click a bin', touch: 'Tap a bin' },
   durationMs: 30000,
-  cpu: { easy: [5, 9], normal: [9, 13], hard: [13, 18] },
+  cpu: { easy: [5, 9], normal: [9, 13], hard: [13, 16] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let current: { w: LexWord; card: Phaser.GameObjects.Container } | null = null

@@ -50,6 +50,8 @@ export interface LegacyChoiceItem {
   prompt: string
   choices: string[]
   correct: number
+  /** 1 = Starter, 2 = Standard, 3 = Challenge (filtered by the Word Level setting). */
+  level?: number
 }
 
 interface LexiconJson {
@@ -201,7 +203,7 @@ export class ContentBank {
       this.focus = this.allWords.filter(w => set.has(w.word))
     }
 
-    type Raw = { sentence?: string; prompt?: string; word?: string; choices?: string[]; correct?: number; correct_index?: number }
+    type Raw = { sentence?: string; prompt?: string; word?: string; choices?: string[]; correct?: number; correct_index?: number; level?: number }
     const asChoice = (raw: unknown[] | undefined, promptOf: (r: Raw) => string | undefined): LegacyChoiceItem[] =>
       (raw ?? []).flatMap(r => {
         const item = r as Raw
@@ -209,17 +211,18 @@ export class ContentBank {
         const correct = item.correct_index ?? item.correct
         if (!prompt || !Array.isArray(item.choices) || typeof correct !== 'number') return []
         if (correct < 0 || correct >= item.choices.length) return []
-        return [{ prompt, choices: item.choices, correct }]
+        return [{ prompt, choices: item.choices, correct, level: typeof item.level === 'number' ? item.level : undefined }]
       })
 
-    this.contextClues = asChoice(vocab.minigame_context_clues, r => r.sentence)
-    this.homophones = asChoice(vocab.minigame_homophones, r => r.prompt)
-    this.antonyms = asChoice(vocab.minigame_antonyms, r => r.word)
-    this.synonyms = asChoice(vocab.minigame_synonyms, r => r.word)
-    this.grammarFix = [
+    // Respect the Word Level setting; a level with too few items falls back to the full list.
+    this.contextClues = filterByLevel(asChoice(vocab.minigame_context_clues, r => r.sentence), 10)
+    this.homophones = filterByLevel(asChoice(vocab.minigame_homophones, r => r.prompt), 10)
+    this.antonyms = filterByLevel(asChoice(vocab.minigame_antonyms, r => r.word), 6)
+    this.synonyms = filterByLevel(asChoice(vocab.minigame_synonyms, r => r.word), 6)
+    this.grammarFix = filterByLevel([
       ...asChoice(grammar.minigame_sentence_fix, r => r.prompt),
       ...asChoice(grammar.minigame_comma, () => 'Which sentence uses commas correctly?'),
-    ]
+    ], 12)
   }
 
   /** Next item from a session-wide no-repeat deck. */

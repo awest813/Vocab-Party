@@ -37,7 +37,7 @@ export const anagramDash: MinigameDef = {
   ],
   controls: { keys: 'Type letters · Backspace undo · Tab skip', touch: 'Tap letters · ⌫ undo' },
   durationMs: 45000,
-  cpu: { easy: [2, 4], normal: [4, 6], hard: [6, 9] },
+  cpu: { easy: [2, 4], normal: [4, 6], hard: [6, 8] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let word: LexWord

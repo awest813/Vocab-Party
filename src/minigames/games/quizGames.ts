@@ -32,7 +32,7 @@ export const definitionDash: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 13] },
+  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 12] },
   start(ctx: MinigameContext) {
     let n = 0
     return runRapidFire(ctx, (): RapidQuestion => {
@@ -78,7 +78,7 @@ export const oddOneOut: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 17] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 15] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const w = ctx.bank.word(x => x.synonyms.length >= 2, 'odd')
@@ -112,7 +112,7 @@ export const spellingBee: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 15] },
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 14] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const item = ctx.bank.draw('spelling', ctx.bank.spelling)
@@ -144,7 +144,7 @@ export const antonymAttack: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 17] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 15] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const legacy = ctx.bank.antonyms
@@ -183,7 +183,7 @@ export const contextClues: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 35000,
-  cpu: { easy: [3, 5], normal: [5, 8], hard: [8, 11] },
+  cpu: { easy: [3, 5], normal: [5, 8], hard: [8, 10] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const legacy = ctx.bank.contextClues
@@ -226,7 +226,7 @@ export const rootDetective: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 12] },
+  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 11] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const r = ctx.bank.draw('roots', ctx.bank.roots)
@@ -257,7 +257,7 @@ export const prefixFactory: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 15] },
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [11, 14] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const a = ctx.bank.draw('affixes', ctx.bank.affixes)
@@ -289,7 +289,7 @@ export const homophoneHunt: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 13] },
+  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 12] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const item = ctx.bank.homophones.length > 0
@@ -314,7 +314,7 @@ export const grammarGauntlet: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 40000,
-  cpu: { easy: [2, 4], normal: [4, 6], hard: [6, 9] },
+  cpu: { easy: [2, 4], normal: [4, 6], hard: [6, 8] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const item = ctx.bank.grammarFix.length > 0
@@ -340,7 +340,7 @@ export const compoundCrafter: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 16] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 15] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const c = ctx.bank.draw('compounds', ctx.bank.compounds)

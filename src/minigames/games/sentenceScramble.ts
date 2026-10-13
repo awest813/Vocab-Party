@@ -36,7 +36,7 @@ export const sentenceScramble: MinigameDef = {
   ],
   controls: { keys: 'Press each word’s letter key (or click) in order · Backspace undo · Tab skip', touch: 'Tap words in order · ⌫ undo' },
   durationMs: 45000,
-  cpu: { easy: [1, 3], normal: [3, 5], hard: [5, 7] },
+  cpu: { easy: [1, 3], normal: [3, 5], hard: [5, 6] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let tiles: Tile[] = []

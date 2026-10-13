@@ -23,7 +23,7 @@ export const letterRescue: MinigameDef = {
   ],
   controls: { keys: 'Type letters on your keyboard', touch: 'Tap the letter keys' },
   durationMs: 50000,
-  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 14] },
+  cpu: { easy: [3, 6], normal: [6, 10], hard: [10, 13] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let word!: LexWord

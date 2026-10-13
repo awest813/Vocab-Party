@@ -30,7 +30,7 @@ export const synonymStorm: MinigameDef = {
   ],
   controls: { keys: 'Click words · or keys 1–4 catch the lowest word in a lane', touch: 'Tap the matching words' },
   durationMs: 35000,
-  cpu: { easy: [4, 8], normal: [9, 13], hard: [13, 18] },
+  cpu: { easy: [4, 8], normal: [9, 13], hard: [13, 16] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const drops: Drop[] = []
