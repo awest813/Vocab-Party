@@ -77,6 +77,8 @@ export interface Player {
   /** Difficulty for `isCpu` players; ignored for humans (kept at default). */
   cpuLevel: CpuLevel
   stats: PlayerStats
+  /** Which die this player rolls: the standard block or their character die. */
+  useCharacterDie?: boolean
 }
 
 /** How often an all-player party minigame runs between rounds. */

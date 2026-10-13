@@ -14,13 +14,17 @@ import {
   spellingBee,
 } from './games/quizGames'
 import { synonymStorm } from './games/synonymStorm'
+import { linkUp } from './games/linkUp'
+import { sentenceScramble } from './games/sentenceScramble'
 import type { MinigameDef } from './types'
 
 export const MINIGAMES: MinigameDef[] = [
   synonymStorm,
   anagramDash,
   memoryMatch,
+  linkUp,
   whackAWord,
+  sentenceScramble,
   wordSorter,
   definitionDash,
   oddOneOut,

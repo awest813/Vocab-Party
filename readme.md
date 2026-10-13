@@ -50,7 +50,7 @@ npm run typecheck
    - **Words:** All levels, Starter (grades 3–5), Standard (6–8), or Challenge (9–12) — applies to board questions and every minigame
    - **Minigames:** every round (default), every other round, or duel tiles only
    - **Bonus Stars:** on/off
-2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher).
+2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher). Every character also has a **special die** (press **D** or tap the die to switch): e.g. 🛡️ Steady Block (almost always 2), 🥷 Shadow Block (0 or 4), 🏴‍☠️ Plunder Block (stay and loot coins, or sail far). All dice average 2 spaces.
 3. Your token moves along the board. The tile you land on determines what happens:
 
 | Tile | Effect |
@@ -78,13 +78,15 @@ npm run typecheck
 
 ### Minigames
 
-14 vocabulary-and-grammar minigames, each 30–50 seconds. All of them can be practiced solo from **🕹️ Minigame Arcade** on the main menu, with personal bests and CPU-tier medals.
+16 vocabulary-and-grammar minigames, each 30–50 seconds. All of them can be practiced solo from **🕹️ Minigame Arcade** on the main menu, with personal bests and CPU-tier medals.
 
 | Game | Skill | Mechanic |
 |------|-------|----------|
 | 🌧️ Synonym Storm | Vocabulary | Catch falling synonyms, dodge opposites |
 | 🔤 Anagram Dash | Spelling | Rebuild a scrambled word from its definition |
 | 🃏 Memory Match | Vocabulary | Flip cards to pair words with meanings |
+| 🔗 Link Up | Vocabulary | Draw lines between words and their synonyms |
+| 🧱 Sentence Scramble | Grammar | Rebuild a jumbled sentence word by word |
 | 🔨 Whack-a-Word | Grammar | Whack words of the part of speech on the sign |
 | 📦 Word Sorter | Grammar | Sort words into noun/verb/adjective/adverb bins |
 | 📘 Definition Dash | Vocabulary | Rapid-fire word ↔ definition |

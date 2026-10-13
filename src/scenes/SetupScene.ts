@@ -4,6 +4,7 @@ import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Sta
 import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { BOARDS, getBoard } from '../systems/BoardLayout'
+import { characterDie } from '../systems/DiceSystem'
 import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
 import {
   CHARACTER_DEFS,
@@ -41,6 +42,7 @@ const MAP_PRESETS: MapPreset[] = [
 interface InputRow {
   label: Phaser.GameObjects.Text
   charName: Phaser.GameObjects.Text
+  dieText: Phaser.GameObjects.Text
   cycleHint: Phaser.GameObjects.Text
   nameText: Phaser.GameObjects.Text
   cursor: Phaser.GameObjects.Text
@@ -570,6 +572,8 @@ export class SetupScene extends Phaser.Scene {
       row.token.setFillStyle(def.color)
     }
     row.cycleHint.setX(row.charName.x + row.charName.width + 8)
+    const die = characterDie(ci)
+    row.dieText.setText(`${die.emoji} ${die.name}`)
 
     const tokenX = this.scale.width / 2 - 430
     const rowY = row.bg.y
@@ -637,6 +641,13 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.mute),
     }).setOrigin(0, 0.5).setAlpha(0.7)
 
+    // Character die preview (each character rolls a unique optional die).
+    const dieText = this.add.text(tokenX + 150, rowY + 10, '', {
+      fontSize: '12px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.mist),
+    }).setOrigin(0, 0.5)
+
     // Invisible hit over portrait for character cycling
     const tokenHit = this.add.circle(tokenX, rowY, 30, 0x000000, 0.001)
       .setInteractive({ useHandCursor: true })
@@ -686,11 +697,12 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.sky),
     }).setOrigin(0, 0.5).setVisible(false)
 
-    container.add([rowPlate, ring, token, tokenHit, label, charName, cycleHint, cpuToggle, bg, nameText, cursor])
+    container.add([rowPlate, ring, token, tokenHit, label, charName, cycleHint, dieText, cpuToggle, bg, nameText, cursor])
 
     const row: InputRow = {
       label,
       charName,
+      dieText,
       cycleHint,
       nameText,
       cursor,
@@ -735,6 +747,7 @@ export class SetupScene extends Phaser.Scene {
       const childAlpha = enabled ? 1 : 0.35
       row.label.setAlpha(childAlpha)
       row.charName.setAlpha(childAlpha)
+      row.dieText.setAlpha(childAlpha * 0.9)
       row.cycleHint.setAlpha(enabled ? 0.7 : 0.2)
       row.bg.setAlpha(childAlpha)
       row.nameText.setAlpha(childAlpha)

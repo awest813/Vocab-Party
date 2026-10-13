@@ -10,10 +10,10 @@ import { getPersonalBests, MINIGAMES } from '../minigames/registry'
 import type { MinigameDef } from '../minigames/types'
 import type { MinigameSceneData } from './MinigameScene'
 
-const COLS = 5
-const CARD_W = 222
+const COLS = 6
+const CARD_W = 196
 const CARD_H = 150
-const GAP = 16
+const GAP = 12
 
 /** Free-play menu: practice any minigame solo and chase personal bests. */
 type ArcadeMode = 'solo' | CpuLevel
@@ -129,7 +129,7 @@ export class ArcadeScene extends Phaser.Scene {
     c.add(g)
     c.add(this.add.text(-CARD_W / 2 + 16, -34, def.icon, { fontSize: '40px' }).setOrigin(0, 0.5))
     c.add(this.add.text(-CARD_W / 2 + 70, -44, def.title, {
-      fontSize: '20px', fontFamily: FONT.display, color: '#ffffff', wordWrap: { width: CARD_W - 84 },
+      fontSize: '18px', fontFamily: FONT.display, color: '#ffffff', wordWrap: { width: CARD_W - 80 },
     }).setOrigin(0, 0))
     c.add(this.add.text(-CARD_W / 2 + 16, 12, def.category.toUpperCase(), {
       fontSize: '12px', fontFamily: FONT.display, color: hexColor(def.accent),

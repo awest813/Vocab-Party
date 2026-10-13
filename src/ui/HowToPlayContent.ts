@@ -26,7 +26,7 @@ export const HOW_TO_TILES: HowToTile[] = [
 
 export const HOW_TO_RULES = [
   '🎭 Setup: pick characters, a board, a word level, and Quick / Classic / Full Map',
-  '🎲 Roll to move (tap ROLL, or Space / R on desktop)',
+  '🎲 Roll to move — or switch to your character\'s special die (D / tap the die)',
   '📖 Vocab & grammar tiles ask questions for points',
   '🌟 Star & 🏪 shop tiles: choose Buy or Pass when you land',
   '🛍️ Item shops let you pick a card or pass · use ITEMS on your turn',

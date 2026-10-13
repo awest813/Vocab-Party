@@ -299,7 +299,7 @@ export const grammarGauntlet: MinigameDef = {
   icon: '✏️',
   accent: 0xff5cad,
   category: 'Grammar',
-  tagline: 'Commas, agreement, pronouns — pick the polished sentence.',
+  tagline: 'Commas, agreement, pronouns: pick the polished one.',
   howTo: [
     'Several versions of a sentence appear.',
     'Choose the one that is written correctly.',

@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS } from '../systems/GameState'
-import { rollBlockDie } from '../systems/DiceSystem'
+import { characterDie, faceSummary, maxMove, rollBlockDie, rollDie, STANDARD_DIE, type DieDef } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BoardNode, getBoard, type BoardDef } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
@@ -264,7 +264,15 @@ export class BoardScene extends Phaser.Scene {
       strokeThickness: 4,
     }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
-    this.diceSprite = this.add.image(w / 2 + 80, h - 56, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52).setDepth(DEPTH.chrome)
+    this.diceSprite = this.add.image(w / 2 + 80, h - 60, DICE_TEXTURE_KEYS[0]).setDisplaySize(52, 52).setDepth(DEPTH.chrome)
+    this.diceSprite.setInteractive({ useHandCursor: true })
+    this.diceSprite.on('pointerdown', () => this.toggleDie())
+    this.dieFaceText = this.add.text(w / 2 + 80, h - 60, '', {
+      fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
+    }).setOrigin(0.5).setDepth(DEPTH.chrome + 1)
+    this.dieLabel = this.add.text(w / 2 + 80, h - 20, '', {
+      fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+    }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
     this.roundText = this.add.text(w - 16, 18, '', {
       fontSize: '18px',
@@ -307,6 +315,8 @@ export class BoardScene extends Phaser.Scene {
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
         ev.preventDefault()
         this.tryRollFromKeyboard()
+      } else if (ev.code === 'KeyD' && !this.coachOpen) {
+        this.toggleDie()
       }
     }
     this.input.keyboard?.on('keydown', rollKeyHandler)
@@ -771,6 +781,7 @@ export class BoardScene extends Phaser.Scene {
     this.statusText.setText(`${p.emoji} ${p.name}'s Turn${cpuTag}${momentumTag}`)
     this.roundText.setText(`Round ${this.state.round} / ${this.roundsPerGame}`)
     this.refreshNextEvent()
+    this.refreshDieUi()
     this.hud.update(this.state)
 
     if (p.isCpu && !this.rolling) {
@@ -865,28 +876,38 @@ export class BoardScene extends Phaser.Scene {
 
     await new Promise<void>(res => this.time.delayedCall(this.d(1300), res))
 
-    let result = forcedMove > 0 ? forcedMove : rollBlockDie()
+    if (player.isCpu && forcedMove <= 0) this.cpuPickDie(player)
+    const die = this.dieFor(player)
+    const face = forcedMove > 0 ? { move: forcedMove } : rollDie(die)
+    let result = face.move
     const hadSpeedBoost = player.speedBoostTurns > 0
     const hadDash = player.dashActive
     if (hadDash && forcedMove <= 0) {
-      const r2 = rollBlockDie()
-      result += r2
-      player.dashActive = false
-    } else if (hadDash) {
-      // Golden Key already sets the move; still consume dash so it doesn't linger
-      player.dashActive = false
+      result += rollBlockDie()
     }
+    player.dashActive = false
     if (hadSpeedBoost && forcedMove <= 0) {
-      result = Math.min(3, result + 1)
-      player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
-    } else if (hadSpeedBoost) {
-      player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
+      result = Math.min(Math.max(3, maxMove(die)), result + 1)
     }
-    const diceFace = Math.min(3, Math.max(1, forcedMove > 0 ? forcedMove : (hadDash && forcedMove <= 0 ? Math.min(3, result) : result)))
-    this.diceSprite.setTexture(DICE_TEXTURE_KEYS[diceFace - 1])
-    const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Speed Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash!' : '')
-    const forceTag = forcedMove > 0 ? ' 🔑' : ''
-    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${forceTag}${hadDash && forcedMove <= 0 ? ' (2 dice)' : forcedMove > 0 ? ' (Golden Key)' : ' (1-3)'}${surgeText}!`)
+    if (hadSpeedBoost) player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
+
+    // Show the rolled face: pip texture for 1–6, big label for 0.
+    if (face.move >= 1) {
+      this.diceSprite.setTexture(DICE_TEXTURE_KEYS[Math.min(6, face.move) - 1]).setAlpha(1)
+      this.dieFaceText?.setText('')
+    } else {
+      this.diceSprite.setAlpha(0.35)
+      this.dieFaceText?.setText('0')
+    }
+    if (face.coins) {
+      player.coins = Math.max(0, player.coins + face.coins)
+      this.showFloatyText(player, face.coins > 0 ? `🎲 +${face.coins} 🪙` : `🎲 ${face.coins} 🪙`, face.coins > 0 ? '#ffd24a' : '#ff8888')
+      if (face.coins > 0) Sfx.coin()
+      this.hud.update(this.state)
+    }
+    const dieTag = forcedMove > 0 ? ' 🔑 (Golden Key)' : player.useCharacterDie ? ` with ${die.emoji} ${die.name}` : ''
+    const surgeText = (hadSpeedBoost && forcedMove <= 0 ? ' + 💨 Surge' : '') + (hadDash && forcedMove <= 0 ? ' + 🏃 Dash' : '')
+    this.statusText.setText(`${player.emoji} ${player.name} rolled ${result}${dieTag}${surgeText}!`)
 
     this.tweens.add({
       targets: this.diceSprite,
@@ -898,6 +919,12 @@ export class BoardScene extends Phaser.Scene {
 
     await new Promise<void>(res => this.time.delayedCall(this.d(600), res))
 
+    if (result <= 0) {
+      this.statusText.setText(`${player.emoji} ${player.name} stays put this turn.`)
+      this.showFloatyText(player, 'Rolled 0 — stay put!', '#aaccff')
+      this.time.delayedCall(this.d(900), () => this.endTurn())
+      return
+    }
     await this.movePlayer(this.state.currentPlayer, result)
   }
 
@@ -2294,6 +2321,51 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private coachOpen = false
+  private dieLabel?: Phaser.GameObjects.Text
+  private dieFaceText?: Phaser.GameObjects.Text
+
+  private dieFor(p: Player): DieDef {
+    return p.useCharacterDie ? characterDie(p.characterIndex) : STANDARD_DIE
+  }
+
+  /** Human players toggle between the standard block and their character die before rolling. */
+  private toggleDie() {
+    const p = this.state.players[this.state.currentPlayer]
+    if (!p || p.isCpu || this.rolling || this.scene.isPaused()) return
+    p.useCharacterDie = !p.useCharacterDie
+    Sfx.uiToggle()
+    this.refreshDieUi()
+    if (!shouldReduceMotion()) this.tweens.add({ targets: this.diceSprite, angle: { from: -15, to: 0 }, duration: 200, ease: 'Back.easeOut' })
+  }
+
+  private refreshDieUi() {
+    const p = this.state.players[this.state.currentPlayer]
+    if (!p || !this.dieLabel) return
+    const die = this.dieFor(p)
+    const charDie = characterDie(p.characterIndex)
+    this.dieLabel.setText(`${die.emoji} ${die.name}: ${faceSummary(die)}`)
+    // Lightened tint keeps dark character colors (e.g. the ninja) readable on the die.
+    if (p.useCharacterDie) this.diceSprite.setTint(Phaser.Display.Color.IntegerToColor(characterDef(p.characterIndex).color).lighten(35).color)
+    else this.diceSprite.clearTint()
+    this.dieFaceText?.setText('')
+    this.diceSprite.setAlpha(1)
+    if (!p.isCpu) {
+      this.tileHintText?.setText(isTouchPreferred(this.sys.game)
+        ? `Tap the die to switch to ${p.useCharacterDie ? 'the standard block' : `${charDie.emoji} ${charDie.name}`}`
+        : `D = switch die (${p.useCharacterDie ? 'standard block' : `${charDie.emoji} ${charDie.name}: ${charDie.hint}`})`)
+    }
+  }
+
+  /** CPU die choice: coin dice when short on star money, long dice when far behind, else a coin flip. */
+  private cpuPickDie(p: Player) {
+    const die = characterDie(p.characterIndex)
+    const coinFaces = die.faces.some(x => (x.coins ?? 0) > 0)
+    const behind = cpuPlayerRank(p.id, this.state.players) >= Math.max(1, this.state.players.length - 1)
+    if (p.cpuLevel === 'easy') p.useCharacterDie = Math.random() < 0.5
+    else if (coinFaces && p.coins < STAR_COST_COINS - 4) p.useCharacterDie = Math.random() < 0.75
+    else if (behind && maxMove(die) > 3) p.useCharacterDie = Math.random() < 0.7
+    else p.useCharacterDie = Math.random() < 0.4
+  }
 
   private pauseGame() {
     if (this.scene.isActive('PauseScene') || this.coachOpen) return
