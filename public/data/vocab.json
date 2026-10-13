@@ -2279,6 +2279,556 @@
         "secret"
       ],
       "correct": 0
+    },
+    {
+      "sentence": "Her _____ about bugs led her to read every insect book in the library.",
+      "word": "curiosity",
+      "choices": [
+        "despair",
+        "fatigue",
+        "curiosity",
+        "luxury"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "It took great _____ for the firefighter to run into the burning building.",
+      "word": "courage",
+      "choices": [
+        "hunger",
+        "laughter",
+        "courage",
+        "rumor"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "The fallen tree was the biggest _____ blocking our path through the woods.",
+      "word": "obstacle",
+      "choices": [
+        "obstacle",
+        "reward",
+        "treasure",
+        "tradition"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "The muddy footprints were _____ that someone had walked through the kitchen.",
+      "word": "evidence",
+      "choices": [
+        "evidence",
+        "gratitude",
+        "luxury",
+        "harmony"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "After running the marathon, she was overcome with _____ and slept for twelve hours.",
+      "word": "fatigue",
+      "choices": [
+        "fatigue",
+        "ambition",
+        "curiosity",
+        "enthusiasm"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "The _____ of water during the drought meant everyone had to save every drop.",
+      "word": "scarcity",
+      "choices": [
+        "scarcity",
+        "abundance",
+        "harmony",
+        "surplus"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "To show her _____, Maya wrote thank-you cards to everyone who helped.",
+      "word": "gratitude",
+      "choices": [
+        "contempt",
+        "scarcity",
+        "gratitude",
+        "fatigue"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "Grandma's favorite _____ for a sore throat is warm tea with honey.",
+      "word": "remedy",
+      "choices": [
+        "remedy",
+        "quarrel",
+        "obstacle",
+        "rumor"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "During the storm, the hikers found _____ in a small cave.",
+      "word": "shelter",
+      "choices": [
+        "hunger",
+        "laughter",
+        "shelter",
+        "danger"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "Neither sister got exactly what she wanted, but they reached a fair _____ by taking turns.",
+      "word": "compromise",
+      "choices": [
+        "compromise",
+        "rumor",
+        "deficit",
+        "quarrel"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "The writer moved to a quiet cabin in the woods to enjoy some _____ away from crowds.",
+      "word": "solitude",
+      "choices": [
+        "chaos",
+        "solitude",
+        "traffic",
+        "noise"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "When the audience loved the play, they rose from their seats for a standing _____.",
+      "word": "ovation",
+      "choices": [
+        "fallacy",
+        "ovation",
+        "deficit",
+        "quarrel"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "If you have a question, don't _____ to raise your hand.",
+      "word": "hesitate",
+      "choices": [
+        "obey",
+        "climb",
+        "repair",
+        "hesitate"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The magician tried to _____ the coin in his sleeve so no one would see it.",
+      "word": "conceal",
+      "choices": [
+        "display",
+        "announce",
+        "reveal",
+        "conceal"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "Sam tried to _____ his parents to get a puppy by promising to walk it every day.",
+      "word": "persuade",
+      "choices": [
+        "wander",
+        "repair",
+        "forgive",
+        "persuade"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The workers used a wrecking ball to _____ the old building.",
+      "word": "demolish",
+      "choices": [
+        "construct",
+        "repair",
+        "protect",
+        "demolish"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The gardener would _____ the tiny seedlings with water, sunlight, and care.",
+      "word": "nurture",
+      "choices": [
+        "nurture",
+        "ignore",
+        "destroy",
+        "neglect"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "Because of the thunderstorm, the coach had to _____ the game until next week.",
+      "word": "postpone",
+      "choices": [
+        "celebrate",
+        "finish",
+        "postpone",
+        "win"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "After the flood, the family worked to _____ whatever furniture had not been ruined.",
+      "word": "salvage",
+      "choices": [
+        "destroy",
+        "waste",
+        "salvage",
+        "scatter"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "In the library, we must _____ so we don't disturb other readers.",
+      "word": "whisper",
+      "choices": [
+        "whisper",
+        "yell",
+        "shout",
+        "cheer"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "Heavy snow will _____ the rescue team and slow them down.",
+      "word": "hinder",
+      "choices": [
+        "inspire",
+        "hinder",
+        "assist",
+        "accelerate"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The mother sang a gentle lullaby to _____ her crying baby.",
+      "word": "soothe",
+      "choices": [
+        "soothe",
+        "tease",
+        "scold",
+        "startle"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "Tom likes to _____; he said his fish was as big as a car when it was only a foot long.",
+      "word": "exaggerate",
+      "choices": [
+        "obey",
+        "exaggerate",
+        "whisper",
+        "apologize"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "After the bake sale used up our supplies, we need to _____ our flour and sugar.",
+      "word": "replenish",
+      "choices": [
+        "scatter",
+        "waste",
+        "replenish",
+        "deplete"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "Parents will _____ the students on the field trip to keep everyone safe.",
+      "word": "accompany",
+      "choices": [
+        "abandon",
+        "accompany",
+        "ignore",
+        "forget"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The nurse gave him an ice pack to _____ the pain in his swollen ankle.",
+      "word": "alleviate",
+      "choices": [
+        "cause",
+        "worsen",
+        "exacerbate",
+        "alleviate"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The parrot learned to _____ its owner's voice so well that the dog came when it called.",
+      "word": "imitate",
+      "choices": [
+        "demolish",
+        "forgive",
+        "postpone",
+        "imitate"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The teacher asked Ana to _____ the worksheets, giving one to every student in the class.",
+      "word": "distribute",
+      "choices": [
+        "destroy",
+        "collect",
+        "distribute",
+        "hide"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "With plenty of sunlight and water, the tomato plants began to _____.",
+      "word": "flourish",
+      "choices": [
+        "wither",
+        "vanish",
+        "shrink",
+        "flourish"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "Handle the antique teacup carefully because it is very _____ and could crack.",
+      "word": "fragile",
+      "choices": [
+        "fragile",
+        "unbreakable",
+        "sturdy",
+        "durable"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "The museum displayed _____ pottery made by people thousands of years ago.",
+      "word": "ancient",
+      "choices": [
+        "modern",
+        "temporary",
+        "ancient",
+        "brand-new"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "Ruby felt _____ before her piano recital, and her hands would not stop shaking.",
+      "word": "anxious",
+      "choices": [
+        "jolly",
+        "serene",
+        "sleepy",
+        "anxious"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The _____ driver slowed down and checked both ways twice before crossing the icy bridge.",
+      "word": "cautious",
+      "choices": [
+        "cautious",
+        "arrogant",
+        "reckless",
+        "careless"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "These hiking boots are so _____ that they lasted for ten years of rough trails.",
+      "word": "durable",
+      "choices": [
+        "temporary",
+        "durable",
+        "flimsy",
+        "fragile"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "My _____ uncle never wastes money and always looks for the best deals.",
+      "word": "frugal",
+      "choices": [
+        "wasteful",
+        "frugal",
+        "extravagant",
+        "careless"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The _____ whale was longer than three school buses.",
+      "word": "gigantic",
+      "choices": [
+        "tiny",
+        "petite",
+        "gigantic",
+        "miniature"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "The _____ teacher let us turn in our homework late without losing points.",
+      "word": "lenient",
+      "choices": [
+        "stern",
+        "lenient",
+        "harsh",
+        "strict"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "Now that everyone streams music, cassette tapes have become nearly _____.",
+      "word": "obsolete",
+      "choices": [
+        "popular",
+        "obsolete",
+        "essential",
+        "modern"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The puppy was _____ to step into the bath and kept backing away from the water.",
+      "word": "reluctant",
+      "choices": [
+        "thrilled",
+        "eager",
+        "excited",
+        "reluctant"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The lake was calm and _____, without a single ripple on its surface.",
+      "word": "serene",
+      "choices": [
+        "serene",
+        "turbulent",
+        "chaotic",
+        "stormy"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "Copying the same sentence one hundred times was a long and _____ task.",
+      "word": "tedious",
+      "choices": [
+        "brief",
+        "exciting",
+        "thrilling",
+        "tedious"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The desert was so _____ that we drove for hours without reaching its end.",
+      "word": "vast",
+      "choices": [
+        "tiny",
+        "vast",
+        "cramped",
+        "narrow"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "Apples were so _____ this fall that the farm gave away extra bushels for free.",
+      "word": "abundant",
+      "choices": [
+        "rare",
+        "scarce",
+        "missing",
+        "abundant"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The new gym is so _____ that all four classes can play there at once.",
+      "word": "spacious",
+      "choices": [
+        "tiny",
+        "spacious",
+        "narrow",
+        "cramped"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The _____ goat leaped easily from rock to rock up the steep cliff.",
+      "word": "nimble",
+      "choices": [
+        "lethargic",
+        "sluggish",
+        "clumsy",
+        "nimble"
+      ],
+      "correct": 3
+    },
+    {
+      "sentence": "The _____ roses filled the whole room with a sweet smell.",
+      "word": "fragrant",
+      "choices": [
+        "odorless",
+        "stinky",
+        "fragrant",
+        "scentless"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "The _____ crowd booed and shouted angrily at the visiting team.",
+      "word": "hostile",
+      "choices": [
+        "polite",
+        "friendly",
+        "hostile",
+        "welcoming"
+      ],
+      "correct": 2
+    },
+    {
+      "sentence": "She is so _____ that she checks every math problem three times for tiny mistakes.",
+      "word": "meticulous",
+      "choices": [
+        "careless",
+        "meticulous",
+        "sloppy",
+        "hasty"
+      ],
+      "correct": 1
+    },
+    {
+      "sentence": "The music stopped _____, leaving the dancers frozen in surprise.",
+      "word": "abruptly",
+      "choices": [
+        "abruptly",
+        "gradually",
+        "gently",
+        "slowly"
+      ],
+      "correct": 0
+    },
+    {
+      "sentence": "It _____ snows in Florida, so the kids were shocked to see snowflakes.",
+      "word": "seldom",
+      "choices": [
+        "constantly",
+        "seldom",
+        "always",
+        "often"
+      ],
+      "correct": 1
     }
   ],
   "minigame_synonyms": [
@@ -3115,6 +3665,506 @@
         "poor"
       ],
       "correct": 0
+    },
+    {
+      "prompt": "My little brother wants to come _____.",
+      "choices": [
+        "to",
+        "two",
+        "tow",
+        "too"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "We walked _____ the library after school.",
+      "choices": [
+        "two",
+        "to",
+        "tow",
+        "too"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "I have _____ tickets for the movie tonight.",
+      "choices": [
+        "to",
+        "too",
+        "tow",
+        "two"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "_____ going to love this surprise!",
+      "choices": [
+        "You're",
+        "Yore",
+        "Your",
+        "Yours"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Is this _____ backpack on the floor?",
+      "choices": [
+        "you're",
+        "yours",
+        "your",
+        "yore"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "_____ a lot of snow on the mountain this year.",
+      "choices": [
+        "There's",
+        "Their",
+        "Theirs",
+        "They're"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The twins forgot _____ lunches at home.",
+      "choices": [
+        "there",
+        "theirs",
+        "their",
+        "they're"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "I hope _____ not late for the bus again.",
+      "choices": [
+        "their",
+        "there",
+        "they're",
+        "theirs"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "The museum is closed, so we can't go _____ today.",
+      "choices": [
+        "they're",
+        "there",
+        "theirs",
+        "their"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "The cat licked _____ paws after dinner.",
+      "choices": [
+        "it",
+        "is",
+        "it's",
+        "its"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "_____ almost time for recess.",
+      "choices": [
+        "It",
+        "Its",
+        "It's",
+        "Is"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Did you _____ that loud thunder?",
+      "choices": [
+        "hair",
+        "hear",
+        "hare",
+        "here"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "Please hang your coat right _____ on this hook.",
+      "choices": [
+        "here",
+        "hear",
+        "hair",
+        "hare"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Do you _____ the answer to number five?",
+      "choices": [
+        "now",
+        "knew",
+        "know",
+        "no"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "There is _____ milk left in the fridge.",
+      "choices": [
+        "know",
+        "no",
+        "knew",
+        "now"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "Remember to _____ a thank-you note to Grandma.",
+      "choices": [
+        "rite",
+        "right",
+        "wright",
+        "write"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Raise your _____ hand if you know the answer.",
+      "choices": [
+        "write",
+        "rite",
+        "right",
+        "wright"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "We collected seashells along the edge of the _____.",
+      "choices": [
+        "sea",
+        "see",
+        "seem",
+        "sees"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Did you _____ the rainbow after the storm?",
+      "choices": [
+        "sea",
+        "see",
+        "seas",
+        "sees"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "Grandma mixed _____ and eggs to bake bread.",
+      "choices": [
+        "flour",
+        "flower",
+        "flier",
+        "floor"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "She picked a red _____ from the garden.",
+      "choices": [
+        "floor",
+        "flour",
+        "flier",
+        "flower"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Squeeze the _____ to stop your bike.",
+      "choices": [
+        "break",
+        "brake",
+        "brook",
+        "broke"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "Be careful not to _____ the glass vase.",
+      "choices": [
+        "break",
+        "brook",
+        "brake",
+        "broke"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "May I have a _____ of apple pie?",
+      "choices": [
+        "peace",
+        "piece",
+        "pies",
+        "peas"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "After years of war, the two countries finally lived in _____.",
+      "choices": [
+        "peas",
+        "pieces",
+        "peace",
+        "piece"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Check the _____ report before we leave for the picnic.",
+      "choices": [
+        "whether",
+        "wither",
+        "wetter",
+        "weather"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "I can't decide _____ to wear boots or sneakers.",
+      "choices": [
+        "weather",
+        "whether",
+        "wetter",
+        "wither"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "The school _____ announced a new recess schedule.",
+      "choices": [
+        "princely",
+        "principled",
+        "principal",
+        "principle"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Honesty is an important _____ to live by.",
+      "choices": [
+        "principle",
+        "principally",
+        "principal",
+        "principled"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The car stayed _____ while the long train passed.",
+      "choices": [
+        "stationery",
+        "stations",
+        "station",
+        "stationary"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "She wrote the letter on fancy _____ with gold edges.",
+      "choices": [
+        "stationary",
+        "stations",
+        "station",
+        "stationery"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Are we _____ to bring snacks on the field trip?",
+      "choices": [
+        "allowed",
+        "aloud",
+        "loud",
+        "allow"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Please read the poem _____ to the class.",
+      "choices": [
+        "allow",
+        "allowed",
+        "aloud",
+        "allows"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "Yesterday the wind _____ my kite high into the sky.",
+      "choices": [
+        "blues",
+        "blow",
+        "blew",
+        "blue"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "The sky was bright _____ without a single cloud.",
+      "choices": [
+        "blues",
+        "blew",
+        "blow",
+        "blue"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "I _____ the answer before the teacher even asked.",
+      "choices": [
+        "knew",
+        "know",
+        "new",
+        "gnu"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Dad bought me a shiny _____ bike for my birthday.",
+      "choices": [
+        "gnu",
+        "new",
+        "know",
+        "knew"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "There is a _____ in my sock where my toe pokes out.",
+      "choices": [
+        "holy",
+        "hole",
+        "whole",
+        "hall"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "She ate the _____ sandwich all by herself.",
+      "choices": [
+        "hall",
+        "holy",
+        "hole",
+        "whole"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "We cleaned _____ classroom before the party.",
+      "choices": [
+        "our",
+        "hour",
+        "are",
+        "ours"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The movie lasted one _____ and thirty minutes.",
+      "choices": [
+        "hour",
+        "ours",
+        "our",
+        "are"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "The _____ hopped across the field and into its burrow.",
+      "choices": [
+        "here",
+        "hear",
+        "hare",
+        "hair"
+      ],
+      "correct": 2
+    },
+    {
+      "prompt": "My little sister is _____ years old.",
+      "choices": [
+        "eight",
+        "eat",
+        "eighth",
+        "ate"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "Yesterday I _____ a big bowl of cereal.",
+      "choices": [
+        "eaten",
+        "ate",
+        "eat",
+        "eight"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "The fox's bushy _____ swished back and forth.",
+      "choices": [
+        "tale",
+        "tell",
+        "tall",
+        "tail"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Grandpa told us a _____ about a brave knight.",
+      "choices": [
+        "tell",
+        "tale",
+        "tall",
+        "tail"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "I was so _____ during the long car ride with nothing to do.",
+      "choices": [
+        "bird",
+        "bored",
+        "boarded",
+        "board"
+      ],
+      "correct": 1
+    },
+    {
+      "prompt": "After being sick, I felt _____ and tired.",
+      "choices": [
+        "weak",
+        "week",
+        "weeks",
+        "wick"
+      ],
+      "correct": 0
+    },
+    {
+      "prompt": "We have a spelling test next _____.",
+      "choices": [
+        "weeks",
+        "wake",
+        "weak",
+        "week"
+      ],
+      "correct": 3
+    },
+    {
+      "prompt": "Nice to _____ you!",
+      "choices": [
+        "mete",
+        "meat",
+        "meet",
+        "met"
+      ],
+      "correct": 2
     }
   ]
 }

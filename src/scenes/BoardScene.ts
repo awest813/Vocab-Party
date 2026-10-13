@@ -32,6 +32,7 @@ import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
 import { recordWords, wordFromQuestion } from '../systems/Progress'
+import { stepsToNearest } from '../systems/CpuPolicy'
 import { checkWordAchievements, unlock } from '../systems/Achievements'
 import type { BattleResult } from './BattleScene'
 import type { MinigameParticipant, MinigameResult, MinigameSceneData } from './MinigameScene'
@@ -49,7 +50,7 @@ const TILE_LABELS: Record<TileType, string> = {
   swap: '🔄',
   start: '🏠',
   shop:     '🏪',
-  star:     '🌟',
+  star:     '🏆',
   brick:    '🧱',
   item_shop: '🛍️',
   penalty:   '💀'
@@ -354,7 +355,7 @@ export class BoardScene extends Phaser.Scene {
       const tips = [
         `🎲  Roll and move — ${isTouchPreferred(this.sys.game) ? 'tap ROLL' : 'press Space or click ROLL'}`,
         '📖  Land on tiles: answer questions, shop, duel, and more',
-        '🌟  Reach a ⭐ Star tile with 20 coins to buy a 🏆 trophy',
+        '🏆  Reach a glowing Star tile with 20 coins to buy a trophy',
         this.state.options.minigames === 'tiles'
           ? '🕹️  Land on a 🕹️ tile to challenge a rival to a minigame duel'
           : `🎉  ${this.state.options.minigames === 'every' ? 'Every round' : 'Every other round'} ends in a vocab minigame — win coins!`,
@@ -441,7 +442,8 @@ export class BoardScene extends Phaser.Scene {
   drawBoard() {
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
-    const pad = 24
+    // 18px frame keeps the outer border clear of the bottom control bar.
+    const pad = 18
     const frameW = boardW + pad * 2
     const frameH = boardH + pad * 2
     const fx = this.boardOriginX - pad
@@ -485,8 +487,22 @@ export class BoardScene extends Phaser.Scene {
     }
 
     // Path underlay glow connecting tiles
+    // A visible "road" under the tiles, then a thin glow line along it.
+    const road = this.add.graphics().setDepth(-1)
+    const roadCol = Phaser.Display.Color.IntegerToColor(this.board.theme.cellLine).lighten(10).color
+    road.lineStyle(30, roadCol, 0.55)
+    this.nodes.forEach(node => {
+      node.next.forEach(nextId => {
+        const to = this.nodes[nextId]
+        if (!to || Math.abs(to.col - node.col) + Math.abs(to.row - node.row) !== 1) return
+        road.lineBetween(
+          this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2, this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2,
+          this.boardOriginX + to.col * TILE_SIZE + TILE_SIZE / 2, this.boardOriginY + to.row * TILE_SIZE + TILE_SIZE / 2,
+        )
+      })
+    })
     const pathGlow = this.add.graphics().setDepth(-1)
-    pathGlow.lineStyle(10, this.board.theme.glow, 0.1)
+    pathGlow.lineStyle(6, this.board.theme.glow, 0.35)
     // Follow the real graph edges (index order jumps across the board at the fork).
     this.nodes.forEach(node => {
       const x1 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
@@ -568,6 +584,15 @@ export class BoardScene extends Phaser.Scene {
         this.tileHintText?.setText(this.describeTile(i, type))
         Sfx.uiHover()
       })
+
+      // Star tiles are the goal of the board: give them a pulsing gold halo so they're easy to spot.
+      if (type === 'star') {
+        const halo = this.add.circle(x, y, TILE_SIZE * 0.62, COLORS.gold, 0.28).setDepth(-0.5)
+        halo.setStrokeStyle(3, COLORS.gold, 0.8)
+        if (!shouldReduceMotion()) {
+          this.tweens.add({ targets: halo, scale: 1.18, alpha: 0.12, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+        }
+      }
 
       // Center glyph so tile types read at a glance.
       const glyph = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '24px' }).setOrigin(0.5).setDepth(1)
@@ -833,6 +858,8 @@ export class BoardScene extends Phaser.Scene {
         {
           ...this.cpuBoardCtx(),
           rivals: this.state.players.filter(p => p.id !== cur.id),
+          shieldActive: cur.shieldActive,
+          doubleScoreActive: cur.doubleScoreActive,
         }
       )
 
@@ -855,6 +882,11 @@ export class BoardScene extends Phaser.Scene {
     // Handle forced moves (Golden Key) — must apply to the actual movement result
     const forcedMove = player.forcedMoveValue > 0 ? player.forcedMoveValue : 0
     if (forcedMove > 0) player.forcedMoveValue = 0
+    // CPUs choose their die before the roll animation, so the die shown is the one rolled.
+    if (player.isCpu && forcedMove <= 0) {
+      this.cpuPickDie(player)
+      this.refreshDieUi()
+    }
 
     // Dramatic dice roll animation
     this.time.addEvent({
@@ -880,7 +912,6 @@ export class BoardScene extends Phaser.Scene {
 
     await new Promise<void>(res => this.time.delayedCall(this.d(1300), res))
 
-    if (player.isCpu && forcedMove <= 0) this.cpuPickDie(player)
     const die = this.dieFor(player)
     const face = forcedMove > 0 ? { move: forcedMove } : rollDie(die)
     let result = face.move
@@ -958,10 +989,16 @@ export class BoardScene extends Phaser.Scene {
               boardLength: this.nodes.length,
               shopPrice: SHOP_PRICE_COINS,
               starCost: STAR_COST_COINS,
+              stepsLeft: steps - s,
             }
           )
           chosenNextId = options[idx]
+          // Let players see the CPU's fork decision.
           this.statusText.setText(`${player.emoji} ${player.name} picks a path…`)
+          const dest = this.getTileXY(chosenNextId)
+          const arrow = this.add.text(dest.x, dest.y - 30, '⬇', { fontSize: '26px' }).setOrigin(0.5).setDepth(DEPTH.tokens + 6)
+          await new Promise(r => this.time.delayedCall(this.d(550), r))
+          arrow.destroy()
         } else {
           this.stepBubble?.destroy()
           this.stepBubble = undefined
@@ -1015,6 +1052,22 @@ export class BoardScene extends Phaser.Scene {
         })
       })
       this.showStepsLeft(token, remaining)
+
+      // Mario Party rule: stars can be bought in passing, not just by landing exactly.
+      if (remaining > 0 && this.getTileTypeAt(player.position) === 'star' && player.coins >= STAR_COST_COINS) {
+        this.stepBubble?.destroy()
+        this.stepBubble = undefined
+        Sfx.star()
+        const tile = this.tileImages.get(player.position)
+        if (tile && !shouldReduceMotion()) this.tweens.add({ targets: tile, scale: tile.scale * 1.2, duration: 160, yoyo: true })
+        if (player.isCpu) await new Promise(r => this.time.delayedCall(this.d(500), r))
+        if (await this.wantsStar(player, true)) {
+          this.buyStar(player)
+          await new Promise(r => this.time.delayedCall(this.d(1600), r))
+        } else {
+          this.statusText.setText(`🏆 ${player.name} walks past the star.`)
+        }
+      }
     }
     this.stepBubble?.destroy()
     this.stepBubble = undefined
@@ -1089,7 +1142,8 @@ export class BoardScene extends Phaser.Scene {
               this.state.players,
               this.board.tiles as string[],
               this.nodes.length,
-              player.cpuLevel
+              player.cpuLevel,
+              this.nodes.map(n => n.next),
             )
           : chosenTarget!
         const target = this.state.players[targetIndex]
@@ -1102,7 +1156,7 @@ export class BoardScene extends Phaser.Scene {
       }
       case 'warp':
         player.position = player.isCpu
-          ? cpuChooseWarpPosition(this.nodes.length, this.board.tiles as string[], player.cpuLevel)
+          ? cpuChooseWarpPosition(this.nodes.length, this.board.tiles as string[], player.cpuLevel, this.nodes.map(n => n.next))
           : Phaser.Math.Between(0, this.nodes.length - 1)
         this.updatePlayerTokens()
         this.showFloatyText(player, '🌀 Warped!', '#88ccff')
@@ -1150,7 +1204,10 @@ export class BoardScene extends Phaser.Scene {
     if (!shouldReduceMotion()) this.cameras.main.shake(150, 0.002)
 
     // Check for collision (Battle)
-    const otherOnTile = this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
+    // No battles in round 1: everyone starts on the same tiles, so early bumps would be constant.
+    const otherOnTile = this.state.round > 1
+      ? this.state.players.find((p, i) => i !== playerIndex && p.position === tileIndex)
+      : undefined
     if (otherOnTile) {
       this.launchBattle(playerIndex, otherOnTile, type, tileIndex, opts)
       return
@@ -1211,7 +1268,7 @@ export class BoardScene extends Phaser.Scene {
             type,
             playerIndex,
             state: this.state,
-            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel, this.state.round) } : {}),
+            ...(player.isCpu ? { cpuResolve: cpuBoardQuestionResolve(Phaser.Math, player.cpuLevel, this.state.round, this.roundsPerGame) } : {}),
             onComplete: (result: QuestionResolution) => {
               this.scene.stop('QuestionScene')
               this.scene.resume()
@@ -1675,47 +1732,47 @@ export class BoardScene extends Phaser.Scene {
     this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
 
+  /** Ask (human) or decide (CPU) whether to buy a star now. Only called when affordable. */
+  private async wantsStar(player: Player, passing: boolean): Promise<boolean> {
+    if (player.isCpu) {
+      return cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
+        round: this.state.round,
+        totalRounds: this.roundsPerGame,
+        rank: cpuPlayerRank(player.id, this.state.players),
+        starCost: STAR_COST_COINS,
+      })
+    }
+    return this.promptBinaryChoice(
+      `${passing ? 'Passing a Star! ' : ''}Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
+      `BUY (${STAR_COST_COINS}🪙)`,
+      'PASS'
+    )
+  }
+
+  private buyStar(player: Player) {
+    player.coins -= STAR_COST_COINS
+    player.trophies += 1
+    player.score += 12
+    this.statusText.setText(`🏆 ${player.name} got a Star Trophy!`)
+    this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
+    this.showDamageNumber(player, 12, 'pts')
+    const pos = this.playerTokens[this.state.players.indexOf(player)]
+    this.burstAt(pos.x, pos.y, TEXTURE_KEYS.starSmall, 0xffee44)
+    this.starPurchaseSplash(player)
+    this.hud.update(this.state)
+  }
+
   async handleStarShop(player: Player) {
-    if (player.isCpu && !cpuShouldBuyStar(player.coins, player.trophies, player.cpuLevel, {
-      round: this.state.round,
-      totalRounds: this.roundsPerGame,
-      rank: cpuPlayerRank(player.id, this.state.players),
-      starCost: STAR_COST_COINS,
-    })) {
-      this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
-      this.showFloatyText(player, 'Saving up…', '#aaccff')
-      this.time.delayedCall(this.d(1200), () => this.endTurn())
-      return
-    }
-    if (!player.isCpu && player.coins >= STAR_COST_COINS) {
-      const buy = await this.promptBinaryChoice(
-        `Buy a Star Trophy for ${STAR_COST_COINS} coins? (+12 score)`,
-        `BUY (${STAR_COST_COINS}🪙)`,
-        'PASS'
-      )
-      if (!buy) {
-        this.statusText.setText(`🌟 ${player.name} saves coins for later.`)
-        this.showFloatyText(player, 'Saving up…', '#aaccff')
-        this.time.delayedCall(this.d(1200), () => this.endTurn())
-        return
-      }
-    }
-    if (player.coins >= STAR_COST_COINS) {
-      player.coins -= STAR_COST_COINS
-      player.trophies += 1
-      player.score += 12
-      this.statusText.setText(`🌟 ${player.name} got a Star Trophy!`)
-      this.showFloatyText(player, 'Star Trophy! +12 pts', '#ffee44')
-      this.showDamageNumber(player, 12, 'pts')
-      {
-        const pos = this.playerTokens[this.state.players.indexOf(player)]
-        this.burstAt(pos.x, pos.y, TEXTURE_KEYS.starSmall, 0xffee44)
-      }
-      this.starPurchaseSplash(player)
-    } else {
+    if (player.coins < STAR_COST_COINS) {
+      // Same consolation for everyone (CPUs used to skip it).
       player.coins += 2
-      this.statusText.setText(`🌟 Save up! Stars cost ${STAR_COST_COINS} coins.`)
+      this.statusText.setText(`🏆 Save up! Stars cost ${STAR_COST_COINS} coins.`)
       this.showFloatyText(player, '+2 pity coins', '#aaccff')
+    } else if (await this.wantsStar(player, false)) {
+      this.buyStar(player)
+    } else {
+      this.statusText.setText(`🏆 ${player.name} saves coins for later.`)
+      this.showFloatyText(player, 'Saving up…', '#aaccff')
     }
     this.time.delayedCall(this.d(1200), () => this.endTurn())
   }
@@ -1896,7 +1953,8 @@ export class BoardScene extends Phaser.Scene {
           this.state.players,
           this.board.tiles as string[],
           this.nodes.length,
-          player.cpuLevel
+          player.cpuLevel,
+          this.nodes.map(n => n.next),
         )
       : this.state.players.indexOf(Phaser.Utils.Array.GetRandom(others))
     const target = this.state.players[targetIndex]
@@ -2125,7 +2183,9 @@ export class BoardScene extends Phaser.Scene {
     if (this.state.players.length > 1) {
       if (player.isCpu) {
         const rivals = this.state.players.filter(p => p.id !== player.id)
-        opponent = [...rivals].sort((a, b) => (b.trophies - a.trophies) || (b.coins - a.coins))[0]
+        // Usually the leader, sometimes the runner-up, so CPUs don't all pile on one player.
+        const ranked = [...rivals].sort((a, b) => (b.trophies - a.trophies) || (b.coins - a.coins))
+        opponent = ranked.length > 1 && Math.random() < 0.35 ? ranked[1] : ranked[0]
         await new Promise(r => this.time.delayedCall(this.d(cpuItemThinkDelayMs(Phaser.Math, player.cpuLevel)), r))
       } else {
         const pick = await this.promptPlayerChoice(playerIndex, `⚔️ DUEL! Pick a rival.\nWinner steals up to ${DUEL_STEAL} 🪙`)
@@ -2189,10 +2249,14 @@ export class BoardScene extends Phaser.Scene {
           starCost: STAR_COST_COINS,
         }
       )
-      item = pick
-        ? available.find(a => a.type === pick.type)
-        : available.find(a => player.coins >= a.cost)
-      if (!item) item = Phaser.Utils.Array.GetRandom(available)
+      item = pick ? available.find(a => a.type === pick.type) : undefined
+      if (!item) {
+        // Saving for a star is a valid choice — leave like a human can.
+        this.statusText.setText(`🛍️ ${player.name} saves their coins.`)
+        this.showFloatyText(player, 'Just browsing…', '#aaaaaa')
+        this.time.delayedCall(this.d(1200), () => this.endTurn())
+        return
+      }
     } else {
       const picked = await this.promptItemPurchase(player)
       if (!picked) {
@@ -2399,15 +2463,29 @@ export class BoardScene extends Phaser.Scene {
     this.diceSprite.setAlpha(1)
   }
 
-  /** CPU die choice: coin dice when short on star money, long dice when far behind, else a coin flip. */
+  /**
+   * CPU die choice. Easy flips a coin; Normal/Hard compare the standard block with the character die
+   * on expected coins plus the chance of reaching the nearest star (stars can be bought in passing).
+   */
   private cpuPickDie(p: Player) {
     const die = characterDie(p.characterIndex)
-    const coinFaces = die.faces.some(x => (x.coins ?? 0) > 0)
-    const behind = cpuPlayerRank(p.id, this.state.players) >= Math.max(1, this.state.players.length - 1)
-    if (p.cpuLevel === 'easy') p.useCharacterDie = Math.random() < 0.5
-    else if (coinFaces && p.coins < STAR_COST_COINS - 4) p.useCharacterDie = Math.random() < 0.75
-    else if (behind && maxMove(die) > 3) p.useCharacterDie = Math.random() < 0.7
-    else p.useCharacterDie = Math.random() < 0.4
+    if (p.cpuLevel === 'easy' || Math.random() > (p.cpuLevel === 'hard' ? 0.95 : 0.75)) {
+      p.useCharacterDie = Math.random() < 0.5
+      return
+    }
+    const next = this.nodes.map(n => n.next)
+    const stars = new Set(this.board.tiles.map((t, i) => (t === 'star' ? i : -1)).filter(i => i > 0))
+    const dist = stepsToNearest(next, p.position, stars)
+    const canBuy = p.coins >= STAR_COST_COINS
+    const value = (d: DieDef) => {
+      const n = d.faces.length
+      const eCoins = d.faces.reduce((sum, f) => sum + (f.coins ?? 0), 0) / n
+      const eMove = d.faces.reduce((sum, f) => sum + f.move, 0) / n
+      const reach = d.faces.filter(f => f.move >= dist).length / n
+      // Short on coins → value coins; can afford a star → value reaching it.
+      return (canBuy ? reach * 30 : 0) + eCoins * (canBuy ? 1 : 3) + eMove * 0.5
+    }
+    p.useCharacterDie = value(die) > value(STANDARD_DIE)
   }
 
   private pauseGame() {

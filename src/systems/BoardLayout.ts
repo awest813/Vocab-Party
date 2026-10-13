@@ -57,13 +57,14 @@ const LOOP_NODES: BoardNode[] = [
   { id: 43, col: 0, row: 1, next: [0] },
 ]
 
-/** Original tile pattern; tile i uses LEGACY_PATTERN[i % length] (tile 0 is Start). */
-const LEGACY_PATTERN: TileType[] = [
-  'shop','vocab','penalty','grammar','bonus','star','item_shop','minigame','vocab','brick','penalty','mystery','vocab','shop',
-  'vocab','grammar','item_shop','minigame','grammar','penalty','star','bonus','mystery','brick','vocab','grammar','swap',
-  'penalty','bonus','vocab','item_shop','grammar','mystery','brick','vocab','minigame','penalty','grammar','star','bonus','vocab',
+/** Tile per node (index 0 is Start). Rebalanced after a play-simulation audit. */
+const LOOP_TILES: TileType[] = [
+  'start', 'vocab', 'vocab', 'grammar', 'bonus', 'star', 'item_shop', 'minigame', 'vocab', 'brick',
+  'penalty', 'mystery', 'vocab', 'shop', 'bonus', 'grammar', 'item_shop', 'minigame', 'grammar', 'penalty',
+  'star', 'bonus', 'mystery', 'brick', 'vocab', 'grammar', 'swap', 'penalty', 'bonus', 'shop',
+  'item_shop', 'star', 'mystery', 'brick', 'vocab', 'minigame', 'penalty', 'grammar', 'grammar', 'bonus',
+  'vocab', 'shop', 'vocab', 'bonus',
 ]
-const LOOP_TILES: TileType[] = LOOP_NODES.map((_, i) => (i === 0 ? 'start' : LEGACY_PATTERN[i % LEGACY_PATTERN.length]))
 
 const GARDEN_NODES: BoardNode[] = [
   { id: 0, col: 0, row: 0, next: [1] },
@@ -112,9 +113,9 @@ const GARDEN_NODES: BoardNode[] = [
 
 const GARDEN_TILES: TileType[] = [
   'start', 'grammar', 'vocab', 'penalty', 'vocab', 'swap', 'bonus', 'grammar', 'bonus', 'grammar',
-  'item_shop', 'item_shop', 'minigame', 'vocab', 'vocab', 'penalty', 'star', 'grammar', 'penalty', 'brick',
-  'star', 'bonus', 'shop', 'mystery', 'bonus', 'mystery', 'vocab', 'shop', 'mystery', 'shop',
-  'vocab', 'vocab', 'grammar', 'brick', 'minigame', 'vocab', 'star', 'vocab', 'vocab', 'minigame',
+  'item_shop', 'shop', 'minigame', 'vocab', 'vocab', 'penalty', 'star', 'grammar', 'penalty', 'brick',
+  'vocab', 'bonus', 'shop', 'mystery', 'bonus', 'mystery', 'vocab', 'shop', 'mystery', 'shop',
+  'star', 'item_shop', 'grammar', 'brick', 'minigame', 'vocab', 'star', 'vocab', 'vocab', 'minigame',
   'grammar', 'penalty',
 ]
 
@@ -177,12 +178,12 @@ const SUMMIT_NODES: BoardNode[] = [
 ]
 
 const SUMMIT_TILES: TileType[] = [
-  'start', 'vocab', 'vocab', 'penalty', 'swap', 'minigame', 'star', 'grammar', 'mystery', 'penalty',
-  'brick', 'shop', 'brick', 'shop', 'minigame', 'grammar', 'star', 'vocab', 'vocab', 'vocab',
-  'mystery', 'star', 'grammar', 'grammar', 'vocab', 'item_shop', 'vocab', 'vocab', 'mystery', 'grammar',
+  'start', 'vocab', 'bonus', 'mystery', 'swap', 'minigame', 'star', 'grammar', 'mystery', 'penalty',
+  'brick', 'shop', 'brick', 'shop', 'minigame', 'grammar', 'star', 'item_shop', 'bonus', 'vocab',
+  'mystery', 'grammar', 'grammar', 'grammar', 'vocab', 'item_shop', 'vocab', 'vocab', 'mystery', 'star',
   'penalty', 'mystery', 'grammar', 'shop', 'bonus', 'item_shop', 'grammar', 'penalty', 'minigame', 'shop',
-  'vocab', 'minigame', 'bonus', 'star', 'vocab', 'bonus', 'vocab', 'swap', 'grammar', 'bonus',
-  'vocab', 'penalty', 'bonus', 'item_shop', 'brick',
+  'vocab', 'minigame', 'bonus', 'star', 'vocab', 'bonus', 'vocab', 'swap', 'grammar', 'vocab',
+  'vocab', 'penalty', 'bonus', 'vocab', 'penalty',
 ]
 
 export interface BoardTheme {
@@ -248,7 +249,7 @@ export const BOARDS: BoardDef[] = [
     nodes: SUMMIT_NODES,
     tiles: SUMMIT_TILES,
     theme: { stageTop: 0x0a0f1e, stageBottom: 0x222a44, cell: 0x16203a, cellLine: 0x3a4a6a, frame: 0xbfe3ff, glow: 0x9fd4ff },
-    logo: { cx: 6, cy: 6, w: 440, h: 100, compact: true },
+    logo: { cx: 6, cy: 6, w: 440, h: 88, compact: true },
     decor: [
       { col: 4, row: 1, emoji: '❄️' }, { col: 8, row: 1, emoji: '🏔️' }, { col: 6, row: 3, emoji: '⛰️' },
       { col: 9, row: 3, emoji: '❄️' }, { col: 1, row: 3, emoji: '🌲' }, { col: 1, row: 5, emoji: '🌲' },

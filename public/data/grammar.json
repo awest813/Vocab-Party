@@ -575,6 +575,726 @@
       "correct": 1,
       "explanation": "The subjunctive mood expresses wishes, hypotheticals, and contrary-to-fact conditions.",
       "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'My sister ___ to school every day.'?",
+      "answers": [
+        "walking",
+        "walks",
+        "are walk",
+        "walk"
+      ],
+      "correct": 1,
+      "explanation": "The singular subject 'sister' needs the singular verb 'walks'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The birds ___ singing outside my window.'?",
+      "answers": [
+        "was",
+        "is",
+        "be",
+        "are"
+      ],
+      "correct": 3,
+      "explanation": "The plural subject 'birds' needs the plural verb 'are'.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses 'I' correctly?",
+      "answers": [
+        "Mom and I baked cookies.",
+        "Mom and myself baked cookies.",
+        "Mom and me baked cookies.",
+        "Me and Mom baked cookies."
+      ],
+      "correct": 0,
+      "explanation": "Use 'I' when you are part of the subject doing the action.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses 'me' correctly?",
+      "answers": [
+        "Grandpa gave the puzzle to my brother and me.",
+        "Grandpa gave the puzzle to my brother and I.",
+        "Grandpa gave the puzzle to me and I.",
+        "Grandpa gave the puzzle to I and my brother."
+      ],
+      "correct": 0,
+      "explanation": "Use 'me' when you receive the action. Try it alone: 'Grandpa gave the puzzle to me.'",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'swim'?",
+      "answers": [
+        "Swam",
+        "Swum",
+        "Swimed",
+        "Swimmed"
+      ],
+      "correct": 0,
+      "explanation": "'Swim' is irregular: today I swim, yesterday I swam.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'catch'?",
+      "answers": [
+        "Cought",
+        "Catched",
+        "Catches",
+        "Caught"
+      ],
+      "correct": 3,
+      "explanation": "'Catch' is irregular: its past tense is 'caught'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'mouse'?",
+      "answers": [
+        "Mices",
+        "Mice",
+        "Meese",
+        "Mouses"
+      ],
+      "correct": 1,
+      "explanation": "'Mouse' has an irregular plural: 'mice'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'box'?",
+      "answers": [
+        "Box's",
+        "Boxen",
+        "Boxes",
+        "Boxs"
+      ],
+      "correct": 2,
+      "explanation": "Nouns ending in -x add -es to become plural.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'baby'?",
+      "answers": [
+        "Babys",
+        "Baby's",
+        "Babies",
+        "Babyes"
+      ],
+      "correct": 2,
+      "explanation": "When a noun ends in a consonant + y, change the y to i and add -es.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses capital letters correctly?",
+      "answers": [
+        "On Friday, Lena visited Chicago.",
+        "on Friday, Lena visited Chicago.",
+        "On friday, Lena visited Chicago.",
+        "On Friday, lena visited chicago."
+      ],
+      "correct": 0,
+      "explanation": "Capitalize the first word of a sentence, days of the week, names of people, and names of places.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The kids hung up ___ jackets.'?",
+      "answers": [
+        "they're",
+        "their",
+        "there",
+        "there's"
+      ],
+      "correct": 1,
+      "explanation": "'Their' shows that something belongs to them.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: '___ raining, so bring an umbrella.'?",
+      "answers": [
+        "Its",
+        "It's",
+        "Its'",
+        "It"
+      ],
+      "correct": 1,
+      "explanation": "'It's' is short for 'it is': 'It is raining.'",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The choir sang ___ at the concert.'?",
+      "answers": [
+        "beautifuller",
+        "beautiful",
+        "beauty",
+        "beautifully"
+      ],
+      "correct": 3,
+      "explanation": "An adverb like 'beautifully' describes how the choir sang.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'An elephant is ___ than a mouse.'?",
+      "answers": [
+        "biggest",
+        "bigly",
+        "bigger",
+        "more big"
+      ],
+      "correct": 2,
+      "explanation": "Use the -er form to compare two things: 'bigger than'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'That was the ___ day of the whole summer.'?",
+      "answers": [
+        "hottest",
+        "hotest",
+        "most hot",
+        "hotter"
+      ],
+      "correct": 0,
+      "explanation": "Use the -est form to compare three or more things. Double the t: 'hottest'.",
+      "level": 1
+    },
+    {
+      "question": "Which shows that the bike belongs to Jake?",
+      "answers": [
+        "Jakes' bike",
+        "Jake bike's",
+        "Jakes bike",
+        "Jake's bike"
+      ],
+      "correct": 3,
+      "explanation": "Add an apostrophe and s to a singular name to show ownership: 'Jake's'.",
+      "level": 1
+    },
+    {
+      "question": "Which group of words is a complete sentence?",
+      "answers": [
+        "The puppy in the yard.",
+        "Because the puppy was fast.",
+        "The puppy chased the ball.",
+        "Chased the ball."
+      ],
+      "correct": 2,
+      "explanation": "A complete sentence has a subject and a verb and expresses a complete thought.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'We ___ to the zoo yesterday.'?",
+      "answers": [
+        "goes",
+        "going",
+        "go",
+        "went"
+      ],
+      "correct": 3,
+      "explanation": "'Yesterday' tells us the action happened in the past, so use 'went'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'tooth'?",
+      "answers": [
+        "Teeth",
+        "Tooths",
+        "Toothes",
+        "Teeths"
+      ],
+      "correct": 0,
+      "explanation": "'Tooth' has an irregular plural: 'teeth'.",
+      "level": 1
+    },
+    {
+      "question": "Which pronoun correctly completes: 'Sara lost ___ backpack.'?",
+      "answers": [
+        "her",
+        "hers",
+        "herself",
+        "she"
+      ],
+      "correct": 0,
+      "explanation": "'Her' is the possessive pronoun that goes before a noun.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Each of the students ___ a pencil.'?",
+      "answers": [
+        "were having",
+        "have",
+        "has",
+        "are having"
+      ],
+      "correct": 2,
+      "explanation": "'Each' is singular, so it takes the singular verb 'has'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Everyone in the class ___ excited about the trip.'?",
+      "answers": [
+        "were",
+        "are",
+        "be",
+        "is"
+      ],
+      "correct": 3,
+      "explanation": "'Everyone' is singular, so it takes 'is'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: '___ left the lights on in the garage?'",
+      "answers": [
+        "Whom",
+        "Whomever",
+        "Who",
+        "Whose"
+      ],
+      "correct": 2,
+      "explanation": "'Who' is the subject of the verb 'left'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The girl ___ won the spelling bee is my cousin.'?",
+      "answers": [
+        "whose",
+        "which",
+        "who",
+        "whom"
+      ],
+      "correct": 2,
+      "explanation": "'Who' is the subject of 'won' and refers to a person.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses pronouns correctly as subjects?",
+      "answers": [
+        "She and I are on the same team.",
+        "Her and I are on the same team.",
+        "Her and me are on the same team.",
+        "Me and her are on the same team."
+      ],
+      "correct": 0,
+      "explanation": "Subject pronouns are 'she' and 'I'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence keeps the verb tense consistent?",
+      "answers": [
+        "Yesterday I will walk to the park and played soccer.",
+        "Yesterday I walked to the park and played soccer.",
+        "Yesterday I walked to the park and play soccer.",
+        "Yesterday I walk to the park and played soccer."
+      ],
+      "correct": 1,
+      "explanation": "Both actions happened yesterday, so both verbs should be in the past tense.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is in the future tense?",
+      "answers": [
+        "We visited Grandma last week.",
+        "We will visit Grandma next week.",
+        "We visit Grandma every week.",
+        "We are visiting Grandma right now."
+      ],
+      "correct": 1,
+      "explanation": "The helping verb 'will' shows an action that will happen in the future.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'She has ___ three stories this month.'?",
+      "answers": [
+        "writed",
+        "writing",
+        "wrote",
+        "written"
+      ],
+      "correct": 3,
+      "explanation": "After 'has', use the past participle: 'has written'.",
+      "level": 2
+    },
+    {
+      "question": "Which shows that the toys belong to more than one dog?",
+      "answers": [
+        "the dogs's toys",
+        "the dogs' toys",
+        "the dogs toys",
+        "the dog's toys"
+      ],
+      "correct": 1,
+      "explanation": "For a plural noun ending in s, add just an apostrophe after the s: 'dogs''.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence spells the contraction 'do not' correctly?",
+      "answers": [
+        "They do'nt want to leave yet.",
+        "They dont' want to leave yet.",
+        "They dont want to leave yet.",
+        "They don't want to leave yet."
+      ],
+      "correct": 3,
+      "explanation": "In a contraction, the apostrophe replaces the missing letter: do not becomes don't.",
+      "level": 2
+    },
+    {
+      "question": "Which correctly shows the coats belonging to the children?",
+      "answers": [
+        "the childrens coats",
+        "the children's coats",
+        "the childs' coats",
+        "the childrens' coats"
+      ],
+      "correct": 1,
+      "explanation": "'Children' is already plural and does not end in s, so add an apostrophe and s.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses commas correctly in a list?",
+      "answers": [
+        "We, packed sandwiches, apples and juice.",
+        "We packed sandwiches apples, and, juice.",
+        "We packed, sandwiches apples and juice.",
+        "We packed sandwiches, apples, and juice."
+      ],
+      "correct": 3,
+      "explanation": "Use commas to separate three or more items in a list.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses commas correctly in a date?",
+      "answers": [
+        "The fair opens on June 5, 2026.",
+        "The fair opens, on June 5 2026.",
+        "The fair opens on June, 5 2026.",
+        "The fair opens on, June 5 2026."
+      ],
+      "correct": 0,
+      "explanation": "Put a comma between the day and the year.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence fixes this run-on: 'The bell rang the students went home.'?",
+      "answers": [
+        "The bell rang, so the students went home.",
+        "The bell rang the students, went home.",
+        "The bell, rang the students went home.",
+        "The bell rang the students went, home."
+      ],
+      "correct": 0,
+      "explanation": "Join two complete thoughts with a comma and a conjunction like 'so'.",
+      "level": 2
+    },
+    {
+      "question": "Which is a sentence fragment?",
+      "answers": [
+        "The movie ended late.",
+        "The movie was funny.",
+        "After the movie ended.",
+        "We left after the movie."
+      ],
+      "correct": 2,
+      "explanation": "'After the movie ended' does not express a complete thought, so it is a fragment.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses 'well' correctly?",
+      "answers": [
+        "She plays the piano goodly.",
+        "She plays the piano weller.",
+        "She plays the piano well.",
+        "She plays the piano good."
+      ],
+      "correct": 2,
+      "explanation": "'Well' is an adverb that tells how she plays.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'This test was ___ than the last one.'?",
+      "answers": [
+        "more harder",
+        "harder",
+        "most hard",
+        "hardest"
+      ],
+      "correct": 1,
+      "explanation": "Use 'harder' to compare two things. Never use 'more' with an -er word.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'That was the ___ storm we have ever had.'?",
+      "answers": [
+        "worse",
+        "baddest",
+        "worst",
+        "most bad"
+      ],
+      "correct": 2,
+      "explanation": "'Bad' is irregular: bad, worse, worst. Use 'worst' for the most extreme.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: '___ going to the beach on Saturday.'?",
+      "answers": [
+        "Theirs",
+        "There",
+        "They're",
+        "Their"
+      ],
+      "correct": 2,
+      "explanation": "'They're' is short for 'they are': 'They are going to the beach.'",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses 'it's' correctly?",
+      "answers": [
+        "The bird flapped it's wings.",
+        "It's time to go home.",
+        "The tree dropped it's leaves.",
+        "The team lost it's first game."
+      ],
+      "correct": 1,
+      "explanation": "'It's' means 'it is'. 'It is time to go home' makes sense.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The new rule had a big ___ on recess.'?",
+      "answers": [
+        "affection",
+        "effect",
+        "effective",
+        "affect"
+      ],
+      "correct": 1,
+      "explanation": "'Effect' is usually a noun meaning a result.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'There are ___ students in class today because of the flu.'?",
+      "answers": [
+        "lesser",
+        "less",
+        "fewest",
+        "fewer"
+      ],
+      "correct": 3,
+      "explanation": "Use 'fewer' for things you can count, like students.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Please use ___ water when you brush your teeth.'?",
+      "answers": [
+        "few",
+        "less",
+        "fewer",
+        "lesser"
+      ],
+      "correct": 1,
+      "explanation": "Use 'less' for things you measure but cannot count one by one, like water.",
+      "level": 2
+    },
+    {
+      "question": "What is the plural of 'leaf'?",
+      "answers": [
+        "Leafes",
+        "Leafs",
+        "Leaves",
+        "Leavs"
+      ],
+      "correct": 2,
+      "explanation": "Many nouns ending in -f change the f to v and add -es: leaf becomes leaves.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence capitalizes the book title correctly?",
+      "answers": [
+        "We read charlotte's Web in class.",
+        "We read charlotte's web in class.",
+        "We read Charlotte's Web in class.",
+        "We read Charlotte's web in class."
+      ],
+      "correct": 2,
+      "explanation": "Capitalize the important words in a title.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Either the cats or the dog ___ knocked over the vase.'?",
+      "answers": [
+        "were",
+        "have",
+        "are",
+        "has"
+      ],
+      "correct": 3,
+      "explanation": "With 'either...or', the verb agrees with the closer subject, 'dog', which is singular.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The list of chores ___ taped to the fridge.'?",
+      "answers": [
+        "is",
+        "were",
+        "are",
+        "have been"
+      ],
+      "correct": 0,
+      "explanation": "The subject is 'list' (not 'chores'), so the verb is singular.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The coach, ___ everyone admires, retired last year.'?",
+      "answers": [
+        "whose",
+        "which",
+        "whom",
+        "who"
+      ],
+      "correct": 2,
+      "explanation": "'Whom' is the object of 'admires': everyone admires him, so use whom.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses pronouns correctly as objects?",
+      "answers": [
+        "The coach chose Maria and me for the relay.",
+        "The coach chose Maria and I for the relay.",
+        "The coach chose I and Maria for the relay.",
+        "The coach chose Maria and myself for the relay."
+      ],
+      "correct": 0,
+      "explanation": "'Me' is the object of 'chose'. Try it alone: 'The coach chose me.'",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'By the time we arrived, the movie ___ already started.'?",
+      "answers": [
+        "having",
+        "has",
+        "have",
+        "had"
+      ],
+      "correct": 3,
+      "explanation": "The past perfect 'had started' shows the movie started before we arrived.",
+      "level": 3
+    },
+    {
+      "question": "Which words correctly complete: 'If it rains tomorrow, we ___ the picnic.'?",
+      "answers": [
+        "will cancel",
+        "canceling",
+        "would have canceled",
+        "canceled"
+      ],
+      "correct": 0,
+      "explanation": "'Tomorrow' points to the future, so use 'will cancel'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The soup smells ___.'?",
+      "answers": [
+        "deliciousness",
+        "delicious",
+        "more deliciously",
+        "deliciously"
+      ],
+      "correct": 1,
+      "explanation": "After a linking verb like 'smells', use an adjective to describe the subject.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses apostrophes correctly?",
+      "answers": [
+        "The girls' locker room is down the hall.",
+        "The girls locker' room is down the hall.",
+        "The girl's' locker room is down the hall.",
+        "The girls's locker room is down the hall."
+      ],
+      "correct": 0,
+      "explanation": "For a plural noun ending in s, add only an apostrophe: girls'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses commas correctly?",
+      "answers": [
+        "My, brother who lives in Texas is a pilot.",
+        "My brother, who lives in Texas is a pilot.",
+        "My brother who lives in Texas, is a pilot.",
+        "My brother, who lives in Texas, is a pilot."
+      ],
+      "correct": 3,
+      "explanation": "Extra information in the middle of a sentence needs a comma on both sides.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence is a comma splice?",
+      "answers": [
+        "I finished my homework, and I went outside.",
+        "I finished my homework, I went outside.",
+        "After I finished my homework, I went outside.",
+        "I finished my homework; I went outside."
+      ],
+      "correct": 1,
+      "explanation": "A comma splice joins two complete sentences with only a comma.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids a double comparison?",
+      "answers": [
+        "Jada is more carefuller than her brother.",
+        "Jada is more careful than her brother.",
+        "Jada is most carefullest of all.",
+        "Jada is more carefulest than her brother."
+      ],
+      "correct": 1,
+      "explanation": "Use either 'more' or '-er', never both.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'less' correctly?",
+      "answers": [
+        "We need less chairs for the party.",
+        "I have less books than you.",
+        "I have less homework tonight than last night.",
+        "There were less people at the game."
+      ],
+      "correct": 2,
+      "explanation": "'Homework' cannot be counted one by one, so 'less' is correct. Books, people, and chairs need 'fewer'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'affect' and 'effect' correctly?",
+      "answers": [
+        "Cold weather can affect your mood, but sunshine has a good affect.",
+        "Cold weather can effect your mood, but sunshine has a good affect.",
+        "Cold weather can effect your mood, but sunshine has a good effect.",
+        "Cold weather can affect your mood, but sunshine has a good effect."
+      ],
+      "correct": 3,
+      "explanation": "'Affect' is usually a verb (to influence); 'effect' is usually a noun (a result).",
+      "level": 3
+    },
+    {
+      "question": "What is the plural of 'mother-in-law'?",
+      "answers": [
+        "Mothers-in-laws",
+        "Mother-ins-law",
+        "Mother-in-laws",
+        "Mothers-in-law"
+      ],
+      "correct": 3,
+      "explanation": "In a hyphenated compound, make the main noun plural: mothers-in-law.",
+      "level": 3
+    },
+    {
+      "question": "Which correctly fixes the run-on 'Lena loves to paint she paints every weekend.'?",
+      "answers": [
+        "Lena loves to paint; she paints every weekend.",
+        "Lena loves to paint she, paints every weekend.",
+        "Lena loves to paint, she paints every weekend.",
+        "Lena loves; to paint she paints every weekend."
+      ],
+      "correct": 0,
+      "explanation": "A semicolon can join two closely related complete sentences.",
+      "level": 3
     }
   ],
   "minigame_comma": [
@@ -731,6 +1451,292 @@
         "The recipe needs flour sugar butter and eggs."
       ],
       "correct_index": 2
+    },
+    {
+      "sentence": "Wow that was a great movie.",
+      "correct": "Wow, that was a great movie.",
+      "choices": [
+        "Wow that was a great, movie.",
+        "Wow, that was a great movie.",
+        "Wow that, was a great movie.",
+        "Wow that was, a great movie."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "No I have not finished my homework.",
+      "correct": "No, I have not finished my homework.",
+      "choices": [
+        "No, I have not finished my homework.",
+        "No I have, not finished my homework.",
+        "No I have not finished, my homework.",
+        "No I, have not finished my homework."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "Jordan can you help me carry these boxes?",
+      "correct": "Jordan, can you help me carry these boxes?",
+      "choices": [
+        "Jordan can you help me, carry these boxes?",
+        "Jordan can, you help me carry these boxes?",
+        "Jordan, can you help me carry these boxes?",
+        "Jordan can you help me carry these boxes?"
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "We bought apples oranges and grapes at the market.",
+      "correct": "We bought apples, oranges, and grapes at the market.",
+      "choices": [
+        "We bought apples, oranges, and grapes at the market.",
+        "We, bought apples, oranges and grapes at the market.",
+        "We bought apples oranges and grapes at the market.",
+        "We bought, apples oranges, and grapes at the market."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "My grandmother was born on July 4 1960.",
+      "correct": "My grandmother was born on July 4, 1960.",
+      "choices": [
+        "My grandmother was born on July, 4 1960.",
+        "My grandmother was born, on July 4 1960.",
+        "My grandmother was born on July 4, 1960.",
+        "My grandmother, was born on July 4 1960."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "Our cousins live in Portland Oregon.",
+      "correct": "Our cousins live in Portland, Oregon.",
+      "choices": [
+        "Our cousins live in Portland, Oregon.",
+        "Our cousins live in Portland Oregon.",
+        "Our cousins, live in Portland Oregon.",
+        "Our cousins live, in Portland Oregon."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "When the bell rang the students lined up.",
+      "correct": "When the bell rang, the students lined up.",
+      "choices": [
+        "When the bell rang the students lined up.",
+        "When the bell rang, the students lined up.",
+        "When the bell rang the students, lined up.",
+        "When, the bell rang the students lined up."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "I like to draw but my brother likes to paint.",
+      "correct": "I like to draw, but my brother likes to paint.",
+      "choices": [
+        "I like, to draw but my brother likes to paint.",
+        "I like to draw but, my brother likes to paint.",
+        "I like to draw, but my brother likes to paint.",
+        "I like to draw but my brother, likes to paint."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "Mr. Lopez our coach blew the whistle.",
+      "correct": "Mr. Lopez, our coach, blew the whistle.",
+      "choices": [
+        "Mr. Lopez our coach blew the whistle.",
+        "Mr. Lopez our, coach blew the whistle.",
+        "Mr. Lopez, our coach, blew the whistle.",
+        "Mr. Lopez, our coach blew the whistle."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "The fluffy playful kitten chased the yarn.",
+      "correct": "The fluffy, playful kitten chased the yarn.",
+      "choices": [
+        "The fluffy, playful kitten chased the yarn.",
+        "The fluffy playful kitten chased the yarn.",
+        "The, fluffy playful kitten chased the yarn.",
+        "The fluffy playful, kitten chased the yarn."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "After we finished lunch we went to the library.",
+      "correct": "After we finished lunch, we went to the library.",
+      "choices": [
+        "After, we finished lunch we went to the library.",
+        "After we finished lunch we went to the library.",
+        "After we finished, lunch we went to the library.",
+        "After we finished lunch, we went to the library."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "Well I think we should try again.",
+      "correct": "Well, I think we should try again.",
+      "choices": [
+        "Well I think, we should try again.",
+        "Well I think we should, try again.",
+        "Well I, think we should try again.",
+        "Well, I think we should try again."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "Mom said \"Please clean your room.\"",
+      "correct": "Mom said, \"Please clean your room.\"",
+      "choices": [
+        "Mom said \"Please, clean your room.\"",
+        "Mom, said \"Please clean your room.\"",
+        "Mom said \"Please clean, your room.\"",
+        "Mom said, \"Please clean your room.\""
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "If you study hard you will do well on the test.",
+      "correct": "If you study hard, you will do well on the test.",
+      "choices": [
+        "If you study hard you will, do well on the test.",
+        "If you study hard, you will do well on the test.",
+        "If you study hard you will do well on the test.",
+        "If, you study hard you will do well on the test."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "Of course I will save you a seat.",
+      "correct": "Of course, I will save you a seat.",
+      "choices": [
+        "Of course I, will save you a seat.",
+        "Of course, I will save you a seat.",
+        "Of course I will, save you a seat.",
+        "Of, course I will save you a seat."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "The movie was long but it was exciting.",
+      "correct": "The movie was long, but it was exciting.",
+      "choices": [
+        "The movie was long but, it was exciting.",
+        "The movie was, long but it was exciting.",
+        "The movie was long, but it was exciting.",
+        "The movie, was long but it was exciting."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "Chicago which is in Illinois has tall buildings.",
+      "correct": "Chicago, which is in Illinois, has tall buildings.",
+      "choices": [
+        "Chicago which is in Illinois has tall buildings.",
+        "Chicago, which is in Illinois has tall buildings.",
+        "Chicago, which is in Illinois, has tall buildings.",
+        "Chicago which is in Illinois, has tall buildings."
+      ],
+      "correct_index": 2
+    },
+    {
+      "sentence": "Thank you Grandma for the sweater.",
+      "correct": "Thank you, Grandma, for the sweater.",
+      "choices": [
+        "Thank you Grandma for the sweater.",
+        "Thank, you Grandma for the sweater.",
+        "Thank you Grandma for, the sweater.",
+        "Thank you, Grandma, for the sweater."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "I had eggs toast and juice for breakfast.",
+      "correct": "I had eggs, toast, and juice for breakfast.",
+      "choices": [
+        "I had eggs, toast, and juice for breakfast.",
+        "I, had eggs toast, and juice for breakfast.",
+        "I had eggs toast and juice for breakfast.",
+        "I had, eggs toast and juice for breakfast."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "However the game was canceled because of rain.",
+      "correct": "However, the game was canceled because of rain.",
+      "choices": [
+        "However the game was canceled because of rain.",
+        "However the game, was canceled because of rain.",
+        "However the game was canceled, because, of rain.",
+        "However, the game was canceled because of rain."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "Because the road was icy we drove slowly.",
+      "correct": "Because the road was icy, we drove slowly.",
+      "choices": [
+        "Because the road was icy, we drove slowly.",
+        "Because, the road was icy we drove slowly.",
+        "Because the road was icy we drove slowly.",
+        "Because the road, was icy we drove slowly."
+      ],
+      "correct_index": 0
+    },
+    {
+      "sentence": "Lily plays the flute and Omar plays the drums.",
+      "correct": "Lily plays the flute, and Omar plays the drums.",
+      "choices": [
+        "Lily, plays the flute and Omar plays the drums.",
+        "Lily plays the flute, and Omar plays the drums.",
+        "Lily plays the flute and, Omar plays the drums.",
+        "Lily plays, the flute and Omar plays the drums."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "On December 25 2025 it snowed all day.",
+      "correct": "On December 25, 2025, it snowed all day.",
+      "choices": [
+        "On, December 25 2025 it snowed, all day.",
+        "On December, 25 2025 it snowed all day.",
+        "On December 25 2025 it snowed all day.",
+        "On December 25, 2025, it snowed all day."
+      ],
+      "correct_index": 3
+    },
+    {
+      "sentence": "The old creaky stairs groaned under our feet.",
+      "correct": "The old, creaky stairs groaned under our feet.",
+      "choices": [
+        "The, old creaky stairs groaned under our feet.",
+        "The old, creaky stairs groaned under our feet.",
+        "The old creaky, stairs groaned under our feet.",
+        "The old creaky stairs, groaned under our feet."
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "Oh no I forgot my lunch!",
+      "correct": "Oh no, I forgot my lunch!",
+      "choices": [
+        "Oh no I forgot, my lunch!",
+        "Oh no, I forgot my lunch!",
+        "Oh no I forgot my, lunch!",
+        "Oh no I, forgot my lunch!"
+      ],
+      "correct_index": 1
+    },
+    {
+      "sentence": "Our science fair project which took weeks won first place.",
+      "correct": "Our science fair project, which took weeks, won first place.",
+      "choices": [
+        "Our science fair project, which took weeks, won first place.",
+        "Our science, fair project which took weeks won first place.",
+        "Our science fair project which took weeks won first place.",
+        "Our science fair project, which took weeks won first place."
+      ],
+      "correct_index": 0
     }
   ],
   "minigame_pos": [
@@ -1177,6 +2183,406 @@
         "Running to class, it was late already."
       ],
       "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'there' correctly?",
+      "choices": [
+        "Put your shoes over there by the door.",
+        "Put your shoes over theirs by the door.",
+        "Put your shoes over they're by the door.",
+        "Put your shoes over their by the door."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'their' correctly?",
+      "choices": [
+        "The players cheered for there's coach.",
+        "The players cheered for there coach.",
+        "The players cheered for their coach.",
+        "The players cheered for they're coach."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence uses 'they're' correctly?",
+      "choices": [
+        "Their bringing snacks to the game.",
+        "There bringing snacks to the game.",
+        "They're bringing snacks to the game.",
+        "Theirs bringing snacks to the game."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence uses 'its' correctly?",
+      "choices": [
+        "The bird built it is nest in the oak tree.",
+        "The bird built its nest in the oak tree.",
+        "The bird built its' nest in the oak tree.",
+        "The bird built it's nest in the oak tree."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses 'it's' correctly?",
+      "choices": [
+        "It's too cold to swim today.",
+        "Its' too cold to swim today.",
+        "Its too cold to swim today.",
+        "It too cold to swim today."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'effect' correctly?",
+      "choices": [
+        "The movie's special affect were amazing.",
+        "The movie's special affects were amazing.",
+        "The movie's special effecting were amazing.",
+        "The movie's special effects were amazing."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses 'less' correctly?",
+      "choices": [
+        "This bottle holds lesser juice than that one.",
+        "This bottle holds fewer juice than that one.",
+        "This bottle holds less juice than that one.",
+        "This bottle holds few juice than that one."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence uses 'who' correctly to describe a person?",
+      "choices": [
+        "The man who fixed our sink was friendly.",
+        "The man which fixed our sink was friendly.",
+        "The man whom fixed our sink was friendly.",
+        "The man whose fixed our sink was friendly."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'whom' correctly after a preposition?",
+      "choices": [
+        "With who are you going to the dance?",
+        "With which are you going to the dance?",
+        "With whose are you going to the dance?",
+        "With whom are you going to the dance?"
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses 'I' correctly as part of the subject?",
+      "choices": [
+        "Jamal and me finished the project early.",
+        "Jamal and I finished the project early.",
+        "Me and Jamal finished the project early.",
+        "Jamal and myself finished the project early."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses 'me' correctly as an object?",
+      "choices": [
+        "The teacher handed the awards to Priya and I.",
+        "The teacher handed the awards to Priya and me.",
+        "The teacher handed the awards to Priya and myself.",
+        "The teacher handed the awards to I and Priya."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses the past tense of 'eat' correctly?",
+      "choices": [
+        "Last night we eat pasta for dinner.",
+        "Last night we eated pasta for dinner.",
+        "Last night we eaten pasta for dinner.",
+        "Last night we ate pasta for dinner."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses the past tense of 'drink' correctly?",
+      "choices": [
+        "Yesterday Leo drunk two glasses of water.",
+        "Yesterday Leo drinked two glasses of water.",
+        "Yesterday Leo drank two glasses of water.",
+        "Yesterday Leo drinks two glasses of water."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence keeps the tense the same throughout?",
+      "choices": [
+        "She will open the box and found a puppy.",
+        "She opened the box and finds a puppy.",
+        "She opens the box and found a puppy.",
+        "She opened the box and found a puppy."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses the present perfect tense correctly?",
+      "choices": [
+        "They have already finish their lunch.",
+        "They have already finishing their lunch.",
+        "They have already finished their lunch.",
+        "They has already finished their lunch."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence uses the future tense correctly?",
+      "choices": [
+        "Next summer, my family traveled to Maine.",
+        "Next summer, my family will traveled to Maine.",
+        "Next summer, my family will travel to Maine.",
+        "Next summer, my family will travels to Maine."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence correctly shows something owned by one student?",
+      "choices": [
+        "The students backpack was left on the bus.",
+        "The student's backpack was left on the bus.",
+        "The students' backpack was left on the bus.",
+        "The student's' backpack was left on the bus."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence correctly shows something shared by several teachers?",
+      "choices": [
+        "The teacher'ss lounge is on the second floor.",
+        "The teachers's lounge is on the second floor.",
+        "The teacher's' lounge is on the second floor.",
+        "The teachers' lounge is on the second floor."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence spells the contraction correctly?",
+      "choices": [
+        "We cann't find the remote anywhere.",
+        "We ca'nt find the remote anywhere.",
+        "We cant' find the remote anywhere.",
+        "We can't find the remote anywhere."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence writes the plural without an extra apostrophe?",
+      "choices": [
+        "The bananas are on sale today.",
+        "The banana's are on sale today.",
+        "The bananas's are on sale today.",
+        "The bananas' are on sale today."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence separates the list items with commas correctly?",
+      "choices": [
+        "Our flag is red, white, and blue.",
+        "Our flag, is red white and blue.",
+        "Our flag is red white, and blue.",
+        "Our flag is, red, white, and blue."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses a comma after an introductory word correctly?",
+      "choices": [
+        "Finally the, bus arrived at the museum.",
+        "Finally, the bus arrived at the museum.",
+        "Finally the bus arrived, at the museum.",
+        "Finally the bus, arrived at the museum."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence punctuates the quotation correctly?",
+      "choices": [
+        "Dad said \"Dinner is ready\",",
+        "Dad said, \"Dinner is ready.\"",
+        "Dad said \"Dinner, is ready.\"",
+        "Dad, said \"Dinner is ready.\""
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses a comma correctly between a city and a state?",
+      "choices": [
+        "My cousin lives, in Austin Texas.",
+        "My cousin lives in Austin Texas.",
+        "My cousin lives in Austin, Texas.",
+        "My cousin, lives in Austin Texas."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence capitalizes the day and the holiday correctly?",
+      "choices": [
+        "We have no school on monday because of Labor Day.",
+        "We have no school on Monday because of labor Day.",
+        "We have no school on monday because of labor day.",
+        "We have no school on Monday because of Labor Day."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence capitalizes a person's title correctly?",
+      "choices": [
+        "yesterday, Dr. Patel checked my ears.",
+        "Yesterday, Dr. patel checked my ears.",
+        "Yesterday, dr. Patel checked my ears.",
+        "Yesterday, Dr. Patel checked my ears."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence capitalizes the country and languages correctly?",
+      "choices": [
+        "My friend from Mexico speaks Spanish and English.",
+        "My friend from Mexico speaks spanish and English.",
+        "My friend from mexico speaks Spanish and English.",
+        "My friend from mexico speaks spanish and english."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which choice is a complete sentence?",
+      "choices": [
+        "The kittens in a basket.",
+        "Sleeping in a basket.",
+        "The kittens slept in a basket.",
+        "When the kittens slept."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which choice correctly fixes the run-on sentence?",
+      "choices": [
+        "The sun set, the sky turned orange.",
+        "The sun set. The sky turned orange.",
+        "The sun, set the sky turned orange.",
+        "The sun set the sky turned orange."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence correctly joins two ideas with a conjunction?",
+      "choices": [
+        "I was hungry, so I made a sandwich.",
+        "I was hungry so, I made a sandwich.",
+        "I was hungry, I made a sandwich.",
+        "I was, hungry so I made a sandwich."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses an adverb correctly?",
+      "choices": [
+        "Tara answered the question correctly.",
+        "Tara answered the question corrected.",
+        "Tara answered the question correctness.",
+        "Tara answered the question correct."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses 'well' correctly?",
+      "choices": [
+        "You did good on your spelling test.",
+        "You did weller on your spelling test.",
+        "You did goodly on your spelling test.",
+        "You did well on your spelling test."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses an adjective correctly after 'feel'?",
+      "choices": [
+        "I feel sadlier that summer is over.",
+        "I feel sadly that summer is over.",
+        "I feel sadden that summer is over.",
+        "I feel sad that summer is over."
+      ],
+      "correct_index": 3
+    },
+    {
+      "prompt": "Which sentence uses the superlative correctly?",
+      "choices": [
+        "Mount Everest is the tallest mountain in the world.",
+        "Mount Everest is the most tallest mountain in the world.",
+        "Mount Everest is the taller mountain in the world.",
+        "Mount Everest is the tallerest mountain in the world."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence compares two animals correctly?",
+      "choices": [
+        "A cheetah is faster than a lion.",
+        "A cheetah is more fast than a lion.",
+        "A cheetah is fastest than a lion.",
+        "A cheetah is more faster than a lion."
+      ],
+      "correct_index": 0
+    },
+    {
+      "prompt": "Which sentence uses the correct plural of 'goose'?",
+      "choices": [
+        "Three gooses waddled across the road.",
+        "Three geese waddled across the road.",
+        "Three goose's waddled across the road.",
+        "Three geeses waddled across the road."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence spells the plural of 'wolf' correctly?",
+      "choices": [
+        "The wolfs howled at the moon.",
+        "The wolve's howled at the moon.",
+        "The wolves howled at the moon.",
+        "The wolfes howled at the moon."
+      ],
+      "correct_index": 2
+    },
+    {
+      "prompt": "Which sentence uses 'fewer' correctly with things you can count?",
+      "choices": [
+        "There are less cookies in the jar than yesterday.",
+        "There are fewer cookies in the jar than yesterday.",
+        "There are lesser cookies in the jar than yesterday.",
+        "There are fewest cookies in the jar than yesterday."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses the correct verb with 'everyone'?",
+      "choices": [
+        "Everyone on the bus are singing.",
+        "Everyone on the bus was singing.",
+        "Everyone on the bus be singing.",
+        "Everyone on the bus were singing."
+      ],
+      "correct_index": 1
+    },
+    {
+      "prompt": "Which sentence uses 'affect' and 'effect' correctly?",
+      "choices": [
+        "Lack of sleep can effect your grades, and exercise has a good affect on your mood.",
+        "Lack of sleep can effect your grades, and exercise has a good effect on your mood.",
+        "Lack of sleep can affect your grades, and exercise has a good effect on your mood.",
+        "Lack of sleep can affect your grades, and exercise has a good affect on your mood."
+      ],
+      "correct_index": 2
     }
   ]
 }

@@ -192,7 +192,7 @@ export class BattleScene extends Phaser.Scene {
     this.statusText.setText(`${defender.name}'s Choice!`)
 
     if (defender.isCpu) {
-      const choice = cpuBattleChoice(defender.atk, defender.def, defender.evd, defender.cpuLevel)
+      const choice = cpuBattleChoice(defender.atk, defender.def, defender.evd, defender.cpuLevel, this.attackerRoll)
       this.statusText.setText(`${defender.name} (CPU) weighs defend vs evade…`)
       this.time.delayedCall(this.d(900), () => this.resolveDefender(choice))
     } else {

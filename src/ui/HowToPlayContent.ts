@@ -19,7 +19,7 @@ export const HOW_TO_TILES: HowToTile[] = [
   { emoji: '🕹️', label: 'Duel', desc: '1-on-1 minigame — winner steals 6 coins', color: TILE_COLORS.minigame },
   { emoji: '🔄', label: 'Swap', desc: 'Trade board positions with a player', color: TILE_COLORS.swap },
   { emoji: '🏪', label: 'Shop', desc: 'Buy shops to earn rent from rivals', color: TILE_COLORS.shop },
-  { emoji: '🌟', label: 'Star', desc: 'Spend 20 coins for a trophy (+12 score)', color: TILE_COLORS.star },
+  { emoji: '🏆', label: 'Star', desc: 'Spend 20 coins for a trophy (+12 score) — look for the gold glow', color: TILE_COLORS.star },
   { emoji: '🧱', label: 'Brick', desc: 'Collect pieces for build bonuses', color: TILE_COLORS.brick },
   { emoji: '🛍️', label: 'Item Shop', desc: 'Buy power-up cards for your turn', color: TILE_COLORS.item_shop },
 ]
@@ -28,7 +28,7 @@ export const HOW_TO_RULES = [
   '🎭 Setup: pick characters, a board, a word level, and Quick / Classic / Full Map',
   '🎲 Roll to move — or switch to your character\'s special die (D / tap the die)',
   '📖 Vocab & grammar tiles ask questions for points',
-  '🌟 Star & 🏪 shop tiles: choose Buy or Pass when you land',
+  '🏆 Stars: buy one when you land on OR walk past a star tile · 🏪 shops: Buy or Pass',
   '🛍️ Item shops let you pick a card or pass · use ITEMS on your turn',
   '⚔️ Landing on another player starts a battle',
   '🎉 After each round everyone plays a vocab minigame — 1st place wins 10 coins',

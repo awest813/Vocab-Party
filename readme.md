@@ -64,7 +64,7 @@ npm run typecheck
 | 🕹️ Duel | Challenge a rival to a 1-on-1 minigame — winner steals up to 6 coins |
 | 🔄 Swap | Swap board positions with another player |
 | 🏪 Shop | Buy shops to collect rent (Buy/Pass prompt) |
-| 🌟 Star | Spend 20 coins for a trophy (+12 score, Buy/Pass prompt) |
+| 🏆 Star | Spend 20 coins for a trophy (+12 score). You can also buy one when you walk past a star tile; if you can't afford it, you get +2 pity coins |
 | 🧱 Brick | Collect pieces for build bonuses |
 | 🛍️ Item Shop | Pick a power-up card or pass |
 

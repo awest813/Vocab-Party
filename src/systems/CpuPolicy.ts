@@ -40,7 +40,7 @@ type CpuLevelProfile = {
 
 const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
   easy: {
-    boardQuestionCorrectChance: 0.38,
+    boardQuestionCorrectChance: 0.42,
     boardQuestionDelayMsMin: 1800,
     boardQuestionDelayMsMax: 3200,
     rollDelayMsMin: 700,
@@ -72,7 +72,7 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     branchLookahead: 4
   },
   hard: {
-    boardQuestionCorrectChance: 0.78,
+    boardQuestionCorrectChance: 0.76,
     boardQuestionDelayMsMin: 900,
     boardQuestionDelayMsMax: 1700,
     rollDelayMsMin: 350,
@@ -82,7 +82,7 @@ const CPU_BY_LEVEL: Record<CpuLevel, CpuLevelProfile> = {
     shopBuyChance: 0.88,
     starBuyThreshold: 0.9,
     coinReserve: 16,
-    preferredItems: ['golden_key', 'double_score', 'shield', 'dash', 'poison_dart', 'swap', 'warp'],
+    preferredItems: ['double_score', 'shield', 'golden_key', 'dash', 'poison_dart', 'swap', 'warp'],
     roundBonus: 0.02,
     smartChance: 0.94,
     branchLookahead: 6
@@ -97,10 +97,17 @@ export function cpuPolicyForLevel(level: CpuLevel | undefined): CpuLevelProfile 
  * Returns the effective question correct chance for a CPU at a given round.
  * Caps at 0.95 to keep some challenge.
  */
-export function cpuEffectiveChance(level: CpuLevel | undefined, round: number): number {
-  const base = cpuPolicyForLevel(level).boardQuestionCorrectChance
-  const bonus = cpuPolicyForLevel(level).roundBonus * (round - 1)
-  return Math.min(0.95, base + bonus)
+const ACCURACY_CAP: Record<CpuLevel, number> = { easy: 0.55, normal: 0.75, hard: 0.88 }
+
+/**
+ * Effective question accuracy: CPUs warm up a little over the game, based on progress through
+ * the party (not raw rounds), and each level has its own ceiling so levels never converge.
+ */
+export function cpuEffectiveChance(level: CpuLevel | undefined, round: number, totalRounds = 10): number {
+  const lv = level ?? DEFAULT_CPU_LEVEL
+  const base = cpuPolicyForLevel(lv).boardQuestionCorrectChance
+  const progress = Math.min(1, Math.max(0, (round - 1) / Math.max(1, totalRounds - 1)))
+  return Math.min(ACCURACY_CAP[lv], base + 0.1 * progress)
 }
 
 export type CpuPhaserMath = {
@@ -108,11 +115,11 @@ export type CpuPhaserMath = {
   FloatBetween: (min: number, max: number) => number
 }
 
-export function cpuBoardQuestionResolve(math: CpuPhaserMath, level?: CpuLevel, round?: number) {
+export function cpuBoardQuestionResolve(math: CpuPhaserMath, level?: CpuLevel, round?: number, totalRounds?: number) {
   const p = cpuPolicyForLevel(level)
   return {
     delayMs: math.Between(p.boardQuestionDelayMsMin, p.boardQuestionDelayMsMax),
-    correctChance: round != null ? cpuEffectiveChance(level, round) : p.boardQuestionCorrectChance
+    correctChance: round != null ? cpuEffectiveChance(level, round, totalRounds) : p.boardQuestionCorrectChance
   }
 }
 
@@ -140,6 +147,13 @@ export type CpuSelfView = CpuRivalView & {
   shieldActive?: boolean
 }
 
+/** Extra context for item use. */
+export type CpuItemContext = Partial<CpuBoardContext> & {
+  rivals?: CpuRivalView[]
+  shieldActive?: boolean
+  doubleScoreActive?: boolean
+}
+
 export type CpuBoardContext = {
   tileTypes: string[]
   boardLength: number
@@ -151,7 +165,8 @@ export type CpuBoardContext = {
   starCost?: number
 }
 
-const GOLDEN_KEY_STEPS = 5
+/** Golden Key forces a roll of exactly 3. */
+const GOLDEN_KEY_STEPS = 3
 const DEFAULT_STAR_COST = 20
 const DEFAULT_SHOP_PRICE = 8
 
@@ -166,22 +181,53 @@ export function cpuPlayerRank(selfId: number, players: CpuRivalView[]): number {
 
 export function findStarPositions(tileTypes: string[], boardLength: number): number[] {
   const stars: number[] = []
-  for (let i = 0; i < boardLength; i++) {
-    if (i === 0) continue
-    const type = tileTypes[i % tileTypes.length]
-    if (type === 'star') stars.push(i)
+  for (let i = 1; i < Math.min(boardLength, tileTypes.length); i++) {
+    if (tileTypes[i] === 'star') stars.push(i)
   }
   return stars
 }
 
-function forwardDistance(from: number, to: number, boardLength: number): number {
-  if (to === from) return 0
-  return to > from ? to - from : boardLength - from + to
+/** Fallback graph for callers without one: a simple ring of `n` nodes. */
+function ringGraph(n: number): number[][] {
+  return Array.from({ length: n }, (_, i) => [(i + 1) % n])
 }
 
-function nearestStarDistance(position: number, stars: number[], boardLength: number): number {
-  if (stars.length === 0) return boardLength
-  return Math.min(...stars.map(s => forwardDistance(position, s, boardLength)))
+/** Fewest real steps (≥ 1, along the board's edges) from `from` to any node in `targets`. */
+export function stepsToNearest(next: number[][], from: number, targets: Set<number>): number {
+  if (targets.size === 0) return Infinity
+  const seen = new Set<number>([from])
+  let frontier = [...(next[from] ?? [])]
+  for (let d = 1; frontier.length > 0 && d <= next.length + 1; d++) {
+    const nextFrontier: number[] = []
+    for (const id of frontier) {
+      if (targets.has(id)) return d
+      if (seen.has(id)) continue
+      seen.add(id)
+      nextFrontier.push(...(next[id] ?? []))
+    }
+    frontier = nextFrontier
+  }
+  return Infinity
+}
+
+/** Every node you can stop on after exactly `k` steps from `from` (any fork choice). */
+export function nodesAfterExactly(next: number[][], from: number, k: number): Set<number> {
+  let cur = new Set<number>([from])
+  for (let i = 0; i < k; i++) {
+    const nxt = new Set<number>()
+    cur.forEach(id => (next[id] ?? []).forEach(n => nxt.add(n)))
+    cur = nxt
+  }
+  return cur
+}
+
+/** Nodes from which `target` is exactly `k` steps away along some path. */
+export function nodesExactlyBefore(next: number[][], target: number, k: number): number[] {
+  return next.map((_, id) => id).filter(id => id !== target && nodesAfterExactly(next, id, k).has(target))
+}
+
+function starSet(tileTypes: string[], boardLength: number): Set<number> {
+  return new Set(findStarPositions(tileTypes, boardLength))
 }
 
 function endgamePressure(round?: number, totalRounds?: number): number {
@@ -206,16 +252,21 @@ export function cpuChooseItem(
   isLastPlace: boolean,
   rankAmongPlayers: number,
   level?: CpuLevel,
-  ctx?: Partial<CpuBoardContext> & { rivals?: CpuRivalView[] }
+  ctx?: CpuItemContext
 ): number {
   if (inventory.length === 0) return -1
 
-  const tileTypes = ctx?.tileTypes
-  const boardLength = ctx?.boardLength ?? 44
-  const stars = tileTypes ? findStarPositions(tileTypes, boardLength) : [5, 20, 38]
-  const starDist = nearestStarDistance(position, stars, boardLength)
-  const keyReach = starDist > 0 && starDist <= GOLDEN_KEY_STEPS
-  const nearStar = starDist > 0 && starDist <= 6
+  const tileTypes = ctx?.tileTypes ?? []
+  const boardLength = ctx?.boardLength ?? tileTypes.length
+  const next = ctx?.nextByNode ?? ringGraph(boardLength)
+  const stars = starSet(tileTypes, boardLength)
+  const starCost = ctx?.starCost ?? DEFAULT_STAR_COST
+  const canAffordStar = coins >= starCost
+  // Real path distance to the nearest star (a star you're standing on doesn't count).
+  const starDist = stepsToNearest(next, position, stars)
+  // Golden Key lands exactly 3 steps ahead — only worth it if that IS a star and we can pay.
+  const keyLandsOnStar = [...nodesAfterExactly(next, position, GOLDEN_KEY_STEPS)].some(id => stars.has(id))
+  const nearStar = starDist <= 6
   const behind = rankAmongPlayers > 1 || isLastPlace
   const leading = rankAmongPlayers === 0
   const lowOnCoins = coins < 8
@@ -235,33 +286,33 @@ export function cpuChooseItem(
     if (idx >= 0 && value > 0) scored.push({ idx, score: value })
   }
 
-  // Golden Key: exactly 5 steps — only when that lands on / past a star window
-  if (keyReach) push('golden_key', 100 + (leading ? 5 : 10))
-  else if (nearStar && starDist === 4) push('golden_key', 40) // sometimes still useful with branches
+  // Golden Key: guaranteed 3 — use it when that lands exactly on a star we can afford.
+  if (keyLandsOnStar && canAffordStar) push('golden_key', 110)
 
-  // Shield: protect thin wallets / endgame / owned-shop danger
-  if (lowOnCoins) push('shield', 72)
-  else if (pressure > 0.7 && coins < 14) push('shield', 55)
-  else if (coins < 12 && Math.random() < 0.25) push('shield', 30)
+  // Shield / Double: pointless while one is already active.
+  if (!ctx?.shieldActive) {
+    if (lowOnCoins) push('shield', 72)
+    else if (pressure > 0.7 && coins < 14) push('shield', 55)
+    else if (coins < 12 && Math.random() < 0.25) push('shield', 30)
+  }
+  if (!ctx?.doubleScoreActive) {
+    if (trophies >= 3) push('double_score', 85)
+    else if (score >= 24 || pressure > 0.65) push('double_score', 70)
+    else if (score > 12) push('double_score', 45)
+  }
 
-  // Double Score: prioritize when already scoring well or late game
-  if (trophies >= 3) push('double_score', 85)
-  else if (score >= 24 || pressure > 0.65) push('double_score', 70)
-  else if (score > 12) push('double_score', 45)
-
-  // Dash: more movement when chasing stars or catching up
-  if (behind && nearStar) push('dash', 78)
-  else if (behind) push('dash', 62)
-  else if (nearStar && starDist > 3) push('dash', 55)
-  else if (!leading && Math.random() < 0.2) push('dash', 28)
+  // Dash (2–6 steps): useful when the star is too far for one die, never when it's 1–3 away.
+  if (starDist >= 4 && starDist <= 6 && canAffordStar) push('dash', 80)
+  else if (behind && starDist > 6) push('dash', 62)
+  else if (!leading && starDist > 6 && Math.random() < 0.2) push('dash', 28)
 
   // Swap: last place / far behind — hope for a better tile
   if (isLastPlace && starDist > 8) push('swap', 68)
   else if (behind && starDist > 12) push('swap', 48)
 
-  // Warp: escape dead zones far from stars
-  if (!nearStar && starDist > 14) push('warp', 58)
-  else if (!nearStar && behind) push('warp', 36)
+  // Warp: escape dead zones far from stars — only worth it with star money.
+  if (!nearStar && starDist > 14 && coins >= starCost - 4) push('warp', 58)
+  else if (!nearStar && behind && coins >= starCost - 4) push('warp', 36)
 
   // Poison: snipe coin leaders / trophy threats
   if (richestRival && richestRival.coins >= 12 && behind) push('poison_dart', 60)
@@ -335,20 +386,12 @@ export function cpuShouldBuyStar(
   const starCost = ctx?.starCost ?? DEFAULT_STAR_COST
   if (coins < starCost) return false
 
-  const pressure = endgamePressure(ctx?.round, ctx?.totalRounds)
-  const rank = ctx?.rank ?? 1
-
-  // Always buy when one star from norma win, or final stretch
-  if (trophies >= 4) return true
-  if (pressure >= 0.85) return true
-  if (level === 'hard' && rank === 0) return Math.random() < 0.97
-  if (level === 'hard') return Math.random() < Math.min(0.98, p.starBuyThreshold + pressure * 0.25)
-
-  let chance = p.starBuyThreshold + pressure * 0.2
-  if (rank === 0) chance += 0.12
-  if (rank >= 2) chance += 0.08
-  if (level === 'easy' && Math.random() < 0.2) return false
-  return Math.random() < Math.min(0.95, chance)
+  // Stars are the win condition and coins have no better use, so CPUs buy them.
+  // Easy CPUs occasionally hesitate, which reads as "easy" without looking broken.
+  void p
+  void trophies
+  if (level === 'easy') return Math.random() < 0.8
+  return true
 }
 
 type BranchGraph = { nextByNode?: number[][]; tileTypes: string[]; boardLength: number }
@@ -380,7 +423,7 @@ function lookaheadValue(
   starCost: number
 ): number {
   const { tileTypes, boardLength, nextByNode } = graph
-  const typeAt = (id: number) => (id === 0 ? 'start' : tileTypes[id % tileTypes.length] ?? 'vocab')
+  const typeAt = (id: number) => (id === 0 ? 'start' : tileTypes[id] ?? 'vocab')
 
   // Without graph: score the immediate tile only
   if (!nextByNode || depth <= 0) {
@@ -406,7 +449,8 @@ function lookaheadValue(
       const key = `${n}:${cur.d + 1}`
       if (seen.has(key)) continue
       seen.add(key)
-      const step = tileScore(typeAt(n % boardLength), coins, shopPrice, starCost) / (cur.d + 2)
+      void boardLength
+      const step = tileScore(typeAt(n), coins, shopPrice, starCost) / (cur.d + 2)
       queue.push({ id: n, d: cur.d + 1, value: cur.value + step })
     }
   }
@@ -424,7 +468,7 @@ export function cpuChooseBranch(
   coins: number,
   trophies: number,
   level?: CpuLevel,
-  ctx?: { nextByNode?: number[][]; boardLength?: number; shopPrice?: number; starCost?: number }
+  ctx?: { nextByNode?: number[][]; boardLength?: number; shopPrice?: number; starCost?: number; stepsLeft?: number }
 ): number {
   if (options.length === 0) return 0
   if (options.length === 1) return 0
@@ -441,12 +485,25 @@ export function cpuChooseBranch(
 
   // Every fork option is exactly one step away, so score purely on what lies ahead.
   // (Index distance is meaningless here: shortcut nodes have high ids on most boards.)
+  const next = ctx?.nextByNode
+  const stepsLeft = ctx?.stepsLeft
   const scored = options.map((id, index) => {
     let score = lookaheadValue(id, graph, coins, p.branchLookahead, shopPrice, starCost)
+    if (next && stepsLeft !== undefined && stepsLeft >= 1) {
+      // The tile we'll actually stop on matters most (average over our remaining steps' landing spots).
+      const landing = [...nodesAfterExactly(next, id, stepsLeft - 1)]
+      if (landing.length > 0) {
+        const avg = landing.reduce((sum, n) => sum + tileScore(tileTypes[n] ?? 'vocab', coins, shopPrice, starCost), 0) / landing.length
+        score += avg * 2
+      }
+      // Stars can be bought in passing, so a star anywhere along the next few steps is valuable.
+      for (let k = 0; k < stepsLeft; k++) {
+        if ([...nodesAfterExactly(next, id, k)].some(n => tileTypes[n] === 'star') && coins >= starCost) score += 60
+      }
+    }
     // Slight trophy hunger: hard CPUs bias harder toward stars when close to norma
     if (trophies >= 3) {
-      const t = id === 0 ? 'start' : tileTypes[id % tileTypes.length]
-      if (t === 'star') score += 25
+      if (tileTypes[id] === 'star') score += 25
     }
     return { index, id, score }
   })
@@ -472,16 +529,26 @@ export function cpuBattleChoice(
   atk: number,
   def: number,
   evd: number,
-  level?: CpuLevel
+  level?: CpuLevel,
+  attackRoll?: number,
 ): 'defend' | 'evade' {
   const p = cpuPolicyForLevel(level)
-  const defScore = def + 1
-  const evdScore = evd + 1
-  if (Math.random() < p.smartChance) {
+  if (Math.random() >= p.smartChance) return Math.random() > 0.5 ? 'defend' : 'evade'
+  if (attackRoll === undefined) {
+    const defScore = def + 1
+    const evdScore = evd + 1
     if (evdScore === defScore) return Math.random() > 0.5 ? 'defend' : 'evade'
     return evdScore > defScore ? 'evade' : 'defend'
   }
-  return Math.random() > 0.5 ? 'defend' : 'evade'
+  // Expected damage over the defender's d6 (mirrors BattleScene: attackRoll already includes atk).
+  void atk
+  let defendDmg = 0
+  let evadeDmg = 0
+  for (let r = 1; r <= 6; r++) {
+    defendDmg += Math.max(1, attackRoll - Math.max(1, r + def))
+    evadeDmg += Math.max(1, r + evd) > attackRoll ? 0 : attackRoll
+  }
+  return evadeDmg < defendDmg ? 'evade' : 'defend'
 }
 
 /**
@@ -493,7 +560,8 @@ export function cpuChooseSwapTarget(
   players: CpuRivalView[],
   tileTypes: string[],
   boardLength: number,
-  level?: CpuLevel
+  level?: CpuLevel,
+  nextByNode?: number[][],
 ): number {
   const others = players
     .map((p, i) => ({ p, i }))
@@ -504,15 +572,17 @@ export function cpuChooseSwapTarget(
     return others[Math.floor(Math.random() * others.length)].i
   }
 
-  const stars = findStarPositions(tileTypes, boardLength)
+  const next = nextByNode ?? ringGraph(boardLength)
+  const stars = starSet(tileTypes, boardLength)
   const self = players[selfIndex]
-  const selfStarDist = nearestStarDistance(self.position, stars, boardLength)
+  const selfStarDist = Math.min(30, stepsToNearest(next, self.position, stars))
 
   const ranked = others.map(({ p, i }) => {
-    const starDist = nearestStarDistance(p.position, stars, boardLength)
+    const starDist = Math.min(30, stepsToNearest(next, p.position, stars))
     let score = 0
-    // Want their tile if closer to a star than we are
+    // Want their spot if a star is closer from there (1–3 steps ahead is ideal for the next roll).
     score += (selfStarDist - starDist) * 8
+    if (starDist >= 1 && starDist <= 3) score += 20
     score += p.trophies * 6
     score += p.score * 0.15
     score += p.coins * 0.2
@@ -554,17 +624,19 @@ export function cpuChoosePoisonTarget(
 export function cpuChooseWarpPosition(
   boardLength: number,
   tileTypes: string[],
-  level?: CpuLevel
+  level?: CpuLevel,
+  nextByNode?: number[][],
 ): number {
   const stars = findStarPositions(tileTypes, boardLength)
   if (stars.length === 0 || !maybeSmart(level)) {
     return Math.floor(Math.random() * boardLength)
   }
-
+  const next = nextByNode ?? ringGraph(boardLength)
   const star = stars[Math.floor(Math.random() * stars.length)]
-  // Land 1–3 tiles before the star so the next rolls can claim it
+  // Land 1–3 real steps before the star (any branch) so the next roll can claim it.
   const back = 1 + Math.floor(Math.random() * 3)
-  return (star - back + boardLength) % boardLength
+  const spots = nodesExactlyBefore(next, star, back)
+  return spots.length > 0 ? spots[Math.floor(Math.random() * spots.length)] : star
 }
 
 /**
@@ -584,7 +656,8 @@ export function cpuChooseItemToBuy(
 
   const affordable = catalog.filter(item => {
     if (coins < item.cost) return false
-    if (coins - item.cost < reserve && coins < starCost) return coins >= item.cost
+    // Keep a reserve so shopping doesn't drain the star fund.
+    if (coins - item.cost < reserve) return false
     if (coins >= starCost && coins - item.cost < starCost && pressure > 0.55) {
       // Prefer saving for star in mid/late game unless item is high priority
       const prio = p.preferredItems.indexOf(item.type)
