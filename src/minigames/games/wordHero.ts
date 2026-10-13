@@ -196,7 +196,10 @@ export const wordHero: MinigameDef = {
       meter.fillRoundedRect(x - 10, topY, 20, h, 8)
       const col = powerOn() ? 0x6ff7ff : rock > 0.66 ? 0x2ad46a : rock > 0.33 ? 0xf4c430 : 0xe84a4a
       meter.fillStyle(col, 1)
-      meter.fillRoundedRect(x - 7, topY + h * (1 - rock) + 3, 14, Math.max(6, h * rock - 6), 6)
+      if (rock > 0.02) {
+        const fillH = Math.max(6, h * rock - 6)
+        meter.fillRoundedRect(x - 7, Math.min(topY + h * (1 - rock) + 3, topY + h - 3 - fillH), 14, fillH, 6)
+      }
     }
 
     const mult = () => Math.min(4, 1 + Math.floor(streak / 8))
@@ -330,7 +333,8 @@ export const wordHero: MinigameDef = {
         if (rock >= 1 && !powerOn()) activatePower()
         const sec = best.section
         ctx.recordWord(sec.target.word, true, `${best.word} ${sec.mode === 'synonym' ? '≈' : '↔'} ${sec.target.word}`)
-        if (streak % 8 === 0 && streak <= 24) ctx.flash(`×${mult()} MULTIPLIER!`, '#ff9fd0')
+        // One callout per hit: WORD POWER outranks a multiplier step.
+        if (streak % 8 === 0 && streak <= 24 && rock < 1) ctx.flash(`×${mult()} MULTIPLIER!`, '#ff9fd0')
       } else {
         Sfx.clunk()
         stats.wrong++
@@ -356,6 +360,8 @@ export const wordHero: MinigameDef = {
     Sfx.stopMusic(false)
     {
       const beat0 = 60000 / tempo.start
+      // Leave room for a full four-click count-in, even at the slow Starter tempo.
+      nextBeat = Math.max(nextBeat, 4 * beat0 + 300)
       for (let k = 4; k >= 1; k--) countIn.push(nextBeat - k * beat0)
     }
     spawning = chooseSection()

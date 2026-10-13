@@ -114,25 +114,36 @@ export const wordRacer: MinigameDef = {
     me.c.add(placeBadge)
     const ORD = ['1st', '2nd', '3rd', '4th']
     /** My current race position (ties go in my favour), and who I was ahead of last time. */
-    const myPlace = () => 1 + rivals.filter(r => (rivalKarts.get(r.id)?.shown ?? 0) > myScore).length
-    let aheadOf = new Set<number>()
+    /** Rivals actually racing (CPUs, or humans who already played) — unplayed humans don't count. */
+    const racing = new Set<number>()
+    const shownOf = (id: number) => rivalKarts.get(id)?.shown ?? 0
+    const active = () => rivals.filter(r => racing.has(r.id))
+    const myPlace = () => 1 + active().filter(r => shownOf(r.id) > myScore).length
+    /** Rivals strictly ahead of me — passing one of these is what earns a callout. */
+    let behindOf = new Set<number>()
+    /** Highest-priority callout from this frame (FINISH > PASSED > SPEEDY), shown once. */
+    let pendingCallout: { pri: number; text: string; color: string } | null = null
+    const callout = (pri: number, text: string, color: string) => {
+      if (!pendingCallout || pri > pendingCallout.pri) pendingCallout = { pri, text, color }
+    }
     const refreshPlace = () => {
-      if (rivals.length === 0) {
+      if (active().length === 0) {
         placeBadge.setVisible(false)
         return
       }
+      placeBadge.setVisible(true)
       const pl = myPlace()
-      const tied = rivals.some(r => (rivalKarts.get(r.id)?.shown ?? 0) === myScore)
+      const tied = active().some(r => shownOf(r.id) === myScore)
       placeBadge.setText(`${tied ? '=' : ''}${ORD[pl - 1] ?? `${pl}th`}`)
       placeBadge.setBackgroundColor(pl === 1 ? '#ffe066' : '#cfd8e6')
-      const nowAhead = new Set(rivals.filter(r => (rivalKarts.get(r.id)?.shown ?? 0) < myScore).map(r => r.id))
-      for (const id of nowAhead) {
-        if (!aheadOf.has(id)) {
+      const nowBehind = new Set(active().filter(r => shownOf(r.id) > myScore).map(r => r.id))
+      for (const id of behindOf) {
+        if (!nowBehind.has(id) && shownOf(id) < myScore) {
           const r = rivals.find(x => x.id === id)
-          if (r && myScore > 0) ctx.flash(`💨 PASSED ${r.name.toUpperCase()}!`, '#7dffb0')
+          if (r) callout(2, `💨 PASSED ${r.name.toUpperCase()}!`, '#7dffb0')
         }
       }
-      aheadOf = nowAhead
+      behindOf = nowBehind
     }
     const rivalKarts = new Map<number, Kart>()
     rivals.forEach((r: RivalView, i) => rivalKarts.set(r.id, makeKart(i + 1, r.color, r.characterIndex, r.name.slice(0, 8))))
@@ -205,15 +216,25 @@ export const wordRacer: MinigameDef = {
         scene.tweens.add({ targets: trail, x: trail.x - 40, alpha: 0, duration: 500, onComplete: () => trail.destroy() })
         scene.tweens.add({ targets: inputText, scale: 1.15, duration: 90, yoyo: true })
       }
-      if (myScore === goal) ctx.flash('🏁 FINISH LINE!', '#7dffb0')
-      const quick = elapsed - wordStartedAt < 4000 && hinted === 0
-      if (quick && myScore !== goal) ctx.flash('⚡ SPEEDY!', '#ffe066')
+      if (myScore === goal) callout(3, '🏁 FINISH LINE!', '#7dffb0')
+      if (elapsed - wordStartedAt < 4000 && hinted === 0) callout(1, '⚡ SPEEDY!', '#ffe066')
       ctx.after(380, nextWord)
     }
 
     /** Reveal the next letter (button, Enter, or automatically when stuck). */
     const hint = () => {
-      if (busy || ctx.isOver() || typed.length >= word.word.length - 1) return
+      if (busy || ctx.isOver()) return
+      if (typed.length >= word.word.length - 1) {
+        // Hints never give away the final letter.
+        lastProgressAt = elapsed
+        const nudge = scene.add.text(area.cx, inputY + 40, 'Type the last letter!', {
+          fontSize: '16px', fontFamily: FONT.display, color: '#ffd24a', stroke: '#000000', strokeThickness: 4,
+        }).setOrigin(0.5)
+        root.add(nudge)
+        scene.tweens.add({ targets: nudge, alpha: 0, delay: 700, duration: 300, onComplete: () => nudge.destroy() })
+        Sfx.clunk()
+        return
+      }
       typed += word.word[typed.length]
       hinted = typed.length
       lastProgressAt = elapsed
@@ -311,7 +332,16 @@ export const wordRacer: MinigameDef = {
         elapsed += delta
         for (const r of ctx.rivals()) {
           const k = rivalKarts.get(r.id)
-          if (k && r.score !== null) moveKart(k, r.score)
+          if (!k || r.score === null) continue
+          if (!racing.has(r.id)) {
+            racing.add(r.id)
+            refreshPlace()
+          }
+          moveKart(k, r.score)
+        }
+        if (pendingCallout) {
+          ctx.flash(pendingCallout.text, pendingCallout.color)
+          pendingCallout = null
         }
         // Stuck for a while? A free letter keeps the race moving.
         if (!busy && elapsed - lastProgressAt > 7000) hint()
