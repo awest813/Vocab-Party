@@ -12,6 +12,36 @@ export type GameSettings = {
   musicVolume: number
   /** Skip heavy parallax / screen shake / flash when true. */
   reducedMotion: boolean
+  /** Vocabulary difficulty for questions and minigames. */
+  wordLevel: WordLevel
+}
+
+export type WordLevel = 'all' | 'starter' | 'standard' | 'challenge'
+
+export const WORD_LEVEL_ORDER: WordLevel[] = ['all', 'starter', 'standard', 'challenge']
+export const WORD_LEVEL_LABEL: Record<WordLevel, string> = {
+  all: 'All levels',
+  starter: 'Starter',
+  standard: 'Standard',
+  challenge: 'Challenge',
+}
+
+/** Content levels (1–3) included by each setting. */
+export function allowedLevels(level: WordLevel): Set<number> {
+  switch (level) {
+    case 'starter': return new Set([1])
+    case 'standard': return new Set([1, 2])
+    case 'challenge': return new Set([2, 3])
+    default: return new Set([1, 2, 3])
+  }
+}
+
+/** Keep items whose `level` fits the current setting; fall back to everything if too few remain. */
+export function filterByLevel<T extends { level?: number }>(items: T[], minKeep: number, level: WordLevel = getSettings().wordLevel): T[] {
+  if (level === 'all') return items
+  const allowed = allowedLevels(level)
+  const kept = items.filter(i => typeof i.level !== 'number' || allowed.has(i.level))
+  return kept.length >= minKeep ? kept : items
 }
 
 const STORAGE_KEY = 'vocab-party-settings'
@@ -21,6 +51,7 @@ const DEFAULTS: GameSettings = {
   sfxVolume: 0.7,
   musicVolume: 0.35,
   reducedMotion: false,
+  wordLevel: 'all',
 }
 
 let cached: GameSettings | null = null
@@ -41,6 +72,7 @@ export function getSettings(): GameSettings {
         sfxVolume: clamp01(typeof parsed.sfxVolume === 'number' ? parsed.sfxVolume : DEFAULTS.sfxVolume),
         musicVolume: clamp01(typeof parsed.musicVolume === 'number' ? parsed.musicVolume : DEFAULTS.musicVolume),
         reducedMotion: Boolean(parsed.reducedMotion),
+        wordLevel: WORD_LEVEL_ORDER.includes(parsed.wordLevel as WordLevel) ? parsed.wordLevel as WordLevel : DEFAULTS.wordLevel,
       }
       return { ...cached }
     }

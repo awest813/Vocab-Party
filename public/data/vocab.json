@@ -9,7 +9,8 @@
         "Confused and lost"
       ],
       "correct": 2,
-      "explanation": "Benevolent means well-meaning, kindly, and generous."
+      "explanation": "Benevolent means well-meaning, kindly, and generous.",
+      "level": 2
     },
     {
       "question": "What does 'ambiguous' mean?",
@@ -20,7 +21,8 @@
         "Clear and obvious"
       ],
       "correct": 0,
-      "explanation": "Ambiguous means unclear or open to more than one interpretation."
+      "explanation": "Ambiguous means unclear or open to more than one interpretation.",
+      "level": 3
     },
     {
       "question": "What does 'persevere' mean?",
@@ -31,7 +33,8 @@
         "To celebrate loudly"
       ],
       "correct": 0,
-      "explanation": "Persevere means to keep going in spite of difficulty or delay."
+      "explanation": "Persevere means to keep going in spite of difficulty or delay.",
+      "level": 2
     },
     {
       "question": "What is a 'hypothesis'?",
@@ -42,7 +45,8 @@
         "A proposed explanation to test"
       ],
       "correct": 3,
-      "explanation": "A hypothesis is a proposed explanation made as a starting point for investigation."
+      "explanation": "A hypothesis is a proposed explanation made as a starting point for investigation.",
+      "level": 2
     },
     {
       "question": "What does 'eloquent' mean?",
@@ -53,7 +57,8 @@
         "Confused and unclear"
       ],
       "correct": 2,
-      "explanation": "Eloquent means fluent or persuasive in speaking or writing."
+      "explanation": "Eloquent means fluent or persuasive in speaking or writing.",
+      "level": 3
     },
     {
       "question": "What does 'tenacious' mean?",
@@ -64,7 +69,8 @@
         "Holding firmly; not quitting"
       ],
       "correct": 3,
-      "explanation": "Tenacious means holding fast and not giving up."
+      "explanation": "Tenacious means holding fast and not giving up.",
+      "level": 3
     },
     {
       "question": "What does 'melancholy' describe?",
@@ -75,7 +81,8 @@
         "Great happiness"
       ],
       "correct": 0,
-      "explanation": "Melancholy describes a feeling of pensive or thoughtful sadness."
+      "explanation": "Melancholy describes a feeling of pensive or thoughtful sadness.",
+      "level": 3
     },
     {
       "question": "What does 'inquisitive' mean?",
@@ -86,7 +93,8 @@
         "Curious and eager to know"
       ],
       "correct": 3,
-      "explanation": "Inquisitive means having or showing a strong desire to learn."
+      "explanation": "Inquisitive means having or showing a strong desire to learn.",
+      "level": 2
     },
     {
       "question": "What is a 'protagonist'?",
@@ -97,7 +105,8 @@
         "Always the narrator"
       ],
       "correct": 0,
-      "explanation": "The protagonist is the main character in a story."
+      "explanation": "The protagonist is the main character in a story.",
+      "level": 2
     },
     {
       "question": "What does 'vivid' mean in writing?",
@@ -108,7 +117,8 @@
         "Dull and boring"
       ],
       "correct": 0,
-      "explanation": "Vivid means producing powerful feelings or clear images in the mind."
+      "explanation": "Vivid means producing powerful feelings or clear images in the mind.",
+      "level": 1
     },
     {
       "question": "What does 'resilient' mean?",
@@ -119,7 +129,8 @@
         "Slow to move"
       ],
       "correct": 2,
-      "explanation": "Resilient means able to recover quickly from difficulties."
+      "explanation": "Resilient means able to recover quickly from difficulties.",
+      "level": 3
     },
     {
       "question": "What does 'scrutinize' mean?",
@@ -130,7 +141,8 @@
         "To ignore completely"
       ],
       "correct": 1,
-      "explanation": "Scrutinize means to examine or inspect closely and thoroughly."
+      "explanation": "Scrutinize means to examine or inspect closely and thoroughly.",
+      "level": 3
     },
     {
       "question": "What does 'collaborate' mean?",
@@ -141,7 +153,8 @@
         "To work jointly with others"
       ],
       "correct": 3,
-      "explanation": "Collaborate means to work jointly on an activity or project."
+      "explanation": "Collaborate means to work jointly on an activity or project.",
+      "level": 1
     },
     {
       "question": "Which word means 'to make a problem worse'?",
@@ -152,7 +165,8 @@
         "Exacerbate"
       ],
       "correct": 3,
-      "explanation": "Exacerbate means to make a problem or bad situation worse."
+      "explanation": "Exacerbate means to make a problem or bad situation worse.",
+      "level": 3
     },
     {
       "question": "What does 'meticulous' mean?",
@@ -163,7 +177,8 @@
         "Careless and messy"
       ],
       "correct": 0,
-      "explanation": "Meticulous means showing great attention to detail; very careful and precise."
+      "explanation": "Meticulous means showing great attention to detail; very careful and precise.",
+      "level": 3
     },
     {
       "question": "What does 'tranquil' describe?",
@@ -174,7 +189,8 @@
         "Extremely busy"
       ],
       "correct": 1,
-      "explanation": "Tranquil means free from disturbance — calm and peaceful."
+      "explanation": "Tranquil means free from disturbance — calm and peaceful.",
+      "level": 2
     },
     {
       "question": "What does 'antagonist' mean in a story?",
@@ -185,7 +201,8 @@
         "The story's narrator"
       ],
       "correct": 2,
-      "explanation": "The antagonist is the character who opposes or works against the protagonist."
+      "explanation": "The antagonist is the character who opposes or works against the protagonist.",
+      "level": 2
     },
     {
       "question": "What does 'diligent' mean?",
@@ -196,7 +213,8 @@
         "Loud and boisterous"
       ],
       "correct": 2,
-      "explanation": "Diligent means having or showing careful and persistent work or effort."
+      "explanation": "Diligent means having or showing careful and persistent work or effort.",
+      "level": 2
     },
     {
       "question": "What does 'unprecedented' mean?",
@@ -207,7 +225,8 @@
         "Never done or known before"
       ],
       "correct": 3,
-      "explanation": "Unprecedented means never having happened or existed before."
+      "explanation": "Unprecedented means never having happened or existed before.",
+      "level": 3
     },
     {
       "question": "What does 'empathy' mean?",
@@ -218,7 +237,8 @@
         "Feeling superior to others"
       ],
       "correct": 1,
-      "explanation": "Empathy is the ability to understand and share the feelings of another."
+      "explanation": "Empathy is the ability to understand and share the feelings of another.",
+      "level": 1
     },
     {
       "question": "What does 'skeptical' mean?",
@@ -229,7 +249,8 @@
         "Very tired"
       ],
       "correct": 2,
-      "explanation": "Skeptical means not easily convinced; having doubts."
+      "explanation": "Skeptical means not easily convinced; having doubts.",
+      "level": 2
     },
     {
       "question": "What is an 'inference'?",
@@ -240,7 +261,8 @@
         "An exact quotation"
       ],
       "correct": 0,
-      "explanation": "An inference is a conclusion formed from evidence and reasoning."
+      "explanation": "An inference is a conclusion formed from evidence and reasoning.",
+      "level": 1
     },
     {
       "question": "What does 'concise' mean?",
@@ -251,7 +273,8 @@
         "Long and detailed"
       ],
       "correct": 1,
-      "explanation": "Concise means giving a lot of information clearly and in few words."
+      "explanation": "Concise means giving a lot of information clearly and in few words.",
+      "level": 2
     },
     {
       "question": "What does 'inevitable' mean?",
@@ -262,7 +285,8 @@
         "Certain to happen; unavoidable"
       ],
       "correct": 3,
-      "explanation": "Inevitable means certain to happen and impossible to avoid."
+      "explanation": "Inevitable means certain to happen and impossible to avoid.",
+      "level": 2
     },
     {
       "question": "What does 'emphatically' mean?",
@@ -273,7 +297,8 @@
         "In a lazy manner"
       ],
       "correct": 2,
-      "explanation": "Emphatically means in a forceful way that leaves no doubt."
+      "explanation": "Emphatically means in a forceful way that leaves no doubt.",
+      "level": 3
     },
     {
       "question": "What does 'precarious' mean?",
@@ -284,7 +309,8 @@
         "Safe and secure"
       ],
       "correct": 1,
-      "explanation": "Precarious means not securely held; uncertain or dangerously likely to fail."
+      "explanation": "Precarious means not securely held; uncertain or dangerously likely to fail.",
+      "level": 3
     },
     {
       "question": "What does 'superfluous' mean?",
@@ -295,7 +321,8 @@
         "Highly intelligent"
       ],
       "correct": 1,
-      "explanation": "Superfluous means more than is needed; unnecessary."
+      "explanation": "Superfluous means more than is needed; unnecessary.",
+      "level": 3
     },
     {
       "question": "What does 'aesthetic' relate to?",
@@ -306,7 +333,8 @@
         "Ancient history"
       ],
       "correct": 1,
-      "explanation": "Aesthetic relates to beauty or the appreciation of beauty."
+      "explanation": "Aesthetic relates to beauty or the appreciation of beauty.",
+      "level": 3
     },
     {
       "question": "What does 'ephemeral' mean?",
@@ -317,7 +345,8 @@
         "Lasting a very short time"
       ],
       "correct": 3,
-      "explanation": "Ephemeral means lasting for a very short time."
+      "explanation": "Ephemeral means lasting for a very short time.",
+      "level": 3
     },
     {
       "question": "What is 'altruism'?",
@@ -328,7 +357,8 @@
         "A scientific theory"
       ],
       "correct": 0,
-      "explanation": "Altruism is selfless concern for the well-being of others."
+      "explanation": "Altruism is selfless concern for the well-being of others.",
+      "level": 3
     },
     {
       "question": "What does 'capricious' describe?",
@@ -339,7 +369,8 @@
         "Stable and predictable"
       ],
       "correct": 1,
-      "explanation": "Capricious describes sudden, unpredictable changes of mood or behavior."
+      "explanation": "Capricious describes sudden, unpredictable changes of mood or behavior.",
+      "level": 3
     },
     {
       "question": "What does 'pragmatic' mean?",
@@ -350,7 +381,8 @@
         "Ancient"
       ],
       "correct": 2,
-      "explanation": "Pragmatic means dealing with things sensibly and realistically."
+      "explanation": "Pragmatic means dealing with things sensibly and realistically.",
+      "level": 3
     },
     {
       "question": "What does 'ubiquitous' mean?",
@@ -361,7 +393,8 @@
         "Very quiet"
       ],
       "correct": 1,
-      "explanation": "Ubiquitous means present, appearing, or found everywhere."
+      "explanation": "Ubiquitous means present, appearing, or found everywhere.",
+      "level": 3
     },
     {
       "question": "What is a 'paradigm'?",
@@ -372,7 +405,8 @@
         "A type of bird"
       ],
       "correct": 0,
-      "explanation": "A paradigm is a typical example, pattern, or model of something."
+      "explanation": "A paradigm is a typical example, pattern, or model of something.",
+      "level": 3
     },
     {
       "question": "What does 'formidable' mean?",
@@ -383,7 +417,8 @@
         "Extremely small"
       ],
       "correct": 0,
-      "explanation": "Formidable means inspiring fear or respect through being powerful or capable."
+      "explanation": "Formidable means inspiring fear or respect through being powerful or capable.",
+      "level": 3
     },
     {
       "question": "What does 'reticent' mean?",
@@ -394,7 +429,8 @@
         "Extremely angry"
       ],
       "correct": 0,
-      "explanation": "Reticent means not revealing one's thoughts or feelings readily."
+      "explanation": "Reticent means not revealing one's thoughts or feelings readily.",
+      "level": 3
     },
     {
       "question": "What does 'gregarious' mean?",
@@ -405,7 +441,8 @@
         "Lazy"
       ],
       "correct": 2,
-      "explanation": "Gregarious means fond of company; sociable."
+      "explanation": "Gregarious means fond of company; sociable.",
+      "level": 3
     },
     {
       "question": "What does 'conundrum' mean?",
@@ -416,7 +453,8 @@
         "A simple answer"
       ],
       "correct": 1,
-      "explanation": "A conundrum is a confusing and difficult problem or question."
+      "explanation": "A conundrum is a confusing and difficult problem or question.",
+      "level": 3
     },
     {
       "question": "What does 'lucid' describe?",
@@ -427,7 +465,8 @@
         "Extremely fast"
       ],
       "correct": 1,
-      "explanation": "Lucid means expressed clearly; easy to understand."
+      "explanation": "Lucid means expressed clearly; easy to understand.",
+      "level": 3
     },
     {
       "question": "What does 'nostalgic' mean?",
@@ -438,7 +477,8 @@
         "A sentimental longing for the past"
       ],
       "correct": 3,
-      "explanation": "Nostalgic means feeling a sentimental longing for the past."
+      "explanation": "Nostalgic means feeling a sentimental longing for the past.",
+      "level": 2
     },
     {
       "question": "What is a 'euphemism'?",
@@ -449,7 +489,8 @@
         "A scientific term"
       ],
       "correct": 2,
-      "explanation": "A euphemism is a mild or indirect word used in place of one that seems harsh."
+      "explanation": "A euphemism is a mild or indirect word used in place of one that seems harsh.",
+      "level": 3
     },
     {
       "question": "What does 'deteriorate' mean?",
@@ -460,7 +501,8 @@
         "To become progressively worse"
       ],
       "correct": 3,
-      "explanation": "Deteriorate means to become progressively worse over time."
+      "explanation": "Deteriorate means to become progressively worse over time.",
+      "level": 3
     },
     {
       "question": "What is an 'anecdote'?",
@@ -471,7 +513,8 @@
         "A short story about a real incident"
       ],
       "correct": 3,
-      "explanation": "An anecdote is a short, interesting story about a real person or incident."
+      "explanation": "An anecdote is a short, interesting story about a real person or incident.",
+      "level": 2
     },
     {
       "question": "What does 'surpass' mean?",
@@ -482,7 +525,8 @@
         "To go beyond; exceed"
       ],
       "correct": 3,
-      "explanation": "Surpass means to exceed or go beyond someone or something."
+      "explanation": "Surpass means to exceed or go beyond someone or something.",
+      "level": 2
     },
     {
       "question": "What does 'profound' mean?",
@@ -493,7 +537,8 @@
         "Deeply meaningful or intense"
       ],
       "correct": 3,
-      "explanation": "Profound means of great depth, intensity, or significance."
+      "explanation": "Profound means of great depth, intensity, or significance.",
+      "level": 2
     },
     {
       "question": "What does 'intricate' mean?",
@@ -504,7 +549,8 @@
         "Simple and plain"
       ],
       "correct": 1,
-      "explanation": "Intricate means very complicated or detailed."
+      "explanation": "Intricate means very complicated or detailed.",
+      "level": 2
     },
     {
       "question": "What does 'abstract' mean?",
@@ -515,7 +561,8 @@
         "Extremely loud"
       ],
       "correct": 1,
-      "explanation": "Abstract refers to ideas and concepts rather than physical objects."
+      "explanation": "Abstract refers to ideas and concepts rather than physical objects.",
+      "level": 2
     },
     {
       "question": "What is a 'prediction'?",
@@ -526,7 +573,8 @@
         "A statement about what will happen"
       ],
       "correct": 3,
-      "explanation": "A prediction is a statement about what will happen in the future."
+      "explanation": "A prediction is a statement about what will happen in the future.",
+      "level": 1
     },
     {
       "question": "What does 'contradict' mean?",
@@ -537,7 +585,8 @@
         "To explain in detail"
       ],
       "correct": 1,
-      "explanation": "Contradict means to assert the opposite of a statement."
+      "explanation": "Contradict means to assert the opposite of a statement.",
+      "level": 1
     },
     {
       "question": "What does 'substantial' mean?",
@@ -548,7 +597,8 @@
         "Temporary"
       ],
       "correct": 2,
-      "explanation": "Substantial means of considerable importance, size, or worth."
+      "explanation": "Substantial means of considerable importance, size, or worth.",
+      "level": 2
     },
     {
       "question": "What does 'perceive' mean?",
@@ -559,7 +609,8 @@
         "To ignore"
       ],
       "correct": 2,
-      "explanation": "Perceive means to become aware of something through the senses or mind."
+      "explanation": "Perceive means to become aware of something through the senses or mind.",
+      "level": 2
     },
     {
       "question": "What does 'fluctuate' mean?",
@@ -570,7 +621,8 @@
         "To remain constant"
       ],
       "correct": 0,
-      "explanation": "Fluctuate means to rise and fall irregularly in number or amount."
+      "explanation": "Fluctuate means to rise and fall irregularly in number or amount.",
+      "level": 2
     },
     {
       "question": "What does 'demonstrate' mean?",
@@ -581,7 +633,8 @@
         "To clearly show or prove"
       ],
       "correct": 3,
-      "explanation": "Demonstrate means to clearly show, prove, or display."
+      "explanation": "Demonstrate means to clearly show, prove, or display.",
+      "level": 1
     },
     {
       "question": "What does 'frugal' mean?",
@@ -592,7 +645,8 @@
         "Wasteful with money"
       ],
       "correct": 2,
-      "explanation": "Frugal means sparing or economical with money or resources."
+      "explanation": "Frugal means sparing or economical with money or resources.",
+      "level": 3
     },
     {
       "question": "What does 'innovation' mean?",
@@ -603,7 +657,8 @@
         "A copy of something"
       ],
       "correct": 0,
-      "explanation": "Innovation is a new method, idea, or product."
+      "explanation": "Innovation is a new method, idea, or product.",
+      "level": 2
     },
     {
       "question": "What does 'apprehensive' mean?",
@@ -614,7 +669,8 @@
         "Confident and calm"
       ],
       "correct": 2,
-      "explanation": "Apprehensive means anxious or fearful that something bad or unpleasant may happen."
+      "explanation": "Apprehensive means anxious or fearful that something bad or unpleasant may happen.",
+      "level": 2
     },
     {
       "question": "What does 'sustainable' mean?",
@@ -625,7 +681,8 @@
         "Unable to continue"
       ],
       "correct": 1,
-      "explanation": "Sustainable means able to be maintained or continued over a long period."
+      "explanation": "Sustainable means able to be maintained or continued over a long period.",
+      "level": 2
     },
     {
       "question": "What is a 'metaphor'?",
@@ -636,7 +693,8 @@
         "A direct comparison without 'like' or 'as'"
       ],
       "correct": 3,
-      "explanation": "A metaphor compares two unlike things without using 'like' or 'as'."
+      "explanation": "A metaphor compares two unlike things without using 'like' or 'as'.",
+      "level": 1
     },
     {
       "question": "What does 'consequence' mean?",
@@ -647,7 +705,8 @@
         "A coincidence"
       ],
       "correct": 1,
-      "explanation": "A consequence is a result or effect of an action or condition."
+      "explanation": "A consequence is a result or effect of an action or condition.",
+      "level": 1
     },
     {
       "question": "What does 'vulnerable' mean?",
@@ -658,7 +717,8 @@
         "Completely hidden"
       ],
       "correct": 0,
-      "explanation": "Vulnerable means susceptible to physical or emotional harm."
+      "explanation": "Vulnerable means susceptible to physical or emotional harm.",
+      "level": 2
     },
     {
       "question": "What does 'plausible' mean?",
@@ -669,7 +729,8 @@
         "Very confusing"
       ],
       "correct": 2,
-      "explanation": "Plausible means seeming reasonable or probable."
+      "explanation": "Plausible means seeming reasonable or probable.",
+      "level": 3
     },
     {
       "question": "What does 'candid' mean?",
@@ -680,7 +741,8 @@
         "Very quiet"
       ],
       "correct": 2,
-      "explanation": "Candid means truthful and straightforward; frank."
+      "explanation": "Candid means truthful and straightforward; frank.",
+      "level": 3
     },
     {
       "question": "What does 'impartial' mean?",
@@ -691,7 +753,8 @@
         "Treating all sides fairly"
       ],
       "correct": 3,
-      "explanation": "Impartial means treating all sides equally; fair and unbiased."
+      "explanation": "Impartial means treating all sides equally; fair and unbiased.",
+      "level": 3
     },
     {
       "question": "What does 'hypothetical' mean?",
@@ -702,7 +765,8 @@
         "Completely proven"
       ],
       "correct": 2,
-      "explanation": "Hypothetical means based on a hypothesis or assumption, not necessarily reality."
+      "explanation": "Hypothetical means based on a hypothesis or assumption, not necessarily reality.",
+      "level": 2
     },
     {
       "question": "What does 'reluctant' mean?",
@@ -713,7 +777,8 @@
         "Eager and willing"
       ],
       "correct": 1,
-      "explanation": "Reluctant means unwilling and hesitant to do something."
+      "explanation": "Reluctant means unwilling and hesitant to do something.",
+      "level": 2
     },
     {
       "question": "What does 'obscure' mean?",
@@ -724,7 +789,8 @@
         "Unclear or hard to understand"
       ],
       "correct": 3,
-      "explanation": "Obscure means not discovered or known about; unclear or hard to understand."
+      "explanation": "Obscure means not discovered or known about; unclear or hard to understand.",
+      "level": 3
     },
     {
       "question": "What does 'compel' mean?",
@@ -735,7 +801,8 @@
         "To ignore"
       ],
       "correct": 0,
-      "explanation": "Compel means to force or oblige someone to do something."
+      "explanation": "Compel means to force or oblige someone to do something.",
+      "level": 2
     },
     {
       "question": "What does 'adversary' mean?",
@@ -746,7 +813,8 @@
         "A teacher"
       ],
       "correct": 1,
-      "explanation": "An adversary is one's opponent in a contest, conflict, or dispute."
+      "explanation": "An adversary is one's opponent in a contest, conflict, or dispute.",
+      "level": 2
     },
     {
       "question": "What does 'elaborate' mean as a verb?",
@@ -757,7 +825,8 @@
         "To add more detail"
       ],
       "correct": 3,
-      "explanation": "To elaborate means to develop or present something in further detail."
+      "explanation": "To elaborate means to develop or present something in further detail.",
+      "level": 1
     },
     {
       "question": "What does 'ominous' mean?",
@@ -768,7 +837,8 @@
         "Completely silent"
       ],
       "correct": 0,
-      "explanation": "Ominous means giving the impression that something bad or unpleasant is going to happen."
+      "explanation": "Ominous means giving the impression that something bad or unpleasant is going to happen.",
+      "level": 2
     },
     {
       "question": "What does 'adhere' mean?",
@@ -779,7 +849,8 @@
         "To stick firmly; to follow closely"
       ],
       "correct": 3,
-      "explanation": "Adhere means to stick fast to a surface or to believe in and follow a practice."
+      "explanation": "Adhere means to stick fast to a surface or to believe in and follow a practice.",
+      "level": 2
     },
     {
       "question": "What does 'genuine' mean?",
@@ -790,7 +861,8 @@
         "Truly what it is said to be"
       ],
       "correct": 3,
-      "explanation": "Genuine means authentic; truly what something is said to be."
+      "explanation": "Genuine means authentic; truly what something is said to be.",
+      "level": 1
     },
     {
       "question": "What does 'hostile' mean?",
@@ -801,7 +873,8 @@
         "Quiet and shy"
       ],
       "correct": 0,
-      "explanation": "Hostile means unfriendly, antagonistic, or opposed."
+      "explanation": "Hostile means unfriendly, antagonistic, or opposed.",
+      "level": 2
     },
     {
       "question": "What does 'diminish' mean?",
@@ -812,7 +885,8 @@
         "To grow larger"
       ],
       "correct": 2,
-      "explanation": "Diminish means to make or become less; to decrease."
+      "explanation": "Diminish means to make or become less; to decrease.",
+      "level": 2
     },
     {
       "question": "What does 'credible' mean?",
@@ -823,7 +897,8 @@
         "Completely proven false"
       ],
       "correct": 1,
-      "explanation": "Credible means able to be believed or convincing."
+      "explanation": "Credible means able to be believed or convincing.",
+      "level": 2
     },
     {
       "question": "What does 'depict' mean?",
@@ -834,7 +909,8 @@
         "To measure"
       ],
       "correct": 1,
-      "explanation": "Depict means to represent or show something in a picture, story, or description."
+      "explanation": "Depict means to represent or show something in a picture, story, or description.",
+      "level": 2
     },
     {
       "question": "What does 'scarce' mean?",
@@ -845,7 +921,8 @@
         "Extremely cheap"
       ],
       "correct": 0,
-      "explanation": "Scarce means insufficient for the demand; rare or hard to find."
+      "explanation": "Scarce means insufficient for the demand; rare or hard to find.",
+      "level": 1
     },
     {
       "question": "What does 'assert' mean?",
@@ -856,7 +933,8 @@
         "To ask a question"
       ],
       "correct": 1,
-      "explanation": "Assert means to state a fact or belief confidently and forcefully."
+      "explanation": "Assert means to state a fact or belief confidently and forcefully.",
+      "level": 2
     },
     {
       "question": "What does 'coherent' mean?",
@@ -867,7 +945,8 @@
         "Logical and consistent"
       ],
       "correct": 3,
-      "explanation": "Coherent means logical and consistent; easy to understand as a whole."
+      "explanation": "Coherent means logical and consistent; easy to understand as a whole.",
+      "level": 3
     },
     {
       "question": "What does 'divert' mean?",
@@ -878,7 +957,8 @@
         "To finalize"
       ],
       "correct": 0,
-      "explanation": "Divert means to cause something to change course or to distract attention."
+      "explanation": "Divert means to cause something to change course or to distract attention.",
+      "level": 2
     },
     {
       "question": "What does 'imply' mean?",
@@ -889,7 +969,8 @@
         "To prove with data"
       ],
       "correct": 1,
-      "explanation": "Imply means to strongly suggest something without stating it outright."
+      "explanation": "Imply means to strongly suggest something without stating it outright.",
+      "level": 2
     },
     {
       "question": "What does 'legitimate' mean?",
@@ -900,7 +981,8 @@
         "Illegal or fake"
       ],
       "correct": 0,
-      "explanation": "Legitimate means conforming to the law or to rules; valid and justifiable."
+      "explanation": "Legitimate means conforming to the law or to rules; valid and justifiable.",
+      "level": 2
     },
     {
       "question": "What does 'navigate' mean?",
@@ -911,7 +993,8 @@
         "To ignore directions"
       ],
       "correct": 0,
-      "explanation": "Navigate means to plan and direct a route or to find one's way through something."
+      "explanation": "Navigate means to plan and direct a route or to find one's way through something.",
+      "level": 1
     },
     {
       "question": "What does 'reinforce' mean?",
@@ -922,7 +1005,8 @@
         "To postpone"
       ],
       "correct": 1,
-      "explanation": "Reinforce means to strengthen or support, especially with additional material or evidence."
+      "explanation": "Reinforce means to strengthen or support, especially with additional material or evidence.",
+      "level": 2
     },
     {
       "question": "What does 'subtle' mean?",
@@ -933,7 +1017,8 @@
         "Extremely large"
       ],
       "correct": 1,
-      "explanation": "Subtle means delicate, precise, or so slight as to be difficult to detect."
+      "explanation": "Subtle means delicate, precise, or so slight as to be difficult to detect.",
+      "level": 2
     },
     {
       "question": "What does 'validate' mean?",
@@ -944,7 +1029,8 @@
         "To invent a story"
       ],
       "correct": 2,
-      "explanation": "Validate means to check or prove the accuracy or value of something."
+      "explanation": "Validate means to check or prove the accuracy or value of something.",
+      "level": 2
     },
     {
       "question": "What does 'adapt' mean?",
@@ -955,7 +1041,8 @@
         "To adjust to new conditions"
       ],
       "correct": 3,
-      "explanation": "Adapt means to make suitable for a new use or purpose; to adjust."
+      "explanation": "Adapt means to make suitable for a new use or purpose; to adjust.",
+      "level": 1
     },
     {
       "question": "What does 'bias' mean?",
@@ -966,7 +1053,8 @@
         "Complete fairness"
       ],
       "correct": 1,
-      "explanation": "Bias is a prejudice in favor of or against a person, group, or idea."
+      "explanation": "Bias is a prejudice in favor of or against a person, group, or idea.",
+      "level": 2
     },
     {
       "question": "What does 'clarify' mean?",
@@ -977,7 +1065,8 @@
         "To make clearer and easier to understand"
       ],
       "correct": 3,
-      "explanation": "Clarify means to make a statement or situation less confused and more understandable."
+      "explanation": "Clarify means to make a statement or situation less confused and more understandable.",
+      "level": 1
     },
     {
       "question": "What does 'diverse' mean?",
@@ -988,7 +1077,8 @@
         "Extremely small"
       ],
       "correct": 0,
-      "explanation": "Diverse means showing a great deal of variety; very different."
+      "explanation": "Diverse means showing a great deal of variety; very different.",
+      "level": 1
     },
     {
       "question": "What does 'evaluate' mean?",
@@ -999,7 +1089,8 @@
         "To ignore information"
       ],
       "correct": 0,
-      "explanation": "Evaluate means to form an idea of the amount, number, or value of; to assess."
+      "explanation": "Evaluate means to form an idea of the amount, number, or value of; to assess.",
+      "level": 2
     },
     {
       "question": "What does 'justify' mean?",
@@ -1010,7 +1101,8 @@
         "To show something is right or reasonable"
       ],
       "correct": 3,
-      "explanation": "Justify means to show or prove that something is right, reasonable, or necessary."
+      "explanation": "Justify means to show or prove that something is right, reasonable, or necessary.",
+      "level": 1
     },
     {
       "question": "What does 'perspective' mean?",
@@ -1021,7 +1113,8 @@
         "A particular way of viewing something"
       ],
       "correct": 3,
-      "explanation": "Perspective is a particular attitude or way of regarding something; a point of view."
+      "explanation": "Perspective is a particular attitude or way of regarding something; a point of view.",
+      "level": 1
     },
     {
       "question": "What does 'significant' mean?",
@@ -1032,7 +1125,8 @@
         "Important or noteworthy"
       ],
       "correct": 3,
-      "explanation": "Significant means sufficiently great or important to be worthy of attention."
+      "explanation": "Significant means sufficiently great or important to be worthy of attention.",
+      "level": 1
     },
     {
       "question": "What does 'analyze' mean?",
@@ -1043,7 +1137,8 @@
         "To memorize blindly"
       ],
       "correct": 2,
-      "explanation": "Analyze means to examine something methodically in detail."
+      "explanation": "Analyze means to examine something methodically in detail.",
+      "level": 1
     }
   ],
   "minigame_context_clues": [

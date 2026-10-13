@@ -44,8 +44,10 @@ npm run typecheck
 
 ## Game Instructions
 
-1. **1–4 players** take turns (human or CPU). Pick characters, a map length, and party rules in setup:
-   - **Quick** — 5 rounds · **Classic** — 10 rounds · **Full Map** — 44 rounds
+1. **1–4 players** take turns (human or CPU). Pick characters, a map length, a board, and party rules in setup:
+   - **Boards:** 📚 Lexicon Loop (classic ring + inner shortcut) · 🌷 Grammar Garden (ring split by a garden path) · 🏔️ Spelling Summit (long switchback climb with a skip-ahead ledge)
+   - **Quick** — 5 rounds · **Classic** — 10 rounds · **Full Map** — one round per tile on the chosen board
+   - **Words:** All levels, Starter (grades 3–5), Standard (6–8), or Challenge (9–12) — applies to board questions and every minigame
    - **Minigames:** every round (default), every other round, or duel tiles only
    - **Bonus Stars:** on/off
 2. Click **ROLL** on your turn to roll the block die (**1–3**; dash can push the total higher).
@@ -71,6 +73,8 @@ npm run typecheck
 6. **Bonus Stars:** when the rounds run out, three extra trophies are awarded — 📚 Word Wizard (most correct answers), 🎮 Minigame Master (most minigame wins), 🪙 Coin Tycoon (most coins held at once).
 7. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
 8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
+9. Games **autosave** at the start of every turn — pick **Continue Party** on the main menu to resume.
+10. The **📖 Word Book** (main menu) tracks every word you've practiced on this device, with mastery levels, definitions, and a *Practice weak words* mode.
 
 ### Minigames
 
@@ -120,6 +124,7 @@ Vocab-Party/
     │   ├── MinigameScene.ts # Minigame runner: roulette, rules, hot-seat turns, results
     │   ├── ArcadeScene.ts   # Free-play minigame menu with personal bests
     │   ├── BonusStarsScene.ts # End-of-game bonus trophy ceremony
+    │   ├── WordBookScene.ts # Lifetime word mastery tracker
     │   ├── BattleScene.ts   # Player encounter battles
     │   ├── PauseScene.ts    # Pause menu overlay
     │   └── ResultsScene.ts  # Final podium and winner announcement
@@ -132,7 +137,9 @@ Vocab-Party/
     ├── systems/
     │   ├── GameState.ts     # Player/state types and factory
     │   ├── DiceSystem.ts    # Block die rolling utilities
-    │   ├── BoardLayout.ts   # Board node graph
+    │   ├── BoardLayout.ts   # Board definitions: node graphs, tile sets, themes
+    │   ├── SaveGame.ts      # Autosave / Continue Party
+    │   ├── Progress.ts      # Word Book progress (localStorage)
     │   ├── CpuPolicy.ts     # CPU decision-making
     │   ├── GameSettings.ts  # Audio and accessibility settings
     │   ├── SpriteFactory.ts # Procedural tiles, tokens, Kenney compositing
@@ -200,9 +207,12 @@ Most minigames draw from the lexicon. Each entry in `words` needs a part of spee
   "definition": "kind and generous toward others",
   "synonyms": ["kind", "generous", "charitable"],
   "antonyms": ["cruel", "selfish"],
-  "sentence": "The benevolent neighbor shoveled every driveway on the street."
+  "sentence": "The benevolent neighbor shoveled every driveway on the street.",
+  "level": 2
 }
 ```
+
+`level` (1 = Starter, 2 = Standard, 3 = Challenge) drives the Word Level setting; it is also supported on board questions in `vocab.json` / `grammar.json` and on `affixes`, `spelling`, and `roots` entries.
 
 `affixes`, `spelling`, and `roots` feed Prefix Factory, Spelling Bee, and Root Detective.
 

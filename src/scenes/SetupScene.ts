@@ -15,7 +15,7 @@ import {
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers, getAutoSimMinigames, getAutoSimBoard } from '../systems/gameFlags'
-import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { getSettings, isTouchPreferred, setSettings, shouldReduceMotion, WORD_LEVEL_LABEL, WORD_LEVEL_ORDER } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 
 const MAX_PLAYERS = 4
@@ -58,8 +58,8 @@ const OPTIONS_KEY = 'vocab-party-options'
 const FREQ_ORDER: MinigameFrequency[] = ['every', 'alternate', 'tiles']
 const FREQ_LABEL: Record<MinigameFrequency, string> = {
   every: 'Every round',
-  alternate: 'Every other round',
-  tiles: 'Duel tiles only',
+  alternate: 'Every 2nd round',
+  tiles: 'Duels only',
 }
 
 function loadPartyOptions(): PartyOptions {
@@ -108,6 +108,7 @@ export class SetupScene extends Phaser.Scene {
   private freqBtn?: Phaser.GameObjects.Container
   private bonusBtn?: Phaser.GameObjects.Container
   private boardBtn?: Phaser.GameObjects.Container
+  private levelBtn?: Phaser.GameObjects.Container
   private fullBlurb?: Phaser.GameObjects.Text
 
   constructor() { super('SetupScene') }
@@ -233,7 +234,7 @@ export class SetupScene extends Phaser.Scene {
 
     this.add.text(w / 2, rosterTop + 24, touch
       ? 'Tap portrait or name tag to change character  ·  Tap START'
-      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  M minigames  ·  B bonus  ·  Enter to start', {
+      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  L words  ·  M minigames  ·  B bonus  ·  Enter', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -271,13 +272,16 @@ export class SetupScene extends Phaser.Scene {
     // ——— Party rules ———
     this.partyOptions = loadPartyOptions()
     const rulesY = 596
-    this.boardBtn = createButton(this, w / 2 - 300, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 340, 44)
+    this.boardBtn = createButton(this, w / 2 - 352, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 300, 44)
     this.boardBtn.setDepth(6)
     this.boardBtn.on('pointerdown', () => this.cycleBoard())
-    this.freqBtn = createButton(this, w / 2 + 60, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 350, 44)
+    this.levelBtn = createButton(this, w / 2 - 70, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 244, 44)
+    this.levelBtn.setDepth(6)
+    this.levelBtn.on('pointerdown', () => this.cycleWordLevel())
+    this.freqBtn = createButton(this, w / 2 + 196, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 268, 44)
     this.freqBtn.setDepth(6)
     this.freqBtn.on('pointerdown', () => this.cycleMinigameFrequency())
-    this.bonusBtn = createButton(this, w / 2 + 352, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 214, 44)
+    this.bonusBtn = createButton(this, w / 2 + 425, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 170, 44)
     this.bonusBtn.setDepth(6)
     this.bonusBtn.on('pointerdown', () => this.toggleBonusStars())
     this.refreshPartyOptions()
@@ -334,6 +338,7 @@ export class SetupScene extends Phaser.Scene {
       if (this.activeRow >= 0) return
       if (ev.code === 'KeyM') this.cycleMinigameFrequency()
       else if (ev.code === 'KeyG') this.cycleBoard()
+      else if (ev.code === 'KeyL') this.cycleWordLevel()
       else if (ev.code === 'KeyB') this.toggleBonusStars()
     }
     this.input.keyboard?.on('keydown', onRules)
@@ -368,11 +373,20 @@ export class SetupScene extends Phaser.Scene {
   }
 
   private refreshPartyOptions() {
-    if (this.freqBtn) setButtonLabel(this.freqBtn, `🎮 Minigames: ${FREQ_LABEL[this.partyOptions.minigames]}`)
+    if (this.freqBtn) setButtonLabel(this.freqBtn, `🎮 ${FREQ_LABEL[this.partyOptions.minigames]}`)
+    if (this.levelBtn) setButtonLabel(this.levelBtn, `🎓 Words: ${WORD_LEVEL_LABEL[getSettings().wordLevel]}`)
     if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
     const board = getBoard(this.partyOptions.board)
-    if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} Board: ${board.name}`)
+    if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} ${board.name}`)
     this.fullBlurb?.setText(`${board.nodes.length} rounds · full lap`)
+  }
+
+  private cycleWordLevel() {
+    if (this.leaving) return
+    const cur = getSettings().wordLevel
+    setSettings({ wordLevel: WORD_LEVEL_ORDER[(WORD_LEVEL_ORDER.indexOf(cur) + 1) % WORD_LEVEL_ORDER.length] })
+    this.refreshPartyOptions()
+    Sfx.uiToggle()
   }
 
   private cycleBoard() {

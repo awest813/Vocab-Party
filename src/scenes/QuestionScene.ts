@@ -6,7 +6,7 @@ import { COLORS, FONT, hexColor } from '../ui/Theme'
 import type { GameState } from '../systems/GameState'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
-import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { filterByLevel, isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { drawFromDeck } from '../minigames/ContentBank'
 
@@ -15,6 +15,7 @@ interface QuestionData {
   answers: string[]
   correct: number
   explanation?: string
+  level?: number
 }
 
 export interface QuestionResolution {
@@ -76,7 +77,7 @@ export class QuestionScene extends Phaser.Scene {
     const bank = type === 'vocab'
       ? this.cache.json.get('vocab')?.questions as QuestionData[] | undefined
       : this.cache.json.get('grammar')?.questions as QuestionData[] | undefined
-    const questions = Array.isArray(bank) ? bank : []
+    const questions = Array.isArray(bank) ? filterByLevel(bank, 10) : []
     const raw: QuestionData = questions.length > 0
       ? drawFromDeck(`board-${data.type}`, questions)
       : FALLBACK_QUESTIONS[type]

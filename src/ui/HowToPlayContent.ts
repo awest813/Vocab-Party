@@ -25,7 +25,7 @@ export const HOW_TO_TILES: HowToTile[] = [
 ]
 
 export const HOW_TO_RULES = [
-  '🎭 Setup: tap a portrait to pick a character · choose Quick / Classic / Full Map',
+  '🎭 Setup: pick characters, a board, a word level, and Quick / Classic / Full Map',
   '🎲 Roll to move (tap ROLL, or Space / R on desktop)',
   '📖 Vocab & grammar tiles ask questions for points',
   '🌟 Star & 🏪 shop tiles: choose Buy or Pass when you land',
@@ -35,6 +35,7 @@ export const HOW_TO_RULES = [
   '🔥 Last Stretch: final rounds double bonus/penalty tiles; last place gets a boost',
   '🌟 Bonus Stars at the end: Word Wizard, Minigame Master, Coin Tycoon (+1 🏆 each)',
   '🎯 First to 5 trophies wins — or most trophies (then score) when rounds end',
+  '💾 Games autosave every turn · 📖 the Word Book tracks every word you practice',
 ]
 
 export const HOW_TO_CONTROLS_DESKTOP = [

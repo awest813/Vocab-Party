@@ -31,6 +31,7 @@ import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
+import { recordWords, wordFromQuestion } from '../systems/Progress'
 import type { BattleResult } from './BattleScene'
 import type { MinigameParticipant, MinigameResult, MinigameSceneData } from './MinigameScene'
 
@@ -1103,6 +1104,10 @@ export class BoardScene extends Phaser.Scene {
             onComplete: (result: QuestionResolution) => {
               this.scene.stop('QuestionScene')
               this.scene.resume()
+              if (!player.isCpu && !isAutoSimMode() && type === 'vocab' && result.question) {
+                const word = wordFromQuestion(result.question)
+                if (word) recordWords([{ word, correct: result.correct, note: result.explanation }])
+              }
               if (result.correct) {
                 player.stats.correctAnswers += 1
                 player.answerStreak += 1

@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { filterByLevel } from '../systems/GameSettings'
 
 export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb'
 
@@ -9,6 +10,7 @@ export interface LexWord {
   synonyms: string[]
   antonyms: string[]
   sentence: string
+  level?: number
 }
 
 export interface AffixItem {
@@ -18,11 +20,13 @@ export interface AffixItem {
   word: string
   definition: string
   distractors: string[]
+  level?: number
 }
 
 export interface SpellingItem {
   correct: string
   misspellings: string[]
+  level?: number
 }
 
 export interface RootItem {
@@ -30,6 +34,7 @@ export interface RootItem {
   meaning: string
   example: string
   distractors: string[]
+  level?: number
 }
 
 export interface LegacyChoiceItem {
@@ -142,6 +147,8 @@ function contentTokens(def: string): Set<string> {
 /** Typed, fault-tolerant access to every word/grammar bank the minigames draw from. */
 export class ContentBank {
   readonly words: LexWord[]
+  /** Every valid lexicon word, ignoring the Word Level setting (for lookups). */
+  readonly allWords: LexWord[]
   readonly affixes: AffixItem[]
   readonly spelling: SpellingItem[]
   readonly roots: RootItem[]
@@ -151,17 +158,26 @@ export class ContentBank {
   readonly synonyms: LegacyChoiceItem[]
   readonly grammarFix: LegacyChoiceItem[]
 
-  constructor(cache: Phaser.Cache.CacheManager) {
+  /** Words to favour (e.g. the player's weak words from the Word Book). */
+  private focus: LexWord[] = []
+
+  constructor(cache: Phaser.Cache.CacheManager, focusWords?: string[]) {
     const lex = (cache.json.get('lexicon') ?? {}) as LexiconJson
     const vocab = (cache.json.get('vocab') ?? {}) as Record<string, unknown[]>
     const grammar = (cache.json.get('grammar') ?? {}) as Record<string, unknown[]>
 
     const validWords = (lex.words ?? []).filter(w =>
       w && typeof w.word === 'string' && Array.isArray(w.synonyms) && w.synonyms.length > 0 && typeof w.definition === 'string')
-    this.words = validWords.length >= 12 ? validWords : FALLBACK_WORDS
-    this.affixes = (lex.affixes?.length ?? 0) >= 4 ? lex.affixes! : FALLBACK_AFFIXES
-    this.spelling = (lex.spelling?.length ?? 0) >= 4 ? lex.spelling! : FALLBACK_SPELLING
-    this.roots = (lex.roots?.length ?? 0) >= 3 ? lex.roots! : FALLBACK_ROOTS
+    this.allWords = validWords.length >= 12 ? validWords : FALLBACK_WORDS
+    // Respect the player's Word Level setting, keeping pools big enough to play.
+    this.words = validWords.length >= 12 ? filterByLevel(validWords, 40) : FALLBACK_WORDS
+    this.affixes = (lex.affixes?.length ?? 0) >= 4 ? filterByLevel(lex.affixes!, 12) : FALLBACK_AFFIXES
+    this.spelling = (lex.spelling?.length ?? 0) >= 4 ? filterByLevel(lex.spelling!, 12) : FALLBACK_SPELLING
+    this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 10) : FALLBACK_ROOTS
+    if (focusWords && focusWords.length > 0) {
+      const set = new Set(focusWords.map(w => w.toLowerCase()))
+      this.focus = this.words.filter(w => set.has(w.word))
+    }
 
     type Raw = { sentence?: string; prompt?: string; word?: string; choices?: string[]; correct?: number; correct_index?: number }
     const asChoice = (raw: unknown[] | undefined, promptOf: (r: Raw) => string | undefined): LegacyChoiceItem[] =>
@@ -191,6 +207,10 @@ export class ContentBank {
 
   /** Draw a word; pass a `key` naming the filter so different filters keep separate no-repeat decks. */
   word(filter?: (w: LexWord) => boolean, key = 'filtered'): LexWord {
+    if (this.focus.length > 0 && Math.random() < 0.6) {
+      const pool = filter ? this.focus.filter(filter) : this.focus
+      if (pool.length > 0) return this.draw(`focus:${key}:${pool.length}`, pool)
+    }
     if (!filter) return this.draw('words', this.words)
     const pool = this.words.filter(filter)
     return pool.length > 0 ? this.draw(`words:${key}:${pool.length}`, pool) : this.draw('words', this.words)

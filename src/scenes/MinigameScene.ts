@@ -19,6 +19,7 @@ import {
   recordPersonalBest,
 } from '../minigames/registry'
 import { stopSpeech } from '../minigames/speech'
+import { recordMinigame, recordWords } from '../systems/Progress'
 import type { MinigameContext, MinigameDef, MinigameInstance, PlayArea } from '../minigames/types'
 import { popText } from '../minigames/ui'
 
@@ -58,6 +59,8 @@ export interface MinigameSceneData {
   /** Optional per-place reward labels shown on the results board. */
   rewardLabels?: string[]
   onComplete?: (result: MinigameResult) => void
+  /** Practice these words more often (Word Book → practice weak words). */
+  focusWords?: string[]
 }
 
 const HEADER_H = 92
@@ -108,7 +111,7 @@ export class MinigameScene extends Phaser.Scene {
     this.sidebarTexts = new Map()
     this.playedIds = new Set()
     this.ghostScores = new Map()
-    this.bank = new ContentBank(this.cache)
+    this.bank = new ContentBank(this.cache, data.focusWords)
     data.participants.forEach(p => {
       this.scores[p.id] = 0
       this.study[p.id] = []
@@ -718,10 +721,21 @@ export class MinigameScene extends Phaser.Scene {
     return { gameId: this.def.id, scores: { ...this.scores }, placements, ranking, study: this.study }
   }
 
+  /** Persist human players' practice into the lifetime Word Book. */
+  private recordProgress(result: MinigameResult) {
+    if (isAutoSimMode()) return
+    const competitive = this.data_.participants.length > 1
+    for (const p of this.humans) {
+      recordWords(result.study[p.id] ?? [])
+      recordMinigame(competitive && result.placements[p.id] === 1)
+    }
+  }
+
   private showResults() {
     const w = this.scale.width
     const h = this.scale.height
     const result = this.computeResult()
+    this.recordProgress(result)
     const practice = this.data_.mode === 'practice'
     const fast = isAutoSimMode()
 

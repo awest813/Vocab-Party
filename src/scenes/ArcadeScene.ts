@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL, type CpuLevel } from '../systems/CpuPolicy'
-import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { getSettings, isTouchPreferred, setSettings, shouldReduceMotion, WORD_LEVEL_LABEL, WORD_LEVEL_ORDER } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { createButton, setButtonLabel } from '../ui/Button'
 import { addVignette, paintStage } from '../ui/Panel'
@@ -62,6 +62,16 @@ export class ArcadeScene extends Phaser.Scene {
     }
     modeBtn.on('pointerdown', cycleMode)
 
+    const levelLabel = () => `🎓 ${WORD_LEVEL_LABEL[getSettings().wordLevel]}`
+    const levelBtn = createButton(this, w - 150, 104, levelLabel(), COLORS.bgPanelAlt, COLORS.chromeDeep, 200, 38)
+    const cycleLevel = () => {
+      const cur = getSettings().wordLevel
+      setSettings({ wordLevel: WORD_LEVEL_ORDER[(WORD_LEVEL_ORDER.indexOf(cur) + 1) % WORD_LEVEL_ORDER.length] })
+      setButtonLabel(levelBtn, levelLabel())
+      Sfx.uiToggle()
+    }
+    levelBtn.on('pointerdown', cycleLevel)
+
     const rows = Math.ceil(MINIGAMES.length / COLS)
     const gridW = COLS * CARD_W + (COLS - 1) * GAP
     const top = 140
@@ -76,7 +86,7 @@ export class ArcadeScene extends Phaser.Scene {
       this.cards.push(this.makeCard(def, x, y, bests[def.id] ?? 0, i))
     })
 
-    this.add.text(w / 2, h - 26, touch ? 'Tap a game to play · tap the mode button to face CPUs' : 'Arrows choose · Enter plays · M switches solo / vs CPUs · Esc returns to menu', {
+    this.add.text(w / 2, h - 26, touch ? 'Tap a game to play · tap the mode button to face CPUs' : 'Arrows choose · Enter plays · M solo / vs CPUs · L word level · Esc returns to menu', {
       fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
@@ -91,6 +101,7 @@ export class ArcadeScene extends Phaser.Scene {
         case 'Space': this.play(this.cards[this.cursor].def); break
         case 'Escape': this.leave(); break
         case 'KeyM': cycleMode(); break
+        case 'KeyL': cycleLevel(); break
         default: return
       }
       ev.preventDefault()

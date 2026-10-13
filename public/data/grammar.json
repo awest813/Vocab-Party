@@ -9,7 +9,8 @@
         "I went to the store and, I bought milk."
       ],
       "correct": 0,
-      "explanation": "Use a comma before a coordinating conjunction joining two independent clauses."
+      "explanation": "Use a comma before a coordinating conjunction joining two independent clauses.",
+      "level": 2
     },
     {
       "question": "Which sentence has correct subject-verb agreement?",
@@ -20,7 +21,8 @@
         "The dogs were runs in the park."
       ],
       "correct": 1,
-      "explanation": "The plural subject 'dogs' requires the plural verb 'run'."
+      "explanation": "The plural subject 'dogs' requires the plural verb 'run'.",
+      "level": 1
     },
     {
       "question": "Which is the correct plural of 'child'?",
@@ -31,7 +33,8 @@
         "Childrens"
       ],
       "correct": 2,
-      "explanation": "The irregular plural of 'child' is 'children'."
+      "explanation": "The irregular plural of 'child' is 'children'.",
+      "level": 1
     },
     {
       "question": "Which sentence is in the active voice?",
@@ -42,7 +45,8 @@
         "Eaten was the cake."
       ],
       "correct": 1,
-      "explanation": "Active voice: subject performs the action directly."
+      "explanation": "Active voice: subject performs the action directly.",
+      "level": 2
     },
     {
       "question": "Which word is a conjunction?",
@@ -53,7 +57,8 @@
         "Ran"
       ],
       "correct": 2,
-      "explanation": "'Although' is a subordinating conjunction."
+      "explanation": "'Although' is a subordinating conjunction.",
+      "level": 2
     },
     {
       "question": "Which sentence uses an apostrophe correctly?",
@@ -64,7 +69,8 @@
         "The cats' toy is lost."
       ],
       "correct": 0,
-      "explanation": "Use 's to show singular possession."
+      "explanation": "Use 's to show singular possession.",
+      "level": 1
     },
     {
       "question": "What type of sentence is this: 'Run!'",
@@ -75,7 +81,8 @@
         "Exclamatory"
       ],
       "correct": 2,
-      "explanation": "An imperative sentence gives a command."
+      "explanation": "An imperative sentence gives a command.",
+      "level": 1
     },
     {
       "question": "Which word is an adverb in: 'She sings beautifully'?",
@@ -86,7 +93,8 @@
         "None"
       ],
       "correct": 2,
-      "explanation": "Beautifully modifies the verb 'sings' — it's an adverb."
+      "explanation": "Beautifully modifies the verb 'sings' — it's an adverb.",
+      "level": 1
     },
     {
       "question": "Which sentence is punctuated correctly?",
@@ -97,7 +105,8 @@
         "Wow! that is amazing."
       ],
       "correct": 1,
-      "explanation": "An interjection like 'Wow' is followed by a comma, then the rest of the sentence."
+      "explanation": "An interjection like 'Wow' is followed by a comma, then the rest of the sentence.",
+      "level": 1
     },
     {
       "question": "Which word correctly completes: 'Neither the teacher ___ the students were late.'?",
@@ -108,7 +117,8 @@
         "and"
       ],
       "correct": 1,
-      "explanation": "'Neither...nor' is a correlative conjunction pair."
+      "explanation": "'Neither...nor' is a correlative conjunction pair.",
+      "level": 2
     },
     {
       "question": "What is the correct past tense of 'bring'?",
@@ -119,7 +129,8 @@
         "Broughts"
       ],
       "correct": 2,
-      "explanation": "The irregular past tense of 'bring' is 'brought'."
+      "explanation": "The irregular past tense of 'bring' is 'brought'.",
+      "level": 1
     },
     {
       "question": "Which sentence uses 'its' correctly?",
@@ -130,7 +141,8 @@
         "The dog wagged its tail's."
       ],
       "correct": 1,
-      "explanation": "'Its' (no apostrophe) is the possessive pronoun; 'it's' means 'it is'."
+      "explanation": "'Its' (no apostrophe) is the possessive pronoun; 'it's' means 'it is'.",
+      "level": 2
     },
     {
       "question": "What is a compound sentence?",
@@ -141,7 +153,8 @@
         "A sentence with no verbs"
       ],
       "correct": 1,
-      "explanation": "A compound sentence joins two independent clauses with a coordinating conjunction."
+      "explanation": "A compound sentence joins two independent clauses with a coordinating conjunction.",
+      "level": 2
     },
     {
       "question": "Which word is a preposition in: 'The book is on the table'?",
@@ -152,7 +165,8 @@
         "table"
       ],
       "correct": 2,
-      "explanation": "'On' is a preposition showing the relationship between the book and the table."
+      "explanation": "'On' is a preposition showing the relationship between the book and the table.",
+      "level": 1
     },
     {
       "question": "Which sentence uses the correct form of 'lie/lay'?",
@@ -163,7 +177,8 @@
         "I need to lied down for a nap."
       ],
       "correct": 1,
-      "explanation": "'Lie' means to recline; 'lay' requires an object."
+      "explanation": "'Lie' means to recline; 'lay' requires an object.",
+      "level": 3
     },
     {
       "question": "Which sentence correctly uses a semicolon?",
@@ -174,7 +189,8 @@
         "I love; pizza it is delicious."
       ],
       "correct": 1,
-      "explanation": "A semicolon connects two closely related independent clauses."
+      "explanation": "A semicolon connects two closely related independent clauses.",
+      "level": 3
     },
     {
       "question": "What part of speech is 'beautiful' in: 'The beautiful sunset amazed us'?",
@@ -185,7 +201,8 @@
         "Adverb"
       ],
       "correct": 2,
-      "explanation": "'Beautiful' modifies the noun 'sunset', so it is an adjective."
+      "explanation": "'Beautiful' modifies the noun 'sunset', so it is an adjective.",
+      "level": 1
     },
     {
       "question": "Which sentence avoids a double negative?",
@@ -196,7 +213,8 @@
         "I never did nothing."
       ],
       "correct": 1,
-      "explanation": "Double negatives cancel each other out. Use 'anything' with 'didn't'."
+      "explanation": "Double negatives cancel each other out. Use 'anything' with 'didn't'.",
+      "level": 1
     },
     {
       "question": "Which sentence uses the correct relative pronoun?",
@@ -207,7 +225,8 @@
         "The car which whom I bought is fast."
       ],
       "correct": 1,
-      "explanation": "Use 'that' or 'which' for objects/animals; 'who' is for people."
+      "explanation": "Use 'that' or 'which' for objects/animals; 'who' is for people.",
+      "level": 2
     },
     {
       "question": "What is the superlative form of 'good'?",
@@ -218,7 +237,8 @@
         "Bestest"
       ],
       "correct": 2,
-      "explanation": "The forms are good (positive), better (comparative), and best (superlative)."
+      "explanation": "The forms are good (positive), better (comparative), and best (superlative).",
+      "level": 1
     },
     {
       "question": "Which sentence uses a colon correctly?",
@@ -229,7 +249,8 @@
         "I: need eggs milk and bread."
       ],
       "correct": 1,
-      "explanation": "Use a colon after a complete sentence to introduce a list."
+      "explanation": "Use a colon after a complete sentence to introduce a list.",
+      "level": 2
     },
     {
       "question": "Which is an example of an oxymoron?",
@@ -240,7 +261,8 @@
         "Big house"
       ],
       "correct": 0,
-      "explanation": "An oxymoron combines two contradictory terms, like 'pretty ugly'."
+      "explanation": "An oxymoron combines two contradictory terms, like 'pretty ugly'.",
+      "level": 2
     },
     {
       "question": "Which sentence is in the past perfect tense?",
@@ -251,7 +273,8 @@
         "I will have eaten the apple."
       ],
       "correct": 2,
-      "explanation": "Past perfect uses 'had' + past participle."
+      "explanation": "Past perfect uses 'had' + past participle.",
+      "level": 2
     },
     {
       "question": "What is the purpose of an interjection?",
@@ -262,7 +285,8 @@
         "To name a person"
       ],
       "correct": 1,
-      "explanation": "Interjections (like 'Wow!' or 'Oops!') express sudden emotion."
+      "explanation": "Interjections (like 'Wow!' or 'Oops!') express sudden emotion.",
+      "level": 1
     },
     {
       "question": "Which sentence uses 'further' correctly?",
@@ -273,7 +297,8 @@
         "The store is further away."
       ],
       "correct": 1,
-      "explanation": "'Farther' refers to physical distance; 'further' refers to figurative depth or extent."
+      "explanation": "'Farther' refers to physical distance; 'further' refers to figurative depth or extent.",
+      "level": 3
     },
     {
       "question": "What is a gerund?",
@@ -284,7 +309,8 @@
         "A past tense verb"
       ],
       "correct": 1,
-      "explanation": "A gerund is a verb form ending in -ing that functions as a noun (e.g., 'Swimming is fun')."
+      "explanation": "A gerund is a verb form ending in -ing that functions as a noun (e.g., 'Swimming is fun').",
+      "level": 3
     },
     {
       "question": "Which sentence uses the correct conditional mood?",
@@ -295,7 +321,8 @@
         "If I be you, I would go."
       ],
       "correct": 1,
-      "explanation": "The subjunctive mood 'were' is used for hypothetical or contrary-to-fact statements."
+      "explanation": "The subjunctive mood 'were' is used for hypothetical or contrary-to-fact statements.",
+      "level": 3
     },
     {
       "question": "Which word is an abstract noun?",
@@ -306,7 +333,8 @@
         "Computer"
       ],
       "correct": 1,
-      "explanation": "An abstract noun refers to an idea, quality, or state rather than a physical object."
+      "explanation": "An abstract noun refers to an idea, quality, or state rather than a physical object.",
+      "level": 2
     },
     {
       "question": "Which sentence contains a participle phrase?",
@@ -317,7 +345,8 @@
         "She is a swimmer."
       ],
       "correct": 1,
-      "explanation": "A participle phrase begins with a participle and functions as an adjective."
+      "explanation": "A participle phrase begins with a participle and functions as an adjective.",
+      "level": 3
     },
     {
       "question": "Which is a complex sentence?",
@@ -328,7 +357,8 @@
         "I went home and ate dinner."
       ],
       "correct": 2,
-      "explanation": "A complex sentence has one independent clause and at least one dependent clause."
+      "explanation": "A complex sentence has one independent clause and at least one dependent clause.",
+      "level": 2
     },
     {
       "question": "Which sentence uses 'than' correctly?",
@@ -339,7 +369,8 @@
         "She is taller this me."
       ],
       "correct": 1,
-      "explanation": "'Than' is used for comparisons; 'then' refers to time."
+      "explanation": "'Than' is used for comparisons; 'then' refers to time.",
+      "level": 1
     },
     {
       "question": "What type of noun is 'team'?",
@@ -350,7 +381,8 @@
         "Compound noun"
       ],
       "correct": 1,
-      "explanation": "A collective noun names a group of individuals (team, jury, audience)."
+      "explanation": "A collective noun names a group of individuals (team, jury, audience).",
+      "level": 2
     },
     {
       "question": "Which sentence uses a dash correctly?",
@@ -361,7 +393,8 @@
         "The - answer is simple really."
       ],
       "correct": 2,
-      "explanation": "A dash (—) sets off a dramatic pause or emphasis within a sentence."
+      "explanation": "A dash (—) sets off a dramatic pause or emphasis within a sentence.",
+      "level": 2
     },
     {
       "question": "What is the predicate nominative in: 'She is a teacher'?",
@@ -372,7 +405,8 @@
         "a"
       ],
       "correct": 2,
-      "explanation": "A predicate nominative follows a linking verb and renames the subject."
+      "explanation": "A predicate nominative follows a linking verb and renames the subject.",
+      "level": 3
     },
     {
       "question": "Which is a transitive verb?",
@@ -383,7 +417,8 @@
         "The sun shines."
       ],
       "correct": 2,
-      "explanation": "A transitive verb needs a direct object to complete its meaning."
+      "explanation": "A transitive verb needs a direct object to complete its meaning.",
+      "level": 2
     },
     {
       "question": "Which sentence correctly uses 'whom'?",
@@ -394,7 +429,8 @@
         "Whom did that?"
       ],
       "correct": 1,
-      "explanation": "'Whom' is used as an object (after prepositions, or as direct/indirect object)."
+      "explanation": "'Whom' is used as an object (after prepositions, or as direct/indirect object).",
+      "level": 3
     },
     {
       "question": "What is a dependent clause?",
@@ -405,7 +441,8 @@
         "A type of phrase"
       ],
       "correct": 1,
-      "explanation": "A dependent clause has a subject and verb but cannot stand alone as a sentence."
+      "explanation": "A dependent clause has a subject and verb but cannot stand alone as a sentence.",
+      "level": 2
     },
     {
       "question": "Which word is a coordinating conjunction?",
@@ -416,7 +453,8 @@
         "Unless"
       ],
       "correct": 1,
-      "explanation": "Coordinating conjunctions: for, and, nor, but, or, yet, so (FANBOYS)."
+      "explanation": "Coordinating conjunctions: for, and, nor, but, or, yet, so (FANBOYS).",
+      "level": 2
     },
     {
       "question": "Which sentence uses an ellipsis correctly?",
@@ -427,7 +465,8 @@
         "I was thinking maybe we... could go... to the park"
       ],
       "correct": 1,
-      "explanation": "An ellipsis (...) shows a pause or incomplete thought."
+      "explanation": "An ellipsis (...) shows a pause or incomplete thought.",
+      "level": 2
     },
     {
       "question": "What is the present perfect tense of 'eat'?",
@@ -438,7 +477,8 @@
         "I will have eaten"
       ],
       "correct": 1,
-      "explanation": "Present perfect: 'have/has' + past participle."
+      "explanation": "Present perfect: 'have/has' + past participle.",
+      "level": 2
     },
     {
       "question": "Which sentence has a dangling modifier?",
@@ -449,7 +489,8 @@
         "Walking the dog, a bird saw me."
       ],
       "correct": 1,
-      "explanation": "A dangling modifier has no clear subject in the sentence."
+      "explanation": "A dangling modifier has no clear subject in the sentence.",
+      "level": 3
     },
     {
       "question": "What is an appositive?",
@@ -460,7 +501,8 @@
         "A punctuation mark"
       ],
       "correct": 1,
-      "explanation": "An appositive renames or explains a nearby noun or pronoun."
+      "explanation": "An appositive renames or explains a nearby noun or pronoun.",
+      "level": 2
     },
     {
       "question": "Which sentence correctly uses 'effect'?",
@@ -471,7 +513,8 @@
         "Effect means to influence."
       ],
       "correct": 1,
-      "explanation": "'Effect' (noun) is a result; 'affect' (verb) means to influence."
+      "explanation": "'Effect' (noun) is a result; 'affect' (verb) means to influence.",
+      "level": 2
     },
     {
       "question": "Which is a compound-complex sentence?",
@@ -482,7 +525,8 @@
         "Because I was tired, I went home, but she stayed."
       ],
       "correct": 3,
-      "explanation": "A compound-complex sentence has two independent clauses and at least one dependent clause."
+      "explanation": "A compound-complex sentence has two independent clauses and at least one dependent clause.",
+      "level": 3
     },
     {
       "question": "What is the function of an adjective clause?",
@@ -493,7 +537,8 @@
         "To connect ideas"
       ],
       "correct": 1,
-      "explanation": "An adjective clause modifies a noun or pronoun and usually begins with a relative pronoun."
+      "explanation": "An adjective clause modifies a noun or pronoun and usually begins with a relative pronoun.",
+      "level": 3
     },
     {
       "question": "Which sentence uses correct capitalization?",
@@ -504,7 +549,8 @@
         "my aunt and I went to the Grand Canyon."
       ],
       "correct": 1,
-      "explanation": "Titles are not capitalized unless used as names; proper nouns are capitalized."
+      "explanation": "Titles are not capitalized unless used as names; proper nouns are capitalized.",
+      "level": 1
     },
     {
       "question": "What does 'irony' refer to in writing?",
@@ -515,7 +561,8 @@
         "A repeated sound"
       ],
       "correct": 1,
-      "explanation": "Irony is the expression of one's meaning by using language that normally signifies the opposite."
+      "explanation": "Irony is the expression of one's meaning by using language that normally signifies the opposite.",
+      "level": 2
     },
     {
       "question": "Which sentence uses the subjunctive mood?",
@@ -526,7 +573,8 @@
         "I will be taller."
       ],
       "correct": 1,
-      "explanation": "The subjunctive mood expresses wishes, hypotheticals, and contrary-to-fact conditions."
+      "explanation": "The subjunctive mood expresses wishes, hypotheticals, and contrary-to-fact conditions.",
+      "level": 3
     }
   ],
   "minigame_comma": [

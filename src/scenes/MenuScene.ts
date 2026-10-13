@@ -216,18 +216,27 @@ export class MenuScene extends Phaser.Scene {
     arcadeBtn.setDepth(6)
     arcadeBtn.on('pointerdown', goArcade)
 
-    const howBtn = createButton(this, w / 2 - 92, 532 + shift, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 176, 52)
+    const howBtn = createButton(this, w / 2 - 188, 532 + shift, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 176, 52)
     howBtn.setDepth(6)
     howBtn.on('pointerdown', () => this.openHowTo())
 
-    const settingsBtn = createButton(this, w / 2 + 92, 532 + shift, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 176, 52)
+    const settingsBtn = createButton(this, w / 2 + 188, 532 + shift, 'SETTINGS', COLORS.bgPanelAlt, COLORS.chromeDeep, 176, 52)
     settingsBtn.setDepth(6)
     settingsBtn.on('pointerdown', () => this.openSettings())
+
+    const bookBtn = createButton(this, w / 2, 532 + shift, '📖 WORD BOOK', COLORS.mint, 0x2fb56a, 176, 52)
+    bookBtn.setDepth(6)
+    const goBook = () => {
+      if (this.modalOpen || leaving) return
+      leaving = true
+      this.scene.start('WordBookScene')
+    }
+    bookBtn.on('pointerdown', goBook)
 
     // Stagger CTA entrance
     if (continueSub) continueSub.setAlpha(0)
     if (continueSub) this.tweens.add({ targets: continueSub, alpha: 1, duration: reduce ? 0 : 400, delay: reduce ? 0 : 300 })
-    ;[...ctas, arcadeBtn, howBtn, settingsBtn].forEach((btn, i) => {
+    ;[...ctas, arcadeBtn, howBtn, bookBtn, settingsBtn].forEach((btn, i) => {
       btn.setAlpha(0)
       btn.y += 18
       this.tweens.add({
@@ -246,7 +255,7 @@ export class MenuScene extends Phaser.Scene {
 
     const hint = this.add.text(w / 2, h - 48, touch
       ? 'Tap ENTER PARTY to begin  ·  Rotate landscape for the best view'
-      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  ? = How to Play' : 'Enter = Start  ·  A = Arcade  ·  ? = How to Play  ·  Esc closes panels', {
+      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  ? = How to Play' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  ? = How to Play', {
       fontSize: '14px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -284,6 +293,7 @@ export class MenuScene extends Phaser.Scene {
     const onEnterKey = () => (save ? goContinue() : goSetup())
     this.input.keyboard?.on('keydown-ENTER', onEnterKey)
     this.input.keyboard?.on('keydown-N', goSetup)
+    this.input.keyboard?.on('keydown-W', goBook)
     this.input.keyboard?.on('keydown-A', goArcade)
     this.input.keyboard?.on('keydown', openHowToFromKeyboard)
     this.input.keyboard?.on('keydown-KeyH', onHelpKey)
@@ -291,6 +301,7 @@ export class MenuScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown-ESC', onEsc)
       this.input.keyboard?.off('keydown-ENTER', onEnterKey)
       this.input.keyboard?.off('keydown-N', goSetup)
+      this.input.keyboard?.off('keydown-W', goBook)
       this.input.keyboard?.off('keydown-A', goArcade)
       this.input.keyboard?.off('keydown', openHowToFromKeyboard)
       this.input.keyboard?.off('keydown-KeyH', onHelpKey)

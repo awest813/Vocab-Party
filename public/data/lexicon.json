@@ -13,7 +13,8 @@
         "fact",
         "certainty"
       ],
-      "sentence": "Her hypothesis predicted that plants grow faster in warm light."
+      "sentence": "Her hypothesis predicted that plants grow faster in warm light.",
+      "level": 2
     },
     {
       "word": "ambition",
@@ -28,7 +29,8 @@
         "apathy",
         "laziness"
       ],
-      "sentence": "Her ambition is to design a bridge one day."
+      "sentence": "Her ambition is to design a bridge one day.",
+      "level": 1
     },
     {
       "word": "catastrophe",
@@ -43,7 +45,8 @@
         "blessing",
         "triumph"
       ],
-      "sentence": "The flooded gym was a catastrophe for the school dance."
+      "sentence": "The flooded gym was a catastrophe for the school dance.",
+      "level": 2
     },
     {
       "word": "dilemma",
@@ -58,7 +61,8 @@
         "solution",
         "answer"
       ],
-      "sentence": "Choosing between soccer and band was a real dilemma."
+      "sentence": "Choosing between soccer and band was a real dilemma.",
+      "level": 2
     },
     {
       "word": "courage",
@@ -73,7 +77,8 @@
         "cowardice",
         "fear"
       ],
-      "sentence": "It took courage to sing alone on the stage."
+      "sentence": "It took courage to sing alone on the stage.",
+      "level": 1
     },
     {
       "word": "curiosity",
@@ -88,7 +93,8 @@
         "indifference",
         "apathy"
       ],
-      "sentence": "Her curiosity led her to take apart the old radio."
+      "sentence": "Her curiosity led her to take apart the old radio.",
+      "level": 1
     },
     {
       "word": "evidence",
@@ -102,7 +108,8 @@
       "antonyms": [
         "disproof"
       ],
-      "sentence": "The muddy footprints were evidence that the dog had been inside."
+      "sentence": "The muddy footprints were evidence that the dog had been inside.",
+      "level": 1
     },
     {
       "word": "harmony",
@@ -117,7 +124,8 @@
         "conflict",
         "discord"
       ],
-      "sentence": "The two cats lived in harmony after a few weeks."
+      "sentence": "The two cats lived in harmony after a few weeks.",
+      "level": 1
     },
     {
       "word": "obstacle",
@@ -132,7 +140,8 @@
         "aid",
         "help"
       ],
-      "sentence": "A fallen tree was the biggest obstacle on the trail."
+      "sentence": "A fallen tree was the biggest obstacle on the trail.",
+      "level": 2
     },
     {
       "word": "prosperity",
@@ -147,7 +156,8 @@
         "poverty",
         "hardship"
       ],
-      "sentence": "The new factory brought prosperity to the small town."
+      "sentence": "The new factory brought prosperity to the small town.",
+      "level": 2
     },
     {
       "word": "resilience",
@@ -162,7 +172,8 @@
         "fragility",
         "weakness"
       ],
-      "sentence": "The team showed resilience after losing the first game."
+      "sentence": "The team showed resilience after losing the first game.",
+      "level": 3
     },
     {
       "word": "anomaly",
@@ -177,7 +188,8 @@
         "norm",
         "rule"
       ],
-      "sentence": "A snowstorm in May was an anomaly for the region."
+      "sentence": "A snowstorm in May was an anomaly for the region.",
+      "level": 3
     },
     {
       "word": "consensus",
@@ -192,7 +204,8 @@
         "disagreement",
         "dissent"
       ],
-      "sentence": "The class reached a consensus on the field trip."
+      "sentence": "The class reached a consensus on the field trip.",
+      "level": 3
     },
     {
       "word": "empathy",
@@ -207,7 +220,8 @@
         "indifference",
         "coldness"
       ],
-      "sentence": "Her empathy made her a great peer mentor."
+      "sentence": "Her empathy made her a great peer mentor.",
+      "level": 1
     },
     {
       "word": "fatigue",
@@ -222,7 +236,8 @@
         "energy",
         "vigor"
       ],
-      "sentence": "After the long hike, fatigue set in quickly."
+      "sentence": "After the long hike, fatigue set in quickly.",
+      "level": 2
     },
     {
       "word": "integrity",
@@ -237,7 +252,8 @@
         "dishonesty",
         "deceit"
       ],
-      "sentence": "He showed integrity by returning the lost wallet."
+      "sentence": "He showed integrity by returning the lost wallet.",
+      "level": 2
     },
     {
       "word": "chaos",
@@ -252,7 +268,8 @@
         "order",
         "calm"
       ],
-      "sentence": "The kitchen was chaos during the bake sale."
+      "sentence": "The kitchen was chaos during the bake sale.",
+      "level": 2
     },
     {
       "word": "myth",
@@ -267,7 +284,8 @@
         "fact",
         "truth"
       ],
-      "sentence": "It is a myth that goldfish forget everything in seconds."
+      "sentence": "It is a myth that goldfish forget everything in seconds.",
+      "level": 1
     },
     {
       "word": "novice",
@@ -282,7 +300,8 @@
         "expert",
         "veteran"
       ],
-      "sentence": "As a novice, she practiced her scales every day."
+      "sentence": "As a novice, she practiced her scales every day.",
+      "level": 2
     },
     {
       "word": "paradox",
@@ -296,7 +315,8 @@
       "antonyms": [
         "truism"
       ],
-      "sentence": "It is a paradox that resting too much can make you tired."
+      "sentence": "It is a paradox that resting too much can make you tired.",
+      "level": 3
     },
     {
       "word": "scarcity",
@@ -311,7 +331,8 @@
         "abundance",
         "plenty"
       ],
-      "sentence": "The drought caused a scarcity of fresh water."
+      "sentence": "The drought caused a scarcity of fresh water.",
+      "level": 2
     },
     {
       "word": "triumph",
@@ -326,7 +347,8 @@
         "defeat",
         "failure"
       ],
-      "sentence": "Finishing the marathon was a triumph for her."
+      "sentence": "Finishing the marathon was a triumph for her.",
+      "level": 1
     },
     {
       "word": "vigor",
@@ -341,7 +363,8 @@
         "weakness",
         "lethargy"
       ],
-      "sentence": "The puppy chased the ball with great vigor."
+      "sentence": "The puppy chased the ball with great vigor.",
+      "level": 3
     },
     {
       "word": "clarity",
@@ -356,7 +379,8 @@
         "confusion",
         "vagueness"
       ],
-      "sentence": "The teacher explained the rule with great clarity."
+      "sentence": "The teacher explained the rule with great clarity.",
+      "level": 2
     },
     {
       "word": "diligence",
@@ -371,7 +395,8 @@
         "laziness",
         "neglect"
       ],
-      "sentence": "Her diligence paid off on the final exam."
+      "sentence": "Her diligence paid off on the final exam.",
+      "level": 3
     },
     {
       "word": "enthusiasm",
@@ -386,7 +411,8 @@
         "apathy",
         "boredom"
       ],
-      "sentence": "The crowd cheered with enthusiasm for the band."
+      "sentence": "The crowd cheered with enthusiasm for the band.",
+      "level": 2
     },
     {
       "word": "fortitude",
@@ -401,7 +427,8 @@
         "weakness",
         "timidity"
       ],
-      "sentence": "Climbing the last steep hill took real fortitude."
+      "sentence": "Climbing the last steep hill took real fortitude.",
+      "level": 3
     },
     {
       "word": "gratitude",
@@ -415,7 +442,8 @@
       "antonyms": [
         "ingratitude"
       ],
-      "sentence": "She wrote a note of gratitude to her coach."
+      "sentence": "She wrote a note of gratitude to her coach.",
+      "level": 1
     },
     {
       "word": "humility",
@@ -430,7 +458,8 @@
         "arrogance",
         "pride"
       ],
-      "sentence": "Despite winning, she accepted the trophy with humility."
+      "sentence": "Despite winning, she accepted the trophy with humility.",
+      "level": 2
     },
     {
       "word": "insight",
@@ -444,7 +473,8 @@
       "antonyms": [
         "ignorance"
       ],
-      "sentence": "Her insight helped the group solve the riddle."
+      "sentence": "Her insight helped the group solve the riddle.",
+      "level": 2
     },
     {
       "word": "luxury",
@@ -458,7 +488,8 @@
       "antonyms": [
         "necessity"
       ],
-      "sentence": "A hot bath felt like a luxury after camping."
+      "sentence": "A hot bath felt like a luxury after camping.",
+      "level": 1
     },
     {
       "word": "nuisance",
@@ -473,7 +504,8 @@
         "pleasure",
         "delight"
       ],
-      "sentence": "The buzzing fly was a nuisance during the test."
+      "sentence": "The buzzing fly was a nuisance during the test.",
+      "level": 2
     },
     {
       "word": "opponent",
@@ -488,7 +520,8 @@
         "ally",
         "teammate"
       ],
-      "sentence": "Her opponent shook her hand after the match."
+      "sentence": "Her opponent shook her hand after the match.",
+      "level": 1
     },
     {
       "word": "precision",
@@ -503,7 +536,8 @@
         "inaccuracy",
         "error"
       ],
-      "sentence": "The robot cut the wood with amazing precision."
+      "sentence": "The robot cut the wood with amazing precision.",
+      "level": 2
     },
     {
       "word": "remedy",
@@ -518,7 +552,8 @@
         "ailment",
         "problem"
       ],
-      "sentence": "Warm tea is her favorite remedy for a sore throat."
+      "sentence": "Warm tea is her favorite remedy for a sore throat.",
+      "level": 2
     },
     {
       "word": "strategy",
@@ -532,7 +567,8 @@
       "antonyms": [
         "improvisation"
       ],
-      "sentence": "Our strategy was to pass the ball quickly."
+      "sentence": "Our strategy was to pass the ball quickly.",
+      "level": 2
     },
     {
       "word": "tradition",
@@ -547,7 +583,8 @@
         "innovation",
         "novelty"
       ],
-      "sentence": "Baking pies on Sunday is a family tradition."
+      "sentence": "Baking pies on Sunday is a family tradition.",
+      "level": 1
     },
     {
       "word": "vendor",
@@ -562,7 +599,8 @@
         "buyer",
         "customer"
       ],
-      "sentence": "The vendor sold warm pretzels outside the stadium."
+      "sentence": "The vendor sold warm pretzels outside the stadium.",
+      "level": 2
     },
     {
       "word": "wisdom",
@@ -577,7 +615,8 @@
         "folly",
         "foolishness"
       ],
-      "sentence": "Grandpa shared his wisdom about saving money."
+      "sentence": "Grandpa shared his wisdom about saving money.",
+      "level": 1
     },
     {
       "word": "adversity",
@@ -592,7 +631,8 @@
         "prosperity",
         "fortune"
       ],
-      "sentence": "She faced adversity with a calm smile."
+      "sentence": "She faced adversity with a calm smile.",
+      "level": 3
     },
     {
       "word": "benefit",
@@ -607,7 +647,8 @@
         "drawback",
         "disadvantage"
       ],
-      "sentence": "One benefit of walking to school is the fresh air."
+      "sentence": "One benefit of walking to school is the fresh air.",
+      "level": 1
     },
     {
       "word": "conflict",
@@ -622,7 +663,8 @@
         "harmony",
         "peace"
       ],
-      "sentence": "The two clubs settled their conflict with a compromise."
+      "sentence": "The two clubs settled their conflict with a compromise.",
+      "level": 1
     },
     {
       "word": "fragment",
@@ -636,7 +678,8 @@
       "antonyms": [
         "whole"
       ],
-      "sentence": "She found a fragment of blue pottery in the sand."
+      "sentence": "She found a fragment of blue pottery in the sand.",
+      "level": 2
     },
     {
       "word": "ovation",
@@ -651,7 +694,8 @@
         "jeers",
         "silence"
       ],
-      "sentence": "The cast received a standing ovation on opening night."
+      "sentence": "The cast received a standing ovation on opening night.",
+      "level": 2
     },
     {
       "word": "persevere",
@@ -666,7 +710,8 @@
         "quit",
         "surrender"
       ],
-      "sentence": "She chose to persevere until the puzzle was solved."
+      "sentence": "She chose to persevere until the puzzle was solved.",
+      "level": 2
     },
     {
       "word": "abandon",
@@ -681,7 +726,8 @@
         "keep",
         "retain"
       ],
-      "sentence": "The sailors had to abandon the leaky rowboat."
+      "sentence": "The sailors had to abandon the leaky rowboat.",
+      "level": 1
     },
     {
       "word": "accelerate",
@@ -696,7 +742,8 @@
         "decelerate",
         "slow"
       ],
-      "sentence": "The car began to accelerate down the ramp."
+      "sentence": "The car began to accelerate down the ramp.",
+      "level": 2
     },
     {
       "word": "admire",
@@ -711,7 +758,8 @@
         "despise",
         "scorn"
       ],
-      "sentence": "I admire how calmly she handles pressure."
+      "sentence": "I admire how calmly she handles pressure.",
+      "level": 1
     },
     {
       "word": "analyze",
@@ -726,7 +774,8 @@
         "ignore",
         "overlook"
       ],
-      "sentence": "We will analyze the data from our experiment."
+      "sentence": "We will analyze the data from our experiment.",
+      "level": 1
     },
     {
       "word": "bewilder",
@@ -741,7 +790,8 @@
         "enlighten",
         "clarify"
       ],
-      "sentence": "The hedge maze was designed to bewilder visitors."
+      "sentence": "The hedge maze was designed to bewilder visitors.",
+      "level": 2
     },
     {
       "word": "collaborate",
@@ -755,7 +805,8 @@
       "antonyms": [
         "compete"
       ],
-      "sentence": "The students collaborate on a science poster."
+      "sentence": "The students collaborate on a science poster.",
+      "level": 1
     },
     {
       "word": "conceal",
@@ -770,7 +821,8 @@
         "reveal",
         "expose"
       ],
-      "sentence": "He tried to conceal the surprise gift under his coat."
+      "sentence": "He tried to conceal the surprise gift under his coat.",
+      "level": 2
     },
     {
       "word": "deteriorate",
@@ -785,7 +837,8 @@
         "improve",
         "recover"
       ],
-      "sentence": "The old bridge began to deteriorate after years of rain."
+      "sentence": "The old bridge began to deteriorate after years of rain.",
+      "level": 3
     },
     {
       "word": "diminish",
@@ -800,7 +853,8 @@
         "increase",
         "grow"
       ],
-      "sentence": "The noise began to diminish as the parade moved on."
+      "sentence": "The noise began to diminish as the parade moved on.",
+      "level": 2
     },
     {
       "word": "emerge",
@@ -815,7 +869,8 @@
         "vanish",
         "disappear"
       ],
-      "sentence": "A rainbow began to emerge after the storm."
+      "sentence": "A rainbow began to emerge after the storm.",
+      "level": 2
     },
     {
       "word": "endorse",
@@ -830,7 +885,8 @@
         "oppose",
         "reject"
       ],
-      "sentence": "The principal agreed to endorse the recycling plan."
+      "sentence": "The principal agreed to endorse the recycling plan.",
+      "level": 3
     },
     {
       "word": "evaluate",
@@ -844,7 +900,8 @@
       "antonyms": [
         "neglect"
       ],
-      "sentence": "Judges will evaluate each project at the science fair."
+      "sentence": "Judges will evaluate each project at the science fair.",
+      "level": 2
     },
     {
       "word": "fabricate",
@@ -858,7 +915,8 @@
       "antonyms": [
         "verify"
       ],
-      "sentence": "He tried to fabricate an excuse for being late."
+      "sentence": "He tried to fabricate an excuse for being late.",
+      "level": 3
     },
     {
       "word": "hesitate",
@@ -873,7 +931,8 @@
         "proceed",
         "act"
       ],
-      "sentence": "Do not hesitate to ask for help."
+      "sentence": "Do not hesitate to ask for help.",
+      "level": 1
     },
     {
       "word": "illuminate",
@@ -888,7 +947,8 @@
         "darken",
         "dim"
       ],
-      "sentence": "Lanterns illuminate the path to the cabin."
+      "sentence": "Lanterns illuminate the path to the cabin.",
+      "level": 2
     },
     {
       "word": "imitate",
@@ -902,7 +962,8 @@
       "antonyms": [
         "originate"
       ],
-      "sentence": "My parrot can imitate the doorbell perfectly."
+      "sentence": "My parrot can imitate the doorbell perfectly.",
+      "level": 1
     },
     {
       "word": "inspire",
@@ -917,7 +978,8 @@
         "discourage",
         "deter"
       ],
-      "sentence": "Her speech will inspire the team to train harder."
+      "sentence": "Her speech will inspire the team to train harder.",
+      "level": 1
     },
     {
       "word": "modify",
@@ -932,7 +994,8 @@
         "preserve",
         "maintain"
       ],
-      "sentence": "We had to modify the recipe because we had no eggs."
+      "sentence": "We had to modify the recipe because we had no eggs.",
+      "level": 2
     },
     {
       "word": "negotiate",
@@ -946,7 +1009,8 @@
       "antonyms": [
         "dictate"
       ],
-      "sentence": "The kids tried to negotiate a later bedtime."
+      "sentence": "The kids tried to negotiate a later bedtime.",
+      "level": 2
     },
     {
       "word": "obtain",
@@ -961,7 +1025,8 @@
         "lose",
         "forfeit"
       ],
-      "sentence": "You must obtain a permit to fish in this lake."
+      "sentence": "You must obtain a permit to fish in this lake.",
+      "level": 2
     },
     {
       "word": "persuade",
@@ -975,7 +1040,8 @@
       "antonyms": [
         "dissuade"
       ],
-      "sentence": "She managed to persuade her parents to adopt a cat."
+      "sentence": "She managed to persuade her parents to adopt a cat.",
+      "level": 2
     },
     {
       "word": "prohibit",
@@ -990,7 +1056,8 @@
         "allow",
         "permit"
       ],
-      "sentence": "The pool rules prohibit running on the deck."
+      "sentence": "The pool rules prohibit running on the deck.",
+      "level": 2
     },
     {
       "word": "reinforce",
@@ -1005,7 +1072,8 @@
         "weaken",
         "undermine"
       ],
-      "sentence": "Extra beams reinforce the treehouse floor."
+      "sentence": "Extra beams reinforce the treehouse floor.",
+      "level": 2
     },
     {
       "word": "scrutinize",
@@ -1020,7 +1088,8 @@
         "skim",
         "overlook"
       ],
-      "sentence": "Editors scrutinize every sentence before printing."
+      "sentence": "Editors scrutinize every sentence before printing.",
+      "level": 3
     },
     {
       "word": "soothe",
@@ -1035,7 +1104,8 @@
         "agitate",
         "upset"
       ],
-      "sentence": "Soft music can soothe a crying baby."
+      "sentence": "Soft music can soothe a crying baby.",
+      "level": 1
     },
     {
       "word": "tolerate",
@@ -1050,7 +1120,8 @@
         "resist",
         "refuse"
       ],
-      "sentence": "I can tolerate the cold for a short walk."
+      "sentence": "I can tolerate the cold for a short walk.",
+      "level": 2
     },
     {
       "word": "undermine",
@@ -1065,7 +1136,8 @@
         "strengthen",
         "bolster"
       ],
-      "sentence": "Gossip can undermine trust within a team."
+      "sentence": "Gossip can undermine trust within a team.",
+      "level": 3
     },
     {
       "word": "venture",
@@ -1079,7 +1151,8 @@
       "antonyms": [
         "retreat"
       ],
-      "sentence": "We decided to venture into the dark cave with flashlights."
+      "sentence": "We decided to venture into the dark cave with flashlights.",
+      "level": 2
     },
     {
       "word": "withdraw",
@@ -1094,7 +1167,8 @@
         "advance",
         "deposit"
       ],
-      "sentence": "The snail will withdraw into its shell when touched."
+      "sentence": "The snail will withdraw into its shell when touched.",
+      "level": 2
     },
     {
       "word": "yearn",
@@ -1108,7 +1182,8 @@
       "antonyms": [
         "loathe"
       ],
-      "sentence": "Sailors yearn for home after months at sea."
+      "sentence": "Sailors yearn for home after months at sea.",
+      "level": 2
     },
     {
       "word": "comprehend",
@@ -1122,7 +1197,8 @@
       "antonyms": [
         "misunderstand"
       ],
-      "sentence": "It took me a while to comprehend the new math rule."
+      "sentence": "It took me a while to comprehend the new math rule.",
+      "level": 2
     },
     {
       "word": "contemplate",
@@ -1136,7 +1212,8 @@
       "antonyms": [
         "disregard"
       ],
-      "sentence": "She sat on the dock to contemplate her future."
+      "sentence": "She sat on the dock to contemplate her future.",
+      "level": 3
     },
     {
       "word": "demolish",
@@ -1151,7 +1228,8 @@
         "build",
         "construct"
       ],
-      "sentence": "Workers will demolish the old mall next month."
+      "sentence": "Workers will demolish the old mall next month.",
+      "level": 2
     },
     {
       "word": "disrupt",
@@ -1166,7 +1244,8 @@
         "steady",
         "settle"
       ],
-      "sentence": "A fire drill can disrupt the whole school day."
+      "sentence": "A fire drill can disrupt the whole school day.",
+      "level": 2
     },
     {
       "word": "enhance",
@@ -1181,7 +1260,8 @@
         "diminish",
         "worsen"
       ],
-      "sentence": "Fresh herbs enhance the flavor of the soup."
+      "sentence": "Fresh herbs enhance the flavor of the soup.",
+      "level": 2
     },
     {
       "word": "exaggerate",
@@ -1196,7 +1276,8 @@
         "understate",
         "minimize"
       ],
-      "sentence": "He tends to exaggerate the size of the fish he caught."
+      "sentence": "He tends to exaggerate the size of the fish he caught.",
+      "level": 1
     },
     {
       "word": "flourish",
@@ -1211,7 +1292,8 @@
         "wither",
         "fail"
       ],
-      "sentence": "Tomatoes flourish in warm, sunny gardens."
+      "sentence": "Tomatoes flourish in warm, sunny gardens.",
+      "level": 2
     },
     {
       "word": "hinder",
@@ -1226,7 +1308,8 @@
         "help",
         "aid"
       ],
-      "sentence": "Heavy rain will hinder the search for the lost kite."
+      "sentence": "Heavy rain will hinder the search for the lost kite.",
+      "level": 3
     },
     {
       "word": "interpret",
@@ -1240,7 +1323,8 @@
       "antonyms": [
         "misread"
       ],
-      "sentence": "Only Mia could interpret the strange symbol on the map."
+      "sentence": "Only Mia could interpret the strange symbol on the map.",
+      "level": 2
     },
     {
       "word": "nurture",
@@ -1254,7 +1338,8 @@
       "antonyms": [
         "neglect"
       ],
-      "sentence": "Gardeners nurture young seedlings with patience."
+      "sentence": "Gardeners nurture young seedlings with patience.",
+      "level": 2
     },
     {
       "word": "rejoice",
@@ -1269,7 +1354,8 @@
         "grieve",
         "lament"
       ],
-      "sentence": "The town will rejoice when the team comes home."
+      "sentence": "The town will rejoice when the team comes home.",
+      "level": 1
     },
     {
       "word": "salvage",
@@ -1284,7 +1370,8 @@
         "discard",
         "lose"
       ],
-      "sentence": "We managed to salvage most of the books from the leak."
+      "sentence": "We managed to salvage most of the books from the leak.",
+      "level": 3
     },
     {
       "word": "distribute",
@@ -1299,7 +1386,8 @@
         "collect",
         "gather"
       ],
-      "sentence": "Volunteers distribute water to the runners."
+      "sentence": "Volunteers distribute water to the runners.",
+      "level": 2
     },
     {
       "word": "benevolent",
@@ -1314,7 +1402,8 @@
         "cruel",
         "selfish"
       ],
-      "sentence": "The benevolent neighbor shoveled every driveway on the street."
+      "sentence": "The benevolent neighbor shoveled every driveway on the street.",
+      "level": 2
     },
     {
       "word": "ambiguous",
@@ -1329,7 +1418,8 @@
         "clear",
         "definite"
       ],
-      "sentence": "The ending of the movie was ambiguous."
+      "sentence": "The ending of the movie was ambiguous.",
+      "level": 3
     },
     {
       "word": "eloquent",
@@ -1343,7 +1433,8 @@
       "antonyms": [
         "inarticulate"
       ],
-      "sentence": "The eloquent speaker held the audience's attention."
+      "sentence": "The eloquent speaker held the audience's attention.",
+      "level": 3
     },
     {
       "word": "rapid",
@@ -1358,7 +1449,8 @@
         "slow",
         "sluggish"
       ],
-      "sentence": "The river's rapid current carried the leaves away."
+      "sentence": "The river's rapid current carried the leaves away.",
+      "level": 1
     },
     {
       "word": "fragile",
@@ -1373,7 +1465,8 @@
         "sturdy",
         "durable"
       ],
-      "sentence": "The fragile vase was wrapped in bubble wrap."
+      "sentence": "The fragile vase was wrapped in bubble wrap.",
+      "level": 1
     },
     {
       "word": "ubiquitous",
@@ -1388,7 +1481,8 @@
         "rare",
         "scarce"
       ],
-      "sentence": "Smartphones have become ubiquitous in modern life."
+      "sentence": "Smartphones have become ubiquitous in modern life.",
+      "level": 3
     },
     {
       "word": "meticulous",
@@ -1403,7 +1497,8 @@
         "careless",
         "sloppy"
       ],
-      "sentence": "She kept meticulous notes in her lab journal."
+      "sentence": "She kept meticulous notes in her lab journal.",
+      "level": 3
     },
     {
       "word": "ancient",
@@ -1418,7 +1513,8 @@
         "modern",
         "new"
       ],
-      "sentence": "We visited the ruins of an ancient temple."
+      "sentence": "We visited the ruins of an ancient temple.",
+      "level": 1
     },
     {
       "word": "anxious",
@@ -1433,7 +1529,8 @@
         "calm",
         "relaxed"
       ],
-      "sentence": "He felt anxious before his piano recital."
+      "sentence": "He felt anxious before his piano recital.",
+      "level": 1
     },
     {
       "word": "arrogant",
@@ -1448,7 +1545,8 @@
         "humble",
         "modest"
       ],
-      "sentence": "The arrogant player refused to pass the ball."
+      "sentence": "The arrogant player refused to pass the ball.",
+      "level": 2
     },
     {
       "word": "candid",
@@ -1463,7 +1561,8 @@
         "guarded",
         "evasive"
       ],
-      "sentence": "She gave a candid answer about her mistake."
+      "sentence": "She gave a candid answer about her mistake.",
+      "level": 3
     },
     {
       "word": "cautious",
@@ -1478,7 +1577,8 @@
         "reckless",
         "careless"
       ],
-      "sentence": "A cautious driver slows down in thick fog."
+      "sentence": "A cautious driver slows down in thick fog.",
+      "level": 1
     },
     {
       "word": "diverse",
@@ -1493,7 +1593,8 @@
         "uniform",
         "similar"
       ],
-      "sentence": "Our school has a diverse group of clubs."
+      "sentence": "Our school has a diverse group of clubs.",
+      "level": 1
     },
     {
       "word": "durable",
@@ -1508,7 +1609,8 @@
         "flimsy",
         "fragile"
       ],
-      "sentence": "These hiking boots are durable enough for any trail."
+      "sentence": "These hiking boots are durable enough for any trail.",
+      "level": 2
     },
     {
       "word": "eager",
@@ -1523,7 +1625,8 @@
         "reluctant",
         "unwilling"
       ],
-      "sentence": "The eager students lined up for the field trip."
+      "sentence": "The eager students lined up for the field trip.",
+      "level": 1
     },
     {
       "word": "feasible",
@@ -1538,7 +1641,8 @@
         "impossible",
         "impractical"
       ],
-      "sentence": "Building a robot by Friday is not feasible."
+      "sentence": "Building a robot by Friday is not feasible.",
+      "level": 3
     },
     {
       "word": "frugal",
@@ -1553,7 +1657,8 @@
         "wasteful",
         "lavish"
       ],
-      "sentence": "My frugal aunt reuses every gift bag."
+      "sentence": "My frugal aunt reuses every gift bag.",
+      "level": 3
     },
     {
       "word": "gigantic",
@@ -1568,7 +1673,8 @@
         "tiny",
         "small"
       ],
-      "sentence": "A gigantic whale surfaced near the boat."
+      "sentence": "A gigantic whale surfaced near the boat.",
+      "level": 1
     },
     {
       "word": "hostile",
@@ -1583,7 +1689,8 @@
         "friendly",
         "welcoming"
       ],
-      "sentence": "The hostile cat hissed at the new puppy."
+      "sentence": "The hostile cat hissed at the new puppy.",
+      "level": 2
     },
     {
       "word": "obsolete",
@@ -1598,7 +1705,8 @@
         "current",
         "modern"
       ],
-      "sentence": "Floppy disks are obsolete technology."
+      "sentence": "Floppy disks are obsolete technology.",
+      "level": 3
     },
     {
       "word": "lenient",
@@ -1613,7 +1721,8 @@
         "strict",
         "harsh"
       ],
-      "sentence": "The lenient teacher allowed extra time on the quiz."
+      "sentence": "The lenient teacher allowed extra time on the quiz.",
+      "level": 3
     },
     {
       "word": "lethargic",
@@ -1628,7 +1737,8 @@
         "energetic",
         "lively"
       ],
-      "sentence": "The summer heat made the dog feel lethargic."
+      "sentence": "The summer heat made the dog feel lethargic.",
+      "level": 3
     },
     {
       "word": "naive",
@@ -1643,7 +1753,8 @@
         "worldly",
         "sophisticated"
       ],
-      "sentence": "The naive tourist believed the tall tale."
+      "sentence": "The naive tourist believed the tall tale.",
+      "level": 2
     },
     {
       "word": "notorious",
@@ -1657,7 +1768,8 @@
       "antonyms": [
         "reputable"
       ],
-      "sentence": "The intersection is notorious for traffic jams."
+      "sentence": "The intersection is notorious for traffic jams.",
+      "level": 3
     },
     {
       "word": "obscure",
@@ -1672,7 +1784,8 @@
         "famous",
         "renowned"
       ],
-      "sentence": "He collects records by obscure bands."
+      "sentence": "He collects records by obscure bands.",
+      "level": 3
     },
     {
       "word": "optimistic",
@@ -1687,7 +1800,8 @@
         "pessimistic",
         "gloomy"
       ],
-      "sentence": "She stayed optimistic even after the rainout."
+      "sentence": "She stayed optimistic even after the rainout.",
+      "level": 2
     },
     {
       "word": "peculiar",
@@ -1702,7 +1816,8 @@
         "normal",
         "ordinary"
       ],
-      "sentence": "A peculiar smell came from the science lab."
+      "sentence": "A peculiar smell came from the science lab.",
+      "level": 2
     },
     {
       "word": "reluctant",
@@ -1717,7 +1832,8 @@
         "eager",
         "willing"
       ],
-      "sentence": "He was reluctant to jump into the cold lake."
+      "sentence": "He was reluctant to jump into the cold lake.",
+      "level": 2
     },
     {
       "word": "serene",
@@ -1732,7 +1848,8 @@
         "turbulent",
         "agitated"
       ],
-      "sentence": "The lake looked serene at sunrise."
+      "sentence": "The lake looked serene at sunrise.",
+      "level": 2
     },
     {
       "word": "tedious",
@@ -1747,7 +1864,8 @@
         "exciting",
         "interesting"
       ],
-      "sentence": "Sorting the socks was a tedious chore."
+      "sentence": "Sorting the socks was a tedious chore.",
+      "level": 3
     },
     {
       "word": "vivid",
@@ -1762,7 +1880,8 @@
         "dull",
         "faded"
       ],
-      "sentence": "She painted a vivid picture of the sunset."
+      "sentence": "She painted a vivid picture of the sunset.",
+      "level": 1
     },
     {
       "word": "vulnerable",
@@ -1777,7 +1896,8 @@
         "secure",
         "guarded"
       ],
-      "sentence": "Baby turtles are vulnerable on the open beach."
+      "sentence": "Baby turtles are vulnerable on the open beach.",
+      "level": 2
     },
     {
       "word": "genuine",
@@ -1792,7 +1912,8 @@
         "fake",
         "counterfeit"
       ],
-      "sentence": "The museum confirmed the painting was genuine."
+      "sentence": "The museum confirmed the painting was genuine.",
+      "level": 1
     },
     {
       "word": "abundant",
@@ -1807,7 +1928,8 @@
         "scarce",
         "sparse"
       ],
-      "sentence": "Berries are abundant in the forest in July."
+      "sentence": "Berries are abundant in the forest in July.",
+      "level": 2
     },
     {
       "word": "adequate",
@@ -1822,7 +1944,8 @@
         "inadequate",
         "insufficient"
       ],
-      "sentence": "The tent offered adequate shelter from the rain."
+      "sentence": "The tent offered adequate shelter from the rain.",
+      "level": 2
     },
     {
       "word": "coherent",
@@ -1837,7 +1960,8 @@
         "incoherent",
         "confused"
       ],
-      "sentence": "Her essay presented a coherent argument."
+      "sentence": "Her essay presented a coherent argument.",
+      "level": 3
     },
     {
       "word": "conspicuous",
@@ -1852,7 +1976,8 @@
         "hidden",
         "inconspicuous"
       ],
-      "sentence": "Her bright orange hat was conspicuous in the crowd."
+      "sentence": "Her bright orange hat was conspicuous in the crowd.",
+      "level": 3
     },
     {
       "word": "dubious",
@@ -1867,7 +1992,8 @@
         "certain",
         "reliable"
       ],
-      "sentence": "He gave a dubious excuse about the missing homework."
+      "sentence": "He gave a dubious excuse about the missing homework.",
+      "level": 3
     },
     {
       "word": "imminent",
@@ -1882,7 +2008,8 @@
         "distant",
         "remote"
       ],
-      "sentence": "Dark clouds showed that rain was imminent."
+      "sentence": "Dark clouds showed that rain was imminent.",
+      "level": 3
     },
     {
       "word": "indifferent",
@@ -1897,7 +2024,8 @@
         "concerned",
         "caring"
       ],
-      "sentence": "The cat seemed indifferent to the new toy."
+      "sentence": "The cat seemed indifferent to the new toy.",
+      "level": 3
     },
     {
       "word": "tenacious",
@@ -1912,7 +2040,8 @@
         "yielding",
         "irresolute"
       ],
-      "sentence": "The tenacious climber finally reached the summit."
+      "sentence": "The tenacious climber finally reached the summit.",
+      "level": 3
     },
     {
       "word": "versatile",
@@ -1927,7 +2056,8 @@
         "limited",
         "rigid"
       ],
-      "sentence": "A versatile player can fill any position."
+      "sentence": "A versatile player can fill any position.",
+      "level": 3
     },
     {
       "word": "trivial",
@@ -1942,7 +2072,8 @@
         "important",
         "significant"
       ],
-      "sentence": "They argued over a trivial detail."
+      "sentence": "They argued over a trivial detail.",
+      "level": 2
     },
     {
       "word": "vast",
@@ -1957,7 +2088,8 @@
         "narrow",
         "cramped"
       ],
-      "sentence": "We gazed out at the vast desert."
+      "sentence": "We gazed out at the vast desert.",
+      "level": 1
     },
     {
       "word": "abruptly",
@@ -1972,7 +2104,8 @@
         "gradually",
         "slowly"
       ],
-      "sentence": "The music stopped abruptly when the power went out."
+      "sentence": "The music stopped abruptly when the power went out.",
+      "level": 2
     },
     {
       "word": "cautiously",
@@ -1987,7 +2120,8 @@
         "recklessly",
         "carelessly"
       ],
-      "sentence": "She stepped cautiously across the icy bridge."
+      "sentence": "She stepped cautiously across the icy bridge.",
+      "level": 1
     },
     {
       "word": "diligently",
@@ -2002,7 +2136,8 @@
         "lazily",
         "carelessly"
       ],
-      "sentence": "He worked diligently on his science fair board."
+      "sentence": "He worked diligently on his science fair board.",
+      "level": 2
     },
     {
       "word": "eagerly",
@@ -2017,7 +2152,8 @@
         "reluctantly",
         "unwillingly"
       ],
-      "sentence": "The kids eagerly opened their presents."
+      "sentence": "The kids eagerly opened their presents.",
+      "level": 1
     },
     {
       "word": "frequently",
@@ -2032,7 +2168,8 @@
         "rarely",
         "seldom"
       ],
-      "sentence": "We frequently visit the library on Saturdays."
+      "sentence": "We frequently visit the library on Saturdays.",
+      "level": 1
     },
     {
       "word": "gradually",
@@ -2047,7 +2184,8 @@
         "suddenly",
         "abruptly"
       ],
-      "sentence": "The sky gradually turned from pink to gray."
+      "sentence": "The sky gradually turned from pink to gray.",
+      "level": 1
     },
     {
       "word": "honestly",
@@ -2062,7 +2200,8 @@
         "dishonestly",
         "deceitfully"
       ],
-      "sentence": "Please answer the survey questions honestly."
+      "sentence": "Please answer the survey questions honestly.",
+      "level": 1
     },
     {
       "word": "reluctantly",
@@ -2077,7 +2216,8 @@
         "willingly",
         "gladly"
       ],
-      "sentence": "He reluctantly handed over the last cookie."
+      "sentence": "He reluctantly handed over the last cookie.",
+      "level": 2
     },
     {
       "word": "silently",
@@ -2092,7 +2232,8 @@
         "loudly",
         "noisily"
       ],
-      "sentence": "The cat crept silently toward the bird feeder."
+      "sentence": "The cat crept silently toward the bird feeder.",
+      "level": 1
     },
     {
       "word": "thoroughly",
@@ -2107,7 +2248,8 @@
         "partially",
         "superficially"
       ],
-      "sentence": "Rinse the vegetables thoroughly before cooking."
+      "sentence": "Rinse the vegetables thoroughly before cooking.",
+      "level": 2
     },
     {
       "word": "vaguely",
@@ -2122,7 +2264,8 @@
         "clearly",
         "precisely"
       ],
-      "sentence": "I vaguely remember my third birthday party."
+      "sentence": "I vaguely remember my third birthday party.",
+      "level": 2
     },
     {
       "word": "briskly",
@@ -2137,7 +2280,8 @@
         "sluggishly",
         "slowly"
       ],
-      "sentence": "We walked briskly to stay warm."
+      "sentence": "We walked briskly to stay warm.",
+      "level": 2
     },
     {
       "word": "calmly",
@@ -2152,7 +2296,8 @@
         "frantically",
         "nervously"
       ],
-      "sentence": "She calmly explained the rules again."
+      "sentence": "She calmly explained the rules again.",
+      "level": 1
     },
     {
       "word": "intently",
@@ -2167,7 +2312,8 @@
         "distractedly",
         "absently"
       ],
-      "sentence": "The owl watched the dark field intently."
+      "sentence": "The owl watched the dark field intently.",
+      "level": 2
     },
     {
       "word": "fiercely",
@@ -2182,7 +2328,8 @@
         "gently",
         "mildly"
       ],
-      "sentence": "The two teams competed fiercely for the trophy."
+      "sentence": "The two teams competed fiercely for the trophy.",
+      "level": 1
     },
     {
       "word": "generously",
@@ -2197,7 +2344,8 @@
         "stingily",
         "meanly"
       ],
-      "sentence": "She generously shared her snacks with everyone."
+      "sentence": "She generously shared her snacks with everyone.",
+      "level": 1
     },
     {
       "word": "gracefully",
@@ -2212,7 +2360,8 @@
         "clumsily",
         "awkwardly"
       ],
-      "sentence": "The dancer moved gracefully across the stage."
+      "sentence": "The dancer moved gracefully across the stage.",
+      "level": 1
     },
     {
       "word": "hastily",
@@ -2227,7 +2376,8 @@
         "slowly",
         "carefully"
       ],
-      "sentence": "He hastily scribbled his name on the form."
+      "sentence": "He hastily scribbled his name on the form.",
+      "level": 2
     },
     {
       "word": "immensely",
@@ -2242,7 +2392,8 @@
         "slightly",
         "barely"
       ],
-      "sentence": "She enjoyed the concert immensely."
+      "sentence": "She enjoyed the concert immensely.",
+      "level": 2
     },
     {
       "word": "precisely",
@@ -2257,7 +2408,8 @@
         "roughly",
         "approximately"
       ],
-      "sentence": "The train arrived at precisely noon."
+      "sentence": "The train arrived at precisely noon.",
+      "level": 1
     },
     {
       "word": "obediently",
@@ -2272,7 +2424,8 @@
         "defiantly",
         "rebelliously"
       ],
-      "sentence": "The puppy sat obediently by the door."
+      "sentence": "The puppy sat obediently by the door.",
+      "level": 1
     },
     {
       "word": "patiently",
@@ -2287,7 +2440,8 @@
         "impatiently",
         "restlessly"
       ],
-      "sentence": "We waited patiently for the fireworks to begin."
+      "sentence": "We waited patiently for the fireworks to begin.",
+      "level": 1
     },
     {
       "word": "scarcely",
@@ -2302,7 +2456,8 @@
         "plentifully",
         "amply"
       ],
-      "sentence": "I could scarcely see the stage from the back row."
+      "sentence": "I could scarcely see the stage from the back row.",
+      "level": 2
     },
     {
       "word": "seldom",
@@ -2317,7 +2472,8 @@
         "often",
         "frequently"
       ],
-      "sentence": "We seldom see snow in this part of the state."
+      "sentence": "We seldom see snow in this part of the state.",
+      "level": 2
     },
     {
       "word": "ultimately",
@@ -2332,7 +2488,8 @@
         "initially",
         "firstly"
       ],
-      "sentence": "The team ultimately decided to change its name."
+      "sentence": "The team ultimately decided to change its name.",
+      "level": 2
     },
     {
       "word": "vigorously",
@@ -2347,7 +2504,8 @@
         "feebly",
         "weakly"
       ],
-      "sentence": "She scrubbed the muddy pan vigorously."
+      "sentence": "She scrubbed the muddy pan vigorously.",
+      "level": 2
     },
     {
       "word": "willingly",
@@ -2362,7 +2520,8 @@
         "reluctantly",
         "unwillingly"
       ],
-      "sentence": "He willingly volunteered to clean the fish tank."
+      "sentence": "He willingly volunteered to clean the fish tank.",
+      "level": 1
     },
     {
       "word": "nearly",
@@ -2377,7 +2536,8 @@
         "fully",
         "entirely"
       ],
-      "sentence": "The bus was nearly empty this morning."
+      "sentence": "The bus was nearly empty this morning.",
+      "level": 1
     },
     {
       "word": "sternly",
@@ -2392,7 +2552,8 @@
         "gently",
         "kindly"
       ],
-      "sentence": "The coach sternly reminded us to stretch."
+      "sentence": "The coach sternly reminded us to stretch.",
+      "level": 2
     },
     {
       "word": "boldly",
@@ -2407,7 +2568,8 @@
         "timidly",
         "meekly"
       ],
-      "sentence": "She boldly raised her hand to answer first."
+      "sentence": "She boldly raised her hand to answer first.",
+      "level": 1
     },
     {
       "word": "cheerfully",
@@ -2422,7 +2584,8 @@
         "gloomily",
         "sadly"
       ],
-      "sentence": "He cheerfully greeted every customer."
+      "sentence": "He cheerfully greeted every customer.",
+      "level": 1
     },
     {
       "word": "constantly",
@@ -2437,7 +2600,8 @@
         "occasionally",
         "intermittently"
       ],
-      "sentence": "My little brother constantly asks questions."
+      "sentence": "My little brother constantly asks questions.",
+      "level": 1
     },
     {
       "word": "fortunately",
@@ -2451,7 +2615,8 @@
       "antonyms": [
         "unfortunately"
       ],
-      "sentence": "The rain stopped and, fortunately, the game went on."
+      "sentence": "The rain stopped and, fortunately, the game went on.",
+      "level": 1
     },
     {
       "word": "loyally",
@@ -2466,7 +2631,8 @@
         "disloyally",
         "treacherously"
       ],
-      "sentence": "The dog loyally waited for its owner at the gate."
+      "sentence": "The dog loyally waited for its owner at the gate.",
+      "level": 1
     },
     {
       "word": "modestly",
@@ -2481,7 +2647,8 @@
         "boastfully",
         "arrogantly"
       ],
-      "sentence": "She modestly thanked the crowd for the award."
+      "sentence": "She modestly thanked the crowd for the award.",
+      "level": 2
     },
     {
       "word": "promptly",
@@ -2496,7 +2663,8 @@
         "slowly",
         "belatedly"
       ],
-      "sentence": "The class promptly lined up at the bell."
+      "sentence": "The class promptly lined up at the bell.",
+      "level": 2
     },
     {
       "word": "afterward",
@@ -2511,7 +2679,8 @@
         "beforehand",
         "previously"
       ],
-      "sentence": "We went out for ice cream afterward."
+      "sentence": "We went out for ice cream afterward.",
+      "level": 1
     },
     {
       "word": "abroad",
@@ -2526,7 +2695,8 @@
         "home",
         "locally"
       ],
-      "sentence": "She hopes to study abroad in Japan."
+      "sentence": "She hopes to study abroad in Japan.",
+      "level": 1
     },
     {
       "word": "gently",
@@ -2541,7 +2711,8 @@
         "roughly",
         "harshly"
       ],
-      "sentence": "Hold the baby chick gently in your palms."
+      "sentence": "Hold the baby chick gently in your palms.",
+      "level": 1
     },
     {
       "word": "obviously",
@@ -2556,7 +2727,8 @@
         "subtly",
         "obscurely"
       ],
-      "sentence": "He was obviously excited about the trip."
+      "sentence": "He was obviously excited about the trip.",
+      "level": 1
     },
     {
       "word": "firmly",
@@ -2571,7 +2743,8 @@
         "loosely",
         "limply"
       ],
-      "sentence": "Hold the rope firmly as you climb."
+      "sentence": "Hold the rope firmly as you climb.",
+      "level": 1
     },
     {
       "word": "openly",
@@ -2586,7 +2759,8 @@
         "secretly",
         "covertly"
       ],
-      "sentence": "The friends openly shared their ideas."
+      "sentence": "The friends openly shared their ideas.",
+      "level": 1
     },
     {
       "word": "secretly",
@@ -2601,7 +2775,8 @@
         "openly",
         "publicly"
       ],
-      "sentence": "She secretly planned a surprise party."
+      "sentence": "She secretly planned a surprise party.",
+      "level": 1
     }
   ],
   "affixes": [
@@ -2615,7 +2790,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2627,7 +2803,8 @@
         "dis",
         "mis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2639,7 +2816,8 @@
         "dis",
         "mis",
         "pre"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2651,7 +2829,8 @@
         "dis",
         "mis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2663,7 +2842,8 @@
         "un",
         "dis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2675,7 +2855,8 @@
         "un",
         "mis",
         "pre"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2687,7 +2868,8 @@
         "un",
         "mis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2699,7 +2881,8 @@
         "un",
         "mis",
         "pre"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2711,7 +2894,8 @@
         "dis",
         "un",
         "pre"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2723,7 +2907,8 @@
         "dis",
         "non",
         "pre"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2735,7 +2920,8 @@
         "dis",
         "un",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2747,7 +2933,8 @@
         "mis",
         "dis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2759,7 +2946,8 @@
         "mis",
         "dis",
         "sub"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2771,7 +2959,8 @@
         "mis",
         "anti",
         "sub"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2783,7 +2972,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2795,7 +2985,8 @@
         "un",
         "dis",
         "non"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -2807,7 +2998,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2819,7 +3011,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2831,7 +3024,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -2843,7 +3037,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2855,7 +3050,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2867,7 +3063,8 @@
         "sub",
         "dis",
         "un"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2879,7 +3076,8 @@
         "sub",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2891,7 +3089,8 @@
         "inter",
         "super",
         "anti"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2903,7 +3102,8 @@
         "inter",
         "trans",
         "over"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2915,7 +3115,8 @@
         "sub",
         "super",
         "anti"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -2927,7 +3128,8 @@
         "sub",
         "mis",
         "anti"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -2939,7 +3141,8 @@
         "sub",
         "inter",
         "super"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2951,7 +3154,8 @@
         "super",
         "trans",
         "mis"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -2963,7 +3167,8 @@
         "sub",
         "inter",
         "trans"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2975,7 +3180,8 @@
         "sub",
         "inter",
         "anti"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -2987,7 +3193,8 @@
         "sub",
         "inter",
         "super"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "prefix",
@@ -2999,7 +3206,8 @@
         "inter",
         "sub",
         "super"
-      ]
+      ],
+      "level": 3
     },
     {
       "kind": "prefix",
@@ -3011,7 +3219,8 @@
         "sub",
         "inter",
         "anti"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -3023,7 +3232,8 @@
         "anti",
         "super",
         "trans"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -3035,7 +3245,8 @@
         "dis",
         "mis",
         "non"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "prefix",
@@ -3047,7 +3258,8 @@
         "un",
         "dis",
         "mis"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3059,7 +3271,8 @@
         "ment",
         "ist",
         "ive"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3071,7 +3284,8 @@
         "ment",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3083,7 +3297,8 @@
         "ment",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3095,7 +3310,8 @@
         "ment",
         "ous",
         "ive"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3107,7 +3323,8 @@
         "ment",
         "ful",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3119,7 +3336,8 @@
         "ness",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3131,7 +3349,8 @@
         "ness",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3143,7 +3362,8 @@
         "ment",
         "ful",
         "ist"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3155,7 +3375,8 @@
         "ment",
         "ness",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3167,7 +3388,8 @@
         "ment",
         "ful",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3179,7 +3401,8 @@
         "ment",
         "ness",
         "able"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3191,7 +3414,8 @@
         "ment",
         "ness",
         "ful"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3203,7 +3427,8 @@
         "ment",
         "ness",
         "ist"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3215,7 +3440,8 @@
         "ment",
         "ist",
         "able"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3227,7 +3453,8 @@
         "ment",
         "ous",
         "ful"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3239,7 +3466,8 @@
         "ment",
         "ness",
         "ful"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3251,7 +3479,8 @@
         "ment",
         "ness",
         "ous"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3263,7 +3492,8 @@
         "ment",
         "ness",
         "ful"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3275,7 +3505,8 @@
         "ment",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3287,7 +3518,8 @@
         "ment",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3299,7 +3531,8 @@
         "ment",
         "ful",
         "ist"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3311,7 +3544,8 @@
         "ment",
         "ful",
         "ist"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3323,7 +3557,8 @@
         "ment",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3335,7 +3570,8 @@
         "ness",
         "ist",
         "ous"
-      ]
+      ],
+      "level": 2
     },
     {
       "kind": "suffix",
@@ -3347,7 +3583,8 @@
         "ment",
         "ness",
         "ist"
-      ]
+      ],
+      "level": 1
     },
     {
       "kind": "suffix",
@@ -3359,7 +3596,8 @@
         "ment",
         "ness",
         "ous"
-      ]
+      ],
+      "level": 2
     }
   ],
   "spelling": [
@@ -3369,7 +3607,8 @@
         "seperate",
         "separete",
         "seprate"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "definitely",
@@ -3377,7 +3616,8 @@
         "definately",
         "definitly",
         "defenitely"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "rhythm",
@@ -3385,7 +3625,8 @@
         "rythm",
         "rhythym",
         "rhytm"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "accommodate",
@@ -3393,7 +3634,8 @@
         "accomodate",
         "acommodate",
         "accommadate"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "embarrass",
@@ -3401,7 +3643,8 @@
         "embarass",
         "embarras",
         "embaress"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "receive",
@@ -3409,7 +3652,8 @@
         "recieve",
         "receeve",
         "receve"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "believe",
@@ -3417,7 +3661,8 @@
         "beleive",
         "belive",
         "beleve"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "occurrence",
@@ -3425,7 +3670,8 @@
         "occurence",
         "occurrance",
         "ocurrence"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "conscience",
@@ -3433,7 +3679,8 @@
         "concience",
         "conscence",
         "consience"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "necessary",
@@ -3441,7 +3688,8 @@
         "neccessary",
         "necesary",
         "neccesary"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "privilege",
@@ -3449,7 +3697,8 @@
         "priviledge",
         "privelege",
         "privilige"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "government",
@@ -3457,7 +3706,8 @@
         "goverment",
         "governmant",
         "govenment"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "environment",
@@ -3465,7 +3715,8 @@
         "enviroment",
         "environmant",
         "envirnment"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "february",
@@ -3473,7 +3724,8 @@
         "febuary",
         "februrary",
         "febrary"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "library",
@@ -3481,7 +3733,8 @@
         "libary",
         "liberry",
         "librery"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "calendar",
@@ -3489,7 +3742,8 @@
         "calender",
         "calandar",
         "calander"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "license",
@@ -3497,7 +3751,8 @@
         "lisense",
         "licanse",
         "lycense"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "neighbor",
@@ -3505,7 +3760,8 @@
         "nieghbor",
         "nayber",
         "neigbor"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "weird",
@@ -3513,7 +3769,8 @@
         "wierd",
         "weard",
         "wiered"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "friend",
@@ -3521,7 +3778,8 @@
         "freind",
         "frend",
         "friennd"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "achieve",
@@ -3529,7 +3787,8 @@
         "acheive",
         "acheve",
         "achive"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "argument",
@@ -3537,7 +3796,8 @@
         "arguement",
         "argumant",
         "arguemant"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "beginning",
@@ -3545,7 +3805,8 @@
         "begining",
         "beggining",
         "beginnig"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "business",
@@ -3553,7 +3814,8 @@
         "buisness",
         "busness",
         "bussiness"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "cemetery",
@@ -3561,7 +3823,8 @@
         "cemetary",
         "cematery",
         "semetery"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "changeable",
@@ -3569,7 +3832,8 @@
         "changable",
         "chanegable",
         "changeble"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "committee",
@@ -3577,7 +3841,8 @@
         "commitee",
         "comittee",
         "committe"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "conscious",
@@ -3585,7 +3850,8 @@
         "concious",
         "consious",
         "conscous"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "discipline",
@@ -3593,7 +3859,8 @@
         "dicipline",
         "disciplin",
         "discipine"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "exaggerate",
@@ -3601,7 +3868,8 @@
         "exagerate",
         "exxagerate",
         "exaggarate"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "existence",
@@ -3609,7 +3877,8 @@
         "existance",
         "existense",
         "exsistence"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "experience",
@@ -3617,7 +3886,8 @@
         "experiance",
         "expierience",
         "experiense"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "fascinate",
@@ -3625,7 +3895,8 @@
         "facinate",
         "fasinate",
         "fascinait"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "foreign",
@@ -3633,7 +3904,8 @@
         "foriegn",
         "forein",
         "foreighn"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "gauge",
@@ -3641,7 +3913,8 @@
         "guage",
         "gaugue",
         "gauje"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "grammar",
@@ -3649,7 +3922,8 @@
         "grammer",
         "gramar",
         "grammmar"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "guarantee",
@@ -3657,7 +3931,8 @@
         "garantee",
         "guarentee",
         "guarantie"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "harass",
@@ -3665,7 +3940,8 @@
         "harrass",
         "harras",
         "hairass"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "humorous",
@@ -3673,7 +3949,8 @@
         "humourous",
         "humerous",
         "humorus"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "immediately",
@@ -3681,7 +3958,8 @@
         "immediatly",
         "imediately",
         "immediatley"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "independent",
@@ -3689,7 +3967,8 @@
         "independant",
         "indepedent",
         "independint"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "intelligence",
@@ -3697,7 +3976,8 @@
         "inteligence",
         "intelligance",
         "intellegence"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "jewelry",
@@ -3705,7 +3985,8 @@
         "jewlery",
         "jewelery",
         "jewlry"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "knowledge",
@@ -3713,7 +3994,8 @@
         "knowlege",
         "knoledge",
         "knowladge"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "maintenance",
@@ -3721,7 +4003,8 @@
         "maintainance",
         "maintenence",
         "maintanance"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "millennium",
@@ -3729,7 +4012,8 @@
         "millenium",
         "milennium",
         "millennim"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "mischievous",
@@ -3737,7 +4021,8 @@
         "mischievious",
         "mischevous",
         "mischivous"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "noticeable",
@@ -3745,7 +4030,8 @@
         "noticable",
         "noticeble",
         "notecable"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "occasion",
@@ -3753,7 +4039,8 @@
         "occassion",
         "ocasion",
         "occaision"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "parallel",
@@ -3761,7 +4048,8 @@
         "paralell",
         "parralel",
         "paralel"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "perseverance",
@@ -3769,7 +4057,8 @@
         "perseverence",
         "perserverance",
         "persevereance"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "possession",
@@ -3777,7 +4066,8 @@
         "posession",
         "possesion",
         "posesion"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "publicly",
@@ -3785,7 +4075,8 @@
         "publically",
         "publicaly",
         "publickly"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "questionnaire",
@@ -3793,7 +4084,8 @@
         "questionaire",
         "questionnare",
         "questionnair"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "recommend",
@@ -3801,7 +4093,8 @@
         "reccommend",
         "recomend",
         "reccomend"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "restaurant",
@@ -3809,7 +4102,8 @@
         "restaraunt",
         "resturant",
         "restarant"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "schedule",
@@ -3817,7 +4111,8 @@
         "schedual",
         "shedule",
         "scedule"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "sincerely",
@@ -3825,7 +4120,8 @@
         "sincerly",
         "sincerley",
         "sinserely"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "succeed",
@@ -3833,7 +4129,8 @@
         "succede",
         "suceed",
         "sucseed"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "surprise",
@@ -3841,7 +4138,8 @@
         "suprise",
         "surprize",
         "surprice"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "tomorrow",
@@ -3849,7 +4147,8 @@
         "tommorow",
         "tomorow",
         "tommorrow"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "until",
@@ -3857,7 +4156,8 @@
         "untill",
         "untile",
         "untl"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "vacuum",
@@ -3865,7 +4165,8 @@
         "vaccum",
         "vacume",
         "vacum"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "wednesday",
@@ -3873,7 +4174,8 @@
         "wenesday",
         "wensday",
         "wednsday"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "whether",
@@ -3881,7 +4183,8 @@
         "wheather",
         "whethar",
         "wheter"
-      ]
+      ],
+      "level": 1
     },
     {
       "correct": "truly",
@@ -3889,7 +4192,8 @@
         "truely",
         "truley",
         "trully"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "pronunciation",
@@ -3897,7 +4201,8 @@
         "pronounciation",
         "pronunsiation",
         "pronuncation"
-      ]
+      ],
+      "level": 3
     },
     {
       "correct": "accidentally",
@@ -3905,7 +4210,8 @@
         "accidently",
         "accidentaly",
         "accidentilly"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "apparent",
@@ -3913,7 +4219,8 @@
         "apparant",
         "aparent",
         "apparrent"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "category",
@@ -3921,7 +4228,8 @@
         "catagory",
         "categorie",
         "catergory"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "column",
@@ -3929,7 +4237,8 @@
         "colum",
         "collumn",
         "colomn"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "convenient",
@@ -3937,7 +4246,8 @@
         "convinient",
         "conveniant",
         "convienient"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "desperate",
@@ -3945,7 +4255,8 @@
         "desparate",
         "desperite",
         "desprate"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "disappoint",
@@ -3953,7 +4264,8 @@
         "dissapoint",
         "disapoint",
         "dissappoint"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "equipment",
@@ -3961,7 +4273,8 @@
         "equiptment",
         "equipmant",
         "equippment"
-      ]
+      ],
+      "level": 2
     },
     {
       "correct": "height",
@@ -3969,7 +4282,8 @@
         "heighth",
         "hieght",
         "hight"
-      ]
+      ],
+      "level": 2
     }
   ],
   "roots": [
@@ -3981,7 +4295,8 @@
         "water",
         "earth",
         "light"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "geo",
@@ -3991,7 +4306,8 @@
         "life",
         "water",
         "star"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "hydr",
@@ -4001,7 +4317,8 @@
         "fire",
         "air",
         "stone"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "aqua",
@@ -4011,7 +4328,8 @@
         "air",
         "earth",
         "sound"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "photo",
@@ -4021,7 +4339,8 @@
         "sound",
         "heat",
         "time"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "phon",
@@ -4031,7 +4350,8 @@
         "light",
         "sight",
         "word"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "graph",
@@ -4041,7 +4361,8 @@
         "read",
         "speak",
         "listen"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "script",
@@ -4051,7 +4372,8 @@
         "read",
         "speak",
         "sing"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "tele",
@@ -4061,7 +4383,8 @@
         "near",
         "fast",
         "small"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "micro",
@@ -4071,7 +4394,8 @@
         "large",
         "far",
         "many"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "scope",
@@ -4081,7 +4405,8 @@
         "hear",
         "write",
         "carry"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "chron",
@@ -4091,7 +4416,8 @@
         "place",
         "color",
         "number"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "auto",
@@ -4101,7 +4427,8 @@
         "other",
         "many",
         "first"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "port",
@@ -4111,7 +4438,8 @@
         "break",
         "see",
         "push"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "dict",
@@ -4121,7 +4449,8 @@
         "write",
         "hear",
         "lead"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "spect",
@@ -4131,7 +4460,8 @@
         "touch",
         "speak",
         "carry"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "vis",
@@ -4141,7 +4471,8 @@
         "hear",
         "feel",
         "speak"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "rupt",
@@ -4151,7 +4482,8 @@
         "build",
         "bend",
         "join"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "struct",
@@ -4161,7 +4493,8 @@
         "break",
         "move",
         "stretch"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "ject",
@@ -4171,7 +4504,8 @@
         "catch",
         "pull",
         "hold"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "tract",
@@ -4181,7 +4515,8 @@
         "push",
         "throw",
         "break"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "aud",
@@ -4191,7 +4526,8 @@
         "see",
         "speak",
         "touch"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "manu",
@@ -4201,7 +4537,8 @@
         "foot",
         "head",
         "mind"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "ped",
@@ -4211,7 +4548,8 @@
         "hand",
         "road",
         "wheel"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "cred",
@@ -4221,7 +4559,8 @@
         "deny",
         "forget",
         "question"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "terr",
@@ -4231,7 +4570,8 @@
         "sky",
         "sea",
         "fire"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "astro",
@@ -4241,7 +4581,8 @@
         "moon",
         "sun",
         "ship"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "therm",
@@ -4251,7 +4592,8 @@
         "cold",
         "light",
         "pressure"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "meter",
@@ -4261,7 +4603,8 @@
         "count",
         "cut",
         "mix"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "logy",
@@ -4271,7 +4614,8 @@
         "love of",
         "fear of",
         "list of"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "phobia",
@@ -4281,7 +4625,8 @@
         "love",
         "study",
         "anger"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "phil",
@@ -4291,7 +4636,8 @@
         "hate",
         "fear",
         "study"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "anthrop",
@@ -4301,7 +4647,8 @@
         "animal",
         "plant",
         "ancient"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "poly",
@@ -4311,7 +4658,8 @@
         "few",
         "one",
         "round"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "mono",
@@ -4321,7 +4669,8 @@
         "two",
         "many",
         "half"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "bi",
@@ -4331,7 +4680,8 @@
         "three",
         "half",
         "wheel"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "tri",
@@ -4341,7 +4691,8 @@
         "two",
         "four",
         "many"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "cent",
@@ -4351,7 +4702,8 @@
         "thousand",
         "ten",
         "half"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "mal",
@@ -4361,7 +4713,8 @@
         "good",
         "small",
         "new"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "bene",
@@ -4371,7 +4724,8 @@
         "bad",
         "large",
         "old"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "voc",
@@ -4381,7 +4735,8 @@
         "hand",
         "light",
         "sight"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "loc",
@@ -4391,7 +4746,8 @@
         "time",
         "move",
         "people"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "mit",
@@ -4401,7 +4757,8 @@
         "receive",
         "keep",
         "write"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "pend",
@@ -4411,7 +4768,8 @@
         "fall",
         "spin",
         "cut"
-      ]
+      ],
+      "level": 3
     },
     {
       "root": "duct",
@@ -4421,7 +4779,8 @@
         "push",
         "break",
         "build"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "cycl",
@@ -4431,7 +4790,8 @@
         "line",
         "square",
         "point"
-      ]
+      ],
+      "level": 2
     },
     {
       "root": "sol",
@@ -4441,7 +4801,8 @@
         "moon",
         "star",
         "earth"
-      ]
+      ],
+      "level": 1
     },
     {
       "root": "hemi",
@@ -4451,7 +4812,8 @@
         "whole",
         "round",
         "double"
-      ]
+      ],
+      "level": 2
     }
   ]
 }

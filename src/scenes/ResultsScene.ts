@@ -9,6 +9,7 @@ import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import { Sfx } from '../systems/Sfx'
+import { recordGame } from '../systems/Progress'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -37,6 +38,10 @@ export class ResultsScene extends Phaser.Scene {
       if (b.trophies !== a.trophies) return b.trophies - a.trophies
       return b.score - a.score
     })
+
+    if (!isAutoSimMode() && state.players.some(p => !p.isCpu)) {
+      recordGame(!sorted[0].isCpu)
+    }
 
     if (typeof window !== 'undefined') {
       const w = window as unknown as {
