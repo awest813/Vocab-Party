@@ -35,7 +35,7 @@ export function openHowToPlay(scene: Phaser.Scene, opts: HowToOpts = {}): () => 
   root.add(vig)
 
   const panelW = mode === 'tiles' ? 780 : 760
-  const panelH = mode === 'tiles' ? 620 : 680
+  const panelH = mode === 'tiles' ? 700 : 680
   const panel = createPanel(scene, {
     x: w / 2,
     y: h / 2,

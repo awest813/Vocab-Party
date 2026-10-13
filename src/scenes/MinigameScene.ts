@@ -131,16 +131,12 @@ export class MinigameScene extends Phaser.Scene {
       stopSpeech()
     })
 
+    const forced = getMinigame(data.gameId)
+    this.def = forced ?? pickPartyMinigame()
     this.paintBackdrop()
     Sfx.startMusic('minigame')
-    const forced = getMinigame(data.gameId)
-    if (forced) {
-      this.def = forced
-      this.showIntro()
-    } else {
-      this.def = pickPartyMinigame()
-      this.showRoulette()
-    }
+    if (forced) this.showIntro()
+    else this.showRoulette()
   }
 
   update(_time: number, delta: number) {
@@ -766,7 +762,8 @@ export class MinigameScene extends Phaser.Scene {
       row.add(this.add.text(110, -1, `${result.scores[p.id]} pts`, {
         fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 4,
       }).setOrigin(0.5))
-      const reward = this.data_.rewardLabels?.[place - 1]
+      const allTied = rows.every(r => result.placements[r.id] === 1)
+      const reward = allTied && rows.length > 1 ? 'TIE' : this.data_.rewardLabels?.[place - 1]
       if (reward) {
         row.add(this.add.text(360, -1, reward, {
           fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 4,

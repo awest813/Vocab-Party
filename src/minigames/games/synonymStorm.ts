@@ -37,9 +37,9 @@ export const synonymStorm: MinigameDef = {
     let target: LexWord
     let goodQueue: string[] = []
     let badPool: string[] = []
-    let caughtForTarget = 0
     let targetAge = 0
     let spawnIn = 400
+    let switching = false
 
     const fieldTop = area.top + 120
     const fieldBottom = area.bottom - 46
@@ -75,12 +75,13 @@ export const synonymStorm: MinigameDef = {
     root.add(banner)
 
     const newTarget = () => {
-      target = ctx.bank.word(w => w.synonyms.length >= 3)
+      target = ctx.bank.word(w => w.synonyms.length >= 3, 'storm')
       goodQueue = [...target.synonyms]
       const decoys = ctx.bank.unrelatedTo(target, 8, x => x.pos === target.pos).flatMap(w => [w.word, ...pickDistinct(w.synonyms, 1)])
       badPool = [...target.antonyms, ...decoys]
-      caughtForTarget = 0
       targetAge = 0
+      switching = false
+      drops.forEach(o => { if (!o.dead) kill(o, 'miss') })
       bannerWord.setText(target.word.toUpperCase())
       if (!ctx.reduceMotion) {
         banner.setScale(1.12)
@@ -93,9 +94,12 @@ export const synonymStorm: MinigameDef = {
       const free = Array.from({ length: LANES }, (_, i) => i).filter(i => !busyLanes.has(i))
       if (free.length === 0) return
       const lane = Phaser.Utils.Array.GetRandom(free) as number
-      const good = goodQueue.length > 0 && Math.random() < 0.45
+      // Never have two copies of the same synonym falling at once.
+      const falling = new Set(drops.filter(d => !d.dead && d.good).map(d => d.word))
+      const available = goodQueue.filter(g => !falling.has(g))
+      const good = available.length > 0 && Math.random() < 0.45
       const word = good
-        ? goodQueue[Math.floor(Math.random() * goodQueue.length)]
+        ? available[Math.floor(Math.random() * available.length)]
         : (Phaser.Utils.Array.GetRandom(badPool) as string)
       const c = scene.add.container(laneX(lane), fieldTop - 10)
       const g = scene.add.graphics()
@@ -138,10 +142,10 @@ export const synonymStorm: MinigameDef = {
         ctx.addScore(1, d.c.x, d.c.y - 20)
         ctx.recordWord(target.word, true, `${d.word} ≈ ${target.word}`)
         goodQueue = goodQueue.filter(x => x !== d.word)
-        caughtForTarget++
         kill(d, 'good')
         if (goodQueue.length === 0) {
           ctx.flash('⚡ ALL CAUGHT! NEW WORD', '#9fd4ff')
+          switching = true
           drops.forEach(o => { if (!o.dead) kill(o, 'miss') })
           ctx.after(300, newTarget)
         }
@@ -172,7 +176,7 @@ export const synonymStorm: MinigameDef = {
         const dt = delta / 1000
         targetAge += delta
         spawnIn -= delta
-        if (spawnIn <= 0) {
+        if (spawnIn <= 0 && !switching) {
           spawn()
           spawnIn = Phaser.Math.Between(520, 820)
         }
@@ -182,9 +186,8 @@ export const synonymStorm: MinigameDef = {
           if (d.c.y >= fieldBottom) kill(d, 'miss')
         }
         for (let i = drops.length - 1; i >= 0; i--) if (drops[i].dead && !drops[i].c.active) drops.splice(i, 1)
-        if (targetAge > 11000 && caughtForTarget < 3) {
+        if (targetAge > 11000 && !switching) {
           ctx.flash('🌀 NEW WORD!', '#9fd4ff')
-          drops.forEach(o => { if (!o.dead) kill(o, 'miss') })
           newTarget()
         }
       },

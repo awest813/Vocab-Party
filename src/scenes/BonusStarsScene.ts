@@ -66,7 +66,7 @@ export class BonusStarsScene extends Phaser.Scene {
       fontSize: '58px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
       stroke: hexColor(COLORS.goldDeep), strokeThickness: 10,
     }).setOrigin(0.5)
-    this.add.text(w / 2, 126, awards.length > 0 ? 'Three extra trophies are up for grabs…' : 'No bonus stars this time — on to the results!', {
+    this.add.text(w / 2, 126, awards.length > 0 ? `${['', 'One extra trophy is', 'Two extra trophies are', 'Three extra trophies are'][awards.length]} up for grabs…` : 'No bonus stars this time — on to the results!', {
       fontSize: '20px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
     }).setOrigin(0.5)
     if (!reduce) {

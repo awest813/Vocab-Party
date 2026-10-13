@@ -98,6 +98,7 @@ export class BoardScene extends Phaser.Scene {
   private diceSprite!: Phaser.GameObjects.Image
   private rolling = false
   private roundText!: Phaser.GameObjects.Text
+  private nextEventText?: Phaser.GameObjects.Text
   private turnGlow?: Phaser.GameObjects.Arc
   private turnGlowTween?: Phaser.Tweens.Tween
   /** Tile index → owner player id (Fortune Street–style shops). */
@@ -235,6 +236,14 @@ export class BoardScene extends Phaser.Scene {
       stroke: '#000033',
       strokeThickness: 4,
     }).setOrigin(1, 0).setDepth(DEPTH.hud)
+    this.nextEventText = this.add.text(w - 16, 44, '', {
+      fontSize: '13px',
+      fontFamily: FONT.body,
+      color: hexColor(COLORS.gold),
+      stroke: '#000033',
+      strokeThickness: 3,
+      align: 'right',
+    }).setOrigin(1, 0).setDepth(DEPTH.hud)
 
     this.rollBtn = createButton(this, w - 118, h - 56, 'ROLL', COLORS.gold, COLORS.goldDeep, 196, 64)
     this.rollBtn.setDepth(DEPTH.chrome)
@@ -271,8 +280,19 @@ export class BoardScene extends Phaser.Scene {
       this.closeItemMenu()
     })
 
+    void this.openingSequence()
+  }
+
+  /** One-time "let's party" splash before the first turn. */
+  private async openingSequence() {
+    this.rolling = true
+    if (!isAutoSimMode()) {
+      Sfx.splash()
+      await this.showAnnouncement("🎉 LET'S PARTY! 🎉", hexColor(COLORS.gold))
+      await this.showAnnouncement(`First to ${TROPHIES_TO_WIN} 🏆 wins!`, hexColor(COLORS.sky))
+    }
+    this.rolling = false
     this.updateStatus()
-    this.maybeScheduleCpuTurn()
   }
 
   /** Roll the die from keyboard when it is the human's turn (board scene active, not mid-roll). */
@@ -649,6 +669,7 @@ export class BoardScene extends Phaser.Scene {
     const momentumTag = momentum.length > 0 ? ` · ${momentum.join(' ')}` : ''
     this.statusText.setText(`${p.emoji} ${p.name}'s Turn${cpuTag}${momentumTag}`)
     this.roundText.setText(`Round ${this.state.round} / ${this.roundsPerGame}`)
+    this.refreshNextEvent()
     this.hud.update(this.state)
 
     if (p.isCpu && !this.rolling) {
@@ -1780,7 +1801,8 @@ export class BoardScene extends Phaser.Scene {
     this.state.currentPlayer = (this.state.currentPlayer + 1) % this.state.players.length
     if (this.state.currentPlayer === 0) {
       this.state.round++
-      const roundsLeft = this.roundsPerGame - this.state.round
+      // Rounds remaining including the one starting now.
+      const roundsLeft = this.roundsPerGame - this.state.round + 1
       if (!this.state.lastStretchDone && this.state.round >= this.lastStretchStartRound()) {
         void this.startLastStretch()
         return
@@ -1790,8 +1812,6 @@ export class BoardScene extends Phaser.Scene {
         if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
         this.cameras.main.flash(400, 255, 100, 0, true)
         this.showAnnouncement(warning, '#ff8800')
-      } else if (roundsLeft === 0 && !isAutoSimMode()) {
-        this.showAnnouncement('⚠️ FINAL ROUND! ⚠️', '#ff8800')
       }
     }
     this.updateStatus()
@@ -1822,6 +1842,7 @@ export class BoardScene extends Phaser.Scene {
   /** Mario Party–style "last turns" event: the trailing player gets a comeback boost. */
   private async startLastStretch() {
     this.state.lastStretchDone = true
+    this.rolling = true
     const ranked = [...this.state.players].sort((a, b) => (a.trophies - b.trophies) || (a.score - b.score))
     const trailing = ranked[0]
     const roundsLeft = this.roundsPerGame - this.state.round + 1
@@ -1839,7 +1860,17 @@ export class BoardScene extends Phaser.Scene {
       await this.showAnnouncement(`💪 ${trailing.name} gets +${LAST_STRETCH_BOOST} coins!`, '#ffd24a')
     }
     if (!isAutoSimMode()) await this.showAnnouncement('⭐ Bonus & penalty tiles now DOUBLE! ⭐', '#ffd24a')
+    this.rolling = false
     this.updateStatus()
+  }
+
+  /** Small line under the round counter: what happens when this round ends. */
+  private refreshNextEvent() {
+    if (!this.nextEventText) return
+    const parts: string[] = []
+    if (this.shouldRunPartyMinigame()) parts.push('🎉 Minigame next')
+    if (this.isLastStretch()) parts.push('🔥 Last Stretch')
+    this.nextEventText.setText(parts.join('\n'))
   }
 
   private shouldRunPartyMinigame(): boolean {

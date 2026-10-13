@@ -77,7 +77,7 @@ export const oddOneOut: MinigameDef = {
   cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 13] },
   start(ctx) {
     return runRapidFire(ctx, () => {
-      const w = ctx.bank.word(x => x.synonyms.length >= 2)
+      const w = ctx.bank.word(x => x.synonyms.length >= 2, 'odd')
       const group = shuffled([w.word, ...w.synonyms]).slice(0, 3)
       const impostor = ctx.bank.unrelatedTo(w, 1, x => x.pos === w.pos)[0] ?? ctx.bank.unrelatedTo(w, 1)[0]
       return {
@@ -147,7 +147,7 @@ export const antonymAttack: MinigameDef = {
         const item = ctx.bank.draw('legacy-antonyms', legacy)
         return { kicker: 'OPPOSITE OF…', prompt: item.prompt.toUpperCase(), choices: item.choices, correct: item.correct, word: item.prompt }
       }
-      const w = ctx.bank.word(x => x.antonyms.length > 0)
+      const w = ctx.bank.word(x => x.antonyms.length > 0, 'antonym')
       const trap = pickDistinct(w.synonyms, 1)
       const filler = ctx.bank.unrelatedTo(w, 3 - trap.length).map(o => o.word)
       return {

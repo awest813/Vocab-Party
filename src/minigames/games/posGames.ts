@@ -99,16 +99,21 @@ export const whackAWord: MinigameDef = {
       lips.fillRect(x - 100, y + 4, 200, 30)
       lips.fillStyle(0x6e5034, 1)
       lips.fillEllipse(x, y + 6, 196, 22)
-      if (!ctx.touch) {
-        const label = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'][i]
-        root.add(scene.add.text(x + 86, y + 20, label, { fontSize: '14px', fontFamily: FONT.display, color: '#c9a77e' }).setOrigin(0.5).setDepth(5))
-      }
     }
     root.add(holes)
 
     const moleLayer = scene.add.container(0, 0)
     root.add(moleLayer)
     root.add(lips)
+    if (!ctx.touch) {
+      // Key hints go on top of the lips so they stay readable.
+      ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'].forEach((label, i) => {
+        const { x, y } = holePos(i)
+        root.add(scene.add.text(x + 84, y + 22, label, {
+          fontSize: '15px', fontFamily: FONT.display, color: '#f3d9b5', stroke: '#2a1a0a', strokeThickness: 3,
+        }).setOrigin(0.5))
+      })
+    }
 
     const hideMole = (m: Mole, how: 'hit' | 'bad' | 'timeout') => {
       if (m.dead) return
@@ -149,7 +154,7 @@ export const whackAWord: MinigameDef = {
       if (free.length === 0) return
       const hole = Phaser.Utils.Array.GetRandom(free) as number
       const good = Math.random() < 0.48
-      const word = ctx.bank.word(w => (good ? w.pos === targetPos : w.pos !== targetPos))
+      const word = ctx.bank.word(w => (good ? w.pos === targetPos : w.pos !== targetPos), `whack:${good ? '' : 'not-'}${targetPos}`)
       const { x, y } = holePos(hole)
       const c = scene.add.container(x, y + 80)
       const g = scene.add.graphics()
@@ -182,7 +187,7 @@ export const whackAWord: MinigameDef = {
       moleLayer.add(c)
       const m: Mole = { hole, c, word, good, dead: false, ttl: Phaser.Math.Between(1300, 1800) - Math.min(500, (30000 - ctx.timeLeftMs()) / 50) }
       moles[hole] = m
-      scene.tweens.add({ targets: c, y, duration: 140, ease: 'Back.easeOut' })
+      scene.tweens.add({ targets: c, y: y - 14, duration: 140, ease: 'Back.easeOut' })
     }
 
     ctx.onKey(ev => {
@@ -283,7 +288,7 @@ export const wordSorter: MinigameDef = {
 
     const showWord = () => {
       if (ctx.isOver()) return
-      const w = ctx.bank.word(x => x.sentence.toLowerCase().includes(x.word))
+      const w = ctx.bank.word(x => x.sentence.toLowerCase().includes(x.word), 'sorter')
       const card = scene.add.container(area.cx, area.top + 130)
       card.add(drawCard(scene, Math.min(area.width - 40, 820), 210, accent))
       card.add(scene.add.text(0, -76, 'WHAT PART OF SPEECH?', { fontSize: '15px', fontFamily: FONT.display, color: hexColor(accent) }).setOrigin(0.5))

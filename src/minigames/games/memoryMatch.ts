@@ -94,7 +94,7 @@ export const memoryMatch: MinigameDef = {
       pairWords = []
       const used = new Set<string>()
       for (let tries = 0; pairWords.length < (COLS * ROWS) / 2 && tries < 60; tries++) {
-        const w = ctx.bank.word(x => x.definition.length <= 42)
+        const w = ctx.bank.word(x => x.definition.length <= 42, 'memory')
         if (used.has(w.word)) continue
         used.add(w.word)
         pairWords.push(w)

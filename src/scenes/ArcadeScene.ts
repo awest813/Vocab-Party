@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
-import { DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
+import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL, type CpuLevel } from '../systems/CpuPolicy'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonLabel } from '../ui/Button'
 import { addVignette, paintStage } from '../ui/Panel'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
@@ -16,7 +16,11 @@ const CARD_H = 150
 const GAP = 16
 
 /** Free-play menu: practice any minigame solo and chase personal bests. */
+type ArcadeMode = 'solo' | CpuLevel
+const MODE_ORDER: ArcadeMode[] = ['solo', 'easy', 'normal', 'hard']
+
 export class ArcadeScene extends Phaser.Scene {
+  private mode: ArcadeMode = 'solo'
   private cursor = 0
   private cards: { c: Phaser.GameObjects.Container; def: MinigameDef; draw: (hover: boolean) => void }[] = []
 
@@ -49,6 +53,15 @@ export class ArcadeScene extends Phaser.Scene {
     const back = createButton(this, 86, 50, '◀ MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 50)
     back.on('pointerdown', () => this.leave())
 
+    const modeLabel = () => this.mode === 'solo' ? '👤 Solo practice' : `🤖 vs 3 CPUs · ${CPU_LEVEL_LABEL[this.mode]}`
+    const modeBtn = createButton(this, w - 150, 50, modeLabel(), COLORS.bgPanelAlt, COLORS.chromeDeep, 260, 50)
+    const cycleMode = () => {
+      this.mode = MODE_ORDER[(MODE_ORDER.indexOf(this.mode) + 1) % MODE_ORDER.length]
+      setButtonLabel(modeBtn, modeLabel())
+      Sfx.uiToggle()
+    }
+    modeBtn.on('pointerdown', cycleMode)
+
     const rows = Math.ceil(MINIGAMES.length / COLS)
     const gridW = COLS * CARD_W + (COLS - 1) * GAP
     const top = 140
@@ -63,7 +76,7 @@ export class ArcadeScene extends Phaser.Scene {
       this.cards.push(this.makeCard(def, x, y, bests[def.id] ?? 0, i))
     })
 
-    this.add.text(w / 2, h - 26, touch ? 'Tap a game to play' : 'Arrows choose · Enter plays · Esc returns to menu', {
+    this.add.text(w / 2, h - 26, touch ? 'Tap a game to play · tap the mode button to face CPUs' : 'Arrows choose · Enter plays · M switches solo / vs CPUs · Esc returns to menu', {
       fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
     }).setOrigin(0.5)
 
@@ -77,6 +90,7 @@ export class ArcadeScene extends Phaser.Scene {
         case 'Enter':
         case 'Space': this.play(this.cards[this.cursor].def); break
         case 'Escape': this.leave(); break
+        case 'KeyM': cycleMode(); break
         default: return
       }
       ev.preventDefault()
@@ -143,10 +157,22 @@ export class ArcadeScene extends Phaser.Scene {
 
   private play(def: MinigameDef) {
     Sfx.uiClick()
+    const you = { id: 0, name: 'You', characterIndex: 0, color: COLORS.player[0], isCpu: false, cpuLevel: DEFAULT_CPU_LEVEL }
+    if (this.mode === 'solo') {
+      const data: MinigameSceneData = { mode: 'practice', gameId: def.id, participants: [you] }
+      this.scene.start('MinigameScene', data)
+      return
+    }
+    const level = this.mode
+    const rivals = ['Blake', 'Casey', 'Dana'].map((name, i) => ({
+      id: i + 1, name, characterIndex: i + 1, color: COLORS.player[i + 1], isCpu: true, cpuLevel: level,
+    }))
     const data: MinigameSceneData = {
-      mode: 'practice',
+      mode: 'party',
       gameId: def.id,
-      participants: [{ id: 0, name: 'You', characterIndex: 0, color: COLORS.player[0], isCpu: false, cpuLevel: DEFAULT_CPU_LEVEL }],
+      participants: [you, ...rivals],
+      stakes: `Arcade match vs ${CPU_LEVEL_LABEL[level]} CPUs`,
+      onComplete: () => this.scene.start('ArcadeScene'),
     }
     this.scene.start('MinigameScene', data)
   }

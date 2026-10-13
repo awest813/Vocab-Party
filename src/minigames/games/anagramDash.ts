@@ -53,7 +53,7 @@ export const anagramDash: MinigameDef = {
     const slotY = area.top + 262
     const tileY = area.top + 372
 
-    const pickWord = (): LexWord => ctx.bank.word(w => w.word.length >= 4 && w.word.length <= 9 && /^[a-z]+$/.test(w.word))
+    const pickWord = (): LexWord => ctx.bank.word(w => w.word.length >= 4 && w.word.length <= 9 && /^[a-z]+$/.test(w.word), 'anagram')
 
     const drawSlot = (g: Phaser.GameObjects.Graphics, state: 'empty' | 'filled' | 'good' | 'bad') => {
       g.clear()

@@ -189,10 +189,11 @@ export class ContentBank {
     return items[drawIndex(key, items.length)]
   }
 
-  word(filter?: (w: LexWord) => boolean): LexWord {
+  /** Draw a word; pass a `key` naming the filter so different filters keep separate no-repeat decks. */
+  word(filter?: (w: LexWord) => boolean, key = 'filtered'): LexWord {
     if (!filter) return this.draw('words', this.words)
     const pool = this.words.filter(filter)
-    return pool.length > 0 ? this.draw(`words:${pool.length}`, pool) : this.draw('words', this.words)
+    return pool.length > 0 ? this.draw(`words:${key}:${pool.length}`, pool) : this.draw('words', this.words)
   }
 
   /**
@@ -211,7 +212,8 @@ export class ContentBank {
     const strict = pickDistinct(this.words, n, x => (filter ? !filter(x) : false) || isRelated(x))
     if (strict.length >= n) return strict
     // Very small banks: relax the filter rather than return too few distractors.
-    const extra = pickDistinct(this.words, n - strict.length, x => isRelated(x) && x.word !== w.word && !strict.includes(x))
-    return [...strict, ...extra.filter(x => !related.has(x.word))]
+    const extra = pickDistinct(this.words, n - strict.length, x =>
+      x.word === w.word || related.has(x.word) || strict.includes(x) || (filter ? !filter(x) : false))
+    return [...strict, ...extra]
   }
 }

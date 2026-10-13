@@ -297,6 +297,9 @@ class SfxSystem {
     if (!ctx || !this.musicGain || !this.musicPlaying) return
     const def = MUSIC_TRACKS[this.currentTrack]
     const stepDur = 60 / def.bpm / 4
+    // After a throttled/background tab, skip missed steps instead of firing them all at once.
+    if (this.nextStepTime < ctx.currentTime) this.nextStepTime = ctx.currentTime + 0.05
+    if (typeof document !== 'undefined' && document.hidden) return
     // Drop stale nodes so the list doesn't grow forever.
     if (this.musicNodes.length > 400) this.musicNodes.splice(0, this.musicNodes.length - 200)
     while (this.nextStepTime < ctx.currentTime + 0.14) {

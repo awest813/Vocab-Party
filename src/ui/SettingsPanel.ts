@@ -147,8 +147,9 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
       opts.onChange?.(settings)
       if (key === 'sfxVolume') Sfx.uiClick()
       if (key === 'musicVolume') {
-        Sfx.stopMusic(false)
-        if (!settings.muted && settings.musicVolume > 0.01) Sfx.startMusic()
+        // Volume follows settings live; only start/stop when crossing silence.
+        if (settings.musicVolume <= 0.01) Sfx.stopMusic(false)
+        else if (!settings.muted) Sfx.startMusic()
       }
     }
     track.on('pointerdown', (p: Phaser.Input.Pointer) => apply(p))
