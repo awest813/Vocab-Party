@@ -106,7 +106,9 @@ export class WordBookScene extends Phaser.Scene {
     next.on('pointerdown', () => this.turnPage(1))
     this.pageText = this.add.text(430, h - 40, '', { fontSize: '16px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0.5)
 
-    const weak = weakWords(40)
+    // Only lexicon words can drive the practice game.
+    const lexSet = new Set(this.bank.allWords.map(x => x.word))
+    const weak = weakWords(200).filter(x => lexSet.has(x)).slice(0, 40)
     const practice = createButton(this, 1050, 160, '🎯 PRACTICE WEAK WORDS', COLORS.warning, 0xd9800f, 340, 44)
     practice.on('pointerdown', () => {
       if (weak.length === 0) return
@@ -114,6 +116,7 @@ export class WordBookScene extends Phaser.Scene {
         mode: 'practice',
         gameId: 'definition-dash',
         focusWords: weak,
+        backScene: 'WordBookScene',
         participants: [{ id: 0, name: 'You', characterIndex: 0, color: COLORS.player[0], isCpu: false, cpuLevel: DEFAULT_CPU_LEVEL }],
       }
       this.scene.start('MinigameScene', data)

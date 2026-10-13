@@ -153,7 +153,7 @@ export class MenuScene extends Phaser.Scene {
 
     this.createTilePreviewRow(w / 2, 292, reduce)
 
-    const startGlow = this.add.ellipse(w / 2, 368, 440, 110, COLORS.mint, 0.14).setDepth(4)
+    const startGlow = this.add.ellipse(w / 2, readSave() ? 352 : 368, 440, 110, COLORS.mint, 0.14).setDepth(4)
     if (!reduce) {
       this.tweens.add({
         targets: startGlow,
@@ -254,7 +254,7 @@ export class MenuScene extends Phaser.Scene {
     gear.on('pointerdown', () => this.openSettings())
 
     const hint = this.add.text(w / 2, h - 48, touch
-      ? 'Tap ENTER PARTY to begin  ·  Rotate landscape for the best view'
+      ? `Tap ${save ? 'CONTINUE PARTY' : 'ENTER PARTY'} to begin  ·  Rotate landscape for the best view`
       : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  ? = How to Play' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  ? = How to Play', {
       fontSize: '14px',
       fontFamily: FONT.body,

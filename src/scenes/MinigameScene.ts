@@ -61,6 +61,8 @@ export interface MinigameSceneData {
   onComplete?: (result: MinigameResult) => void
   /** Practice these words more often (Word Book → practice weak words). */
   focusWords?: string[]
+  /** Where practice mode's back button goes (default: the Arcade). */
+  backScene?: 'ArcadeScene' | 'WordBookScene'
 }
 
 const HEADER_H = 92
@@ -863,11 +865,12 @@ export class MinigameScene extends Phaser.Scene {
 
     const again = createButton(this, w / 2 - 170, h - 62, '↻  PLAY AGAIN', COLORS.party, COLORS.partyDeep, 300, 60)
     again.on('pointerdown', () => this.scene.restart({ ...this.data_ }))
-    const back = createButton(this, w / 2 + 170, h - 62, 'ARCADE', COLORS.skyBtn, COLORS.skyBtnDeep, 300, 60)
-    back.on('pointerdown', () => this.scene.start('ArcadeScene'))
+    const backScene = this.data_.backScene ?? 'ArcadeScene'
+    const back = createButton(this, w / 2 + 170, h - 62, backScene === 'WordBookScene' ? 'WORD BOOK' : 'ARCADE', COLORS.skyBtn, COLORS.skyBtnDeep, 300, 60)
+    back.on('pointerdown', () => this.scene.start(backScene))
     const key = (ev: KeyboardEvent) => {
       if (ev.code === 'Enter') this.scene.restart({ ...this.data_ })
-      else if (ev.code === 'Escape') this.scene.start('ArcadeScene')
+      else if (ev.code === 'Escape') this.scene.start(backScene)
     }
     this.wait(400, () => this.input.keyboard?.on('keydown', key))
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', key))

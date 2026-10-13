@@ -143,7 +143,7 @@ export class BoardScene extends Phaser.Scene {
       case 'grammar':
         return `Tile ${tileIndex}: ${type.toUpperCase()} — answer fast for bonus points and Speed Surge.`
       case 'minigame':
-        return `Tile ${tileIndex}: MINIGAME — winner gains +15 score and +5 coins.`
+        return `Tile ${tileIndex}: DUEL — challenge a rival to a minigame; winner steals up to ${DUEL_STEAL} coins.`
       case 'mystery':
         return `Tile ${tileIndex}: MYSTERY — random event: jackpots, steals, boosts, or extra roll.`
       case 'swap':
@@ -198,6 +198,7 @@ export class BoardScene extends Phaser.Scene {
     this.turnGlow = undefined
     this.turnGlowTween = undefined
     this._shakeTokenContainer = null
+    this.coachOpen = false
 
     const names = data?.playerNames ?? ['Alex', 'Blake', 'Casey', 'Dana']
     const emojis = data?.playerEmojis ?? ['🎉', '🧙', '🛡️', '🏴‍☠️']
@@ -324,6 +325,7 @@ export class BoardScene extends Phaser.Scene {
     return new Promise(resolve => {
       const w = this.scale.width
       const h = this.scale.height
+      this.coachOpen = true
       const c = this.add.container(w / 2, h / 2).setDepth(DEPTH.banner + 5)
       const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.6).setInteractive()
       const g = this.add.graphics()
@@ -340,7 +342,7 @@ export class BoardScene extends Phaser.Scene {
         '📖  Land on tiles: answer questions, shop, duel, and more',
         '🌟  Reach a ⭐ Star tile with 20 coins to buy a 🏆 trophy',
         this.state.options.minigames === 'tiles'
-          ? '🕹️  Land on a Duel tile to challenge a rival to a minigame'
+          ? '🕹️  Land on a 🕹️ tile to challenge a rival to a minigame duel'
           : `🎉  ${this.state.options.minigames === 'every' ? 'Every round' : 'Every other round'} ends in a vocab minigame — win coins!`,
         `🏆  First to ${TROPHIES_TO_WIN} trophies (or most at the end) wins`,
       ]
@@ -354,11 +356,12 @@ export class BoardScene extends Phaser.Scene {
         if (done) return
         done = true
         markCoachSeen()
+        this.coachOpen = false
         this.input.keyboard?.off('keydown', onKey)
         c.destroy()
         resolve()
       }
-      const onKey = (ev: KeyboardEvent) => { if (ev.code === 'Enter' || ev.code === 'Space' || ev.code === 'Escape') close() }
+      const onKey = (ev: KeyboardEvent) => { if (ev.code === 'Enter' || ev.code === 'Space') close() }
       btn.on('pointerdown', close)
       this.time.delayedCall(400, () => this.input.keyboard?.on('keydown', onKey))
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', onKey))
@@ -2290,8 +2293,10 @@ export class BoardScene extends Phaser.Scene {
     btn.on('pointerdown', () => this.pauseGame())
   }
 
+  private coachOpen = false
+
   private pauseGame() {
-    if (this.scene.isActive('PauseScene')) return
+    if (this.scene.isActive('PauseScene') || this.coachOpen) return
     Sfx.pause()
     this.scene.pause()
     this.scene.launch('PauseScene')

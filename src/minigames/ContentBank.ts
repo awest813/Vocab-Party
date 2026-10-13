@@ -176,7 +176,7 @@ export class ContentBank {
     this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 10) : FALLBACK_ROOTS
     if (focusWords && focusWords.length > 0) {
       const set = new Set(focusWords.map(w => w.toLowerCase()))
-      this.focus = this.words.filter(w => set.has(w.word))
+      this.focus = this.allWords.filter(w => set.has(w.word))
     }
 
     type Raw = { sentence?: string; prompt?: string; word?: string; choices?: string[]; correct?: number; correct_index?: number }

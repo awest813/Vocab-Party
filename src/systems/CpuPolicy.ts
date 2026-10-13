@@ -439,10 +439,10 @@ export function cpuChooseBranch(
     nextByNode: ctx?.nextByNode
   }
 
+  // Every fork option is exactly one step away, so score purely on what lies ahead.
+  // (Index distance is meaningless here: shortcut nodes have high ids on most boards.)
   const scored = options.map((id, index) => {
-    const dist = forwardDistance(position, id, boardLength)
     let score = lookaheadValue(id, graph, coins, p.branchLookahead, shopPrice, starCost)
-    score -= dist * 2
     // Slight trophy hunger: hard CPUs bias harder toward stars when close to norma
     if (trophies >= 3) {
       const t = id === 0 ? 'start' : tileTypes[id % tileTypes.length]
