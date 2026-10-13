@@ -91,11 +91,11 @@ const FALLBACK_AFFIXES: AffixItem[] = [
 ]
 
 const FALLBACK_COMPOUNDS: CompoundItem[] = [
-  { a: 'sun', b: 'flower', word: 'sunflower', definition: 'a tall plant with a big yellow bloom', distractors: ['shine', 'cloud', 'rain'] },
-  { a: 'rain', b: 'bow', word: 'rainbow', definition: 'an arc of colors in the sky', distractors: ['coat', 'drop', 'fall'] },
-  { a: 'foot', b: 'ball', word: 'football', definition: 'a game played by kicking a ball', distractors: ['step', 'print', 'path'] },
-  { a: 'tooth', b: 'brush', word: 'toothbrush', definition: 'a tool for cleaning your teeth', distractors: ['paste', 'pick', 'ache'] },
-  { a: 'butter', b: 'fly', word: 'butterfly', definition: 'an insect with colorful wings', distractors: ['milk', 'cup', 'nut'] },
+  { a: 'sun', b: 'flower', word: 'sunflower', definition: 'a tall plant with a big yellow bloom', distractors: ['table', 'river', 'pencil'] },
+  { a: 'rain', b: 'bow', word: 'rainbow', definition: 'an arc of colors in the sky', distractors: ['chair', 'mouse', 'lamp'] },
+  { a: 'foot', b: 'ball', word: 'football', definition: 'a game played by kicking a ball', distractors: ['cloud', 'spoon', 'grape'] },
+  { a: 'tooth', b: 'brush', word: 'toothbrush', definition: 'a tool for cleaning your teeth', distractors: ['window', 'tiger', 'plate'] },
+  { a: 'butter', b: 'fly', word: 'butterfly', definition: 'an insect with colorful wings', distractors: ['rock', 'desk', 'shoe'] },
 ]
 
 const FALLBACK_ROOTS: RootItem[] = [

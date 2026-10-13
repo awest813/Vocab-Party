@@ -25,11 +25,19 @@ const BPM_END = 128
 
 type Mode = 'synonym' | 'antonym'
 
+interface Section {
+  target: LexWord
+  mode: Mode
+  goodPool: string[]
+  badPool: string[]
+}
+
 interface Note {
   lane: number
   hitAt: number
   word: string
   good: boolean
+  section: Section
   c: Phaser.GameObjects.Container
   done: boolean
 }
@@ -48,27 +56,25 @@ export const wordHero: MinigameDef = {
   ],
   controls: { keys: 'D F J K (or 1–4 / arrows) to strum each lane', touch: 'Tap the colored frets' },
   durationMs: 40000,
-  cpu: { easy: [12, 24], normal: [24, 42], hard: [42, 66] },
+  cpu: { easy: [6, 14], normal: [14, 26], hard: [26, 40] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const notes: Note[] = []
     let t = 0
-    let nextBeat = 1800
+    let nextBeat = 2700
     let beatIndex = 0
     let streak = 0
     let riffStep = 0
     let rock = 0.5
-    let mode: Mode = 'synonym'
-    let target!: LexWord
-    let goodPool: string[] = []
-    let badPool: string[] = []
+    /** Section new notes are spawned for (runs one section ahead of the banner during a hand-off). */
+    let spawning!: Section
     let goodHitsForTarget = 0
     let targetSince = 0
     /** Scheduled beat times not yet reached — drums fire exactly when notes land. */
     const beatQueue: number[] = []
     let lastBeatAt = -1
     let beatCount = 0
-    /** Set when a new target is due: stop spawning until the highway clears. */
+    /** Set while the next section's notes are already falling but the old ones haven't landed yet. */
     let pendingSwitch = false
 
     // Highway geometry (pseudo-3D trapezoid)
@@ -101,10 +107,8 @@ export const wordHero: MinigameDef = {
         hwy.lineStyle(i === 0 || i === 4 ? 4 : 2, i === 0 || i === 4 ? accent : 0x2a3a5a, i === 0 || i === 4 ? 0.8 : 0.7)
         hwy.lineBetween(xf, topY, xn, bottomY)
       }
-      // scrolling fret bars (beat lines)
-      const beatMs = 60000 / bpm()
-      for (let k = 0; k < 8; k++) {
-        const hitAt = nextBeat + (k - 1) * beatMs
+      // scrolling fret bars: one per scheduled beat still in flight
+      for (const hitAt of beatQueue) {
         const p = 1 - (hitAt - t) / travelMs()
         if (p < 0 || p > 1.15) continue
         const y = yAt(p)
@@ -182,16 +186,22 @@ export const wordHero: MinigameDef = {
       drawMeter()
     }
 
-    const newTarget = () => {
-      mode = Math.random() < 0.7 ? 'synonym' : 'antonym'
-      target = ctx.bank.word(w => w.synonyms.length >= 3 && (mode === 'synonym' || w.antonyms.length > 0), `hero:${mode}`)
-      goodPool = mode === 'synonym' ? [...target.synonyms] : [...target.antonyms]
+    const chooseSection = (): Section => {
+      let mode: Mode = Math.random() < 0.7 ? 'synonym' : 'antonym'
+      const target = ctx.bank.word(w => w.synonyms.length >= 3 && (mode === 'synonym' || w.antonyms.length > 0), `hero:${mode}`)
+      // Guard custom content: fall back to synonyms if this word has no opposites.
+      if (mode === 'antonym' && target.antonyms.length === 0) mode = 'synonym'
+      const goodPool = mode === 'synonym' ? [...target.synonyms] : [...target.antonyms]
       const decoys = ctx.bank.unrelatedTo(target, 6, x => x.pos === target.pos).map(x => x.word)
-      badPool = [...decoys, ...(mode === 'antonym' ? target.synonyms : target.antonyms)]
+      const badPool = [...decoys, ...(mode === 'antonym' ? target.synonyms : target.antonyms)]
+      return { target, mode, goodPool: goodPool.length > 0 ? goodPool : [target.word], badPool }
+    }
+
+    const showSection = (sec: Section) => {
       goodHitsForTarget = 0
       targetSince = t
-      kicker.setText(mode === 'synonym' ? 'STRUM WORDS THAT MEAN…' : 'STRUM THE OPPOSITES OF…')
-      bigWord.setText(target.word.toUpperCase())
+      kicker.setText(sec.mode === 'synonym' ? 'STRUM WORDS THAT MEAN…' : 'STRUM THE OPPOSITES OF…')
+      bigWord.setText(sec.target.word.toUpperCase())
       if (!ctx.reduceMotion) {
         banner.setScale(1.12)
         scene.tweens.add({ targets: banner, scale: 1, duration: 260, ease: 'Back.easeOut' })
@@ -202,9 +212,10 @@ export const wordHero: MinigameDef = {
       const lane = Phaser.Math.Between(0, 3)
       // Keep good notes a bit more common than decoys so there's always music to play.
       const good = Math.random() < 0.58
+      const sec = spawning
       const word = good
-        ? (Phaser.Utils.Array.GetRandom(goodPool) as string)
-        : (Phaser.Utils.Array.GetRandom(pickDistinct(badPool, 3)) as string)
+        ? (Phaser.Utils.Array.GetRandom(sec.goodPool) as string)
+        : (Phaser.Utils.Array.GetRandom(pickDistinct(sec.badPool, 3)) as string)
       const c = scene.add.container(laneX(lane, 0), topY)
       const g = scene.add.graphics()
       const col = LANE_COLORS[lane]
@@ -222,7 +233,7 @@ export const wordHero: MinigameDef = {
       c.add([g, label])
       c.setScale(scaleAt(0))
       root.add(c)
-      notes.push({ lane, hitAt, word, good, c, done: false })
+      notes.push({ lane, hitAt, word, good, section: sec, c, done: false })
     }
 
     const burst = (lane: number, color: number, text: string, textColor: string) => {
@@ -277,14 +288,16 @@ export const wordHero: MinigameDef = {
         rock = Math.min(1, rock + 0.04)
         goodHitsForTarget++
         burst(lane, LANE_COLORS[lane], perfect ? 'PERFECT!' : 'GOOD', perfect ? '#ffe066' : '#ffffff')
-        ctx.recordWord(target.word, true, `${best.word} ${mode === 'synonym' ? '≈' : '↔'} ${target.word}`)
-        if (streak > 0 && streak % 8 === 0 && mult() > m - 1 && streak <= 24) ctx.flash(`×${mult()} MULTIPLIER!`, '#ff9fd0')
+        const sec = best.section
+        ctx.recordWord(sec.target.word, true, `${best.word} ${sec.mode === 'synonym' ? '≈' : '↔'} ${sec.target.word}`)
+        if (streak % 8 === 0 && streak <= 24) ctx.flash(`×${mult()} MULTIPLIER!`, '#ff9fd0')
       } else {
         Sfx.clunk()
         ctx.addScore(-1)
         rock = Math.max(0, rock - 0.1)
         burst(lane, 0x555555, 'WRONG WORD', '#ff8888')
-        ctx.recordWord(target.word, false, `“${best.word}” doesn’t ${mode === 'synonym' ? 'mean' : 'oppose'} ${target.word}`)
+        const sec = best.section
+        ctx.recordWord(sec.target.word, false, `“${best.word}” doesn’t ${sec.mode === 'synonym' ? 'mean' : 'oppose'} ${sec.target.word}`)
         breakStreak()
         if (!ctx.reduceMotion) scene.cameras.main.shake(90, 0.004)
       }
@@ -300,7 +313,8 @@ export const wordHero: MinigameDef = {
     })
 
     Sfx.stopMusic(false)
-    newTarget()
+    spawning = chooseSection()
+    showSection(spawning)
     refreshHud()
     drawHighway(0)
 
@@ -312,7 +326,7 @@ export const wordHero: MinigameDef = {
         // Schedule notes so they reach the strike line exactly on the beat.
         while (t + travelMs() >= nextBeat) {
           // Rest on some off-beats so it isn't a wall of notes.
-          if (!pendingSwitch && !(beatIndex % 8 === 7 && Math.random() < 0.6)) spawn(nextBeat)
+          if (!(beatIndex % 8 === 7 && Math.random() < 0.6)) spawn(nextBeat)
           beatQueue.push(nextBeat)
           nextBeat += beatMs
           beatIndex++
@@ -337,7 +351,7 @@ export const wordHero: MinigameDef = {
               // Missed a note you should have played.
               rock = Math.max(0, rock - 0.06)
               if (streak > 0) breakStreak()
-              ctx.recordWord(target.word, false, `missed “${n.word}”`)
+              ctx.recordWord(n.section.target.word, false, `missed “${n.word}”`)
               scene.tweens.add({ targets: n.c, alpha: 0, duration: 160, onComplete: () => n.c.destroy() })
             } else {
               // Correctly let a decoy pass.
@@ -347,12 +361,17 @@ export const wordHero: MinigameDef = {
         }
         for (let i = notes.length - 1; i >= 0; i--) if (notes[i].done && !notes[i].c.active) notes.splice(i, 1)
         drawMeter()
-        // New target after enough plays (or a while): stop spawning, let the lanes clear, then switch.
-        if (!pendingSwitch && (goodHitsForTarget >= 8 || t - targetSince > 12000)) pendingSwitch = true
-        if (pendingSwitch && notes.every(n => n.done)) {
+        // New section: start spawning the next target's notes right away (one beat of rest),
+        // and swap the banner once the last of the old section's notes has landed.
+        if (!pendingSwitch && (goodHitsForTarget >= 8 || t - targetSince > 12000)) {
+          pendingSwitch = true
+          spawning = chooseSection()
+          nextBeat += 60000 / bpm()
+        }
+        if (pendingSwitch && notes.every(n => n.done || n.section === spawning)) {
           pendingSwitch = false
           ctx.flash('🎸 NEW SONG SECTION!', '#ff9fd0')
-          newTarget()
+          showSection(spawning)
         }
       },
       stop() {

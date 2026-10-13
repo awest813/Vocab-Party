@@ -23,7 +23,7 @@ export const letterRescue: MinigameDef = {
   ],
   controls: { keys: 'Type letters on your keyboard', touch: 'Tap the letter keys' },
   durationMs: 50000,
-  cpu: { easy: [1, 3], normal: [3, 5], hard: [5, 8] },
+  cpu: { easy: [2, 4], normal: [4, 7], hard: [7, 10] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let word!: LexWord
@@ -191,6 +191,8 @@ export const letterRescue: MinigameDef = {
     }
 
     ctx.onKey(ev => {
+      // Leave browser shortcuts (Ctrl/Cmd+R, etc.) alone.
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return false
       const k = ev.key.toLowerCase()
       if (/^[a-z]$/.test(k)) {
         guess(k)

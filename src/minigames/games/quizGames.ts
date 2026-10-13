@@ -338,7 +338,7 @@ export const compoundCrafter: MinigameDef = {
       const c = ctx.bank.draw('compounds', ctx.bank.compounds)
       return {
         kicker: 'BUILD THE COMPOUND WORD',
-        prompt: `${c.a.toUpperCase()} + ▢▢▢`,
+        prompt: `${c.a.toUpperCase()} + ${'▢'.repeat(Math.min(6, c.b.length))}`,
         detail: `clue: “${c.definition}”`,
         choices: [c.b, ...c.distractors.slice(0, 3)],
         correct: 0,
