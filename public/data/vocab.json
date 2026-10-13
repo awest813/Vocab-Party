@@ -2003,7 +2003,8 @@
         "mistake",
         "question"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "She was so _____ that she finished the race even though her legs ached.",
@@ -2014,7 +2015,8 @@
         "confused",
         "distracted"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "The _____ rainforest sheltered hundreds of plant and animal species.",
@@ -2025,7 +2027,8 @@
         "diverse",
         "identical"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "He spoke in a _____ voice so he would not wake the sleeping baby.",
@@ -2036,7 +2039,8 @@
         "booming",
         "angry"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "The old bridge looked _____, so engineers warned people not to cross it.",
@@ -2047,7 +2051,8 @@
         "sturdy",
         "colorful"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "After days of hard work, the team felt _____ when they finally finished.",
@@ -2058,7 +2063,8 @@
         "furious",
         "relieved"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The puppy wagged its tail and greeted everyone — it was incredibly _____.",
@@ -2069,7 +2075,8 @@
         "affectionate",
         "hostile"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The hikers followed the _____ trail, carefully marked with bright orange signs.",
@@ -2080,7 +2087,8 @@
         "designated",
         "forbidden"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The teacher used diagrams and examples to help students _____ the concept.",
@@ -2091,7 +2099,8 @@
         "grasp",
         "forget"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "After the storm, the town was in complete _____, with downed trees and flooded streets.",
@@ -2102,7 +2111,8 @@
         "order",
         "silence"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "sentence": "The kind stranger offered to _____ the lost tourist to the nearest bus stop.",
@@ -2113,7 +2123,8 @@
         "escort",
         "block"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The chef prepared a _____ meal using only fresh, local ingredients.",
@@ -2124,7 +2135,8 @@
         "savory",
         "bland"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The night sky was so _____ that we could see thousands of stars.",
@@ -2135,7 +2147,8 @@
         "murky",
         "cloudless"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The athlete showed great _____ by training every day for the Olympics.",
@@ -2146,7 +2159,8 @@
         "discipline",
         "luck"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "Because the instructions were _____, nobody knew how to assemble the furniture.",
@@ -2157,7 +2171,8 @@
         "vague",
         "helpful"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The artist used _____ colors that made the painting stand out in the gallery.",
@@ -2168,7 +2183,8 @@
         "faded",
         "vibrant"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "After the long hike, the cold stream water felt incredibly _____.",
@@ -2179,7 +2195,8 @@
         "refreshing",
         "bitter"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "Her argument was so _____ that even skeptics began to agree.",
@@ -2190,7 +2207,8 @@
         "sloppy",
         "persuasive"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The museum exhibit was _____ — every display held a surprising detail.",
@@ -2201,7 +2219,8 @@
         "fascinating",
         "empty"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "We had to _____ our plans when the sudden rain flooded the field.",
@@ -2212,7 +2231,8 @@
         "abandon",
         "celebrate"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The detective searched for any _____ that might explain the mystery.",
@@ -2223,7 +2243,8 @@
         "distraction",
         "decoration"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "Although the hike was exhausting, the mountain view was _____.",
@@ -2234,7 +2255,8 @@
         "ordinary",
         "disappointing"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "Please _____ your sources so readers know where the facts came from.",
@@ -2245,7 +2267,8 @@
         "hide",
         "invent"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "The new rule will _____ students from bringing phones into the exam room.",
@@ -2256,7 +2279,8 @@
         "require",
         "prohibit"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "His apology sounded _____; nobody believed he was truly sorry.",
@@ -2267,7 +2291,8 @@
         "insincere",
         "timely"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "The map was _____ enough that even first-time visitors found the trailhead.",
@@ -2278,7 +2303,8 @@
         "smudged",
         "secret"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "Her _____ about bugs led her to read every insect book in the library.",
@@ -2289,7 +2315,8 @@
         "curiosity",
         "luxury"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "It took great _____ for the firefighter to run into the burning building.",
@@ -2300,7 +2327,8 @@
         "courage",
         "rumor"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "The fallen tree was the biggest _____ blocking our path through the woods.",
@@ -2311,7 +2339,8 @@
         "treasure",
         "tradition"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "The muddy footprints were _____ that someone had walked through the kitchen.",
@@ -2322,7 +2351,8 @@
         "luxury",
         "harmony"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "After running the marathon, she was overcome with _____ and slept for twelve hours.",
@@ -2333,7 +2363,8 @@
         "curiosity",
         "enthusiasm"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "The _____ of water during the drought meant everyone had to save every drop.",
@@ -2344,7 +2375,8 @@
         "harmony",
         "surplus"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 3
     },
     {
       "sentence": "To show her _____, Maya wrote thank-you cards to everyone who helped.",
@@ -2355,7 +2387,8 @@
         "gratitude",
         "fatigue"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "Grandma's favorite _____ for a sore throat is warm tea with honey.",
@@ -2366,7 +2399,8 @@
         "obstacle",
         "rumor"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "During the storm, the hikers found _____ in a small cave.",
@@ -2377,7 +2411,8 @@
         "shelter",
         "danger"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "Neither sister got exactly what she wanted, but they reached a fair _____ by taking turns.",
@@ -2388,7 +2423,8 @@
         "deficit",
         "quarrel"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "The writer moved to a quiet cabin in the woods to enjoy some _____ away from crowds.",
@@ -2399,7 +2435,8 @@
         "traffic",
         "noise"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "sentence": "When the audience loved the play, they rose from their seats for a standing _____.",
@@ -2410,7 +2447,8 @@
         "deficit",
         "quarrel"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "sentence": "If you have a question, don't _____ to raise your hand.",
@@ -2421,7 +2459,8 @@
         "repair",
         "hesitate"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The magician tried to _____ the coin in his sleeve so no one would see it.",
@@ -2432,7 +2471,8 @@
         "reveal",
         "conceal"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "Sam tried to _____ his parents to get a puppy by promising to walk it every day.",
@@ -2443,7 +2483,8 @@
         "forgive",
         "persuade"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The workers used a wrecking ball to _____ the old building.",
@@ -2454,7 +2495,8 @@
         "protect",
         "demolish"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The gardener would _____ the tiny seedlings with water, sunlight, and care.",
@@ -2465,7 +2507,8 @@
         "destroy",
         "neglect"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "Because of the thunderstorm, the coach had to _____ the game until next week.",
@@ -2476,7 +2519,8 @@
         "postpone",
         "win"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "After the flood, the family worked to _____ whatever furniture had not been ruined.",
@@ -2487,7 +2531,8 @@
         "salvage",
         "scatter"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "sentence": "In the library, we must _____ so we don't disturb other readers.",
@@ -2498,7 +2543,8 @@
         "shout",
         "cheer"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "Heavy snow will _____ the rescue team and slow them down.",
@@ -2509,7 +2555,8 @@
         "assist",
         "accelerate"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "sentence": "The mother sang a gentle lullaby to _____ her crying baby.",
@@ -2520,7 +2567,8 @@
         "scold",
         "startle"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "Tom likes to _____; he said his fish was as big as a car when it was only a foot long.",
@@ -2531,7 +2579,8 @@
         "whisper",
         "apologize"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "sentence": "After the bake sale used up our supplies, we need to _____ our flour and sugar.",
@@ -2542,7 +2591,8 @@
         "replenish",
         "deplete"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "sentence": "Parents will _____ the students on the field trip to keep everyone safe.",
@@ -2553,7 +2603,8 @@
         "ignore",
         "forget"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "sentence": "The nurse gave him an ice pack to _____ the pain in his swollen ankle.",
@@ -2564,7 +2615,8 @@
         "exacerbate",
         "alleviate"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "sentence": "The parrot learned to _____ its owner's voice so well that the dog came when it called.",
@@ -2575,7 +2627,8 @@
         "postpone",
         "imitate"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The teacher asked Ana to _____ the worksheets, giving one to every student in the class.",
@@ -2586,7 +2639,8 @@
         "distribute",
         "hide"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "With plenty of sunlight and water, the tomato plants began to _____.",
@@ -2597,7 +2651,8 @@
         "shrink",
         "flourish"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "Handle the antique teacup carefully because it is very _____ and could crack.",
@@ -2608,7 +2663,8 @@
         "sturdy",
         "durable"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "The museum displayed _____ pottery made by people thousands of years ago.",
@@ -2619,7 +2675,8 @@
         "ancient",
         "brand-new"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "Ruby felt _____ before her piano recital, and her hands would not stop shaking.",
@@ -2630,7 +2687,8 @@
         "sleepy",
         "anxious"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "sentence": "The _____ driver slowed down and checked both ways twice before crossing the icy bridge.",
@@ -2641,7 +2699,8 @@
         "reckless",
         "careless"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "sentence": "These hiking boots are so _____ that they lasted for ten years of rough trails.",
@@ -2652,7 +2711,8 @@
         "flimsy",
         "fragile"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "sentence": "My _____ uncle never wastes money and always looks for the best deals.",
@@ -2663,7 +2723,8 @@
         "extravagant",
         "careless"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "sentence": "The _____ whale was longer than three school buses.",
@@ -2674,7 +2735,8 @@
         "gigantic",
         "miniature"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "The _____ teacher let us turn in our homework late without losing points.",
@@ -2685,7 +2747,8 @@
         "harsh",
         "strict"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "sentence": "Now that everyone streams music, cassette tapes have become nearly _____.",
@@ -2696,7 +2759,8 @@
         "essential",
         "modern"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "sentence": "The puppy was _____ to step into the bath and kept backing away from the water.",
@@ -2707,7 +2771,8 @@
         "excited",
         "reluctant"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The lake was calm and _____, without a single ripple on its surface.",
@@ -2718,7 +2783,8 @@
         "chaotic",
         "stormy"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "Copying the same sentence one hundred times was a long and _____ task.",
@@ -2729,7 +2795,8 @@
         "thrilling",
         "tedious"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The desert was so _____ that we drove for hours without reaching its end.",
@@ -2740,7 +2807,8 @@
         "cramped",
         "narrow"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "sentence": "Apples were so _____ this fall that the farm gave away extra bushels for free.",
@@ -2751,7 +2819,8 @@
         "missing",
         "abundant"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The new gym is so _____ that all four classes can play there at once.",
@@ -2762,7 +2831,8 @@
         "narrow",
         "cramped"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "sentence": "The _____ goat leaped easily from rock to rock up the steep cliff.",
@@ -2773,7 +2843,8 @@
         "clumsy",
         "nimble"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "sentence": "The _____ roses filled the whole room with a sweet smell.",
@@ -2784,7 +2855,8 @@
         "fragrant",
         "scentless"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "sentence": "The _____ crowd booed and shouted angrily at the visiting team.",
@@ -2795,7 +2867,8 @@
         "hostile",
         "welcoming"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "sentence": "She is so _____ that she checks every math problem three times for tiny mistakes.",
@@ -2806,7 +2879,8 @@
         "sloppy",
         "hasty"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "sentence": "The music stopped _____, leaving the dancers frozen in surprise.",
@@ -2817,7 +2891,8 @@
         "gently",
         "slowly"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "sentence": "It _____ snows in Florida, so the kids were shocked to see snowflakes.",
@@ -2828,7 +2903,8 @@
         "always",
         "often"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     }
   ],
   "minigame_synonyms": [
@@ -2840,7 +2916,8 @@
         "heavy",
         "slow"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "brave",
@@ -2850,7 +2927,8 @@
         "noisy",
         "cowardly"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "ancient",
@@ -2860,7 +2938,8 @@
         "modern",
         "loud"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "fragile",
@@ -2870,7 +2949,8 @@
         "colorful",
         "quick"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "enormous",
@@ -2880,7 +2960,8 @@
         "bitter",
         "huge"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "word": "silent",
@@ -2890,7 +2971,8 @@
         "without sound",
         "noisy"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "generous",
@@ -2900,7 +2982,8 @@
         "selfish",
         "giving freely"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "word": "furious",
@@ -2910,7 +2993,8 @@
         "calm",
         "hungry"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "timid",
@@ -2920,7 +3004,8 @@
         "tall",
         "bold"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "gloomy",
@@ -2930,7 +3015,8 @@
         "sweet",
         "cheerful"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "sparse",
@@ -2940,7 +3026,8 @@
         "thinly scattered",
         "round"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "meticulous",
@@ -2950,7 +3037,8 @@
         "very careful",
         "sleepy"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "word": "obstinate",
@@ -2960,7 +3048,8 @@
         "fast",
         "stubborn"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "word": "vivid",
@@ -2970,7 +3059,8 @@
         "noisy",
         "dull"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "lethargic",
@@ -2980,7 +3070,8 @@
         "angry",
         "energetic"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "word": "diligent",
@@ -2990,7 +3081,8 @@
         "calm",
         "noisy"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "concise",
@@ -3000,7 +3092,8 @@
         "loud",
         "wordy"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "scarce",
@@ -3010,7 +3103,8 @@
         "bright",
         "rare"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "word": "hostile",
@@ -3020,7 +3114,8 @@
         "tiny",
         "unfriendly"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "word": "compel",
@@ -3030,7 +3125,8 @@
         "ignore",
         "suggest"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "word": "obscure",
@@ -3040,7 +3136,8 @@
         "shiny",
         "unclear"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "word": "genuine",
@@ -3050,7 +3147,8 @@
         "authentic",
         "cheap"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "diminish",
@@ -3060,7 +3158,8 @@
         "increase",
         "freeze"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "assert",
@@ -3070,7 +3169,8 @@
         "ask",
         "deny"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 3
     },
     {
       "word": "precise",
@@ -3080,7 +3180,8 @@
         "late",
         "messy"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "reluctant",
@@ -3090,7 +3191,8 @@
         "unwilling",
         "loud"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     }
   ],
   "minigame_antonyms": [
@@ -3102,7 +3204,8 @@
         "toasty",
         "warm"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "brave",
@@ -3112,7 +3215,8 @@
         "fast",
         "bold"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "friendly",
@@ -3122,7 +3226,8 @@
         "hostile",
         "polite"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "expand",
@@ -3132,7 +3237,8 @@
         "grow",
         "contract"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "word": "wealthy",
@@ -3142,7 +3248,8 @@
         "lucky",
         "rich"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "ancient",
@@ -3152,7 +3259,8 @@
         "modern",
         "wise"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "ascend",
@@ -3162,7 +3270,8 @@
         "float",
         "rise"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "permanent",
@@ -3172,7 +3281,8 @@
         "temporary",
         "solid"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "optimistic",
@@ -3182,7 +3292,8 @@
         "cheerful",
         "hopeful"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 3
     },
     {
       "word": "chaotic",
@@ -3192,7 +3303,8 @@
         "organized",
         "loud"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "generous",
@@ -3202,7 +3314,8 @@
         "rich",
         "giving"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "rigid",
@@ -3212,7 +3325,8 @@
         "strong",
         "flexible"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "word": "frequent",
@@ -3222,7 +3336,8 @@
         "usual",
         "common"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "artificial",
@@ -3232,7 +3347,8 @@
         "fake",
         "plastic"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "triumph",
@@ -3242,7 +3358,8 @@
         "victory",
         "success"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "word": "vivid",
@@ -3252,7 +3369,8 @@
         "clear",
         "bright"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "encourage",
@@ -3262,7 +3380,8 @@
         "discourage",
         "support"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "abundant",
@@ -3272,7 +3391,8 @@
         "scarce",
         "ample"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "word": "reluctant",
@@ -3282,7 +3402,8 @@
         "hesitant",
         "shy"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "humble",
@@ -3292,7 +3413,8 @@
         "proud",
         "modest"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "harmony",
@@ -3302,7 +3424,8 @@
         "discord",
         "unity"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "word": "shallow",
@@ -3312,7 +3435,8 @@
         "narrow",
         "surface"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "scarce",
@@ -3322,7 +3446,8 @@
         "plentiful",
         "rare"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "hostile",
@@ -3332,7 +3457,8 @@
         "friendly",
         "fierce"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "obscure",
@@ -3342,7 +3468,8 @@
         "clear",
         "dim"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "word": "include",
@@ -3352,7 +3479,8 @@
         "exclude",
         "add"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "complex",
@@ -3362,7 +3490,8 @@
         "complicated",
         "dense"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "arrive",
@@ -3372,7 +3501,8 @@
         "depart",
         "enter"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     }
   ],
   "minigame_homophones": [
@@ -3384,7 +3514,8 @@
         "They're",
         "There"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Put the book over _____ on the shelf.",
@@ -3394,7 +3525,8 @@
         "they're",
         "there"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "The dog wagged _____ tail happily.",
@@ -3404,7 +3536,8 @@
         "its's",
         "it's"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "_____ a beautiful day outside!",
@@ -3414,7 +3547,8 @@
         "Its",
         "Its's"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "I need _____ buy some groceries.",
@@ -3424,7 +3558,8 @@
         "two",
         "tow"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "She ate _____ many cookies.",
@@ -3434,7 +3569,8 @@
         "two",
         "to"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "There were _____ birds on the fence.",
@@ -3444,7 +3580,8 @@
         "too",
         "to"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The _____ soaked the town overnight.",
@@ -3454,7 +3591,8 @@
         "rein",
         "reign"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The king's _____ lasted for decades.",
@@ -3464,7 +3602,8 @@
         "rain",
         "reign"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "prompt": "Can you _____ the bell?",
@@ -3474,7 +3613,8 @@
         "hear",
         "hare"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Come over _____ right now!",
@@ -3484,7 +3624,8 @@
         "hear",
         "here"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "The _____ of the mountain was covered in snow.",
@@ -3494,7 +3635,8 @@
         "peek",
         "peak"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "She took a quick _____ through the window.",
@@ -3504,7 +3646,8 @@
         "peak",
         "pique"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "A strong _____ blew the leaves across the yard.",
@@ -3514,7 +3657,8 @@
         "whined",
         "wand"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "He needed to _____ his watch.",
@@ -3524,7 +3668,8 @@
         "wond",
         "whined"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 2
     },
     {
       "prompt": "She _____ the race by a wide margin.",
@@ -3534,7 +3679,8 @@
         "one",
         "wan"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "I have _____ dollar left.",
@@ -3544,7 +3690,8 @@
         "own",
         "wan"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Please _____ the door behind you.",
@@ -3554,7 +3701,8 @@
         "claws",
         "cloze"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The _____ you wear should be warm.",
@@ -3564,7 +3712,8 @@
         "claws",
         "cloze"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The cat cleaned its _____ with its tongue.",
@@ -3574,7 +3723,8 @@
         "pores",
         "pause"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Press _____ to continue the game.",
@@ -3584,7 +3734,8 @@
         "paws",
         "pause"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "I can _____ the ocean from my window.",
@@ -3594,7 +3745,8 @@
         "see",
         "sea"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "We sailed across the _____ at dawn.",
@@ -3604,7 +3756,8 @@
         "sea",
         "see"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Please _____ your name on the form.",
@@ -3614,7 +3767,8 @@
         "write",
         "rite"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Turn _____ at the next corner.",
@@ -3624,7 +3778,8 @@
         "wright",
         "right"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "The _____ shone brightly after the storm.",
@@ -3634,7 +3789,8 @@
         "soon",
         "son"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "Their _____ just started high school.",
@@ -3644,7 +3800,8 @@
         "soon",
         "sin"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Don't _____ the soup until it cools.",
@@ -3654,7 +3811,8 @@
         "pour",
         "pore"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "I need to _____ over the instructions carefully.",
@@ -3664,7 +3822,8 @@
         "power",
         "poor"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 3
     },
     {
       "prompt": "My little brother wants to come _____.",
@@ -3674,7 +3833,8 @@
         "tow",
         "too"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "We walked _____ the library after school.",
@@ -3684,7 +3844,8 @@
         "tow",
         "too"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "I have _____ tickets for the movie tonight.",
@@ -3694,7 +3855,8 @@
         "tow",
         "two"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "_____ going to love this surprise!",
@@ -3704,7 +3866,8 @@
         "Your",
         "Yours"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Is this _____ backpack on the floor?",
@@ -3714,7 +3877,8 @@
         "your",
         "yore"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "_____ a lot of snow on the mountain this year.",
@@ -3724,7 +3888,8 @@
         "Theirs",
         "They're"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The twins forgot _____ lunches at home.",
@@ -3734,7 +3899,8 @@
         "their",
         "they're"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "I hope _____ not late for the bus again.",
@@ -3744,7 +3910,8 @@
         "they're",
         "theirs"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "The museum is closed, so we can't go _____ today.",
@@ -3754,7 +3921,8 @@
         "theirs",
         "their"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "The cat licked _____ paws after dinner.",
@@ -3764,7 +3932,8 @@
         "it's",
         "its"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "_____ almost time for recess.",
@@ -3774,7 +3943,8 @@
         "It's",
         "Is"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Did you _____ that loud thunder?",
@@ -3784,7 +3954,8 @@
         "hare",
         "here"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "Please hang your coat right _____ on this hook.",
@@ -3794,7 +3965,8 @@
         "hair",
         "hare"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Do you _____ the answer to number five?",
@@ -3804,7 +3976,8 @@
         "know",
         "no"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "There is _____ milk left in the fridge.",
@@ -3814,7 +3987,8 @@
         "knew",
         "now"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "Remember to _____ a thank-you note to Grandma.",
@@ -3824,7 +3998,8 @@
         "wright",
         "write"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "Raise your _____ hand if you know the answer.",
@@ -3834,7 +4009,8 @@
         "right",
         "wright"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "We collected seashells along the edge of the _____.",
@@ -3844,7 +4020,8 @@
         "seem",
         "sees"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Did you _____ the rainbow after the storm?",
@@ -3854,7 +4031,8 @@
         "seas",
         "sees"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "Grandma mixed _____ and eggs to bake bread.",
@@ -3864,7 +4042,8 @@
         "flier",
         "floor"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "She picked a red _____ from the garden.",
@@ -3874,7 +4053,8 @@
         "flier",
         "flower"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "Squeeze the _____ to stop your bike.",
@@ -3884,7 +4064,8 @@
         "brook",
         "broke"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "Be careful not to _____ the glass vase.",
@@ -3894,7 +4075,8 @@
         "brake",
         "broke"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "May I have a _____ of apple pie?",
@@ -3904,7 +4086,8 @@
         "pies",
         "peas"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "After years of war, the two countries finally lived in _____.",
@@ -3914,7 +4097,8 @@
         "peace",
         "piece"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Check the _____ report before we leave for the picnic.",
@@ -3924,7 +4108,8 @@
         "wetter",
         "weather"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "I can't decide _____ to wear boots or sneakers.",
@@ -3934,7 +4119,8 @@
         "wetter",
         "wither"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "prompt": "The school _____ announced a new recess schedule.",
@@ -3944,7 +4130,8 @@
         "principal",
         "principle"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 3
     },
     {
       "prompt": "Honesty is an important _____ to live by.",
@@ -3954,7 +4141,8 @@
         "principal",
         "principled"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 3
     },
     {
       "prompt": "The car stayed _____ while the long train passed.",
@@ -3964,7 +4152,8 @@
         "station",
         "stationary"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "prompt": "She wrote the letter on fancy _____ with gold edges.",
@@ -3974,7 +4163,8 @@
         "station",
         "stationery"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 3
     },
     {
       "prompt": "Are we _____ to bring snacks on the field trip?",
@@ -3984,7 +4174,8 @@
         "loud",
         "allow"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Please read the poem _____ to the class.",
@@ -3994,7 +4185,8 @@
         "aloud",
         "allows"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "Yesterday the wind _____ my kite high into the sky.",
@@ -4004,7 +4196,8 @@
         "blew",
         "blue"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "The sky was bright _____ without a single cloud.",
@@ -4014,7 +4207,8 @@
         "blow",
         "blue"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "I _____ the answer before the teacher even asked.",
@@ -4024,7 +4218,8 @@
         "new",
         "gnu"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Dad bought me a shiny _____ bike for my birthday.",
@@ -4034,7 +4229,8 @@
         "know",
         "knew"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "There is a _____ in my sock where my toe pokes out.",
@@ -4044,7 +4240,8 @@
         "whole",
         "hall"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "She ate the _____ sandwich all by herself.",
@@ -4054,7 +4251,8 @@
         "hole",
         "whole"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "We cleaned _____ classroom before the party.",
@@ -4064,7 +4262,8 @@
         "are",
         "ours"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The movie lasted one _____ and thirty minutes.",
@@ -4074,7 +4273,8 @@
         "our",
         "are"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "The _____ hopped across the field and into its burrow.",
@@ -4084,7 +4284,8 @@
         "hare",
         "hair"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "prompt": "My little sister is _____ years old.",
@@ -4094,7 +4295,8 @@
         "eighth",
         "ate"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "Yesterday I _____ a big bowl of cereal.",
@@ -4104,7 +4306,8 @@
         "eat",
         "eight"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "The fox's bushy _____ swished back and forth.",
@@ -4114,7 +4317,8 @@
         "tall",
         "tail"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "Grandpa told us a _____ about a brave knight.",
@@ -4124,7 +4328,8 @@
         "tall",
         "tail"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "I was so _____ during the long car ride with nothing to do.",
@@ -4134,7 +4339,8 @@
         "boarded",
         "board"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "prompt": "After being sick, I felt _____ and tired.",
@@ -4144,7 +4350,8 @@
         "weeks",
         "wick"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "prompt": "We have a spelling test next _____.",
@@ -4154,7 +4361,8 @@
         "weak",
         "week"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "prompt": "Nice to _____ you!",
@@ -4164,7 +4372,8 @@
         "meet",
         "met"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     }
   ]
 }

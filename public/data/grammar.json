@@ -1307,7 +1307,8 @@
         "Before, you leave please turn off the lights and close, the door.",
         "Before you leave please, turn off the lights and close the door."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "My favorite foods are pizza tacos and sushi.",
@@ -1318,7 +1319,8 @@
         "My favorite foods are pizza, tacos, and sushi.",
         "My favorite foods, are pizza tacos and sushi."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Although it was raining we decided to go for a walk.",
@@ -1329,7 +1331,8 @@
         "Although it was raining, we decided to go for a walk.",
         "Although, it was raining we decided to go for a walk."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "The tall dark and handsome stranger walked into the room.",
@@ -1340,7 +1343,8 @@
         "The tall dark and handsome stranger walked into the room.",
         "The tall, dark, and handsome stranger walked into the room."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "sentence": "Yes I would love to come to your birthday party.",
@@ -1351,7 +1355,8 @@
         "Yes I would love to come to your birthday party.",
         "Yes I, would love to come to your birthday party."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "We visited Paris France last summer.",
@@ -1362,7 +1367,8 @@
         "We visited Paris, France, last summer.",
         "We visited Paris France last summer."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 3
     },
     {
       "sentence": "The cat however refused to come inside.",
@@ -1373,7 +1379,8 @@
         "The, cat however, refused to come inside.",
         "The cat, however, refused to come inside."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 3
     },
     {
       "sentence": "I wanted to go swimming but it was too cold outside.",
@@ -1384,7 +1391,8 @@
         "I wanted to go swimming, but it was too cold outside.",
         "I wanted to go swimming but it was too cold outside."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "On Monday March 15 2024 the new library will open.",
@@ -1395,7 +1403,8 @@
         "On Monday March, 15, 2024 the new library will open.",
         "On Monday March 15 2024 the new library will open."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 3
     },
     {
       "sentence": "Maria who is my best friend just moved to a new city.",
@@ -1406,7 +1415,8 @@
         "Maria, who is my best friend, just moved to a new city.",
         "Maria, who is my best friend just moved to a new city."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 3
     },
     {
       "sentence": "After practice we grabbed snacks water and towels.",
@@ -1417,7 +1427,8 @@
         "After practice, we grabbed snacks, water, and towels.",
         "After practice we grabbed, snacks water, and towels."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Sam please pass the salt.",
@@ -1428,7 +1439,8 @@
         "Sam please, pass the salt.",
         "Sam, please pass the salt."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "In conclusion the evidence supports our claim.",
@@ -1439,7 +1451,8 @@
         "In, conclusion the evidence supports our claim.",
         "In conclusion, the evidence supports our claim."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "The recipe needs flour sugar butter and eggs.",
@@ -1450,7 +1463,8 @@
         "The recipe needs flour, sugar, butter, and eggs.",
         "The recipe needs flour sugar butter and eggs."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Wow that was a great movie.",
@@ -1461,7 +1475,8 @@
         "Wow that, was a great movie.",
         "Wow that was, a great movie."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "No I have not finished my homework.",
@@ -1472,7 +1487,8 @@
         "No I have not finished, my homework.",
         "No I, have not finished my homework."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "Jordan can you help me carry these boxes?",
@@ -1483,7 +1499,8 @@
         "Jordan, can you help me carry these boxes?",
         "Jordan can you help me carry these boxes?"
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "We bought apples oranges and grapes at the market.",
@@ -1494,7 +1511,8 @@
         "We bought apples oranges and grapes at the market.",
         "We bought, apples oranges, and grapes at the market."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "My grandmother was born on July 4 1960.",
@@ -1505,7 +1523,8 @@
         "My grandmother was born on July 4, 1960.",
         "My grandmother, was born on July 4 1960."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Our cousins live in Portland Oregon.",
@@ -1516,7 +1535,8 @@
         "Our cousins, live in Portland Oregon.",
         "Our cousins live, in Portland Oregon."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "When the bell rang the students lined up.",
@@ -1527,7 +1547,8 @@
         "When the bell rang the students, lined up.",
         "When, the bell rang the students lined up."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "I like to draw but my brother likes to paint.",
@@ -1538,7 +1559,8 @@
         "I like to draw, but my brother likes to paint.",
         "I like to draw but my brother, likes to paint."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Mr. Lopez our coach blew the whistle.",
@@ -1549,7 +1571,8 @@
         "Mr. Lopez, our coach, blew the whistle.",
         "Mr. Lopez, our coach blew the whistle."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 2
     },
     {
       "sentence": "The fluffy playful kitten chased the yarn.",
@@ -1560,7 +1583,8 @@
         "The, fluffy playful kitten chased the yarn.",
         "The fluffy playful, kitten chased the yarn."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 2
     },
     {
       "sentence": "After we finished lunch we went to the library.",
@@ -1571,7 +1595,8 @@
         "After we finished, lunch we went to the library.",
         "After we finished lunch, we went to the library."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "Well I think we should try again.",
@@ -1582,7 +1607,8 @@
         "Well I, think we should try again.",
         "Well, I think we should try again."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "Mom said \"Please clean your room.\"",
@@ -1593,7 +1619,8 @@
         "Mom said \"Please clean, your room.\"",
         "Mom said, \"Please clean your room.\""
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "If you study hard you will do well on the test.",
@@ -1604,7 +1631,8 @@
         "If you study hard you will do well on the test.",
         "If, you study hard you will do well on the test."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "Of course I will save you a seat.",
@@ -1615,7 +1643,8 @@
         "Of course I will, save you a seat.",
         "Of, course I will save you a seat."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "The movie was long but it was exciting.",
@@ -1626,7 +1655,8 @@
         "The movie was long, but it was exciting.",
         "The movie, was long but it was exciting."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "sentence": "Chicago which is in Illinois has tall buildings.",
@@ -1637,7 +1667,8 @@
         "Chicago, which is in Illinois, has tall buildings.",
         "Chicago which is in Illinois, has tall buildings."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 3
     },
     {
       "sentence": "Thank you Grandma for the sweater.",
@@ -1648,7 +1679,8 @@
         "Thank you Grandma for, the sweater.",
         "Thank you, Grandma, for the sweater."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "I had eggs toast and juice for breakfast.",
@@ -1659,7 +1691,8 @@
         "I had eggs toast and juice for breakfast.",
         "I had, eggs toast and juice for breakfast."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "However the game was canceled because of rain.",
@@ -1670,7 +1703,8 @@
         "However the game was canceled, because, of rain.",
         "However, the game was canceled because of rain."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "sentence": "Because the road was icy we drove slowly.",
@@ -1681,7 +1715,8 @@
         "Because the road was icy we drove slowly.",
         "Because the road, was icy we drove slowly."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "sentence": "Lily plays the flute and Omar plays the drums.",
@@ -1692,7 +1727,8 @@
         "Lily plays the flute and, Omar plays the drums.",
         "Lily plays, the flute and Omar plays the drums."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "On December 25 2025 it snowed all day.",
@@ -1703,7 +1739,8 @@
         "On December 25 2025 it snowed all day.",
         "On December 25, 2025, it snowed all day."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "sentence": "The old creaky stairs groaned under our feet.",
@@ -1714,7 +1751,8 @@
         "The old creaky, stairs groaned under our feet.",
         "The old creaky stairs, groaned under our feet."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 2
     },
     {
       "sentence": "Oh no I forgot my lunch!",
@@ -1725,7 +1763,8 @@
         "Oh no I forgot my, lunch!",
         "Oh no I, forgot my lunch!"
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "sentence": "Our science fair project which took weeks won first place.",
@@ -1736,7 +1775,8 @@
         "Our science fair project which took weeks won first place.",
         "Our science fair project, which took weeks won first place."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 3
     }
   ],
   "minigame_pos": [
@@ -1749,7 +1789,8 @@
         "Adjective",
         "Adverb"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "word": "BRILLIANT",
@@ -1760,7 +1801,8 @@
         "Verb",
         "Adjective"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "word": "LIBRARY",
@@ -1771,7 +1813,8 @@
         "Noun",
         "Adjective"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "CLIMBED",
@@ -1782,7 +1825,8 @@
         "Verb",
         "Noun"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "JOYFUL",
@@ -1793,7 +1837,8 @@
         "Verb",
         "Adjective"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 1
     },
     {
       "word": "WHISPERED",
@@ -1804,7 +1849,8 @@
         "Adjective",
         "Noun"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "SILENTLY",
@@ -1815,7 +1861,8 @@
         "Noun",
         "Verb"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "MOUNTAIN",
@@ -1826,7 +1873,8 @@
         "Verb",
         "Adverb"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "ENORMOUS",
@@ -1837,7 +1885,8 @@
         "Noun",
         "Adverb"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "DANCED",
@@ -1848,7 +1897,8 @@
         "Verb",
         "Adjective"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "BRAVELY",
@@ -1859,7 +1909,8 @@
         "Verb",
         "Adjective"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     },
     {
       "word": "FRIENDSHIP",
@@ -1870,7 +1921,8 @@
         "Noun",
         "Adverb"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "ALTHOUGH",
@@ -1881,7 +1933,8 @@
         "Conjunction",
         "Verb"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "EVERYONE",
@@ -1892,7 +1945,8 @@
         "Verb",
         "Noun"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 2
     },
     {
       "word": "SUDDENLY",
@@ -1903,7 +1957,8 @@
         "Adjective",
         "Noun"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "MYSTERY",
@@ -1914,7 +1969,8 @@
         "Adjective",
         "Pronoun"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "MAGNIFICENT",
@@ -1925,7 +1981,8 @@
         "Adverb",
         "Verb"
       ],
-      "correct": 1
+      "correct": 1,
+      "level": 1
     },
     {
       "word": "BENEATH",
@@ -1936,7 +1993,8 @@
         "Preposition",
         "Noun"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 2
     },
     {
       "word": "THEMSELVES",
@@ -1947,7 +2005,8 @@
         "Noun",
         "Pronoun"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "word": "BECAUSE",
@@ -1958,7 +2017,8 @@
         "Noun",
         "Conjunction"
       ],
-      "correct": 3
+      "correct": 3,
+      "level": 2
     },
     {
       "word": "GENTLY",
@@ -1969,7 +2029,8 @@
         "Adverb",
         "Verb"
       ],
-      "correct": 2
+      "correct": 2,
+      "level": 1
     },
     {
       "word": "DISCOVER",
@@ -1980,7 +2041,8 @@
         "Adverb",
         "Noun"
       ],
-      "correct": 0
+      "correct": 0,
+      "level": 1
     }
   ],
   "minigame_sentence_fix": [
@@ -1992,7 +2054,8 @@
         "The team of players is ready.",
         "The team of players be ready."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses pronouns correctly?",
@@ -2002,7 +2065,8 @@
         "Between you and me, the secret is safe.",
         "Between we and them, the secret is safe."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 3
     },
     {
       "prompt": "Which sentence is punctuated correctly?",
@@ -2012,7 +2076,8 @@
         "Its's a beautiful day outside.",
         "Its a beautiful day outside."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence avoids a double negative?",
@@ -2022,7 +2087,8 @@
         "I don't need never help.",
         "I don't need any help."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which uses the correct homophones?",
@@ -2032,7 +2098,8 @@
         "Their going to bring they're books over their.",
         "They're going to bring there books over they're."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence has correct parallel structure?",
@@ -2042,7 +2109,8 @@
         "She likes hiking, swim, and bikes.",
         "She likes to hike, swimming, and to bike."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses \"who\" correctly as the subject?",
@@ -2052,7 +2120,8 @@
         "Give the prize to who won.",
         "Who is at the door?"
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which is a complete sentence?",
@@ -2062,7 +2131,8 @@
         "Running through the park.",
         "The rain stopped suddenly."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which correctly combines these ideas?",
@@ -2072,7 +2142,8 @@
         "The book was long; but I finished it.",
         "The book was long, but I finished it."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which sentence makes the meaning clearest?",
@@ -2082,7 +2153,8 @@
         "Climbing a tree, my pajamas saw a squirrel.",
         "While I was in my pajamas, I saw a squirrel climbing a tree."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 3
     },
     {
       "prompt": "Which sentence uses 'whom' correctly as an object?",
@@ -2092,7 +2164,8 @@
         "Whom is going to the party?",
         "Whom did you see at the party?"
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 3
     },
     {
       "prompt": "Which sentence uses the correct verb form?",
@@ -2102,7 +2175,8 @@
         "I have never seen that movie.",
         "I never sawed that movie."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence capitalizes place and month names correctly?",
@@ -2112,7 +2186,8 @@
         "we visited new york city in july.",
         "We visited New york City in july."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which is an example of a run-on sentence?",
@@ -2122,7 +2197,8 @@
         "Because I like to code, it is fun.",
         "I like to code it is fun."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses 'fewer' correctly?",
@@ -2132,7 +2208,8 @@
         "I have fewer milk than you.",
         "I have fewer apples than you."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses the comparative correctly?",
@@ -2142,7 +2219,8 @@
         "This puzzle is easier than that one.",
         "This puzzle is most easier than that one."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence is in active voice?",
@@ -2152,7 +2230,8 @@
         "Thrown was the ball by Jordan.",
         "The ball had been thrown."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses an apostrophe correctly?",
@@ -2162,7 +2241,8 @@
         "The dog bowl's is empty.",
         "The dogs bowl is empty."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'affect' correctly?",
@@ -2172,7 +2252,8 @@
         "The affect of the weather surprised us.",
         "Weather effects everything."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 2
     },
     {
       "prompt": "Which sentence avoids a dangling modifier?",
@@ -2182,7 +2263,8 @@
         "Running to class, the bell rang loudly.",
         "Running to class, it was late already."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 3
     },
     {
       "prompt": "Which sentence uses 'there' correctly?",
@@ -2192,7 +2274,8 @@
         "Put your shoes over they're by the door.",
         "Put your shoes over their by the door."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'their' correctly?",
@@ -2202,7 +2285,8 @@
         "The players cheered for their coach.",
         "The players cheered for they're coach."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'they're' correctly?",
@@ -2212,7 +2296,8 @@
         "They're bringing snacks to the game.",
         "Theirs bringing snacks to the game."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'its' correctly?",
@@ -2222,7 +2307,8 @@
         "The bird built its' nest in the oak tree.",
         "The bird built it's nest in the oak tree."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'it's' correctly?",
@@ -2232,7 +2318,8 @@
         "Its too cold to swim today.",
         "It too cold to swim today."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'effect' correctly?",
@@ -2242,7 +2329,8 @@
         "The movie's special effecting were amazing.",
         "The movie's special effects were amazing."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses 'less' correctly?",
@@ -2252,7 +2340,8 @@
         "This bottle holds less juice than that one.",
         "This bottle holds few juice than that one."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses 'who' correctly to describe a person?",
@@ -2262,7 +2351,8 @@
         "The man whom fixed our sink was friendly.",
         "The man whose fixed our sink was friendly."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses 'whom' correctly after a preposition?",
@@ -2272,7 +2362,8 @@
         "With whose are you going to the dance?",
         "With whom are you going to the dance?"
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 3
     },
     {
       "prompt": "Which sentence uses 'I' correctly as part of the subject?",
@@ -2282,7 +2373,8 @@
         "Me and Jamal finished the project early.",
         "Jamal and myself finished the project early."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'me' correctly as an object?",
@@ -2292,7 +2384,8 @@
         "The teacher handed the awards to Priya and myself.",
         "The teacher handed the awards to I and Priya."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses the past tense of 'eat' correctly?",
@@ -2302,7 +2395,8 @@
         "Last night we eaten pasta for dinner.",
         "Last night we ate pasta for dinner."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses the past tense of 'drink' correctly?",
@@ -2312,7 +2406,8 @@
         "Yesterday Leo drank two glasses of water.",
         "Yesterday Leo drinks two glasses of water."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence keeps the tense the same throughout?",
@@ -2322,7 +2417,8 @@
         "She opens the box and found a puppy.",
         "She opened the box and found a puppy."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses the present perfect tense correctly?",
@@ -2332,7 +2428,8 @@
         "They have already finished their lunch.",
         "They has already finished their lunch."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses the future tense correctly?",
@@ -2342,7 +2439,8 @@
         "Next summer, my family will travel to Maine.",
         "Next summer, my family will travels to Maine."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence correctly shows something owned by one student?",
@@ -2352,7 +2450,8 @@
         "The students' backpack was left on the bus.",
         "The student's' backpack was left on the bus."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence correctly shows something shared by several teachers?",
@@ -2362,7 +2461,8 @@
         "The teacher's' lounge is on the second floor.",
         "The teachers' lounge is on the second floor."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence spells the contraction correctly?",
@@ -2372,7 +2472,8 @@
         "We cant' find the remote anywhere.",
         "We can't find the remote anywhere."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence writes the plural without an extra apostrophe?",
@@ -2382,7 +2483,8 @@
         "The bananas's are on sale today.",
         "The bananas' are on sale today."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence separates the list items with commas correctly?",
@@ -2392,7 +2494,8 @@
         "Our flag is red white, and blue.",
         "Our flag is, red, white, and blue."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses a comma after an introductory word correctly?",
@@ -2402,7 +2505,8 @@
         "Finally the bus arrived, at the museum.",
         "Finally the bus, arrived at the museum."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence punctuates the quotation correctly?",
@@ -2412,7 +2516,8 @@
         "Dad said \"Dinner, is ready.\"",
         "Dad, said \"Dinner is ready.\""
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses a comma correctly between a city and a state?",
@@ -2422,7 +2527,8 @@
         "My cousin lives in Austin, Texas.",
         "My cousin, lives in Austin Texas."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence capitalizes the day and the holiday correctly?",
@@ -2432,7 +2538,8 @@
         "We have no school on monday because of labor day.",
         "We have no school on Monday because of Labor Day."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence capitalizes a person's title correctly?",
@@ -2442,7 +2549,8 @@
         "Yesterday, dr. Patel checked my ears.",
         "Yesterday, Dr. Patel checked my ears."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence capitalizes the country and languages correctly?",
@@ -2452,7 +2560,8 @@
         "My friend from mexico speaks Spanish and English.",
         "My friend from mexico speaks spanish and english."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which choice is a complete sentence?",
@@ -2462,7 +2571,8 @@
         "The kittens slept in a basket.",
         "When the kittens slept."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which choice correctly fixes the run-on sentence?",
@@ -2472,7 +2582,8 @@
         "The sun, set the sky turned orange.",
         "The sun set the sky turned orange."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence correctly joins two ideas with a conjunction?",
@@ -2482,7 +2593,8 @@
         "I was hungry, I made a sandwich.",
         "I was, hungry so I made a sandwich."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses an adverb correctly?",
@@ -2492,7 +2604,8 @@
         "Tara answered the question correctness.",
         "Tara answered the question correct."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'well' correctly?",
@@ -2502,7 +2615,8 @@
         "You did goodly on your spelling test.",
         "You did well on your spelling test."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses an adjective correctly after 'feel'?",
@@ -2512,7 +2626,8 @@
         "I feel sadden that summer is over.",
         "I feel sad that summer is over."
       ],
-      "correct_index": 3
+      "correct_index": 3,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses the superlative correctly?",
@@ -2522,7 +2637,8 @@
         "Mount Everest is the taller mountain in the world.",
         "Mount Everest is the tallerest mountain in the world."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence compares two animals correctly?",
@@ -2532,7 +2648,8 @@
         "A cheetah is fastest than a lion.",
         "A cheetah is more faster than a lion."
       ],
-      "correct_index": 0
+      "correct_index": 0,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses the correct plural of 'goose'?",
@@ -2542,7 +2659,8 @@
         "Three goose's waddled across the road.",
         "Three geeses waddled across the road."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 1
     },
     {
       "prompt": "Which sentence spells the plural of 'wolf' correctly?",
@@ -2552,7 +2670,8 @@
         "The wolves howled at the moon.",
         "The wolfes howled at the moon."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 1
     },
     {
       "prompt": "Which sentence uses 'fewer' correctly with things you can count?",
@@ -2562,7 +2681,8 @@
         "There are lesser cookies in the jar than yesterday.",
         "There are fewest cookies in the jar than yesterday."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses the correct verb with 'everyone'?",
@@ -2572,7 +2692,8 @@
         "Everyone on the bus be singing.",
         "Everyone on the bus were singing."
       ],
-      "correct_index": 1
+      "correct_index": 1,
+      "level": 2
     },
     {
       "prompt": "Which sentence uses 'affect' and 'effect' correctly?",
@@ -2582,7 +2703,8 @@
         "Lack of sleep can affect your grades, and exercise has a good effect on your mood.",
         "Lack of sleep can affect your grades, and exercise has a good affect on your mood."
       ],
-      "correct_index": 2
+      "correct_index": 2,
+      "level": 3
     }
   ]
 }
