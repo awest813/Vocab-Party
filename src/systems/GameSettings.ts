@@ -107,6 +107,8 @@ export function onSettingsChange(fn: (s: GameSettings) => void): () => void {
 
 export function isTouchPreferred(game?: { device?: { os?: { android?: boolean; iOS?: boolean; desktop?: boolean }; input?: { touch?: boolean } } }): boolean {
   try {
+    // Primary pointer is a finger (phones, tablets — including iPadOS, which reports a desktop UA).
+    if (typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches) return true
     if (game?.device) {
       const d = game.device
       return Boolean(d.os?.android || d.os?.iOS || d.input?.touch) && !d.os?.desktop
