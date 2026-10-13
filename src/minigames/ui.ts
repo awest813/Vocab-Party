@@ -120,10 +120,12 @@ export function drawCard(
   const g = scene.add.graphics()
   g.fillStyle(0x000000, 0.4)
   g.fillRoundedRect(-width / 2 + 3, -height / 2 + 7, width, height, 20)
-  g.fillStyle(fill, 0.96)
-  g.fillRoundedRect(-width / 2, -height / 2, width, height, 20)
+  // Accent cap: a rounded-top band, then the body drawn over all but its top 8px.
+  // (A 20px corner radius on an 8px-tall rect renders far too tall in Phaser.)
   g.fillStyle(accent, 0.9)
-  g.fillRoundedRect(-width / 2, -height / 2, width, 8, { tl: 20, tr: 20, bl: 0, br: 0 })
+  g.fillRoundedRect(-width / 2, -height / 2, width, 40, { tl: 20, tr: 20, bl: 0, br: 0 })
+  g.fillStyle(fill, 0.96)
+  g.fillRoundedRect(-width / 2, -height / 2 + 8, width, height - 8, { tl: 0, tr: 0, bl: 20, br: 20 })
   g.lineStyle(2.5, accent, 0.55)
   g.strokeRoundedRect(-width / 2 + 1, -height / 2 + 1, width - 2, height - 2, 20)
   return g

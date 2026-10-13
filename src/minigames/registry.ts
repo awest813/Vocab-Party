@@ -17,12 +17,14 @@ import {
 import { synonymStorm } from './games/synonymStorm'
 import { linkUp } from './games/linkUp'
 import { wordHero } from './games/wordHero'
+import { wordRacer } from './games/wordRacer'
 import { letterRescue } from './games/letterRescue'
 import { sentenceScramble } from './games/sentenceScramble'
 import type { MinigameDef } from './types'
 
 export const MINIGAMES: MinigameDef[] = [
   wordHero,
+  wordRacer,
   synonymStorm,
   anagramDash,
   memoryMatch,

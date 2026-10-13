@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { getSettings, type WordLevel } from '../../systems/GameSettings'
 import { Sfx } from '../../systems/Sfx'
 import { FONT, hexColor } from '../../ui/Theme'
 import { pickDistinct, type LexWord } from '../ContentBank'
@@ -20,8 +21,13 @@ const RIFF = [57, 60, 62, 64, 67, 64, 62, 60, 57, 60, 62, 67, 69, 67, 64, 62]
 
 const PERFECT_MS = 75
 const GOOD_MS = 150
-const BPM_START = 104
-const BPM_END = 128
+/** Song tempo (start → end BPM) and note travel time, by word level: younger players get a gentler song. */
+const TEMPO: Record<WordLevel, { start: number; end: number; travel: number }> = {
+  starter: { start: 88, end: 104, travel: 2700 },
+  all: { start: 104, end: 128, travel: 2300 },
+  standard: { start: 104, end: 128, travel: 2300 },
+  challenge: { start: 112, end: 140, travel: 2100 },
+}
 
 type Mode = 'synonym' | 'antonym'
 
@@ -82,7 +88,8 @@ export const wordHero: MinigameDef = {
     const strikeY = area.bottom - 104
     const nearW = Math.min(560, area.width - 80)
     const farW = nearW * 0.34
-    const travelMs = () => 2300 - Math.min(500, t / 80)
+    const tempo = TEMPO[getSettings().wordLevel] ?? TEMPO.all
+    const travelMs = () => tempo.travel - Math.min(500, t / 80)
     const scaleAt = (p: number) => 0.34 + 0.66 * p
     const yAt = (p: number) => topY + (strikeY - topY) * p
     const laneX = (lane: number, p: number) => area.cx + (lane - 1.5) * (nearW / 4) * scaleAt(p)
@@ -178,7 +185,7 @@ export const wordHero: MinigameDef = {
     }
 
     const mult = () => Math.min(4, 1 + Math.floor(streak / 8))
-    const bpm = () => BPM_START + (BPM_END - BPM_START) * Math.min(1, t / 40000)
+    const bpm = () => tempo.start + (tempo.end - tempo.start) * Math.min(1, t / 40000)
 
     const refreshHud = () => {
       comboText.setText(streak >= 2 ? `🔥 ${streak} streak` : '')

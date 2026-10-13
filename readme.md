@@ -79,11 +79,12 @@ npm run typecheck
 
 ### Minigames
 
-19 vocabulary-and-grammar minigames, each 30–50 seconds. All of them can be practiced solo from **🕹️ Minigame Arcade** on the main menu, with personal bests and CPU-tier medals.
+20 vocabulary-and-grammar minigames, each 30–50 seconds. All of them can be practiced solo from **🕹️ Minigame Arcade** on the main menu, with personal bests and CPU-tier medals.
 
 | Game | Skill | Mechanic |
 |------|-------|----------|
-| 🎸 Word Hero | Vocabulary | Guitar Hero–style rhythm game: strum the notes whose words match the target (synonyms or opposites), let decoys pass, build a ×4 multiplier |
+| 🎸 Word Hero | Vocabulary | Guitar Hero–style rhythm game: strum the notes whose words match the target (synonyms or opposites), let decoys pass, build a ×4 multiplier (song tempo follows the word level) |
+| 🏎️ Word Racer | Spelling | Type words from their definitions to race CPU karts to the finish |
 | 🎈 Letter Rescue | Spelling | Guess the hidden word letter by letter before six balloons pop |
 | 🏗️ Compound Crafter | Word parts | Snap two words together (sun + flower) |
 | 🌧️ Synonym Storm | Vocabulary | Catch falling synonyms, dodge opposites |

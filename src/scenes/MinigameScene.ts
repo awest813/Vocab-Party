@@ -546,6 +546,13 @@ export class MinigameScene extends Phaser.Scene {
 
   private ghostScores = new Map<number, number>()
 
+  /** A CPU ghost's score at the current point in the round. */
+  private ghostShown(g: Ghost): number {
+    let shown = 0
+    while (shown < g.times.length && g.times[shown] <= this.elapsed) shown++
+    return shown
+  }
+
   private updateClock() {
     const total = this.def.durationMs
     const left = Math.max(0, total - this.elapsed)
@@ -569,9 +576,7 @@ export class MinigameScene extends Phaser.Scene {
       }
     }
     for (const g of this.ghosts) {
-      let shown = 0
-      while (shown < g.times.length && g.times[shown] <= this.elapsed) shown++
-      const s = String(shown)
+      const s = String(this.ghostShown(g))
       if (g.text.text !== s) {
         g.text.setText(s)
         if (!shouldReduceMotion()) this.tweens.add({ targets: g.text, scale: 1.25, duration: 80, yoyo: true })
@@ -644,6 +649,18 @@ export class MinigameScene extends Phaser.Scene {
         this.roundTimers.push(t)
         return t
       },
+      rivals: () => this.data_.participants
+        .filter(r => r.id !== player.id)
+        .map(r => {
+          let score: number | null = null
+          if (r.isCpu) {
+            const g = this.ghosts.find(x => x.id === r.id)
+            score = g ? this.ghostShown(g) : 0
+          } else if (this.playedIds.has(r.id)) {
+            score = this.scores[r.id] ?? 0
+          }
+          return { id: r.id, name: r.name, color: r.color, characterIndex: r.characterIndex, isCpu: r.isCpu, score }
+        }),
       flash: (text, color = '#ffffff') => {
         const t = this.add.text(area.cx, area.top + (area.bottom - area.top) * 0.5, text, {
           fontSize: '40px', fontFamily: FONT.display, color, stroke: '#000000', strokeThickness: 8,

@@ -118,10 +118,10 @@ export class ArcadeScene extends Phaser.Scene {
       g.clear()
       g.fillStyle(0x000000, 0.4)
       g.fillRoundedRect(-CARD_W / 2 + 3, -CARD_H / 2 + 7, CARD_W, CARD_H, 18)
-      g.fillStyle(hover ? 0x1c2a46 : COLORS.bgPanel, 0.97)
-      g.fillRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, CARD_H, 18)
       g.fillStyle(def.accent, 0.95)
-      g.fillRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, 8, { tl: 18, tr: 18, bl: 0, br: 0 })
+      g.fillRoundedRect(-CARD_W / 2, -CARD_H / 2, CARD_W, 40, { tl: 18, tr: 18, bl: 0, br: 0 })
+      g.fillStyle(hover ? 0x1c2a46 : COLORS.bgPanel, 1)
+      g.fillRoundedRect(-CARD_W / 2, -CARD_H / 2 + 8, CARD_W, CARD_H - 8, { tl: 0, tr: 0, bl: 18, br: 18 })
       g.lineStyle(hover ? 4 : 2, hover ? 0xffe066 : def.accent, hover ? 1 : 0.5)
       g.strokeRoundedRect(-CARD_W / 2 + 1, -CARD_H / 2 + 1, CARD_W - 2, CARD_H - 2, 18)
     }

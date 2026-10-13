@@ -45,8 +45,22 @@ export interface MinigameContext {
   timeLeftMs(): number
   /** Runs `fn` after `ms` unless the round has ended. */
   after(ms: number, fn: () => void): Phaser.Time.TimerEvent
+  /**
+   * Other participants and their current scores: CPUs report their live (ghost) score,
+   * humans who already played report their final score, humans yet to play report null.
+   */
+  rivals(): RivalView[]
   /** Brief center-screen text flash (e.g. "NEW TARGET!"). */
   flash(text: string, color?: string): void
+}
+
+export interface RivalView {
+  id: number
+  name: string
+  color: number
+  characterIndex: number
+  isCpu: boolean
+  score: number | null
 }
 
 export interface MinigameInstance {
