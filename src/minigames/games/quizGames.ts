@@ -9,7 +9,9 @@ const RAPID_CONTROLS = { keys: 'Keys 1–4 or click', touch: 'Tap an answer' }
 function blankOut(sentence: string, word: string): string | null {
   const idx = sentence.toLowerCase().indexOf(word.toLowerCase())
   if (idx < 0) return null
-  return `${sentence.slice(0, idx)}_____${sentence.slice(idx + word.length)}`
+  // "a/an" right before the blank would give the answer away, so neutralise it.
+  const before = sentence.slice(0, idx).replace(/\b(an?|An?) $/, m => (m[0] === 'A' ? 'A(n) ' : 'a(n) '))
+  return `${before}_____${sentence.slice(idx + word.length)}`
 }
 
 function cap(s: string): string {
@@ -35,7 +37,9 @@ export const definitionDash: MinigameDef = {
     let n = 0
     return runRapidFire(ctx, (): RapidQuestion => {
       const w = ctx.bank.word()
-      const others = ctx.bank.unrelatedTo(w, 3)
+      // Same part of speech, so the answer can't be spotted by grammar ("to …" verbs) alone.
+      const samePos = ctx.bank.unrelatedTo(w, 3, x => x.pos === w.pos)
+      const others = samePos.length === 3 ? samePos : ctx.bank.unrelatedTo(w, 3)
       n++
       if (n % 3 === 0) {
         return {
@@ -74,11 +78,12 @@ export const oddOneOut: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 13] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 17] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const w = ctx.bank.word(x => x.synonyms.length >= 2, 'odd')
-      const group = shuffled([w.word, ...w.synonyms]).slice(0, 3)
+      // The target word is always shown, so the study note names a word the player saw.
+      const group = shuffled([w.word, ...shuffled(w.synonyms).slice(0, 2)])
       const impostor = ctx.bank.unrelatedTo(w, 1, x => x.pos === w.pos)[0] ?? ctx.bank.unrelatedTo(w, 1)[0]
       return {
         kicker: 'WHICH WORD DOESN’T BELONG?',
@@ -139,13 +144,13 @@ export const antonymAttack: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 14] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 17] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const legacy = ctx.bank.antonyms
       if (legacy.length > 0 && Math.random() < 0.25) {
         const item = ctx.bank.draw('legacy-antonyms', legacy)
-        return { kicker: 'OPPOSITE OF…', prompt: item.prompt.toUpperCase(), choices: item.choices, correct: item.correct, word: item.prompt }
+        return { kicker: 'OPPOSITE OF…', prompt: item.prompt.toUpperCase(), choices: item.choices, correct: item.correct, word: item.prompt, note: `opposite: ${item.choices[item.correct]}` }
       }
       const w = ctx.bank.word(x => x.antonyms.length > 0, 'antonym')
       const trap = pickDistinct(w.synonyms, 1)
@@ -184,7 +189,7 @@ export const contextClues: MinigameDef = {
       const legacy = ctx.bank.contextClues
       if (legacy.length > 0 && Math.random() < 0.3) {
         const item = ctx.bank.draw('legacy-context', legacy)
-        return { kicker: 'FILL IN THE BLANK', prompt: item.prompt, promptSize: 28, choices: item.choices, correct: item.correct }
+        return { kicker: 'FILL IN THE BLANK', prompt: item.prompt, promptSize: 28, choices: item.choices, correct: item.correct, word: item.choices[item.correct], note: item.prompt }
       }
       let w: LexWord = ctx.bank.word()
       let blanked = blankOut(w.sentence, w.word)
@@ -259,7 +264,7 @@ export const prefixFactory: MinigameDef = {
       const isPrefix = a.kind === 'prefix'
       return {
         kicker: isPrefix ? 'ADD A PREFIX' : 'ADD A SUFFIX',
-        prompt: isPrefix ? `▢▢ + ${a.base}` : `${a.base} + ▢▢`,
+        prompt: isPrefix ? `▢ + ${a.base}` : `${a.base} + ▢`,
         detail: `to mean “${a.definition}”`,
         choices: [a.affix, ...a.distractors.slice(0, 3)].map(s => (isPrefix ? `${s}-` : `-${s}`)),
         correct: 0,
@@ -290,7 +295,7 @@ export const homophoneHunt: MinigameDef = {
       const item = ctx.bank.homophones.length > 0
         ? ctx.bank.draw('homophones', ctx.bank.homophones)
         : { prompt: '_____ going to the store later.', choices: ["They're", 'Their', 'There', 'Thier'], correct: 0 }
-      return { kicker: 'WHICH WORD FITS?', prompt: item.prompt, promptSize: 30, choices: item.choices, correct: item.correct }
+      return { kicker: 'WHICH WORD FITS?', prompt: item.prompt, promptSize: 30, choices: item.choices, correct: item.correct, word: item.choices[item.correct], note: item.prompt.replace('_____', item.choices[item.correct]) }
     })
   },
 }
@@ -315,7 +320,8 @@ export const grammarGauntlet: MinigameDef = {
       const item = ctx.bank.grammarFix.length > 0
         ? ctx.bank.draw('grammar', ctx.bank.grammarFix)
         : { prompt: 'Which sentence is written correctly?', choices: ['Me and him went.', 'He and I went.', 'Him and I went.', 'Me and he went.'], correct: 1 }
-      return { kicker: 'PICK THE CORRECT SENTENCE', prompt: item.prompt, promptSize: 26, choices: item.choices, correct: item.correct, layout: 'stack' }
+      // Neutral kicker: some prompts ask for the *incorrect* example (e.g. "which is a run-on?").
+      return { kicker: 'READ CAREFULLY', prompt: item.prompt, promptSize: 26, choices: item.choices, correct: item.correct, layout: 'stack', word: item.prompt, note: item.choices[item.correct] }
     }, { missPauseMs: 1500 })
   },
 }
@@ -334,13 +340,14 @@ export const compoundCrafter: MinigameDef = {
   ],
   controls: RAPID_CONTROLS,
   durationMs: 30000,
-  cpu: { easy: [4, 7], normal: [7, 10], hard: [10, 14] },
+  cpu: { easy: [4, 8], normal: [8, 12], hard: [12, 16] },
   start(ctx) {
     return runRapidFire(ctx, () => {
       const c = ctx.bank.draw('compounds', ctx.bank.compounds)
       return {
         kicker: 'BUILD THE COMPOUND WORD',
-        prompt: `${c.a.toUpperCase()} + ${'▢'.repeat(Math.min(6, c.b.length))}`,
+        // Fixed box count: matching the answer's length would give it away.
+        prompt: `${c.a.toUpperCase()} + ▢▢▢`,
         detail: `clue: “${c.definition}”`,
         choices: [c.b, ...c.distractors.slice(0, 3)],
         correct: 0,

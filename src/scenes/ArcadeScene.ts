@@ -6,7 +6,7 @@ import { createButton, setButtonLabel } from '../ui/Button'
 import { addVignette, paintStage } from '../ui/Panel'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
-import { getPersonalBests, MINIGAMES } from '../minigames/registry'
+import { getPersonalBests, MINIGAMES, recordPersonalBest } from '../minigames/registry'
 import type { MinigameDef } from '../minigames/types'
 import type { MinigameSceneData } from './MinigameScene'
 
@@ -183,7 +183,12 @@ export class ArcadeScene extends Phaser.Scene {
       gameId: def.id,
       participants: [you, ...rivals],
       stakes: `Arcade match vs ${CPU_LEVEL_LABEL[level]} CPUs`,
-      onComplete: () => this.scene.start('ArcadeScene'),
+      // Must stop the minigame explicitly: the callback runs on this (already stopped) scene's plugin.
+      onComplete: (result) => {
+        recordPersonalBest(def.id, result.scores[0] ?? 0)
+        this.scene.stop('MinigameScene')
+        this.scene.start('ArcadeScene')
+      },
     }
     this.scene.start('MinigameScene', data)
   }

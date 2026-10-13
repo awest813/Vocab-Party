@@ -54,8 +54,15 @@ export function getMinigame(id: string | undefined): MinigameDef | undefined {
  * rotation feels fresh (Mario Party–style roulette).
  */
 const recent: string[] = []
+/** Games built on the shared 4-choice rapid-fire engine — half the roster plays alike. */
+const QUIZ_IDS = new Set([
+  'definition-dash', 'odd-one-out', 'spelling-bee', 'antonym-attack', 'context-clues',
+  'prefix-factory', 'root-detective', 'homophone-hunt', 'grammar-gauntlet', 'compound-crafter',
+])
 export function pickPartyMinigame(): MinigameDef {
-  const pool = MINIGAMES.filter(m => !recent.includes(m.id))
+  const last = recent[recent.length - 1]
+  // Never two quiz-style games back to back, so party rounds keep changing feel.
+  const pool = MINIGAMES.filter(m => !recent.includes(m.id) && !(last && QUIZ_IDS.has(last) && QUIZ_IDS.has(m.id)))
   const choice = pool[Math.floor(Math.random() * pool.length)] ?? MINIGAMES[0]
   recent.push(choice.id)
   while (recent.length > Math.min(6, MINIGAMES.length - 1)) recent.shift()

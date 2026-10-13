@@ -8,6 +8,9 @@ import { drawCard } from '../ui'
 
 interface Tile {
   c: Phaser.GameObjects.Container
+  g: Phaser.GameObjects.Graphics
+  badge: Phaser.GameObjects.Text
+  key: string
   text: string
   w: number
   homeX: number
@@ -31,7 +34,7 @@ export const sentenceScramble: MinigameDef = {
     'Tap the words in the right order to rebuild it.',
     'Long sentences (10+ words) are worth double.',
   ],
-  controls: { keys: 'Click words in order · Backspace undo · Space skip', touch: 'Tap words in order · ⌫ undo' },
+  controls: { keys: 'Press each word’s letter key (or click) in order · Backspace undo · Space skip', touch: 'Tap words in order · ⌫ undo' },
   durationMs: 45000,
   cpu: { easy: [1, 3], normal: [3, 5], hard: [5, 7] },
   start(ctx) {
@@ -42,6 +45,7 @@ export const sentenceScramble: MinigameDef = {
     let word: LexWord
     let objs: Phaser.GameObjects.GameObject[] = []
     let busy = false
+    let missedThis = false
     const lineY = area.top + 210
     const poolTop = area.top + 330
 
@@ -56,11 +60,16 @@ export const sentenceScramble: MinigameDef = {
       g.lineStyle(2, accent, 1)
       g.strokeRoundedRect(-w / 2, -24, w, 44, 10)
       const t = scene.add.text(0, -2, text, { fontSize: '21px', fontFamily: FONT.display, color: '#1a1a2e' }).setOrigin(0.5)
+      // Keyboard badge (a, b, c…) so keyboard players can place tiles; hidden on touch.
+      const key = String.fromCharCode(97 + tiles.length)
+      const badge = scene.add.text(-w / 2 + 2, -28, key, {
+        fontSize: '13px', fontFamily: FONT.display, color: '#ffffff', backgroundColor: hexColor(accent), padding: { x: 4, y: 1 },
+      }).setOrigin(0, 0.5).setVisible(!ctx.touch)
       const hit = scene.add.rectangle(0, -2, w, 48, 0, 0.001).setInteractive({ useHandCursor: true })
-      c.add([g, t, hit])
+      c.add([g, t, badge, hit])
       root.add(c)
       objs.push(c)
-      const tile: Tile = { c, text, w, homeX: 0, homeY: 0, used: false }
+      const tile: Tile = { c, text, w, homeX: 0, homeY: 0, used: false, key, badge, g }
       hit.on('pointerdown', () => (tile.used ? undefined : place(tile)))
       return tile
     }
@@ -97,6 +106,7 @@ export const sentenceScramble: MinigameDef = {
     const place = (t: Tile) => {
       if (busy || ctx.isOver()) return
       t.used = true
+      t.badge.setVisible(false)
       placed.push(t)
       Sfx.uiClick()
       relayoutPlaced()
@@ -107,22 +117,43 @@ export const sentenceScramble: MinigameDef = {
       if (busy || placed.length === 0) return
       const t = placed.pop()!
       t.used = false
+      t.badge.setVisible(!ctx.touch)
       scene.tweens.add({ targets: t.c, x: t.homeX, y: t.homeY, duration: 120 })
       relayoutPlaced()
     }
 
+    /** Adverbs can often sit in more than one spot ("abruptly stopped" / "stopped abruptly"). */
+    const isAcceptable = (built: string[]): boolean => {
+      if (built.join(' ') === target.join(' ')) return true
+      if (word.pos !== 'adverb') return false
+      const strip = (arr: string[]) => arr.map(x => x.replace(/[.,!?]$/, '').toLowerCase()).filter(x => x !== word.word).join(' ')
+      // Same words, only the adverb moved, and the sentence still ends with the original final punctuation.
+      const lastOk = built[built.length - 1]?.match(/[.!?]$/) !== null
+      return lastOk && strip(built) === strip(target)
+    }
+
     const check = () => {
       busy = true
-      const built = placed.map(t => t.text).join(' ')
-      if (built === target.join(' ')) {
+      const builtWords = placed.map(t => t.text)
+      if (isAcceptable(builtWords)) {
         Sfx.correct()
         const pts = target.length >= 10 ? 2 : 1
         ctx.addScore(pts, area.cx, lineY - 50)
         ctx.recordWord(word.word, true, word.sentence)
-        placed.forEach((t, i) => scene.tweens.add({ targets: t.c, y: t.c.y - 12, duration: 110, delay: i * 25, yoyo: true }))
+        if (!ctx.reduceMotion) placed.forEach((t, i) => scene.tweens.add({ targets: t.c, y: t.c.y - 12, duration: 110, delay: i * 25, yoyo: true }))
         ctx.after(650, next)
       } else {
         Sfx.wrong()
+        if (!missedThis) {
+          missedThis = true
+          ctx.recordWord(word.word, false, word.sentence)
+        }
+        // Visible cue that doesn't rely on motion: a red ✗ over the answer line.
+        const x = scene.add.text(area.cx, lineY - 46, '✗  Not quite — try again', {
+          fontSize: '22px', fontFamily: FONT.display, color: '#ff8888', stroke: '#000000', strokeThickness: 4,
+        }).setOrigin(0.5)
+        root.add(x)
+        scene.tweens.add({ targets: x, alpha: 0, delay: 500, duration: 300, onComplete: () => x.destroy() })
         if (!ctx.reduceMotion) placed.forEach(t => scene.tweens.add({ targets: t.c, x: t.c.x + 6, duration: 40, yoyo: true, repeat: 3 }))
         ctx.after(420, () => {
           // Keep the correct prefix, return the rest.
@@ -131,6 +162,7 @@ export const sentenceScramble: MinigameDef = {
           while (placed.length > keep) {
             const t = placed.pop()!
             t.used = false
+            t.badge.setVisible(!ctx.touch)
             scene.tweens.add({ targets: t.c, x: t.homeX, y: t.homeY, duration: 140 })
           }
           relayoutPlaced()
@@ -142,10 +174,17 @@ export const sentenceScramble: MinigameDef = {
     const skip = () => {
       if (busy || ctx.isOver()) return
       busy = true
-      ctx.recordWord(word.word, false, word.sentence)
-      ctx.flash('⏭ Skipped', '#ffb3b3')
+      if (!missedThis) ctx.recordWord(word.word, false, word.sentence)
       Sfx.wrong()
-      ctx.after(700, next)
+      // Show the full sentence so a skip still teaches something.
+      const ans = scene.add.text(area.cx, lineY, word.sentence, {
+        fontSize: '24px', fontFamily: FONT.display, color: '#ffcc66', stroke: '#000000', strokeThickness: 4,
+        align: 'center', wordWrap: { width: area.width - 80 },
+      }).setOrigin(0.5)
+      root.add(ans)
+      objs.push(ans)
+      placed.forEach(t => t.c.setVisible(false))
+      ctx.after(2000, next)
     }
 
     const next = () => {
@@ -155,6 +194,7 @@ export const sentenceScramble: MinigameDef = {
       tiles = []
       placed = []
       busy = false
+      missedThis = false
       word = ctx.bank.word(w => {
         const n = tokenize(w.sentence).length
         return n >= 5 && n <= 13
@@ -181,7 +221,8 @@ export const sentenceScramble: MinigameDef = {
       // Avoid shuffles that leave the sentence already in order.
       let order = shuffled(target)
       for (let i = 0; i < 6 && order.join(' ') === target.join(' '); i++) order = shuffled(target)
-      tiles = order.map(makeTile)
+      tiles = []
+      order.forEach(w => tiles.push(makeTile(w)))
       // Reserve as many answer rows as the full sentence needs, then start the pool below them.
       const answerRows = new Set(flow(tiles, lineY, area.width - 80).map(p => p.y)).size
       const top = Math.max(poolTop, lineY + answerRows * 58 + 40)
@@ -208,6 +249,12 @@ export const sentenceScramble: MinigameDef = {
     ctx.onKey(ev => {
       if (ev.key === 'Backspace') { undo(); return true }
       if (ev.code === 'Space') { skip(); return true }
+      const k = ev.key.toLowerCase()
+      if (!ev.ctrlKey && !ev.metaKey && /^[a-z]$/.test(k)) {
+        const tile = tiles.find(t => !t.used && t.key === k)
+        if (tile) place(tile)
+        return true
+      }
       return false
     })
 

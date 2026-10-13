@@ -38,6 +38,8 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
   const missPause = opts.missPauseMs ?? 1100
   const streakEvery = opts.streakEvery ?? 4
   let streak = 0
+  /** Misses in a row: each one lengthens the pause, so guessing is slower than reading. */
+  let missRun = 0
   let locked = false
   let current: { q: RapidQuestion; tiles: ChoiceTile[]; card: Phaser.GameObjects.Container } | null = null
 
@@ -111,7 +113,7 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
         if (n === 3 && i === 2) x = area.cx
         y = startY + h / 2 + row * (h + 16)
       }
-      const tile = createChoiceTile(scene, x, y, w, h, choice, String(i + 1), accent, () => pick(i), fontPx)
+      const tile = createChoiceTile(scene, x, y, w, h, choice, ctx.touch ? '' : String(i + 1), accent, () => pick(i), fontPx)
       tile.choiceIndex = i
       root.add(tile)
       tiles.push(tile)
@@ -144,15 +146,15 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
     const tile = tiles[i]
     if (i === q.correct) {
       streak++
+      missRun = 0
       tile.setChoiceState('correct')
       tiles.forEach((t, j) => { if (j !== i) t.setChoiceState('off') })
       Sfx.correct()
       ctx.addScore(1, tile.x, tile.y - 30)
       if (streak % streakEvery === 0) {
-        ctx.after(120, () => {
-          ctx.addScore(1, tile.x + 70, tile.y - 60)
-          ctx.flash(`🔥 STREAK BONUS ×${streak}`, '#ffb84a')
-        })
+        // Award now (the clock could expire during a delay); only the flash waits.
+        ctx.addScore(1, tile.x + 70, tile.y - 60)
+        ctx.after(120, () => ctx.flash(`🔥 STREAK BONUS ×${streak}`, '#ffb84a'))
       }
       if (q.word) ctx.recordWord(q.word, true, q.note)
       renderStreak()
@@ -168,7 +170,8 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
         scene.tweens.add({ targets: tile, x: tile.x + 8, duration: 45, yoyo: true, repeat: 3 })
       }
       if (q.word) ctx.recordWord(q.word, false, q.note)
-      ctx.after(missPause, () => { clear(); show() })
+      missRun++
+      ctx.after(missPause + Math.min(2, missRun - 1) * 600, () => { clear(); show() })
     }
   }
 

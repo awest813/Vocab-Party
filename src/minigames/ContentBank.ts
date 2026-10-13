@@ -250,12 +250,16 @@ export class ContentBank {
       || related.has(x.word)
       || x.synonyms.some(s => related.has(s) || s === w.word)
       || x.antonyms.includes(w.word)
+      // e.g. "exacerbate" lists "alleviate"'s synonyms as its opposites — it IS an opposite of alleviate.
+      || x.antonyms.some(a => related.has(a))
+      || w.antonyms.some(a => x.synonyms.includes(a))
       || [...contentTokens(x.definition)].some(t => defTokens.has(t))
     const strict = pickDistinct(this.words, n, x => (filter ? !filter(x) : false) || isRelated(x))
     if (strict.length >= n) return strict
     // Very small banks: relax the filter rather than return too few distractors.
     const extra = pickDistinct(this.words, n - strict.length, x =>
-      x.word === w.word || related.has(x.word) || strict.includes(x) || (filter ? !filter(x) : false))
+      x.word === w.word || related.has(x.word) || strict.includes(x) || (filter ? !filter(x) : false)
+      || x.synonyms.some(sy => related.has(sy)) || x.antonyms.some(a => related.has(a)))
     return [...strict, ...extra]
   }
 }

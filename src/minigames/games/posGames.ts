@@ -15,6 +15,18 @@ const POS_HINT: Record<PartOfSpeech, string> = {
   adverb: 'describes a verb — often ends in -ly',
 }
 
+/**
+ * Words commonly used as more than one part of speech. Whack-a-Word shows words with no
+ * context sentence, so these would be unfair there (Word Sorter shows a sentence and keeps them).
+ */
+const DUAL_POS = new Set([
+  'benefit', 'bottom', 'compromise', 'conflict', 'debate', 'display', 'encounter', 'finish', 'grab', 'hurry',
+  'journey', 'lift', 'mess', 'mistake', 'noise', 'praise', 'promise', 'puzzle', 'quarrel', 'remedy', 'repair',
+  'reward', 'rumor', 'shelter', 'storm', 'struggle', 'treasure', 'triumph', 'venture', 'whisper', 'wander',
+  'scatter', 'tumble', 'climb', 'complex', 'hollow', 'yearn', 'admit', 'invite', 'dawn', 'fragment',
+  'surplus',
+])
+
 interface Mole {
   hole: number
   c: Phaser.GameObjects.Container
@@ -153,8 +165,13 @@ export const whackAWord: MinigameDef = {
       const free = moles.map((m, i) => (m ? -1 : i)).filter(i => i >= 0)
       if (free.length === 0) return
       const hole = Phaser.Utils.Array.GetRandom(free) as number
-      const good = Math.random() < 0.48
-      const word = ctx.bank.word(w => (good ? w.pos === targetPos : w.pos !== targetPos), `whack:${good ? '' : 'not-'}${targetPos}`)
+      const wantGood = Math.random() < 0.48
+      const word = ctx.bank.word(
+        w => !DUAL_POS.has(w.word) && (wantGood ? w.pos === targetPos : w.pos !== targetPos),
+        `whack:${wantGood ? '' : 'not-'}${targetPos}`,
+      )
+      // Derive from the word itself, in case the filtered pool was empty and fell back.
+      const good = word.pos === targetPos
       const { x, y } = holePos(hole)
       const c = scene.add.container(x, y + 80)
       const g = scene.add.graphics()
@@ -242,7 +259,7 @@ export const wordSorter: MinigameDef = {
   ],
   controls: { keys: 'Keys 1–4 or click a bin', touch: 'Tap a bin' },
   durationMs: 30000,
-  cpu: { easy: [5, 8], normal: [8, 12], hard: [11, 15] },
+  cpu: { easy: [5, 9], normal: [9, 13], hard: [13, 18] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let current: { w: LexWord; card: Phaser.GameObjects.Container } | null = null
@@ -343,6 +360,11 @@ export const wordSorter: MinigameDef = {
         Sfx.wrong()
         drawBin(chosen.g, chosen.pos, 'bad')
         drawBin(bins[rightIdx].g, bins[rightIdx].pos, 'hint')
+        const tag = scene.add.text(binX(rightIdx), binY - 92, `✓ ${w.pos.toUpperCase()}`, {
+          fontSize: '20px', fontFamily: FONT.display, color: '#7dffb0', stroke: '#000000', strokeThickness: 5,
+        }).setOrigin(0.5)
+        root.add(tag)
+        scene.tweens.add({ targets: tag, alpha: 0, delay: 900, duration: 250, onComplete: () => tag.destroy() })
         ctx.recordWord(w.word, false, `“${w.word}” is used as a${w.pos === 'adjective' || w.pos === 'adverb' ? 'n' : ''} ${w.pos} here`)
         if (!ctx.reduceMotion) scene.tweens.add({ targets: card, x: card.x + 10, duration: 45, yoyo: true, repeat: 3 })
         ctx.after(800, () => fly(rightIdx, 320))

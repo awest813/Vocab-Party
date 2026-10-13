@@ -78,6 +78,11 @@ interface Ghost {
   text: Phaser.GameObjects.Text
 }
 
+/** Trim long player names so they fit fixed-width UI slots. */
+function fitName(name: string, max: number): string {
+  return name.length > max ? `${name.slice(0, max - 1)}…` : name
+}
+
 export class MinigameScene extends Phaser.Scene {
   private data_!: MinigameSceneData
   private def!: MinigameDef
@@ -121,7 +126,8 @@ export class MinigameScene extends Phaser.Scene {
     })
 
     this.keyListener = (ev: KeyboardEvent) => {
-      if (!this.running) return
+      // Held keys auto-repeat; never let one held key answer question after question.
+      if (!this.running || ev.repeat) return
       for (const h of this.keyHandlers) {
         if (h(ev)) {
           ev.preventDefault()
@@ -133,6 +139,7 @@ export class MinigameScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       if (this.keyListener) this.input.keyboard?.off('keydown', this.keyListener)
       this.timers.forEach(t => t.remove())
+      // Note: don't call instance.stop() here — the display list is already destroyed at shutdown.
       this.running = false
       stopSpeech()
     })
@@ -304,16 +311,20 @@ export class MinigameScene extends Phaser.Scene {
       align: 'center', wordWrap: { width: 820 },
     }).setOrigin(0.5))
 
+    // Stack rule lines by their measured height so wrapped lines never overlap.
+    let ruleY = -108
     def.howTo.forEach((line, i) => {
-      const y = -88 + i * 42
+      const t = this.add.text(-346, ruleY, line, {
+        fontSize: '21px', fontFamily: FONT.body, color: '#ffffff', wordWrap: { width: 740 },
+      }).setOrigin(0, 0)
+      const dotY = ruleY + 13
       const dot = this.add.graphics()
       dot.fillStyle(def.accent, 1)
-      dot.fillCircle(-372, y, 13)
+      dot.fillCircle(-372, dotY, 13)
       panel.add(dot)
-      panel.add(this.add.text(-372, y, String(i + 1), { fontSize: '15px', fontFamily: FONT.display, color: '#0a101c' }).setOrigin(0.5))
-      panel.add(this.add.text(-346, y, line, {
-        fontSize: '21px', fontFamily: FONT.body, color: '#ffffff', wordWrap: { width: 740 },
-      }).setOrigin(0, 0.5))
+      panel.add(this.add.text(-372, dotY, String(i + 1), { fontSize: '15px', fontFamily: FONT.display, color: '#0a101c' }).setOrigin(0.5))
+      panel.add(t)
+      ruleY += t.height + 12
     })
 
     panel.add(this.add.text(0, 50, `🎮  ${touch ? def.controls.touch : def.controls.keys}`, {
@@ -363,10 +374,11 @@ export class MinigameScene extends Phaser.Scene {
       this.runTurns(0)
     }
     const keyGo = (ev: KeyboardEvent) => {
+      if (ev.repeat) return
       if (ev.code === 'Enter' || ev.code === 'Space' || ev.code === 'NumpadEnter') begin()
     }
     go.on('pointerdown', begin)
-    this.input.keyboard?.on('keydown', keyGo)
+    this.wait(400, () => { if (!started) this.input.keyboard?.on('keydown', keyGo) })
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', keyGo))
   }
 
@@ -393,11 +405,16 @@ export class MinigameScene extends Phaser.Scene {
       x: w / 2, y: h / 2, width: 640, height: 380, border: player.color, headerColor: player.color, headerHeight: 10, depth: 10,
     })
     panel.add(this.portrait(player, 0, -70, 110))
-    panel.add(this.add.text(0, 30, `${player.name}'s turn!`, {
+    panel.add(this.add.text(0, 30, `${fitName(player.name, 14)}'s turn!`, {
       fontSize: '42px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0.5))
-    const beat = humanIdx > 0
-      ? `Score to beat: ${Math.max(...this.data_.participants.filter(p => !p.isCpu).slice(0, humanIdx).map(p => this.scores[p.id] ?? 0))}`
+    // Leader so far: humans who already played plus the CPUs' locked-in finals.
+    const known = [
+      ...this.data_.participants.filter(p => !p.isCpu).slice(0, humanIdx).map(p => this.scores[p.id] ?? 0),
+      ...Array.from(this.ghostScores.values()),
+    ]
+    const beat = humanIdx > 0 && known.length > 0
+      ? `Top score so far: ${Math.max(...known)}`
       : 'Everyone else — no peeking! 👀'
     panel.add(this.add.text(0, 84, beat, { fontSize: '20px', fontFamily: FONT.body, color: hexColor(COLORS.mist) }).setOrigin(0.5))
     const btn = createButton(this, w / 2, h / 2 + 140, "I'M READY", player.color, player.color, 260, 56)
@@ -410,9 +427,10 @@ export class MinigameScene extends Phaser.Scene {
       this.clearAll()
       next()
     }
-    const key = (ev: KeyboardEvent) => { if (ev.code === 'Enter' || ev.code === 'Space') go() }
+    const key = (ev: KeyboardEvent) => { if (!ev.repeat && (ev.code === 'Enter' || ev.code === 'Space')) go() }
     btn.on('pointerdown', go)
-    this.input.keyboard?.on('keydown', key)
+    // Arm late: the previous player may still be mashing Space/Enter when time ran out.
+    this.wait(600, () => { if (!done) this.input.keyboard?.on('keydown', key) })
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', key))
   }
 
@@ -514,7 +532,7 @@ export class MinigameScene extends Phaser.Scene {
           hl.fillRoundedRect(sx + 6, y - rowH / 2 + 4, SIDEBAR_W - 12, rowH - 8, 12)
         }
         this.portrait(p, sx + 38, y, 46).setDepth(31)
-        this.add.text(sx + 70, y - 12, p.name, { fontSize: '17px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0, 0.5).setDepth(31)
+        this.add.text(sx + 70, y - 12, fitName(p.name, 9), { fontSize: '17px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0, 0.5).setDepth(31)
         this.add.text(sx + 70, y + 12, p.isCpu ? `CPU · ${CPU_LEVEL_LABEL[p.cpuLevel]}` : isMe ? 'playing now' : this.playedIds.has(p.id) ? 'finished' : 'up next', {
           fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
         }).setOrigin(0, 0.5).setDepth(31)
@@ -539,7 +557,9 @@ export class MinigameScene extends Phaser.Scene {
         this.ghostScores.set(p.id, cpuMinigameScore(this.def, p.cpuLevel))
       }
       const finalScore = this.ghostScores.get(p.id)!
-      const times = Array.from({ length: finalScore }, () => Phaser.Math.FloatBetween(0.04, 0.97) * this.def.durationMs).sort((a, b) => a - b)
+      // Each CPU gets its own pace: some start fast, some finish strong.
+      const k = Phaser.Math.FloatBetween(0.75, 1.35)
+      const times = Array.from({ length: finalScore }, () => Math.pow(Phaser.Math.FloatBetween(0.04, 0.97), k) * this.def.durationMs).sort((a, b) => a - b)
       this.ghosts.push({ id: p.id, finalScore, times, text })
     }
   }
@@ -665,7 +685,14 @@ export class MinigameScene extends Phaser.Scene {
         const t = this.add.text(area.cx, area.top + (area.bottom - area.top) * 0.5, text, {
           fontSize: '40px', fontFamily: FONT.display, color, stroke: '#000000', strokeThickness: 8,
         }).setOrigin(0.5).setDepth(60)
-        this.tweens.add({ targets: t, scale: { from: 0.6, to: 1.1 }, alpha: { from: 1, to: 0 }, duration: 950, ease: 'Cubic.easeOut', onComplete: () => t.destroy() })
+        this.tweens.add({
+          targets: t,
+          ...(reduceMotion ? {} : { scale: { from: 0.6, to: 1.1 } }),
+          alpha: { from: 1, to: 0 },
+          duration: 950,
+          ease: 'Cubic.easeOut',
+          onComplete: () => t.destroy(),
+        })
       },
     }
 
@@ -795,13 +822,14 @@ export class MinigameScene extends Phaser.Scene {
         fontSize: '28px', fontFamily: FONT.display, color: '#0a101c',
       }).setOrigin(0.5))
       row.add(this.portrait(p, -240, -1, 58))
-      row.add(this.add.text(-196, -14, p.name, { fontSize: '26px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0, 0.5))
+      row.add(this.add.text(-196, -14, fitName(p.name, 12), { fontSize: '26px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0, 0.5))
       row.add(this.add.text(-196, 16, p.isCpu ? `CPU · ${CPU_LEVEL_LABEL[p.cpuLevel]}` : 'Player', { fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mute) }).setOrigin(0, 0.5))
       row.add(this.add.text(110, -1, `${result.scores[p.id]} pts`, {
         fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 4,
       }).setOrigin(0.5))
       const allTied = rows.every(r => result.placements[r.id] === 1)
-      const reward = allTied && rows.length > 1 ? 'TIE' : this.data_.rewardLabels?.[place - 1]
+      // The Rival Bot (negative id) never collects board rewards.
+      const reward = allTied && rows.length > 1 ? 'TIE' : p.id < 0 ? '' : this.data_.rewardLabels?.[place - 1]
       if (reward) {
         row.add(this.add.text(360, -1, reward, {
           fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 4,
@@ -813,9 +841,9 @@ export class MinigameScene extends Phaser.Scene {
       }
     })
 
-    const winner = rows[0]
+    const humanWon = rows.some(r => !r.isCpu && result.placements[r.id] === 1)
     this.wait(150 + rows.length * 260, () => {
-      if (winner && !winner.isCpu) {
+      if (humanWon) {
         Sfx.win()
         showConfetti(this)
       } else {
@@ -830,7 +858,7 @@ export class MinigameScene extends Phaser.Scene {
       this.data_.onComplete?.(result)
     }
     let done = false
-    const key = (ev: KeyboardEvent) => { if (ev.code === 'Enter' || ev.code === 'Space') finish() }
+    const key = (ev: KeyboardEvent) => { if (!ev.repeat && (ev.code === 'Enter' || ev.code === 'Space' || ev.code === 'NumpadEnter')) finish() }
     if (fast || this.humans.length === 0) {
       this.wait(fast ? 600 : 2600, finish)
       return
@@ -890,14 +918,19 @@ export class MinigameScene extends Phaser.Scene {
       Sfx.star()
     }
 
-    const again = createButton(this, w / 2 - 170, h - 62, '↻  PLAY AGAIN', COLORS.party, COLORS.partyDeep, 300, 60)
-    again.on('pointerdown', () => this.scene.restart({ ...this.data_ }))
+    const touch = isTouchPreferred(this.sys.game)
+    let leaving = false
     const backScene = this.data_.backScene ?? 'ArcadeScene'
-    const back = createButton(this, w / 2 + 170, h - 62, backScene === 'WordBookScene' ? 'WORD BOOK' : 'ARCADE', COLORS.skyBtn, COLORS.skyBtnDeep, 300, 60)
-    back.on('pointerdown', () => this.scene.start(backScene))
+    const again = () => { if (!leaving) { leaving = true; this.scene.restart({ ...this.data_ }) } }
+    const backOut = () => { if (!leaving) { leaving = true; this.scene.start(backScene) } }
+    const againBtn = createButton(this, w / 2 - 170, h - 62, touch ? '↻  PLAY AGAIN' : '↻  AGAIN  (Enter)', COLORS.party, COLORS.partyDeep, 300, 60)
+    againBtn.on('pointerdown', again)
+    const back = createButton(this, w / 2 + 170, h - 62, `${backScene === 'WordBookScene' ? 'WORD BOOK' : 'ARCADE'}${touch ? '' : '  (Esc)'}`, COLORS.skyBtn, COLORS.skyBtnDeep, 300, 60)
+    back.on('pointerdown', backOut)
     const key = (ev: KeyboardEvent) => {
-      if (ev.code === 'Enter') this.scene.restart({ ...this.data_ })
-      else if (ev.code === 'Escape') this.scene.start(backScene)
+      if (ev.repeat) return
+      if (ev.code === 'Enter' || ev.code === 'NumpadEnter' || ev.code === 'Space') again()
+      else if (ev.code === 'Escape') backOut()
     }
     this.wait(400, () => this.input.keyboard?.on('keydown', key))
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', key))

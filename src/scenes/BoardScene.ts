@@ -315,6 +315,7 @@ export class BoardScene extends Phaser.Scene {
     }).setOrigin(0, 0.5).setDepth(DEPTH.chrome)
 
     const rollKeyHandler = (ev: KeyboardEvent) => {
+      if (ev.repeat) return
       if (ev.code === 'Space' || ev.code === 'Enter' || ev.code === 'KeyR') {
         ev.preventDefault()
         this.tryRollFromKeyboard()

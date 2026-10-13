@@ -46,6 +46,7 @@ export const anagramDash: MinigameDef = {
     let placed: LetterTile[] = []
     let hinted = 0
     let busy = false
+    let missedThis = false
     let wordObjs: Phaser.GameObjects.GameObject[] = []
     let hintTimer: Phaser.Time.TimerEvent | undefined
 
@@ -123,7 +124,12 @@ export const anagramDash: MinigameDef = {
     }
 
     const giveHint = () => {
-      if (busy || ctx.isOver() || hinted >= word.word.length - 2) return
+      if (ctx.isOver() || hinted >= word.word.length - 2) return
+      // Don't lose the hint if it lands during a wrong-answer flash or skip.
+      if (busy) {
+        hintTimer = ctx.after(1000, giveHint)
+        return
+      }
       resetPlaced()
       const need = word.word[hinted]
       const tile = tiles.find(t => !t.used && t.letter === need)
@@ -155,6 +161,15 @@ export const anagramDash: MinigameDef = {
       } else {
         slots.forEach(s => drawSlot(s.box, 'bad'))
         Sfx.wrong()
+        if (!missedThis) {
+          missedThis = true
+          ctx.recordWord(word.word, false, word.definition)
+        }
+        const x = scene.add.text(area.cx, slotY + 52, '✗ Try again', {
+          fontSize: '20px', fontFamily: FONT.display, color: '#ff8888', stroke: '#000000', strokeThickness: 4,
+        }).setOrigin(0.5)
+        root.add(x)
+        scene.tweens.add({ targets: x, alpha: 0, delay: 350, duration: 250, onComplete: () => x.destroy() })
         if (!ctx.reduceMotion) placed.forEach(t => scene.tweens.add({ targets: t.c, x: t.c.x + 7, duration: 40, yoyo: true, repeat: 3 }))
         ctx.after(380, () => {
           busy = false
@@ -167,7 +182,7 @@ export const anagramDash: MinigameDef = {
     const skip = () => {
       if (busy || ctx.isOver()) return
       busy = true
-      ctx.recordWord(word.word, false, word.definition)
+      if (!missedThis) ctx.recordWord(word.word, false, word.definition)
       ctx.flash(`It was “${word.word.toUpperCase()}”`, '#ffb3b3')
       Sfx.wrong()
       ctx.after(900, nextWord)
@@ -177,6 +192,7 @@ export const anagramDash: MinigameDef = {
       if (ctx.isOver()) return
       clearWord()
       busy = false
+      missedThis = false
       hinted = 0
       word = pickWord()
 
@@ -220,6 +236,12 @@ export const anagramDash: MinigameDef = {
         }
       })
       hintTimer = ctx.after(8000, giveHint)
+    }
+
+    if (!ctx.touch) {
+      root.add(scene.add.text(area.cx, area.bottom - 92, '⌨ Type the letters on your keyboard', {
+        fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
+      }).setOrigin(0.5))
     }
 
     const undoBtn = createButton(scene, area.cx - 150, area.bottom - 50, '⌫  UNDO', COLORS.chrome, COLORS.chromeDeep, 200, 56)

@@ -62,7 +62,7 @@ export const wordHero: MinigameDef = {
   ],
   controls: { keys: 'D F J K (or 1–4 / arrows) to strum each lane', touch: 'Tap the colored frets' },
   durationMs: 40000,
-  cpu: { easy: [6, 14], normal: [14, 26], hard: [26, 40] },
+  cpu: { easy: [8, 18], normal: [18, 32], hard: [32, 50] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     const notes: Note[] = []
@@ -358,7 +358,6 @@ export const wordHero: MinigameDef = {
               // Missed a note you should have played.
               rock = Math.max(0, rock - 0.06)
               if (streak > 0) breakStreak()
-              ctx.recordWord(n.section.target.word, false, `missed “${n.word}”`)
               scene.tweens.add({ targets: n.c, alpha: 0, duration: 160, onComplete: () => n.c.destroy() })
             } else {
               // Correctly let a decoy pass.
@@ -373,6 +372,8 @@ export const wordHero: MinigameDef = {
         if (!pendingSwitch && (goodHitsForTarget >= 8 || t - targetSince > 12000)) {
           pendingSwitch = true
           spawning = chooseSection()
+          // Preview the next target so players can read it before its notes arrive.
+          kicker.setText(`NEXT: ${spawning.mode === 'synonym' ? 'MEANS' : 'OPPOSITE OF'} ${spawning.target.word.toUpperCase()}`)
           nextBeat += 60000 / bpm()
         }
         if (pendingSwitch && notes.every(n => n.done || n.section === spawning)) {

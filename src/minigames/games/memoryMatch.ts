@@ -30,7 +30,7 @@ export const memoryMatch: MinigameDef = {
   ],
   controls: { keys: 'Arrows move · Space/Enter flips · or click', touch: 'Tap cards to flip' },
   durationMs: 50000,
-  cpu: { easy: [2, 4], normal: [4, 7], hard: [6, 10] },
+  cpu: { easy: [3, 6], normal: [6, 10], hard: [9, 14] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let cards: Card[] = []
@@ -52,6 +52,7 @@ export const memoryMatch: MinigameDef = {
     const drawCursor = () => {
       cursorBox.clear()
       if (ctx.touch || cards.length === 0) return
+      cursor = Math.min(cursor, cards.length - 1)
       const card = cards[cursor]
       cursorBox.lineStyle(4, 0xffe066, 1)
       cursorBox.strokeRoundedRect(card.c.x - cardW / 2 - 6, card.c.y - cardH / 2 - 6, cardW + 12, cardH + 12, 16)
@@ -187,6 +188,7 @@ export const memoryMatch: MinigameDef = {
         case 'ArrowDown': cursor = ((row + 1) % ROWS) * COLS + col; break
         case 'Space':
         case 'Enter':
+          cursor = Math.min(cursor, cards.length - 1)
           if (cards[cursor]) flip(cards[cursor])
           return true
         default: return false

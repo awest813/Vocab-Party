@@ -5808,7 +5808,7 @@
       "word": "misplace",
       "definition": "to put in the wrong spot and lose",
       "distractors": [
-        "dis",
+        "pre",
         "un",
         "non"
       ],
@@ -6362,7 +6362,7 @@
     },
     {
       "kind": "suffix",
-      "affix": "tion",
+      "affix": "ion",
       "base": "invent",
       "word": "invention",
       "definition": "something newly made",
@@ -6375,7 +6375,7 @@
     },
     {
       "kind": "suffix",
-      "affix": "tion",
+      "affix": "ion",
       "base": "protect",
       "word": "protection",
       "definition": "the act of keeping safe",
@@ -6610,11 +6610,11 @@
       "level": 2
     },
     {
-      "correct": "february",
+      "correct": "February",
       "misspellings": [
-        "febuary",
-        "februrary",
-        "febrary"
+        "Febuary",
+        "Februrary",
+        "Febrary"
       ],
       "level": 2
     },
@@ -7060,11 +7060,11 @@
       "level": 3
     },
     {
-      "correct": "wednesday",
+      "correct": "Wednesday",
       "misspellings": [
-        "wenesday",
-        "wensday",
-        "wednsday"
+        "Wenesday",
+        "Wensday",
+        "Wednsday"
       ],
       "level": 1
     },
@@ -7629,8 +7629,8 @@
     {
       "correct": "supersede",
       "misspellings": [
-        "supercede",
         "superseed",
+        "suppersede",
         "supresede"
       ],
       "level": 3
@@ -8038,7 +8038,7 @@
       "distractors": [
         "three",
         "half",
-        "wheel"
+        "small"
       ],
       "level": 1
     },

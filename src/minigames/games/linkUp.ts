@@ -29,11 +29,11 @@ export const linkUp: MinigameDef = {
   howTo: [
     'Pick a word on the left, then its synonym on the right.',
     'Each correct link is +1. Clear all five for a +2 bonus.',
-    'Wrong links flash red — try again fast!',
+    'Wrong links freeze the board for a moment — think first!',
   ],
   controls: { keys: 'Click a left word, then a right word (or 1–5 then Q–T)', touch: 'Tap a left word, then its match' },
   durationMs: 40000,
-  cpu: { easy: [3, 6], normal: [6, 9], hard: [9, 13] },
+  cpu: { easy: [5, 9], normal: [9, 14], hard: [14, 20] },
   start(ctx) {
     const { scene, root, area, accent } = ctx
     let nodes: Node[] = []
@@ -107,7 +107,14 @@ export const linkUp: MinigameDef = {
         Sfx.wrong()
         const left = a.side === 'L' ? a : n
         ctx.recordWord(words[left.pair].word, false, `${words[left.pair].word} means “${words[left.pair].definition}”`)
-        ctx.after(380, () => {
+        // Guess-spamming shouldn't pay: a wrong link freezes the board briefly, with a visible ✗.
+        const mark = scene.add.text((a.x + n.x) / 2, (a.y + n.y) / 2, '✗', {
+          fontSize: '44px', fontFamily: FONT.display, color: '#ff6b6b', stroke: '#000000', strokeThickness: 6,
+        }).setOrigin(0.5)
+        root.add(mark)
+        objs.push(mark)
+        ctx.after(900, () => {
+          mark.destroy()
           paint(a, 'idle')
           paint(n, 'idle')
           locked = false

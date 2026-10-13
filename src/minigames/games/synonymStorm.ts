@@ -118,7 +118,7 @@ export const synonymStorm: MinigameDef = {
       const hit = scene.add.rectangle(0, -2, w + 16, 60, 0, 0.001).setInteractive({ useHandCursor: true })
       c.add([g, t, hit])
       root.add(c)
-      const drop: Drop = { c, lane, good, speed: Phaser.Math.Between(95, 135) + Math.min(60, (35000 - ctx.timeLeftMs()) / 600), dead: false, word }
+      const drop: Drop = { c, lane, good, speed: Phaser.Math.Between(95, 135) + Math.min(60, (synonymStorm.durationMs - ctx.timeLeftMs()) / 600), dead: false, word }
       hit.on('pointerdown', () => catchDrop(drop))
       drops.push(drop)
     }
@@ -187,7 +187,13 @@ export const synonymStorm: MinigameDef = {
         }
         for (let i = drops.length - 1; i >= 0; i--) if (drops[i].dead && !drops[i].c.active) drops.splice(i, 1)
         if (targetAge > 11000 && !switching) {
-          ctx.flash('🌀 NEW WORD!', '#9fd4ff')
+          // Teach the ones that got away: record them and show one before moving on.
+          if (goodQueue.length > 0) {
+            ctx.recordWord(target.word, false, `${target.word} ≈ ${goodQueue.join(', ')}`)
+            ctx.flash(`${target.word.toUpperCase()} ≈ ${goodQueue.slice(0, 2).join(', ')}`, '#9fd4ff')
+          } else {
+            ctx.flash('🌀 NEW WORD!', '#9fd4ff')
+          }
           newTarget()
         }
       },

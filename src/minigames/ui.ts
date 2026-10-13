@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { FONT } from '../ui/Theme'
 
@@ -52,21 +53,23 @@ export function createChoiceTile(
     const edge = state === 'idle' ? accent : state === 'off' ? 0x2a3548 : 0xffffff
     g.lineStyle(state === 'idle' && hover ? 3.5 : 2.5, edge, state === 'idle' ? (hover ? 1 : 0.6) : 0.85)
     g.strokeRoundedRect(-width / 2 + 1, -height / 2 + 1, width - 2, height - 2, r)
-    // badge
-    g.fillStyle(state === 'idle' ? accent : 0x000000, state === 'idle' ? 1 : 0.25)
-    g.fillRoundedRect(-width / 2 + 10, -14, 28, 28, 8)
+    // key badge (hidden on touch, where there are no number keys)
+    if (badge) {
+      g.fillStyle(state === 'idle' ? accent : 0x000000, state === 'idle' ? 1 : 0.25)
+      g.fillRoundedRect(-width / 2 + 10, -14, 28, 28, 8)
+    }
   }
 
   const badgeText = scene.add.text(-width / 2 + 24, 0, badge, {
     fontSize: '16px', fontFamily: FONT.display, color: '#0a101c',
   }).setOrigin(0.5)
 
-  const text = scene.add.text(14, 0, label, {
+  const text = scene.add.text(badge ? 14 : 0, 0, label, {
     fontSize: `${fontPx ?? choiceFontPx(label.length)}px`,
     fontFamily: FONT.display,
     color: '#ffffff',
     align: 'center',
-    wordWrap: { width: width - 76 },
+    wordWrap: { width: width - (badge ? 76 : 40) },
     stroke: '#000000',
     strokeThickness: 2,
   }).setOrigin(0.5)
@@ -108,7 +111,7 @@ export function popText(scene: Phaser.Scene, parent: Phaser.GameObjects.Containe
     targets: t,
     y: y - 56,
     alpha: 0,
-    scale: 1.25,
+    scale: shouldReduceMotion() ? 1 : 1.25,
     duration: 760,
     ease: 'Cubic.easeOut',
     onComplete: () => t.destroy(),
