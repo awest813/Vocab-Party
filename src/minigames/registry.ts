@@ -77,7 +77,14 @@ export function pickPartyMinigame(): MinigameDef {
  * off days and hot streaks, so a Normal CPU can occasionally beat a Hard one.
  */
 export function cpuMinigameScore(def: MinigameDef, level: CpuLevel): number {
-  const [lo, hi] = def.cpu[level]
+  let [lo, hi] = def.cpu[level]
+  // The Hard range doubles as the Arcade's gold-medal target; in play a Hard CPU centres half a
+  // range lower, so strong players can beat it (it starts where Normal ends otherwise).
+  if (level === 'hard') {
+    const shift = Math.round((hi - lo) / 2)
+    lo -= shift
+    hi -= shift
+  }
   const spread = (hi - lo) / 2
   const r = (Math.random() + Math.random() + Math.random()) / 3
   return Math.max(0, Math.round(lo - spread + r * (hi - lo + spread * 2)))

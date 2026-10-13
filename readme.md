@@ -50,7 +50,7 @@ npm run typecheck
    - **Words:** All levels, Starter (grades 3–5), Standard (6–8), or Challenge (9–12) — applies to board questions and every minigame
    - **Minigames:** every round (default), every other round, or duel tiles only
    - **Bonus Stars:** on/off
-2. Click **ROLL** on your turn to roll the standard die (**1–6**; a Dash card adds 1–3 more). Every character also has a **special die** (press **D** or tap the die to switch): e.g. 🛡️ Steady Block (always 3 or 4), 🤖 Calibrated Block (2 or 5), 🏴‍☠️ Plunder Block (stay and loot 5 coins, or sail far). All dice average 3.5 spaces.
+2. Click **ROLL** on your turn to roll the standard die (**1–6**; a Dash card adds 1–3 more). Every character also has a **special die** (press **D** or tap the die to switch): e.g. 🛡️ Steady Block (always 3 or 4), 🤖 Calibrated Block (2 or 5), 🏴‍☠️ Plunder Block (stay and loot 4 coins, or sail far). All dice average 3.5 spaces.
 3. Your token moves along the board. The tile you land on determines what happens:
 
 | Tile | Effect |

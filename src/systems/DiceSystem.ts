@@ -39,12 +39,12 @@ export const STANDARD_DIE: DieDef = {
 export const CHARACTER_DICE: DieDef[] = [
   { name: 'Lucky Block', emoji: '🎉', faces: [f(0, 4), f(2, 1), f(3), f(4), f(5), f(7)], hint: 'Anything can happen — even a 7.' },
   { name: 'Arcane Block', emoji: '🧙', faces: [f(0, 3), f(1, 1), f(2), f(5), f(6), f(7)], hint: 'Low or high, rarely in between.' },
-  { name: 'Steady Block', emoji: '🛡️', faces: [f(3), f(3), f(3), f(4), f(4), f(4)], hint: 'Always 3 or 4. Plan your landing.' },
-  { name: 'Plunder Block', emoji: '🏴‍☠️', faces: [f(0, 5), f(2, 2), f(3), f(5), f(6), f(6)], hint: 'Stay and loot 5 coins, or sail far.' },
-  { name: 'Shadow Block', emoji: '🥷', faces: [f(0, 4), f(2, 1), f(4), f(5), f(5), f(6)], hint: 'Lie low for coins, then strike far.' },
+  { name: 'Steady Block', emoji: '🛡️', faces: [f(3, 1), f(3, 1), f(3), f(4), f(4), f(4)], hint: 'Always 3 or 4 — some 3s pay a coin.' },
+  { name: 'Plunder Block', emoji: '🏴‍☠️', faces: [f(0, 4), f(1, 1), f(3), f(5), f(6), f(6)], hint: 'Stay and loot 4 coins, or sail far.' },
+  { name: 'Shadow Block', emoji: '🥷', faces: [f(0, 3), f(1, 1), f(4), f(5), f(5), f(6)], hint: 'Lie low for coins, then strike far.' },
   { name: 'Trail Block', emoji: '🏹', faces: [f(2, 1), f(2, 1), f(3), f(4), f(5), f(5)], hint: 'Short steps pay a coin.' },
   { name: 'Calibrated Block', emoji: '🤖', faces: [f(2), f(2), f(2), f(5), f(5), f(5)], hint: 'Exactly 2 or exactly 5.' },
-  { name: 'Royal Block', emoji: '👑', faces: [f(1, 2), f(2, 1), f(3), f(4), f(4), f(6)], hint: 'Coins on low rolls, never a zero.' },
+  { name: 'Royal Block', emoji: '👑', faces: [f(1, 2), f(2), f(3), f(4), f(4), f(6)], hint: 'A 1 pays 2 coins, and never a zero.' },
 ]
 
 export function characterDie(characterIndex: number): DieDef {
