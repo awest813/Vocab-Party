@@ -220,7 +220,7 @@ Most minigames draw from the lexicon. Each entry in `words` needs a part of spee
 
 `level` (1 = Starter, 2 = Standard, 3 = Challenge) drives the Word Level setting; it is also supported on board questions in `vocab.json` / `grammar.json` and on `affixes`, `spelling`, and `roots` entries.
 
-`affixes`, `spelling`, and `roots` feed Prefix Factory, Spelling Bee, and Root Detective.
+`affixes`, `spelling`, `roots`, and `compounds` feed Prefix Factory, Spelling Bee, Root Detective, and Compound Crafter.
 
 ### Context Clue Minigame (`public/data/vocab.json`)
 

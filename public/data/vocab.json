@@ -1139,6 +1139,858 @@
       "correct": 2,
       "explanation": "Analyze means to examine something methodically in detail.",
       "level": 1
+    },
+    {
+      "question": "What does 'journey' mean?",
+      "answers": [
+        "A short nap after lunch",
+        "A long trip from one place to another",
+        "A loud argument",
+        "A type of map"
+      ],
+      "correct": 1,
+      "explanation": "A journey is a long trip from one place to another.",
+      "level": 1
+    },
+    {
+      "question": "What does 'treasure' mean?",
+      "answers": [
+        "A pirate's ship",
+        "A kind of sandy beach",
+        "Valuable things like gold and jewels",
+        "Old, broken toys"
+      ],
+      "correct": 2,
+      "explanation": "Treasure means valuable things such as gold, jewels, or coins.",
+      "level": 1
+    },
+    {
+      "question": "What does 'shelter' mean?",
+      "answers": [
+        "A tall mountain peak",
+        "A sudden storm",
+        "A long walk outside",
+        "A place that keeps you safe from harm or weather"
+      ],
+      "correct": 3,
+      "explanation": "A shelter is a place that protects you from weather or danger.",
+      "level": 1
+    },
+    {
+      "question": "What does 'danger' mean?",
+      "answers": [
+        "A happy surprise",
+        "A quiet moment",
+        "The chance that something harmful may happen",
+        "A good grade"
+      ],
+      "correct": 2,
+      "explanation": "Danger is the chance that something bad or harmful may happen.",
+      "level": 1
+    },
+    {
+      "question": "What does 'dawn' mean?",
+      "answers": [
+        "The first light of the day",
+        "A rainy afternoon",
+        "The middle of the night",
+        "The last day of the year"
+      ],
+      "correct": 0,
+      "explanation": "Dawn is the early morning when daylight first appears.",
+      "level": 1
+    },
+    {
+      "question": "What does 'promise' mean?",
+      "answers": [
+        "A funny joke",
+        "A question about the future",
+        "A secret hiding place",
+        "Words saying you will surely do something"
+      ],
+      "correct": 3,
+      "explanation": "A promise is your word that you will definitely do something.",
+      "level": 1
+    },
+    {
+      "question": "What does 'sorrow' mean?",
+      "answers": [
+        "A feeling of hunger",
+        "A deep feeling of sadness",
+        "A burst of laughter",
+        "A strong sense of pride"
+      ],
+      "correct": 1,
+      "explanation": "Sorrow means deep sadness or grief.",
+      "level": 1
+    },
+    {
+      "question": "What does 'reward' mean?",
+      "answers": [
+        "A type of fence",
+        "A difficult test",
+        "Something given in return for good work",
+        "A punishment for a mistake"
+      ],
+      "correct": 2,
+      "explanation": "A reward is something you receive for doing something good.",
+      "level": 1
+    },
+    {
+      "question": "What does 'cottage' mean?",
+      "answers": [
+        "A small, cozy house",
+        "A huge castle",
+        "A fast sailboat",
+        "A busy city street"
+      ],
+      "correct": 0,
+      "explanation": "A cottage is a small house, often in the countryside.",
+      "level": 1
+    },
+    {
+      "question": "What does 'entrance' mean?",
+      "answers": [
+        "A door or opening that lets you go in",
+        "The back of a closet",
+        "A window on the roof",
+        "A path that leads nowhere"
+      ],
+      "correct": 0,
+      "explanation": "An entrance is the way into a place.",
+      "level": 1
+    },
+    {
+      "question": "What does 'whisper' mean?",
+      "answers": [
+        "To shout loudly",
+        "To speak very softly",
+        "To sing a song",
+        "To run very fast"
+      ],
+      "correct": 1,
+      "explanation": "To whisper is to speak quietly using your breath.",
+      "level": 1
+    },
+    {
+      "question": "What does 'explore' mean?",
+      "answers": [
+        "To build a wall",
+        "To forget a place",
+        "To stay home all day",
+        "To travel through a place to learn about it"
+      ],
+      "correct": 3,
+      "explanation": "To explore is to travel through an area to discover what is there.",
+      "level": 1
+    },
+    {
+      "question": "What does 'repair' mean?",
+      "answers": [
+        "To hide something away",
+        "To paint something red",
+        "To break something on purpose",
+        "To make something broken work again"
+      ],
+      "correct": 3,
+      "explanation": "To repair means to fix something that is broken.",
+      "level": 1
+    },
+    {
+      "question": "What does 'praise' mean?",
+      "answers": [
+        "To say good things about someone",
+        "To ignore someone completely",
+        "To make someone wait",
+        "To tease someone"
+      ],
+      "correct": 0,
+      "explanation": "To praise is to express approval or admiration.",
+      "level": 1
+    },
+    {
+      "question": "What does 'forgive' mean?",
+      "answers": [
+        "To stop being angry at someone for a wrong",
+        "To blame someone else",
+        "To hide from a friend",
+        "To remember a wrong forever"
+      ],
+      "correct": 0,
+      "explanation": "To forgive is to let go of anger toward someone who did wrong.",
+      "level": 1
+    },
+    {
+      "question": "What does 'wander' mean?",
+      "answers": [
+        "To move around with no clear plan",
+        "To sit perfectly still",
+        "To run a race",
+        "To follow strict directions"
+      ],
+      "correct": 0,
+      "explanation": "To wander means to roam around without a fixed path.",
+      "level": 1
+    },
+    {
+      "question": "What does 'scatter' mean?",
+      "answers": [
+        "To spread things over a wide area",
+        "To count things carefully",
+        "To glue things together",
+        "To pile things neatly"
+      ],
+      "correct": 0,
+      "explanation": "To scatter is to throw or spread things in many directions.",
+      "level": 1
+    },
+    {
+      "question": "What does 'grumpy' mean?",
+      "answers": [
+        "Full of joy and laughter",
+        "Extremely tall",
+        "Very sleepy",
+        "In a bad mood and easily annoyed"
+      ],
+      "correct": 3,
+      "explanation": "Grumpy describes someone who is cranky and irritable.",
+      "level": 1
+    },
+    {
+      "question": "What does 'clever' mean?",
+      "answers": [
+        "Quick to learn and good at solving problems",
+        "Afraid of the dark",
+        "Very loud",
+        "Slow and confused"
+      ],
+      "correct": 0,
+      "explanation": "Clever means smart and quick-thinking.",
+      "level": 1
+    },
+    {
+      "question": "What does 'polite' mean?",
+      "answers": [
+        "Messy and careless",
+        "Shy and silent",
+        "Rude and pushy",
+        "Having good manners and showing respect"
+      ],
+      "correct": 3,
+      "explanation": "Polite means courteous and respectful toward others.",
+      "level": 1
+    },
+    {
+      "question": "What does 'hollow' mean?",
+      "answers": [
+        "Completely solid",
+        "Very heavy",
+        "Having an empty space inside",
+        "Covered in spikes"
+      ],
+      "correct": 2,
+      "explanation": "Something hollow has an empty space inside it.",
+      "level": 1
+    },
+    {
+      "question": "What does 'greedy' mean?",
+      "answers": [
+        "Happy to share with everyone",
+        "Too tired to move",
+        "Afraid of heights",
+        "Wanting more than your fair share"
+      ],
+      "correct": 3,
+      "explanation": "Greedy describes someone who wants more than they need or deserve.",
+      "level": 1
+    },
+    {
+      "question": "What does 'thirsty' mean?",
+      "answers": [
+        "Needing to sleep",
+        "Wanting to play outside",
+        "Needing something to drink",
+        "Feeling very cold"
+      ],
+      "correct": 2,
+      "explanation": "Thirsty means you need or want something to drink.",
+      "level": 1
+    },
+    {
+      "question": "What does 'cozy' mean?",
+      "answers": [
+        "Dark and scary",
+        "Cold and drafty",
+        "Loud and crowded",
+        "Warm, comfortable, and snug"
+      ],
+      "correct": 3,
+      "explanation": "Cozy describes a place that feels warm and comfortable.",
+      "level": 1
+    },
+    {
+      "question": "What does 'neatly' mean?",
+      "answers": [
+        "In a sad, gloomy way",
+        "In a tidy and careful way",
+        "In a loud, noisy way",
+        "In a messy, rushed way"
+      ],
+      "correct": 1,
+      "explanation": "Neatly means done in a tidy, orderly way.",
+      "level": 1
+    },
+    {
+      "question": "What does 'ancestor' mean?",
+      "answers": [
+        "A relative who lived long before you",
+        "A next-door neighbor",
+        "A new classmate",
+        "A younger cousin"
+      ],
+      "correct": 0,
+      "explanation": "An ancestor is a family member from many generations ago.",
+      "level": 2
+    },
+    {
+      "question": "What does 'compromise' mean?",
+      "answers": [
+        "A refusal to talk",
+        "A secret plan",
+        "A complete victory for one side",
+        "An agreement where each side gives up something"
+      ],
+      "correct": 3,
+      "explanation": "A compromise is a deal where both sides give a little.",
+      "level": 2
+    },
+    {
+      "question": "What does 'generosity' mean?",
+      "answers": [
+        "A fear of strangers",
+        "The habit of freely giving to others",
+        "A habit of keeping everything",
+        "A love of loud music"
+      ],
+      "correct": 1,
+      "explanation": "Generosity is the quality of being willing to give and share.",
+      "level": 2
+    },
+    {
+      "question": "What does 'surplus' mean?",
+      "answers": [
+        "An amount that is too small",
+        "A missing piece",
+        "An exact match",
+        "An amount that is more than what is needed"
+      ],
+      "correct": 3,
+      "explanation": "A surplus is an extra amount beyond what is needed.",
+      "level": 2
+    },
+    {
+      "question": "What does 'majority' mean?",
+      "answers": [
+        "The leader of a group",
+        "The smallest part of a group",
+        "A group that meets once",
+        "The greater number or part of a group"
+      ],
+      "correct": 3,
+      "explanation": "The majority is more than half of a group.",
+      "level": 2
+    },
+    {
+      "question": "What does 'reputation' mean?",
+      "answers": [
+        "A person's home address",
+        "What people generally think about someone",
+        "A kind of award ceremony",
+        "A list of chores"
+      ],
+      "correct": 1,
+      "explanation": "Reputation is the general opinion people hold about someone or something.",
+      "level": 2
+    },
+    {
+      "question": "What does 'quarrel' mean?",
+      "answers": [
+        "An angry argument between people",
+        "A friendly handshake",
+        "A quiet game",
+        "A group song"
+      ],
+      "correct": 0,
+      "explanation": "A quarrel is an angry disagreement or argument.",
+      "level": 2
+    },
+    {
+      "question": "What does 'rumor' mean?",
+      "answers": [
+        "A proven scientific fact",
+        "A school rule",
+        "A story passed around that may not be true",
+        "A written apology"
+      ],
+      "correct": 2,
+      "explanation": "A rumor is information spread by word of mouth that may be false.",
+      "level": 2
+    },
+    {
+      "question": "What does 'postpone' mean?",
+      "answers": [
+        "To start early",
+        "To cancel forever",
+        "To move an event to a later time",
+        "To celebrate loudly"
+      ],
+      "correct": 2,
+      "explanation": "To postpone means to delay something until later.",
+      "level": 2
+    },
+    {
+      "question": "What does 'assemble' mean?",
+      "answers": [
+        "To paint a picture",
+        "To take something apart",
+        "To put the parts of something together",
+        "To throw something away"
+      ],
+      "correct": 2,
+      "explanation": "To assemble is to fit parts together to build something.",
+      "level": 2
+    },
+    {
+      "question": "What does 'conserve' mean?",
+      "answers": [
+        "To waste something quickly",
+        "To use something carefully so it lasts",
+        "To sell something",
+        "To borrow something"
+      ],
+      "correct": 1,
+      "explanation": "To conserve means to protect resources by not wasting them.",
+      "level": 2
+    },
+    {
+      "question": "What does 'emphasize' mean?",
+      "answers": [
+        "To hide something from view",
+        "To give special importance to something",
+        "To forget about something",
+        "To speak very quietly"
+      ],
+      "correct": 1,
+      "explanation": "To emphasize is to stress or highlight something as important.",
+      "level": 2
+    },
+    {
+      "question": "What does 'accompany' mean?",
+      "answers": [
+        "To call someone on the phone",
+        "To argue with someone",
+        "To go somewhere with someone",
+        "To leave someone behind"
+      ],
+      "correct": 2,
+      "explanation": "To accompany means to go along with someone.",
+      "level": 2
+    },
+    {
+      "question": "What does 'distract' mean?",
+      "answers": [
+        "To repeat a lesson",
+        "To draw attention away from something",
+        "To help someone focus",
+        "To finish a task quickly"
+      ],
+      "correct": 1,
+      "explanation": "To distract is to pull someone's attention away.",
+      "level": 2
+    },
+    {
+      "question": "What does 'essential' mean?",
+      "answers": [
+        "Extremely old",
+        "Absolutely needed or very important",
+        "Totally useless",
+        "Slightly funny"
+      ],
+      "correct": 1,
+      "explanation": "Essential means necessary and very important.",
+      "level": 2
+    },
+    {
+      "question": "What does 'temporary' mean?",
+      "answers": [
+        "Lasting forever",
+        "Very expensive",
+        "Lasting only for a short time",
+        "Brightly colored"
+      ],
+      "correct": 2,
+      "explanation": "Temporary means not permanent; lasting only a while.",
+      "level": 2
+    },
+    {
+      "question": "What does 'relevant' mean?",
+      "answers": [
+        "Closely connected to the topic",
+        "Very difficult",
+        "Completely unrelated",
+        "Out of date"
+      ],
+      "correct": 0,
+      "explanation": "Relevant means related and important to the subject at hand.",
+      "level": 2
+    },
+    {
+      "question": "What does 'spacious' mean?",
+      "answers": [
+        "Very noisy",
+        "Having lots of room inside",
+        "Cramped and tight",
+        "Brand new"
+      ],
+      "correct": 1,
+      "explanation": "Spacious means roomy and large inside.",
+      "level": 2
+    },
+    {
+      "question": "What does 'dependable' mean?",
+      "answers": [
+        "Likely to break",
+        "Hard to find",
+        "Able to be trusted",
+        "Easy to forget"
+      ],
+      "correct": 2,
+      "explanation": "Dependable means reliable and trustworthy.",
+      "level": 2
+    },
+    {
+      "question": "What does 'fragrant' mean?",
+      "answers": [
+        "Making a loud noise",
+        "Having a bitter taste",
+        "Having a sweet or pleasant smell",
+        "Feeling rough to the touch"
+      ],
+      "correct": 2,
+      "explanation": "Fragrant means having a nice, sweet smell.",
+      "level": 2
+    },
+    {
+      "question": "What does 'nimble' mean?",
+      "answers": [
+        "Quick and light in movement",
+        "Shy and quiet",
+        "Loud and bossy",
+        "Slow and heavy"
+      ],
+      "correct": 0,
+      "explanation": "Nimble means able to move quickly and easily.",
+      "level": 2
+    },
+    {
+      "question": "What does 'briefly' mean?",
+      "answers": [
+        "In a loud voice",
+        "In a careless way",
+        "For a short time",
+        "For many years"
+      ],
+      "correct": 2,
+      "explanation": "Briefly means for only a short time.",
+      "level": 2
+    },
+    {
+      "question": "What does 'anxiously' mean?",
+      "answers": [
+        "In a calm, relaxed way",
+        "In a silly way",
+        "In a worried or nervous way",
+        "In an angry way"
+      ],
+      "correct": 2,
+      "explanation": "Anxiously means in a way that shows worry or nervousness.",
+      "level": 2
+    },
+    {
+      "question": "What does 'skepticism' mean?",
+      "answers": [
+        "An attitude of doubting that claims are true",
+        "A fear of crowds",
+        "Complete trust in every claim",
+        "A feeling of great joy"
+      ],
+      "correct": 0,
+      "explanation": "Skepticism is a questioning attitude that doubts claims until proven.",
+      "level": 3
+    },
+    {
+      "question": "What does 'ambivalence' mean?",
+      "answers": [
+        "Deep sleep",
+        "Mixed feelings about something",
+        "Extreme anger",
+        "Total certainty"
+      ],
+      "correct": 1,
+      "explanation": "Ambivalence means having conflicting or uncertain feelings.",
+      "level": 3
+    },
+    {
+      "question": "What does 'euphoria' mean?",
+      "answers": [
+        "A mild headache",
+        "A feeling of intense happiness and excitement",
+        "A feeling of deep sadness",
+        "A state of boredom"
+      ],
+      "correct": 1,
+      "explanation": "Euphoria is an intense feeling of joy and excitement.",
+      "level": 3
+    },
+    {
+      "question": "What does 'benefactor' mean?",
+      "answers": [
+        "A person who gives money or help to a cause",
+        "A rival in a contest",
+        "A newcomer to a town",
+        "A person who steals"
+      ],
+      "correct": 0,
+      "explanation": "A benefactor is someone who gives support, often money, to help others.",
+      "level": 3
+    },
+    {
+      "question": "What does 'discrepancy' mean?",
+      "answers": [
+        "A difference between things that should match",
+        "A long journey",
+        "A perfect agreement",
+        "A kind of reward"
+      ],
+      "correct": 0,
+      "explanation": "A discrepancy is a mismatch or inconsistency between facts.",
+      "level": 3
+    },
+    {
+      "question": "What does 'proximity' mean?",
+      "answers": [
+        "A loud noise",
+        "A feeling of fear",
+        "The state of being far away",
+        "The state of being near"
+      ],
+      "correct": 3,
+      "explanation": "Proximity means nearness in space or time.",
+      "level": 3
+    },
+    {
+      "question": "What does 'animosity' mean?",
+      "answers": [
+        "Mild curiosity",
+        "Quiet patience",
+        "Strong dislike or ill will",
+        "Warm friendship"
+      ],
+      "correct": 2,
+      "explanation": "Animosity is strong hostility toward someone.",
+      "level": 3
+    },
+    {
+      "question": "What does 'ingenuity' mean?",
+      "answers": [
+        "Skill at inventing clever new ideas",
+        "A love of sleep",
+        "A fear of change",
+        "A lack of imagination"
+      ],
+      "correct": 0,
+      "explanation": "Ingenuity is cleverness and originality in solving problems.",
+      "level": 3
+    },
+    {
+      "question": "What does 'fallacy' mean?",
+      "answers": [
+        "A funny story",
+        "A proven truth",
+        "A mistaken belief or faulty argument",
+        "A famous speech"
+      ],
+      "correct": 2,
+      "explanation": "A fallacy is an idea that is false or based on bad reasoning.",
+      "level": 3
+    },
+    {
+      "question": "What does 'epiphany' mean?",
+      "answers": [
+        "A sudden moment of understanding",
+        "A long period of confusion",
+        "A loud celebration",
+        "A daily routine"
+      ],
+      "correct": 0,
+      "explanation": "An epiphany is a sudden realization or insight.",
+      "level": 3
+    },
+    {
+      "question": "What does 'brevity' mean?",
+      "answers": [
+        "Great physical strength",
+        "The quality of using few words or little time",
+        "A lack of courage",
+        "The habit of talking too much"
+      ],
+      "correct": 1,
+      "explanation": "Brevity means shortness and conciseness.",
+      "level": 3
+    },
+    {
+      "question": "What does 'alleviate' mean?",
+      "answers": [
+        "To make pain worse",
+        "To make pain or trouble less severe",
+        "To ignore a problem",
+        "To cause trouble on purpose"
+      ],
+      "correct": 1,
+      "explanation": "To alleviate is to ease or relieve something unpleasant.",
+      "level": 3
+    },
+    {
+      "question": "What does 'deviate' mean?",
+      "answers": [
+        "To follow a plan exactly",
+        "To stop completely",
+        "To turn away from a usual path or plan",
+        "To speed up"
+      ],
+      "correct": 2,
+      "explanation": "To deviate means to stray from an expected course.",
+      "level": 3
+    },
+    {
+      "question": "What does 'corroborate' mean?",
+      "answers": [
+        "To disprove a claim",
+        "To invent a claim",
+        "To forget a claim",
+        "To support a claim with more evidence"
+      ],
+      "correct": 3,
+      "explanation": "To corroborate is to confirm something with additional evidence.",
+      "level": 3
+    },
+    {
+      "question": "What does 'exacerbate' mean?",
+      "answers": [
+        "To ignore a situation",
+        "To make a bad situation worse",
+        "To describe a situation",
+        "To fix a problem completely"
+      ],
+      "correct": 1,
+      "explanation": "To exacerbate means to make a problem more severe.",
+      "level": 3
+    },
+    {
+      "question": "What does 'relinquish' mean?",
+      "answers": [
+        "To share a secret",
+        "To build something new",
+        "To grab control of something",
+        "To give up control of something"
+      ],
+      "correct": 3,
+      "explanation": "To relinquish is to let go of or surrender something.",
+      "level": 3
+    },
+    {
+      "question": "What does 'deplete' mean?",
+      "answers": [
+        "To hide a supply",
+        "To use up the supply of something",
+        "To refill a supply",
+        "To count a supply"
+      ],
+      "correct": 1,
+      "explanation": "To deplete means to reduce or use up a resource.",
+      "level": 3
+    },
+    {
+      "question": "What does 'disseminate' mean?",
+      "answers": [
+        "To erase information",
+        "To spread information widely",
+        "To keep information secret",
+        "To question information"
+      ],
+      "correct": 1,
+      "explanation": "To disseminate means to circulate information to many people.",
+      "level": 3
+    },
+    {
+      "question": "What does 'vindicate' mean?",
+      "answers": [
+        "To clear someone of blame",
+        "To praise someone's looks",
+        "To accuse someone of a crime",
+        "To forget someone's name"
+      ],
+      "correct": 0,
+      "explanation": "To vindicate is to prove someone was right or not guilty.",
+      "level": 3
+    },
+    {
+      "question": "What does 'arduous' mean?",
+      "answers": [
+        "Fun and relaxing",
+        "Short and simple",
+        "Quick and easy",
+        "Needing great effort and hard work"
+      ],
+      "correct": 3,
+      "explanation": "Arduous means very difficult and tiring.",
+      "level": 3
+    },
+    {
+      "question": "What does 'tangible' mean?",
+      "answers": [
+        "Very fast",
+        "Imaginary and unseen",
+        "Easily broken",
+        "Able to be touched or clearly seen"
+      ],
+      "correct": 3,
+      "explanation": "Tangible means real and able to be touched.",
+      "level": 3
+    },
+    {
+      "question": "What does 'volatile' mean?",
+      "answers": [
+        "Very heavy",
+        "Completely silent",
+        "Always steady",
+        "Likely to change suddenly"
+      ],
+      "correct": 3,
+      "explanation": "Volatile means unstable and liable to change quickly.",
+      "level": 3
+    },
+    {
+      "question": "What does 'verbose' mean?",
+      "answers": [
+        "Unable to speak",
+        "Speaking too softly",
+        "Using more words than needed",
+        "Using very few words"
+      ],
+      "correct": 2,
+      "explanation": "Verbose means wordy or long-winded.",
+      "level": 3
     }
   ],
   "minigame_context_clues": [

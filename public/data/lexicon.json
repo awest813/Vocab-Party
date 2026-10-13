@@ -2777,6 +2777,2897 @@
       ],
       "sentence": "She secretly planned a surprise party.",
       "level": 1
+    },
+    {
+      "word": "journey",
+      "pos": "noun",
+      "definition": "a long trip from one place to another",
+      "synonyms": [
+        "trip",
+        "voyage",
+        "trek"
+      ],
+      "antonyms": [
+        "stay"
+      ],
+      "sentence": "Our journey to Grandma's farm took six hours by car.",
+      "level": 1
+    },
+    {
+      "word": "treasure",
+      "pos": "noun",
+      "definition": "valuable things such as gold, jewels, or coins",
+      "synonyms": [
+        "riches",
+        "valuables",
+        "hoard"
+      ],
+      "antonyms": [
+        "junk",
+        "trash"
+      ],
+      "sentence": "The pirates buried their treasure under a palm tree.",
+      "level": 1
+    },
+    {
+      "word": "shelter",
+      "pos": "noun",
+      "definition": "a place that keeps you safe from weather or harm",
+      "synonyms": [
+        "refuge",
+        "haven",
+        "sanctuary"
+      ],
+      "antonyms": [
+        "exposure"
+      ],
+      "sentence": "We found shelter in a cave when the rain began.",
+      "level": 1
+    },
+    {
+      "word": "laughter",
+      "pos": "noun",
+      "definition": "the sound people make when something is funny",
+      "synonyms": [
+        "giggles",
+        "chuckles",
+        "amusement"
+      ],
+      "antonyms": [
+        "tears"
+      ],
+      "sentence": "Laughter filled the room when the puppy chased its tail.",
+      "level": 1
+    },
+    {
+      "word": "danger",
+      "pos": "noun",
+      "definition": "the chance that something bad or harmful may happen",
+      "synonyms": [
+        "hazard",
+        "peril",
+        "threat"
+      ],
+      "antonyms": [
+        "safety"
+      ],
+      "sentence": "The sign warned hikers of danger near the cliff edge.",
+      "level": 1
+    },
+    {
+      "word": "dawn",
+      "pos": "noun",
+      "definition": "the first light of the day",
+      "synonyms": [
+        "daybreak",
+        "sunrise",
+        "morning"
+      ],
+      "antonyms": [
+        "dusk",
+        "sunset"
+      ],
+      "sentence": "The rooster crows every day at dawn.",
+      "level": 1
+    },
+    {
+      "word": "mistake",
+      "pos": "noun",
+      "definition": "something done in the wrong way by accident",
+      "synonyms": [
+        "blunder",
+        "slip",
+        "oversight"
+      ],
+      "antonyms": [
+        "accuracy"
+      ],
+      "sentence": "I fixed the mistake on my math homework.",
+      "level": 1
+    },
+    {
+      "word": "helper",
+      "pos": "noun",
+      "definition": "a person who gives a hand with a job",
+      "synonyms": [
+        "assistant",
+        "aide",
+        "supporter"
+      ],
+      "antonyms": [
+        "hindrance"
+      ],
+      "sentence": "Mia was the teacher's helper during art class.",
+      "level": 1
+    },
+    {
+      "word": "promise",
+      "pos": "noun",
+      "definition": "words saying you will surely do something",
+      "synonyms": [
+        "pledge",
+        "vow",
+        "oath"
+      ],
+      "antonyms": [
+        "betrayal"
+      ],
+      "sentence": "Ben kept his promise to feed the fish every day.",
+      "level": 1
+    },
+    {
+      "word": "puzzle",
+      "pos": "noun",
+      "definition": "a game or problem that takes thought to solve",
+      "synonyms": [
+        "mystery",
+        "poser",
+        "brainteaser"
+      ],
+      "antonyms": [
+        "solution"
+      ],
+      "sentence": "The puzzle had five hundred tiny pieces.",
+      "level": 1
+    },
+    {
+      "word": "sorrow",
+      "pos": "noun",
+      "definition": "a deep feeling of sadness",
+      "synonyms": [
+        "grief",
+        "misery",
+        "heartache"
+      ],
+      "antonyms": [
+        "joy"
+      ],
+      "sentence": "She felt sorrow when her best friend moved away.",
+      "level": 1
+    },
+    {
+      "word": "crowd",
+      "pos": "noun",
+      "definition": "a large group of people gathered together",
+      "synonyms": [
+        "throng",
+        "mob",
+        "horde"
+      ],
+      "antonyms": [
+        "individual"
+      ],
+      "sentence": "A huge crowd cheered as the runners crossed the line.",
+      "level": 1
+    },
+    {
+      "word": "mess",
+      "pos": "noun",
+      "definition": "a dirty or untidy state of things",
+      "synonyms": [
+        "clutter",
+        "jumble",
+        "disarray"
+      ],
+      "antonyms": [
+        "tidiness",
+        "order"
+      ],
+      "sentence": "After the party, the kitchen was a total mess.",
+      "level": 1
+    },
+    {
+      "word": "reward",
+      "pos": "noun",
+      "definition": "something given in return for good work",
+      "synonyms": [
+        "prize",
+        "bonus",
+        "award"
+      ],
+      "antonyms": [
+        "penalty",
+        "punishment"
+      ],
+      "sentence": "The reward for finding the lost dog was ten dollars.",
+      "level": 1
+    },
+    {
+      "word": "storm",
+      "pos": "noun",
+      "definition": "bad weather with strong wind and rain",
+      "synonyms": [
+        "tempest",
+        "gale",
+        "squall"
+      ],
+      "antonyms": [
+        "calm"
+      ],
+      "sentence": "The storm knocked a branch onto our fence.",
+      "level": 1
+    },
+    {
+      "word": "noise",
+      "pos": "noun",
+      "definition": "a loud or unpleasant sound",
+      "synonyms": [
+        "din",
+        "racket",
+        "clamor"
+      ],
+      "antonyms": [
+        "quiet",
+        "hush"
+      ],
+      "sentence": "The noise from the street kept me awake.",
+      "level": 1
+    },
+    {
+      "word": "friendship",
+      "pos": "noun",
+      "definition": "the bond between people who like each other",
+      "synonyms": [
+        "companionship",
+        "fellowship",
+        "camaraderie"
+      ],
+      "antonyms": [
+        "rivalry",
+        "hostility"
+      ],
+      "sentence": "Their friendship began on the first day of school.",
+      "level": 1
+    },
+    {
+      "word": "enemy",
+      "pos": "noun",
+      "definition": "someone who is against you or wants to harm you",
+      "synonyms": [
+        "foe",
+        "nemesis",
+        "archrival"
+      ],
+      "antonyms": [
+        "friend",
+        "ally"
+      ],
+      "sentence": "In the story, the dragon was the knight's enemy.",
+      "level": 1
+    },
+    {
+      "word": "beauty",
+      "pos": "noun",
+      "definition": "the quality of being pleasing to look at",
+      "synonyms": [
+        "loveliness",
+        "charm",
+        "elegance"
+      ],
+      "antonyms": [
+        "ugliness"
+      ],
+      "sentence": "We stopped to admire the beauty of the sunset.",
+      "level": 1
+    },
+    {
+      "word": "hunger",
+      "pos": "noun",
+      "definition": "the feeling of needing food",
+      "synonyms": [
+        "appetite",
+        "craving",
+        "starvation"
+      ],
+      "antonyms": [
+        "fullness"
+      ],
+      "sentence": "After soccer practice, my hunger made my stomach growl.",
+      "level": 1
+    },
+    {
+      "word": "visitor",
+      "pos": "noun",
+      "definition": "someone who comes to see a person or place",
+      "synonyms": [
+        "guest",
+        "caller",
+        "tourist"
+      ],
+      "antonyms": [
+        "host",
+        "resident"
+      ],
+      "sentence": "A visitor knocked on our door during dinner.",
+      "level": 1
+    },
+    {
+      "word": "cottage",
+      "pos": "noun",
+      "definition": "a small, cozy house, often in the country",
+      "synonyms": [
+        "cabin",
+        "hut",
+        "lodge"
+      ],
+      "antonyms": [
+        "mansion",
+        "palace"
+      ],
+      "sentence": "We rented a cottage by the lake for the summer.",
+      "level": 1
+    },
+    {
+      "word": "bottom",
+      "pos": "noun",
+      "definition": "the lowest part of something",
+      "synonyms": [
+        "base",
+        "foot",
+        "floor"
+      ],
+      "antonyms": [
+        "top",
+        "peak"
+      ],
+      "sentence": "A shiny coin sat at the bottom of the fountain.",
+      "level": 1
+    },
+    {
+      "word": "adventure",
+      "pos": "noun",
+      "definition": "an exciting or daring experience",
+      "synonyms": [
+        "quest",
+        "expedition",
+        "escapade"
+      ],
+      "antonyms": [
+        "routine"
+      ],
+      "sentence": "Camping in the woods was a real adventure.",
+      "level": 1
+    },
+    {
+      "word": "entrance",
+      "pos": "noun",
+      "definition": "a door or opening that lets you go in",
+      "synonyms": [
+        "doorway",
+        "entry",
+        "gateway"
+      ],
+      "antonyms": [
+        "exit"
+      ],
+      "sentence": "Meet me at the front entrance of the museum.",
+      "level": 1
+    },
+    {
+      "word": "whisper",
+      "pos": "verb",
+      "definition": "to speak very softly using your breath",
+      "synonyms": [
+        "murmur",
+        "mutter",
+        "breathe"
+      ],
+      "antonyms": [
+        "shout",
+        "yell"
+      ],
+      "sentence": "Please whisper in the library so others can read.",
+      "level": 1
+    },
+    {
+      "word": "explore",
+      "pos": "verb",
+      "definition": "to travel through a place to learn about it",
+      "synonyms": [
+        "investigate",
+        "scout",
+        "survey"
+      ],
+      "antonyms": [
+        "ignore"
+      ],
+      "sentence": "We will explore the tide pools at low tide.",
+      "level": 1
+    },
+    {
+      "word": "arrive",
+      "pos": "verb",
+      "definition": "to reach a place at the end of a trip",
+      "synonyms": [
+        "reach",
+        "come",
+        "land"
+      ],
+      "antonyms": [
+        "depart",
+        "leave"
+      ],
+      "sentence": "The bus should arrive at school by eight.",
+      "level": 1
+    },
+    {
+      "word": "climb",
+      "pos": "verb",
+      "definition": "to go up something using hands and feet",
+      "synonyms": [
+        "ascend",
+        "scale",
+        "mount"
+      ],
+      "antonyms": [
+        "descend"
+      ],
+      "sentence": "The kids love to climb the rope at the park.",
+      "level": 1
+    },
+    {
+      "word": "repair",
+      "pos": "verb",
+      "definition": "to make something broken work again",
+      "synonyms": [
+        "fix",
+        "mend",
+        "restore"
+      ],
+      "antonyms": [
+        "break",
+        "damage"
+      ],
+      "sentence": "Dad helped me repair the flat tire on my bike.",
+      "level": 1
+    },
+    {
+      "word": "discover",
+      "pos": "verb",
+      "definition": "to find something for the first time",
+      "synonyms": [
+        "uncover",
+        "detect",
+        "unearth"
+      ],
+      "antonyms": [
+        "miss"
+      ],
+      "sentence": "Scientists hope to discover new kinds of deep-sea fish.",
+      "level": 1
+    },
+    {
+      "word": "praise",
+      "pos": "verb",
+      "definition": "to say good things about someone",
+      "synonyms": [
+        "compliment",
+        "applaud",
+        "laud"
+      ],
+      "antonyms": [
+        "criticize",
+        "scold"
+      ],
+      "sentence": "Coach likes to praise players who work hard.",
+      "level": 1
+    },
+    {
+      "word": "expand",
+      "pos": "verb",
+      "definition": "to grow larger or spread out",
+      "synonyms": [
+        "widen",
+        "enlarge",
+        "swell"
+      ],
+      "antonyms": [
+        "contract",
+        "shrink"
+      ],
+      "sentence": "A balloon will expand as you blow air into it.",
+      "level": 1
+    },
+    {
+      "word": "invite",
+      "pos": "verb",
+      "definition": "to ask someone to come to an event",
+      "synonyms": [
+        "summon",
+        "welcome",
+        "request"
+      ],
+      "antonyms": [
+        "exclude"
+      ],
+      "sentence": "Let's invite the whole class to the picnic.",
+      "level": 1
+    },
+    {
+      "word": "forgive",
+      "pos": "verb",
+      "definition": "to stop being angry at someone for a wrong",
+      "synonyms": [
+        "pardon",
+        "excuse",
+        "absolve"
+      ],
+      "antonyms": [
+        "blame",
+        "resent"
+      ],
+      "sentence": "It took a day, but I chose to forgive my brother.",
+      "level": 1
+    },
+    {
+      "word": "complain",
+      "pos": "verb",
+      "definition": "to say you are unhappy about something",
+      "synonyms": [
+        "grumble",
+        "whine",
+        "gripe"
+      ],
+      "antonyms": [
+        "approve"
+      ],
+      "sentence": "My sister likes to complain about doing the dishes.",
+      "level": 1
+    },
+    {
+      "word": "protect",
+      "pos": "verb",
+      "definition": "to keep someone or something safe from harm",
+      "synonyms": [
+        "guard",
+        "shield",
+        "defend"
+      ],
+      "antonyms": [
+        "endanger",
+        "attack"
+      ],
+      "sentence": "Sunscreen helps protect your skin from sunburn.",
+      "level": 1
+    },
+    {
+      "word": "wander",
+      "pos": "verb",
+      "definition": "to move around with no clear plan or path",
+      "synonyms": [
+        "roam",
+        "ramble",
+        "drift"
+      ],
+      "antonyms": [
+        "settle"
+      ],
+      "sentence": "The goats wander across the hill all afternoon.",
+      "level": 1
+    },
+    {
+      "word": "decide",
+      "pos": "verb",
+      "definition": "to make up your mind about something",
+      "synonyms": [
+        "choose",
+        "resolve",
+        "conclude"
+      ],
+      "antonyms": [
+        "hesitate",
+        "waver"
+      ],
+      "sentence": "We need to decide which movie to watch.",
+      "level": 1
+    },
+    {
+      "word": "finish",
+      "pos": "verb",
+      "definition": "to bring something to an end",
+      "synonyms": [
+        "complete",
+        "end",
+        "close"
+      ],
+      "antonyms": [
+        "start",
+        "begin"
+      ],
+      "sentence": "Please finish your snack before recess is over.",
+      "level": 1
+    },
+    {
+      "word": "remember",
+      "pos": "verb",
+      "definition": "to bring back to mind from the past",
+      "synonyms": [
+        "recall",
+        "recollect",
+        "reminisce"
+      ],
+      "antonyms": [
+        "forget"
+      ],
+      "sentence": "I always remember to water the plants on Monday.",
+      "level": 1
+    },
+    {
+      "word": "grab",
+      "pos": "verb",
+      "definition": "to take hold of something quickly",
+      "synonyms": [
+        "seize",
+        "snatch",
+        "clutch"
+      ],
+      "antonyms": [
+        "release"
+      ],
+      "sentence": "Be sure to grab your coat before we go outside.",
+      "level": 1
+    },
+    {
+      "word": "tumble",
+      "pos": "verb",
+      "definition": "to fall over and roll in a sudden way",
+      "synonyms": [
+        "topple",
+        "stumble",
+        "plunge"
+      ],
+      "antonyms": [
+        "rise"
+      ],
+      "sentence": "The clothes tumble around and around in the dryer.",
+      "level": 1
+    },
+    {
+      "word": "carry",
+      "pos": "verb",
+      "definition": "to hold something while moving it",
+      "synonyms": [
+        "haul",
+        "lug",
+        "tote"
+      ],
+      "antonyms": [
+        "drop"
+      ],
+      "sentence": "Please help me carry these groceries inside.",
+      "level": 1
+    },
+    {
+      "word": "hurry",
+      "pos": "verb",
+      "definition": "to move or act fast",
+      "synonyms": [
+        "rush",
+        "dash",
+        "scurry"
+      ],
+      "antonyms": [
+        "dawdle"
+      ],
+      "sentence": "We must hurry or we will miss the bus.",
+      "level": 1
+    },
+    {
+      "word": "obey",
+      "pos": "verb",
+      "definition": "to do what a rule or person tells you",
+      "synonyms": [
+        "follow",
+        "heed",
+        "mind"
+      ],
+      "antonyms": [
+        "disobey",
+        "defy"
+      ],
+      "sentence": "Good dogs obey when their owner says sit.",
+      "level": 1
+    },
+    {
+      "word": "connect",
+      "pos": "verb",
+      "definition": "to join two or more things together",
+      "synonyms": [
+        "link",
+        "attach",
+        "fasten"
+      ],
+      "antonyms": [
+        "disconnect",
+        "separate"
+      ],
+      "sentence": "You must connect the red wire to light the bulb.",
+      "level": 1
+    },
+    {
+      "word": "teach",
+      "pos": "verb",
+      "definition": "to help someone learn a skill or subject",
+      "synonyms": [
+        "instruct",
+        "educate",
+        "train"
+      ],
+      "antonyms": [
+        "learn"
+      ],
+      "sentence": "My grandpa will teach me how to fish.",
+      "level": 1
+    },
+    {
+      "word": "lift",
+      "pos": "verb",
+      "definition": "to move something up to a higher place",
+      "synonyms": [
+        "raise",
+        "hoist",
+        "elevate"
+      ],
+      "antonyms": [
+        "lower"
+      ],
+      "sentence": "It took two of us to lift the heavy box.",
+      "level": 1
+    },
+    {
+      "word": "scatter",
+      "pos": "verb",
+      "definition": "to throw or spread things over a wide area",
+      "synonyms": [
+        "spread",
+        "sprinkle",
+        "strew"
+      ],
+      "antonyms": [
+        "gather",
+        "collect"
+      ],
+      "sentence": "The wind will scatter the leaves across the yard.",
+      "level": 1
+    },
+    {
+      "word": "grumpy",
+      "pos": "adjective",
+      "definition": "in a bad mood and easily annoyed",
+      "synonyms": [
+        "cranky",
+        "grouchy",
+        "irritable"
+      ],
+      "antonyms": [
+        "cheerful",
+        "pleasant"
+      ],
+      "sentence": "Dad is grumpy until he has his morning coffee.",
+      "level": 1
+    },
+    {
+      "word": "clever",
+      "pos": "adjective",
+      "definition": "quick to learn and good at solving problems",
+      "synonyms": [
+        "bright",
+        "witty",
+        "ingenious"
+      ],
+      "antonyms": [
+        "foolish",
+        "dim"
+      ],
+      "sentence": "The clever fox found a way around the fence.",
+      "level": 1
+    },
+    {
+      "word": "noisy",
+      "pos": "adjective",
+      "definition": "making a lot of loud sound",
+      "synonyms": [
+        "rowdy",
+        "boisterous",
+        "clamorous"
+      ],
+      "antonyms": [
+        "quiet",
+        "silent"
+      ],
+      "sentence": "The cafeteria gets very noisy at lunchtime.",
+      "level": 1
+    },
+    {
+      "word": "polite",
+      "pos": "adjective",
+      "definition": "having good manners and showing respect",
+      "synonyms": [
+        "courteous",
+        "respectful",
+        "mannerly"
+      ],
+      "antonyms": [
+        "rude"
+      ],
+      "sentence": "It is polite to say thank you for a gift.",
+      "level": 1
+    },
+    {
+      "word": "delicious",
+      "pos": "adjective",
+      "definition": "tasting or smelling very good",
+      "synonyms": [
+        "tasty",
+        "yummy",
+        "scrumptious"
+      ],
+      "antonyms": [
+        "disgusting",
+        "bland"
+      ],
+      "sentence": "Grandma baked a delicious apple pie.",
+      "level": 1
+    },
+    {
+      "word": "shiny",
+      "pos": "adjective",
+      "definition": "bright because it reflects light",
+      "synonyms": [
+        "glossy",
+        "gleaming",
+        "polished"
+      ],
+      "antonyms": [
+        "dull"
+      ],
+      "sentence": "She found a shiny penny on the sidewalk.",
+      "level": 1
+    },
+    {
+      "word": "muddy",
+      "pos": "adjective",
+      "definition": "covered with wet, soft dirt",
+      "synonyms": [
+        "dirty",
+        "grimy",
+        "filthy"
+      ],
+      "antonyms": [
+        "clean"
+      ],
+      "sentence": "Take off your muddy boots at the door.",
+      "level": 1
+    },
+    {
+      "word": "lonely",
+      "pos": "adjective",
+      "definition": "sad because you are alone",
+      "synonyms": [
+        "lonesome",
+        "isolated",
+        "friendless"
+      ],
+      "antonyms": [
+        "sociable"
+      ],
+      "sentence": "The new kid felt lonely at recess.",
+      "level": 1
+    },
+    {
+      "word": "proud",
+      "pos": "adjective",
+      "definition": "pleased about something you or others did",
+      "synonyms": [
+        "gratified",
+        "elated",
+        "satisfied"
+      ],
+      "antonyms": [
+        "ashamed"
+      ],
+      "sentence": "Maya was proud of her science fair project.",
+      "level": 1
+    },
+    {
+      "word": "fluffy",
+      "pos": "adjective",
+      "definition": "soft, light, and full of air",
+      "synonyms": [
+        "fuzzy",
+        "downy",
+        "feathery"
+      ],
+      "antonyms": [
+        "coarse",
+        "flat"
+      ],
+      "sentence": "The kitten had fluffy white fur.",
+      "level": 1
+    },
+    {
+      "word": "hollow",
+      "pos": "adjective",
+      "definition": "having an empty space inside",
+      "synonyms": [
+        "empty",
+        "vacant",
+        "unfilled"
+      ],
+      "antonyms": [
+        "solid",
+        "full"
+      ],
+      "sentence": "An owl lived inside the hollow tree.",
+      "level": 1
+    },
+    {
+      "word": "sleepy",
+      "pos": "adjective",
+      "definition": "tired and ready to rest",
+      "synonyms": [
+        "weary",
+        "groggy",
+        "dozy"
+      ],
+      "antonyms": [
+        "alert",
+        "awake"
+      ],
+      "sentence": "The long car ride made me sleepy.",
+      "level": 1
+    },
+    {
+      "word": "greedy",
+      "pos": "adjective",
+      "definition": "wanting more than your fair share",
+      "synonyms": [
+        "grasping",
+        "hoggish",
+        "covetous"
+      ],
+      "antonyms": [
+        "generous"
+      ],
+      "sentence": "The greedy squirrel took all the seeds.",
+      "level": 1
+    },
+    {
+      "word": "thirsty",
+      "pos": "adjective",
+      "definition": "needing or wanting something to drink",
+      "synonyms": [
+        "parched",
+        "dry",
+        "dehydrated"
+      ],
+      "antonyms": [
+        "quenched"
+      ],
+      "sentence": "After the race, everyone was thirsty.",
+      "level": 1
+    },
+    {
+      "word": "silly",
+      "pos": "adjective",
+      "definition": "funny in a foolish or playful way",
+      "synonyms": [
+        "goofy",
+        "absurd",
+        "zany"
+      ],
+      "antonyms": [
+        "serious",
+        "sensible"
+      ],
+      "sentence": "My brother made a silly face for the photo.",
+      "level": 1
+    },
+    {
+      "word": "bumpy",
+      "pos": "adjective",
+      "definition": "having many lumps or rough spots",
+      "synonyms": [
+        "rough",
+        "uneven",
+        "jolting"
+      ],
+      "antonyms": [
+        "smooth",
+        "even"
+      ],
+      "sentence": "The bumpy road made our wagon shake.",
+      "level": 1
+    },
+    {
+      "word": "cozy",
+      "pos": "adjective",
+      "definition": "warm, comfortable, and snug",
+      "synonyms": [
+        "comfy",
+        "homey",
+        "toasty"
+      ],
+      "antonyms": [
+        "uncomfortable",
+        "chilly"
+      ],
+      "sentence": "We read books in a cozy corner by the fire.",
+      "level": 1
+    },
+    {
+      "word": "angry",
+      "pos": "adjective",
+      "definition": "feeling strong displeasure toward someone",
+      "synonyms": [
+        "mad",
+        "furious",
+        "cross"
+      ],
+      "antonyms": [
+        "calm",
+        "content"
+      ],
+      "sentence": "Max was angry when his tower got knocked down.",
+      "level": 1
+    },
+    {
+      "word": "tidy",
+      "pos": "adjective",
+      "definition": "neat and in good order",
+      "synonyms": [
+        "orderly",
+        "trim",
+        "shipshape"
+      ],
+      "antonyms": [
+        "messy",
+        "sloppy"
+      ],
+      "sentence": "Keep your desk tidy so you can find things.",
+      "level": 1
+    },
+    {
+      "word": "jolly",
+      "pos": "adjective",
+      "definition": "happy and full of good cheer",
+      "synonyms": [
+        "jovial",
+        "cheery",
+        "festive"
+      ],
+      "antonyms": [
+        "glum"
+      ],
+      "sentence": "The jolly baker hummed while he worked.",
+      "level": 1
+    },
+    {
+      "word": "politely",
+      "pos": "adverb",
+      "definition": "in a way that shows good manners",
+      "synonyms": [
+        "courteously",
+        "respectfully",
+        "graciously"
+      ],
+      "antonyms": [
+        "rudely"
+      ],
+      "sentence": "She politely asked for a second helping.",
+      "level": 1
+    },
+    {
+      "word": "neatly",
+      "pos": "adverb",
+      "definition": "in a tidy and careful way",
+      "synonyms": [
+        "tidily",
+        "trimly",
+        "methodically"
+      ],
+      "antonyms": [
+        "messily",
+        "sloppily"
+      ],
+      "sentence": "He folded his shirts neatly in the drawer.",
+      "level": 1
+    },
+    {
+      "word": "angrily",
+      "pos": "adverb",
+      "definition": "in a mad or upset way",
+      "synonyms": [
+        "furiously",
+        "crossly",
+        "irately"
+      ],
+      "antonyms": [
+        "calmly"
+      ],
+      "sentence": "The cat hissed angrily at the dog.",
+      "level": 1
+    },
+    {
+      "word": "brightly",
+      "pos": "adverb",
+      "definition": "with a lot of light or color",
+      "synonyms": [
+        "radiantly",
+        "brilliantly",
+        "vividly"
+      ],
+      "antonyms": [
+        "dimly"
+      ],
+      "sentence": "The stars shone brightly over the campsite.",
+      "level": 1
+    },
+    {
+      "word": "joyfully",
+      "pos": "adverb",
+      "definition": "in a very happy way",
+      "synonyms": [
+        "jubilantly",
+        "blissfully",
+        "elatedly"
+      ],
+      "antonyms": [
+        "sadly",
+        "sorrowfully"
+      ],
+      "sentence": "The children sang joyfully at the party.",
+      "level": 1
+    },
+    {
+      "word": "ancestor",
+      "pos": "noun",
+      "definition": "a relative who lived long before you",
+      "synonyms": [
+        "forebear",
+        "forefather",
+        "predecessor"
+      ],
+      "antonyms": [
+        "descendant"
+      ],
+      "sentence": "My ancestor sailed from Ireland over a hundred years ago.",
+      "level": 2
+    },
+    {
+      "word": "compromise",
+      "pos": "noun",
+      "definition": "an agreement where each side gives up something",
+      "synonyms": [
+        "concession",
+        "settlement",
+        "tradeoff"
+      ],
+      "antonyms": [
+        "deadlock"
+      ],
+      "sentence": "The twins reached a compromise about the TV remote.",
+      "level": 2
+    },
+    {
+      "word": "confidence",
+      "pos": "noun",
+      "definition": "a belief in yourself and your abilities",
+      "synonyms": [
+        "assurance",
+        "poise",
+        "boldness"
+      ],
+      "antonyms": [
+        "doubt",
+        "insecurity"
+      ],
+      "sentence": "Practice gave her confidence before the spelling bee.",
+      "level": 2
+    },
+    {
+      "word": "generosity",
+      "pos": "noun",
+      "definition": "the habit of freely giving to others",
+      "synonyms": [
+        "bounty",
+        "liberality",
+        "largesse"
+      ],
+      "antonyms": [
+        "greed",
+        "stinginess"
+      ],
+      "sentence": "The family's generosity helped the food bank feed hundreds.",
+      "level": 2
+    },
+    {
+      "word": "citizen",
+      "pos": "noun",
+      "definition": "a legal member of a country or town",
+      "synonyms": [
+        "resident",
+        "national",
+        "native"
+      ],
+      "antonyms": [
+        "foreigner",
+        "alien"
+      ],
+      "sentence": "Every citizen over eighteen can vote in the election.",
+      "level": 2
+    },
+    {
+      "word": "patience",
+      "pos": "noun",
+      "definition": "the ability to wait calmly without getting upset",
+      "synonyms": [
+        "forbearance",
+        "composure",
+        "restraint"
+      ],
+      "antonyms": [
+        "impatience"
+      ],
+      "sentence": "Fishing takes a lot of patience and quiet.",
+      "level": 2
+    },
+    {
+      "word": "surplus",
+      "pos": "noun",
+      "definition": "an amount that is more than what is needed",
+      "synonyms": [
+        "excess",
+        "surfeit",
+        "glut"
+      ],
+      "antonyms": [
+        "deficit",
+        "shortage"
+      ],
+      "sentence": "The farm had a surplus of tomatoes this summer.",
+      "level": 2
+    },
+    {
+      "word": "majority",
+      "pos": "noun",
+      "definition": "the greater number or part of a group",
+      "synonyms": [
+        "bulk",
+        "mass",
+        "preponderance"
+      ],
+      "antonyms": [
+        "minority"
+      ],
+      "sentence": "The majority of students voted for a longer recess.",
+      "level": 2
+    },
+    {
+      "word": "freedom",
+      "pos": "noun",
+      "definition": "the power to act or speak without limits",
+      "synonyms": [
+        "liberty",
+        "autonomy",
+        "independence"
+      ],
+      "antonyms": [
+        "captivity"
+      ],
+      "sentence": "Summer break gives kids the freedom to explore.",
+      "level": 2
+    },
+    {
+      "word": "reputation",
+      "pos": "noun",
+      "definition": "what people generally think about someone",
+      "synonyms": [
+        "standing",
+        "repute",
+        "prestige"
+      ],
+      "antonyms": [
+        "disgrace"
+      ],
+      "sentence": "The bakery has a reputation for the best bagels in town.",
+      "level": 2
+    },
+    {
+      "word": "conclusion",
+      "pos": "noun",
+      "definition": "the end or last part of something",
+      "synonyms": [
+        "ending",
+        "finale",
+        "termination"
+      ],
+      "antonyms": [
+        "introduction",
+        "opening"
+      ],
+      "sentence": "The conclusion of the book surprised everyone.",
+      "level": 2
+    },
+    {
+      "word": "quarrel",
+      "pos": "noun",
+      "definition": "an angry argument between people",
+      "synonyms": [
+        "squabble",
+        "spat",
+        "feud"
+      ],
+      "antonyms": [
+        "truce",
+        "agreement"
+      ],
+      "sentence": "The quarrel over the last cookie ended in giggles.",
+      "level": 2
+    },
+    {
+      "word": "rumor",
+      "pos": "noun",
+      "definition": "a story passed around that may not be true",
+      "synonyms": [
+        "gossip",
+        "hearsay",
+        "buzz"
+      ],
+      "antonyms": [
+        "fact"
+      ],
+      "sentence": "A rumor spread that school would close early.",
+      "level": 2
+    },
+    {
+      "word": "debate",
+      "pos": "noun",
+      "definition": "a formal talk where people argue different sides",
+      "synonyms": [
+        "discussion",
+        "deliberation",
+        "discourse"
+      ],
+      "antonyms": [
+        "consensus"
+      ],
+      "sentence": "Our class held a debate about school uniforms.",
+      "level": 2
+    },
+    {
+      "word": "portion",
+      "pos": "noun",
+      "definition": "a part or share of something larger",
+      "synonyms": [
+        "segment",
+        "serving",
+        "fraction"
+      ],
+      "antonyms": [
+        "whole"
+      ],
+      "sentence": "Each camper got a portion of the trail mix.",
+      "level": 2
+    },
+    {
+      "word": "postpone",
+      "pos": "verb",
+      "definition": "to move an event to a later time",
+      "synonyms": [
+        "delay",
+        "defer",
+        "shelve"
+      ],
+      "antonyms": [
+        "expedite",
+        "advance"
+      ],
+      "sentence": "Rain forced us to postpone the soccer game.",
+      "level": 2
+    },
+    {
+      "word": "assemble",
+      "pos": "verb",
+      "definition": "to put the parts of something together",
+      "synonyms": [
+        "build",
+        "construct",
+        "erect"
+      ],
+      "antonyms": [
+        "dismantle"
+      ],
+      "sentence": "We had to assemble the new bookshelf ourselves.",
+      "level": 2
+    },
+    {
+      "word": "conserve",
+      "pos": "verb",
+      "definition": "to use something carefully so it lasts",
+      "synonyms": [
+        "preserve",
+        "safeguard",
+        "economize"
+      ],
+      "antonyms": [
+        "waste",
+        "squander"
+      ],
+      "sentence": "Turn off the lights to conserve energy.",
+      "level": 2
+    },
+    {
+      "word": "admit",
+      "pos": "verb",
+      "definition": "to agree that something is true, often unwillingly",
+      "synonyms": [
+        "confess",
+        "acknowledge",
+        "concede"
+      ],
+      "antonyms": [
+        "deny"
+      ],
+      "sentence": "I had to admit that I broke the vase.",
+      "level": 2
+    },
+    {
+      "word": "respond",
+      "pos": "verb",
+      "definition": "to give a reply to something said or asked",
+      "synonyms": [
+        "answer",
+        "react",
+        "retort"
+      ],
+      "antonyms": [
+        "ignore"
+      ],
+      "sentence": "Please respond to the invitation by Friday.",
+      "level": 2
+    },
+    {
+      "word": "criticize",
+      "pos": "verb",
+      "definition": "to point out what is wrong with something",
+      "synonyms": [
+        "critique",
+        "fault",
+        "condemn"
+      ],
+      "antonyms": [
+        "praise",
+        "commend"
+      ],
+      "sentence": "It is easy to criticize but hard to help.",
+      "level": 2
+    },
+    {
+      "word": "emphasize",
+      "pos": "verb",
+      "definition": "to give special importance to something",
+      "synonyms": [
+        "stress",
+        "highlight",
+        "underline"
+      ],
+      "antonyms": [
+        "downplay"
+      ],
+      "sentence": "Teachers emphasize key ideas by writing them on the board.",
+      "level": 2
+    },
+    {
+      "word": "encounter",
+      "pos": "verb",
+      "definition": "to meet or come upon, often by surprise",
+      "synonyms": [
+        "confront",
+        "face",
+        "experience"
+      ],
+      "antonyms": [
+        "avoid",
+        "evade"
+      ],
+      "sentence": "Hikers may encounter deer on the trail.",
+      "level": 2
+    },
+    {
+      "word": "accompany",
+      "pos": "verb",
+      "definition": "to go somewhere with someone",
+      "synonyms": [
+        "escort",
+        "attend",
+        "chaperone"
+      ],
+      "antonyms": [
+        "abandon",
+        "leave"
+      ],
+      "sentence": "My aunt will accompany us to the zoo.",
+      "level": 2
+    },
+    {
+      "word": "reduce",
+      "pos": "verb",
+      "definition": "to make something smaller in size or amount",
+      "synonyms": [
+        "cut",
+        "curtail",
+        "pare"
+      ],
+      "antonyms": [
+        "increase",
+        "raise"
+      ],
+      "sentence": "We reduce waste by recycling cans and paper.",
+      "level": 2
+    },
+    {
+      "word": "consume",
+      "pos": "verb",
+      "definition": "to eat, drink, or use up something",
+      "synonyms": [
+        "devour",
+        "ingest",
+        "expend"
+      ],
+      "antonyms": [
+        "produce",
+        "save"
+      ],
+      "sentence": "Big trucks consume a lot of fuel.",
+      "level": 2
+    },
+    {
+      "word": "recognize",
+      "pos": "verb",
+      "definition": "to know someone or something from before",
+      "synonyms": [
+        "identify",
+        "spot",
+        "distinguish"
+      ],
+      "antonyms": [
+        "overlook"
+      ],
+      "sentence": "I did not recognize my cousin after his haircut.",
+      "level": 2
+    },
+    {
+      "word": "distract",
+      "pos": "verb",
+      "definition": "to draw attention away from something",
+      "synonyms": [
+        "sidetrack",
+        "divert",
+        "preoccupy"
+      ],
+      "antonyms": [
+        "focus",
+        "concentrate"
+      ],
+      "sentence": "Loud music can distract you from homework.",
+      "level": 2
+    },
+    {
+      "word": "display",
+      "pos": "verb",
+      "definition": "to put something where people can see it",
+      "synonyms": [
+        "exhibit",
+        "present",
+        "showcase"
+      ],
+      "antonyms": [
+        "conceal",
+        "hide"
+      ],
+      "sentence": "The museum will display ancient coins.",
+      "level": 2
+    },
+    {
+      "word": "struggle",
+      "pos": "verb",
+      "definition": "to try very hard against something difficult",
+      "synonyms": [
+        "strive",
+        "toil",
+        "grapple"
+      ],
+      "antonyms": [
+        "relax",
+        "coast"
+      ],
+      "sentence": "Many students struggle with fractions at first.",
+      "level": 2
+    },
+    {
+      "word": "vibrant",
+      "pos": "adjective",
+      "definition": "bright, lively, and full of energy",
+      "synonyms": [
+        "spirited",
+        "dynamic",
+        "vivacious"
+      ],
+      "antonyms": [
+        "dull",
+        "drab"
+      ],
+      "sentence": "The mural was painted in vibrant colors.",
+      "level": 2
+    },
+    {
+      "word": "ridiculous",
+      "pos": "adjective",
+      "definition": "so silly that it makes people laugh",
+      "synonyms": [
+        "ludicrous",
+        "preposterous",
+        "laughable"
+      ],
+      "antonyms": [
+        "reasonable",
+        "sensible"
+      ],
+      "sentence": "Wearing a snowsuit to the beach would look ridiculous.",
+      "level": 2
+    },
+    {
+      "word": "essential",
+      "pos": "adjective",
+      "definition": "absolutely needed or very important",
+      "synonyms": [
+        "vital",
+        "crucial",
+        "indispensable"
+      ],
+      "antonyms": [
+        "unnecessary",
+        "optional"
+      ],
+      "sentence": "Water is essential for all living things.",
+      "level": 2
+    },
+    {
+      "word": "temporary",
+      "pos": "adjective",
+      "definition": "lasting only for a short time",
+      "synonyms": [
+        "brief",
+        "fleeting",
+        "passing"
+      ],
+      "antonyms": [
+        "permanent"
+      ],
+      "sentence": "The cast on my arm is only temporary.",
+      "level": 2
+    },
+    {
+      "word": "relevant",
+      "pos": "adjective",
+      "definition": "closely connected to the topic at hand",
+      "synonyms": [
+        "pertinent",
+        "applicable",
+        "related"
+      ],
+      "antonyms": [
+        "irrelevant",
+        "unrelated"
+      ],
+      "sentence": "Only include facts that are relevant to your essay.",
+      "level": 2
+    },
+    {
+      "word": "complex",
+      "pos": "adjective",
+      "definition": "made of many parts that are hard to understand",
+      "synonyms": [
+        "complicated",
+        "involved",
+        "convoluted"
+      ],
+      "antonyms": [
+        "simple"
+      ],
+      "sentence": "The human brain is incredibly complex.",
+      "level": 2
+    },
+    {
+      "word": "typical",
+      "pos": "adjective",
+      "definition": "normal for a certain person, place, or thing",
+      "synonyms": [
+        "usual",
+        "standard",
+        "customary"
+      ],
+      "antonyms": [
+        "unusual",
+        "atypical"
+      ],
+      "sentence": "A typical school day starts at eight.",
+      "level": 2
+    },
+    {
+      "word": "hilarious",
+      "pos": "adjective",
+      "definition": "extremely funny",
+      "synonyms": [
+        "comical",
+        "uproarious",
+        "riotous"
+      ],
+      "antonyms": [
+        "solemn",
+        "serious"
+      ],
+      "sentence": "The clown's hilarious act made everyone laugh.",
+      "level": 2
+    },
+    {
+      "word": "spacious",
+      "pos": "adjective",
+      "definition": "having lots of room inside",
+      "synonyms": [
+        "roomy",
+        "commodious",
+        "sizable"
+      ],
+      "antonyms": [
+        "cramped"
+      ],
+      "sentence": "The new gym is bright and spacious.",
+      "level": 2
+    },
+    {
+      "word": "dependable",
+      "pos": "adjective",
+      "definition": "able to be trusted to do what is expected",
+      "synonyms": [
+        "trustworthy",
+        "responsible",
+        "unfailing"
+      ],
+      "antonyms": [
+        "unreliable"
+      ],
+      "sentence": "Our dependable old car has never broken down.",
+      "level": 2
+    },
+    {
+      "word": "mysterious",
+      "pos": "adjective",
+      "definition": "strange and hard to explain or understand",
+      "synonyms": [
+        "puzzling",
+        "cryptic",
+        "mystifying"
+      ],
+      "antonyms": [
+        "obvious"
+      ],
+      "sentence": "A mysterious light glowed in the attic window.",
+      "level": 2
+    },
+    {
+      "word": "rural",
+      "pos": "adjective",
+      "definition": "having to do with the countryside",
+      "synonyms": [
+        "rustic",
+        "pastoral",
+        "country"
+      ],
+      "antonyms": [
+        "urban"
+      ],
+      "sentence": "My cousins live on a rural farm with cows.",
+      "level": 2
+    },
+    {
+      "word": "competent",
+      "pos": "adjective",
+      "definition": "having enough skill to do something well",
+      "synonyms": [
+        "capable",
+        "skilled",
+        "proficient"
+      ],
+      "antonyms": [
+        "incompetent",
+        "inept"
+      ],
+      "sentence": "She is a competent swimmer who can lead the relay.",
+      "level": 2
+    },
+    {
+      "word": "nimble",
+      "pos": "adjective",
+      "definition": "quick and light in movement",
+      "synonyms": [
+        "agile",
+        "spry",
+        "deft"
+      ],
+      "antonyms": [
+        "clumsy"
+      ],
+      "sentence": "The nimble goat leaped from rock to rock.",
+      "level": 2
+    },
+    {
+      "word": "fragrant",
+      "pos": "adjective",
+      "definition": "having a sweet or pleasant smell",
+      "synonyms": [
+        "aromatic",
+        "perfumed",
+        "scented"
+      ],
+      "antonyms": [
+        "smelly",
+        "stinky"
+      ],
+      "sentence": "The garden was full of fragrant roses.",
+      "level": 2
+    },
+    {
+      "word": "knowingly",
+      "pos": "adverb",
+      "definition": "with full awareness of what you are doing",
+      "synonyms": [
+        "consciously",
+        "wittingly",
+        "deliberately"
+      ],
+      "antonyms": [
+        "unknowingly",
+        "unwittingly"
+      ],
+      "sentence": "She would never knowingly break a rule.",
+      "level": 2
+    },
+    {
+      "word": "confidently",
+      "pos": "adverb",
+      "definition": "in a sure and self-assured way",
+      "synonyms": [
+        "assuredly",
+        "surely",
+        "positively"
+      ],
+      "antonyms": [
+        "uncertainly",
+        "timidly"
+      ],
+      "sentence": "He walked confidently onto the stage.",
+      "level": 2
+    },
+    {
+      "word": "anxiously",
+      "pos": "adverb",
+      "definition": "in a worried or nervous way",
+      "synonyms": [
+        "worriedly",
+        "uneasily",
+        "fretfully"
+      ],
+      "antonyms": [
+        "calmly",
+        "serenely"
+      ],
+      "sentence": "We waited anxiously for the test results.",
+      "level": 2
+    },
+    {
+      "word": "curiously",
+      "pos": "adverb",
+      "definition": "in a way that shows a wish to know more",
+      "synonyms": [
+        "inquisitively",
+        "nosily",
+        "questioningly"
+      ],
+      "antonyms": [
+        "indifferently"
+      ],
+      "sentence": "The puppy sniffed curiously at the new toy.",
+      "level": 2
+    },
+    {
+      "word": "partly",
+      "pos": "adverb",
+      "definition": "to some degree but not completely",
+      "synonyms": [
+        "partially",
+        "somewhat",
+        "incompletely"
+      ],
+      "antonyms": [
+        "completely",
+        "wholly"
+      ],
+      "sentence": "The sky was partly cloudy all afternoon.",
+      "level": 2
+    },
+    {
+      "word": "certainly",
+      "pos": "adverb",
+      "definition": "without any doubt",
+      "synonyms": [
+        "undoubtedly",
+        "unquestionably",
+        "indeed"
+      ],
+      "antonyms": [
+        "doubtfully"
+      ],
+      "sentence": "You will certainly enjoy this book.",
+      "level": 2
+    },
+    {
+      "word": "casually",
+      "pos": "adverb",
+      "definition": "in a relaxed and informal way",
+      "synonyms": [
+        "nonchalantly",
+        "offhandedly",
+        "breezily"
+      ],
+      "antonyms": [
+        "formally"
+      ],
+      "sentence": "He casually tossed his backpack onto the couch.",
+      "level": 2
+    },
+    {
+      "word": "briefly",
+      "pos": "adverb",
+      "definition": "for a short time",
+      "synonyms": [
+        "shortly",
+        "momentarily",
+        "fleetingly"
+      ],
+      "antonyms": [
+        "lengthily",
+        "extensively"
+      ],
+      "sentence": "The principal spoke briefly at the assembly.",
+      "level": 2
+    },
+    {
+      "word": "separately",
+      "pos": "adverb",
+      "definition": "apart from others, one at a time",
+      "synonyms": [
+        "individually",
+        "independently",
+        "singly"
+      ],
+      "antonyms": [
+        "together",
+        "jointly"
+      ],
+      "sentence": "The teacher graded each group separately.",
+      "level": 2
+    },
+    {
+      "word": "fairly",
+      "pos": "adverb",
+      "definition": "in a just and honest way",
+      "synonyms": [
+        "justly",
+        "equitably",
+        "evenhandedly"
+      ],
+      "antonyms": [
+        "unfairly",
+        "unjustly"
+      ],
+      "sentence": "The referee must treat both teams fairly.",
+      "level": 2
+    },
+    {
+      "word": "skepticism",
+      "pos": "noun",
+      "definition": "an attitude of doubting that claims are true",
+      "synonyms": [
+        "distrust",
+        "disbelief",
+        "incredulity"
+      ],
+      "antonyms": [
+        "belief",
+        "faith"
+      ],
+      "sentence": "The scientist met the bold claim with healthy skepticism.",
+      "level": 3
+    },
+    {
+      "word": "ambivalence",
+      "pos": "noun",
+      "definition": "mixed feelings about someone or something",
+      "synonyms": [
+        "indecision",
+        "uncertainty",
+        "hesitancy"
+      ],
+      "antonyms": [
+        "certainty",
+        "conviction"
+      ],
+      "sentence": "Her ambivalence about the move showed in her quiet voice.",
+      "level": 3
+    },
+    {
+      "word": "euphoria",
+      "pos": "noun",
+      "definition": "a feeling of intense happiness and excitement",
+      "synonyms": [
+        "elation",
+        "bliss",
+        "ecstasy"
+      ],
+      "antonyms": [
+        "despair",
+        "misery"
+      ],
+      "sentence": "After the win, euphoria swept through the stadium.",
+      "level": 3
+    },
+    {
+      "word": "despair",
+      "pos": "noun",
+      "definition": "the complete loss of hope",
+      "synonyms": [
+        "hopelessness",
+        "despondency",
+        "anguish"
+      ],
+      "antonyms": [
+        "hope",
+        "optimism"
+      ],
+      "sentence": "The lost hikers refused to give in to despair.",
+      "level": 3
+    },
+    {
+      "word": "benefactor",
+      "pos": "noun",
+      "definition": "a person who gives money or help to a cause",
+      "synonyms": [
+        "patron",
+        "sponsor",
+        "donor"
+      ],
+      "antonyms": [
+        "beneficiary"
+      ],
+      "sentence": "A generous benefactor paid for the new library wing.",
+      "level": 3
+    },
+    {
+      "word": "discrepancy",
+      "pos": "noun",
+      "definition": "a difference between things that should match",
+      "synonyms": [
+        "inconsistency",
+        "mismatch",
+        "disparity"
+      ],
+      "antonyms": [
+        "consistency",
+        "agreement"
+      ],
+      "sentence": "The cashier noticed a discrepancy on the receipt.",
+      "level": 3
+    },
+    {
+      "word": "proximity",
+      "pos": "noun",
+      "definition": "the state of being near in space or time",
+      "synonyms": [
+        "nearness",
+        "closeness",
+        "vicinity"
+      ],
+      "antonyms": [
+        "distance",
+        "remoteness"
+      ],
+      "sentence": "The cabin's proximity to the lake made it popular.",
+      "level": 3
+    },
+    {
+      "word": "animosity",
+      "pos": "noun",
+      "definition": "strong dislike or ill will toward someone",
+      "synonyms": [
+        "hostility",
+        "enmity",
+        "rancor"
+      ],
+      "antonyms": [
+        "goodwill",
+        "friendliness"
+      ],
+      "sentence": "The rival teams set aside their animosity after the game.",
+      "level": 3
+    },
+    {
+      "word": "solitude",
+      "pos": "noun",
+      "definition": "the state of being alone, often by choice",
+      "synonyms": [
+        "isolation",
+        "seclusion",
+        "privacy"
+      ],
+      "antonyms": [
+        "company"
+      ],
+      "sentence": "The poet found peace in the solitude of the mountains.",
+      "level": 3
+    },
+    {
+      "word": "incentive",
+      "pos": "noun",
+      "definition": "something that encourages a person to act",
+      "synonyms": [
+        "motivation",
+        "stimulus",
+        "inducement"
+      ],
+      "antonyms": [
+        "deterrent",
+        "disincentive"
+      ],
+      "sentence": "Extra recess was an incentive to finish work early.",
+      "level": 3
+    },
+    {
+      "word": "obligation",
+      "pos": "noun",
+      "definition": "something you must do because of a duty or promise",
+      "synonyms": [
+        "responsibility",
+        "requirement",
+        "commitment"
+      ],
+      "antonyms": [
+        "choice",
+        "option"
+      ],
+      "sentence": "Returning library books on time is an obligation.",
+      "level": 3
+    },
+    {
+      "word": "deficit",
+      "pos": "noun",
+      "definition": "an amount by which something falls short",
+      "synonyms": [
+        "shortfall",
+        "deficiency",
+        "gap"
+      ],
+      "antonyms": [
+        "surplus",
+        "excess"
+      ],
+      "sentence": "The club faced a deficit after buying new uniforms.",
+      "level": 3
+    },
+    {
+      "word": "ingenuity",
+      "pos": "noun",
+      "definition": "skill at inventing clever new ideas",
+      "synonyms": [
+        "inventiveness",
+        "cleverness",
+        "originality"
+      ],
+      "antonyms": [
+        "ineptitude"
+      ],
+      "sentence": "With ingenuity, she built a robot from cardboard.",
+      "level": 3
+    },
+    {
+      "word": "deception",
+      "pos": "noun",
+      "definition": "the act of tricking someone into believing a lie",
+      "synonyms": [
+        "trickery",
+        "fraud",
+        "duplicity"
+      ],
+      "antonyms": [
+        "honesty",
+        "candor"
+      ],
+      "sentence": "The magician's act relied on clever deception.",
+      "level": 3
+    },
+    {
+      "word": "contempt",
+      "pos": "noun",
+      "definition": "a feeling that someone is worthless or beneath you",
+      "synonyms": [
+        "disdain",
+        "derision",
+        "disrespect"
+      ],
+      "antonyms": [
+        "respect",
+        "admiration"
+      ],
+      "sentence": "The villain looked at the townspeople with contempt.",
+      "level": 3
+    },
+    {
+      "word": "exuberance",
+      "pos": "noun",
+      "definition": "great energy, cheer, and excitement",
+      "synonyms": [
+        "ebullience",
+        "buoyancy",
+        "vivacity"
+      ],
+      "antonyms": [
+        "dejection",
+        "listlessness"
+      ],
+      "sentence": "The puppy's exuberance made everyone smile.",
+      "level": 3
+    },
+    {
+      "word": "fallacy",
+      "pos": "noun",
+      "definition": "a mistaken belief or faulty argument",
+      "synonyms": [
+        "misconception",
+        "delusion",
+        "misbelief"
+      ],
+      "antonyms": [
+        "truth",
+        "fact"
+      ],
+      "sentence": "It is a fallacy that goldfish forget everything instantly.",
+      "level": 3
+    },
+    {
+      "word": "epiphany",
+      "pos": "noun",
+      "definition": "a sudden moment of understanding",
+      "synonyms": [
+        "revelation",
+        "realization",
+        "awakening"
+      ],
+      "antonyms": [
+        "confusion"
+      ],
+      "sentence": "In the shower, he had an epiphany about the riddle.",
+      "level": 3
+    },
+    {
+      "word": "brevity",
+      "pos": "noun",
+      "definition": "the quality of using few words or little time",
+      "synonyms": [
+        "conciseness",
+        "briefness",
+        "succinctness"
+      ],
+      "antonyms": [
+        "wordiness",
+        "verbosity"
+      ],
+      "sentence": "The audience appreciated the brevity of her speech.",
+      "level": 3
+    },
+    {
+      "word": "affinity",
+      "pos": "noun",
+      "definition": "a natural liking for something",
+      "synonyms": [
+        "fondness",
+        "attraction",
+        "kinship"
+      ],
+      "antonyms": [
+        "aversion",
+        "dislike"
+      ],
+      "sentence": "She has a strong affinity for ocean animals.",
+      "level": 3
+    },
+    {
+      "word": "alleviate",
+      "pos": "verb",
+      "definition": "to make pain or trouble less severe",
+      "synonyms": [
+        "ease",
+        "relieve",
+        "mitigate"
+      ],
+      "antonyms": [
+        "aggravate",
+        "worsen"
+      ],
+      "sentence": "A cool cloth can alleviate the itch of a bug bite.",
+      "level": 3
+    },
+    {
+      "word": "deviate",
+      "pos": "verb",
+      "definition": "to turn away from a usual path or plan",
+      "synonyms": [
+        "diverge",
+        "stray",
+        "digress"
+      ],
+      "antonyms": [
+        "conform",
+        "adhere"
+      ],
+      "sentence": "Do not deviate from the trail in the fog.",
+      "level": 3
+    },
+    {
+      "word": "corroborate",
+      "pos": "verb",
+      "definition": "to support a claim with more evidence",
+      "synonyms": [
+        "confirm",
+        "affirm",
+        "uphold"
+      ],
+      "antonyms": [
+        "refute",
+        "contradict"
+      ],
+      "sentence": "Two witnesses can corroborate her story.",
+      "level": 3
+    },
+    {
+      "word": "exacerbate",
+      "pos": "verb",
+      "definition": "to make a bad situation even worse",
+      "synonyms": [
+        "intensify",
+        "inflame",
+        "magnify"
+      ],
+      "antonyms": [
+        "soothe",
+        "relieve"
+      ],
+      "sentence": "Scratching will only exacerbate the rash.",
+      "level": 3
+    },
+    {
+      "word": "reconcile",
+      "pos": "verb",
+      "definition": "to restore friendly relations after a dispute",
+      "synonyms": [
+        "reunite",
+        "harmonize",
+        "conciliate"
+      ],
+      "antonyms": [
+        "alienate",
+        "estrange"
+      ],
+      "sentence": "The friends tried to reconcile after their argument.",
+      "level": 3
+    },
+    {
+      "word": "relinquish",
+      "pos": "verb",
+      "definition": "to give up control or possession of something",
+      "synonyms": [
+        "surrender",
+        "cede",
+        "forgo"
+      ],
+      "antonyms": [
+        "retain",
+        "keep"
+      ],
+      "sentence": "The champion refused to relinquish her title.",
+      "level": 3
+    },
+    {
+      "word": "augment",
+      "pos": "verb",
+      "definition": "to make something greater by adding to it",
+      "synonyms": [
+        "amplify",
+        "supplement",
+        "heighten"
+      ],
+      "antonyms": [
+        "diminish",
+        "reduce"
+      ],
+      "sentence": "Students can augment their reports with photos.",
+      "level": 3
+    },
+    {
+      "word": "deplete",
+      "pos": "verb",
+      "definition": "to use up the supply of something",
+      "synonyms": [
+        "exhaust",
+        "drain",
+        "sap"
+      ],
+      "antonyms": [
+        "replenish",
+        "restore"
+      ],
+      "sentence": "Long hikes can deplete your energy quickly.",
+      "level": 3
+    },
+    {
+      "word": "replenish",
+      "pos": "verb",
+      "definition": "to fill something up again",
+      "synonyms": [
+        "refill",
+        "restock",
+        "reload"
+      ],
+      "antonyms": [
+        "deplete",
+        "drain"
+      ],
+      "sentence": "Remember to replenish the bird feeder each week.",
+      "level": 3
+    },
+    {
+      "word": "advocate",
+      "pos": "verb",
+      "definition": "to publicly support a cause or idea",
+      "synonyms": [
+        "promote",
+        "urge",
+        "espouse"
+      ],
+      "antonyms": [
+        "oppose"
+      ],
+      "sentence": "The students advocate for more bike racks at school.",
+      "level": 3
+    },
+    {
+      "word": "disseminate",
+      "pos": "verb",
+      "definition": "to spread information widely",
+      "synonyms": [
+        "circulate",
+        "broadcast",
+        "propagate"
+      ],
+      "antonyms": [
+        "suppress",
+        "withhold"
+      ],
+      "sentence": "The club will disseminate flyers about the bake sale.",
+      "level": 3
+    },
+    {
+      "word": "elucidate",
+      "pos": "verb",
+      "definition": "to make something clear by explaining it",
+      "synonyms": [
+        "explicate",
+        "expound",
+        "demystify"
+      ],
+      "antonyms": [
+        "obscure",
+        "confuse"
+      ],
+      "sentence": "The teacher used a diagram to elucidate the water cycle.",
+      "level": 3
+    },
+    {
+      "word": "circumvent",
+      "pos": "verb",
+      "definition": "to find a way around a rule or obstacle",
+      "synonyms": [
+        "bypass",
+        "evade",
+        "sidestep"
+      ],
+      "antonyms": [
+        "confront",
+        "face"
+      ],
+      "sentence": "Engineers built a tunnel to circumvent the mountain.",
+      "level": 3
+    },
+    {
+      "word": "assimilate",
+      "pos": "verb",
+      "definition": "to take in and fully understand information",
+      "synonyms": [
+        "absorb",
+        "integrate",
+        "incorporate"
+      ],
+      "antonyms": [
+        "reject"
+      ],
+      "sentence": "It takes time to assimilate so many new facts.",
+      "level": 3
+    },
+    {
+      "word": "commemorate",
+      "pos": "verb",
+      "definition": "to honor the memory of a person or event",
+      "synonyms": [
+        "memorialize",
+        "observe",
+        "salute"
+      ],
+      "antonyms": [
+        "forget",
+        "ignore"
+      ],
+      "sentence": "The town built a statue to commemorate its founder.",
+      "level": 3
+    },
+    {
+      "word": "extol",
+      "pos": "verb",
+      "definition": "to praise someone or something with great enthusiasm",
+      "synonyms": [
+        "glorify",
+        "exalt",
+        "eulogize"
+      ],
+      "antonyms": [
+        "belittle",
+        "criticize"
+      ],
+      "sentence": "Critics extol the film for its stunning music.",
+      "level": 3
+    },
+    {
+      "word": "belittle",
+      "pos": "verb",
+      "definition": "to make someone seem small or unimportant",
+      "synonyms": [
+        "disparage",
+        "demean",
+        "deprecate"
+      ],
+      "antonyms": [
+        "compliment",
+        "extol"
+      ],
+      "sentence": "Never belittle a teammate who makes a mistake.",
+      "level": 3
+    },
+    {
+      "word": "vindicate",
+      "pos": "verb",
+      "definition": "to clear someone of blame or suspicion",
+      "synonyms": [
+        "exonerate",
+        "acquit",
+        "exculpate"
+      ],
+      "antonyms": [
+        "incriminate",
+        "accuse"
+      ],
+      "sentence": "New evidence helped vindicate the boy accused of cheating.",
+      "level": 3
+    },
+    {
+      "word": "perpetuate",
+      "pos": "verb",
+      "definition": "to make something continue for a long time",
+      "synonyms": [
+        "prolong",
+        "sustain",
+        "extend"
+      ],
+      "antonyms": [
+        "abolish",
+        "terminate"
+      ],
+      "sentence": "Old myths can perpetuate false ideas about sharks.",
+      "level": 3
+    },
+    {
+      "word": "speculate",
+      "pos": "verb",
+      "definition": "to form ideas without firm evidence",
+      "synonyms": [
+        "conjecture",
+        "hypothesize",
+        "theorize"
+      ],
+      "antonyms": [
+        "verify",
+        "prove"
+      ],
+      "sentence": "Scientists speculate about life on other planets.",
+      "level": 3
+    },
+    {
+      "word": "benign",
+      "pos": "adjective",
+      "definition": "gentle and not harmful",
+      "synonyms": [
+        "harmless",
+        "innocuous",
+        "mild"
+      ],
+      "antonyms": [
+        "harmful",
+        "malignant"
+      ],
+      "sentence": "Most garden spiders are benign to people.",
+      "level": 3
+    },
+    {
+      "word": "arduous",
+      "pos": "adjective",
+      "definition": "needing great effort and hard work",
+      "synonyms": [
+        "grueling",
+        "laborious",
+        "taxing"
+      ],
+      "antonyms": [
+        "easy",
+        "effortless"
+      ],
+      "sentence": "Climbing the steep trail was an arduous task.",
+      "level": 3
+    },
+    {
+      "word": "audacious",
+      "pos": "adjective",
+      "definition": "showing bold and daring courage",
+      "synonyms": [
+        "intrepid",
+        "plucky",
+        "adventurous"
+      ],
+      "antonyms": [
+        "timid",
+        "cautious"
+      ],
+      "sentence": "The squirrel made an audacious leap to the bird feeder.",
+      "level": 3
+    },
+    {
+      "word": "impeccable",
+      "pos": "adjective",
+      "definition": "without any flaws or errors",
+      "synonyms": [
+        "flawless",
+        "faultless",
+        "perfect"
+      ],
+      "antonyms": [
+        "flawed",
+        "sloppy"
+      ],
+      "sentence": "The violinist gave an impeccable performance tonight.",
+      "level": 3
+    },
+    {
+      "word": "tangible",
+      "pos": "adjective",
+      "definition": "able to be touched or clearly seen",
+      "synonyms": [
+        "concrete",
+        "physical",
+        "palpable"
+      ],
+      "antonyms": [
+        "intangible",
+        "abstract"
+      ],
+      "sentence": "The trophy was tangible proof of their hard work.",
+      "level": 3
+    },
+    {
+      "word": "volatile",
+      "pos": "adjective",
+      "definition": "likely to change suddenly and unpredictably",
+      "synonyms": [
+        "unstable",
+        "erratic",
+        "explosive"
+      ],
+      "antonyms": [
+        "stable",
+        "steady"
+      ],
+      "sentence": "Mountain weather can be volatile in spring.",
+      "level": 3
+    },
+    {
+      "word": "eccentric",
+      "pos": "adjective",
+      "definition": "unusual in a strange or quirky way",
+      "synonyms": [
+        "unconventional",
+        "offbeat",
+        "idiosyncratic"
+      ],
+      "antonyms": [
+        "conventional",
+        "ordinary"
+      ],
+      "sentence": "Our eccentric neighbor walks his cat on a leash.",
+      "level": 3
+    },
+    {
+      "word": "verbose",
+      "pos": "adjective",
+      "definition": "using more words than needed",
+      "synonyms": [
+        "wordy",
+        "longwinded",
+        "rambling"
+      ],
+      "antonyms": [
+        "concise",
+        "succinct"
+      ],
+      "sentence": "The verbose report took an hour to read.",
+      "level": 3
+    },
+    {
+      "word": "pensive",
+      "pos": "adjective",
+      "definition": "deeply and quietly thoughtful",
+      "synonyms": [
+        "reflective",
+        "contemplative",
+        "musing"
+      ],
+      "antonyms": [
+        "thoughtless",
+        "carefree"
+      ],
+      "sentence": "She grew pensive while watching the rain.",
+      "level": 3
+    },
+    {
+      "word": "resolute",
+      "pos": "adjective",
+      "definition": "firmly set on a purpose",
+      "synonyms": [
+        "unwavering",
+        "decisive",
+        "staunch"
+      ],
+      "antonyms": [
+        "irresolute",
+        "wavering"
+      ],
+      "sentence": "The resolute team kept practicing after every loss.",
+      "level": 3
+    },
+    {
+      "word": "ostensibly",
+      "pos": "adverb",
+      "definition": "as it appears on the surface, maybe not truly",
+      "synonyms": [
+        "apparently",
+        "seemingly",
+        "supposedly"
+      ],
+      "antonyms": [
+        "actually",
+        "genuinely"
+      ],
+      "sentence": "He left early, ostensibly to study for a test.",
+      "level": 3
+    },
+    {
+      "word": "tentatively",
+      "pos": "adverb",
+      "definition": "in an unsure or trial way, not yet final",
+      "synonyms": [
+        "provisionally",
+        "experimentally",
+        "guardedly"
+      ],
+      "antonyms": [
+        "decisively",
+        "definitely"
+      ],
+      "sentence": "We tentatively planned the picnic for Saturday.",
+      "level": 3
+    },
+    {
+      "word": "inherently",
+      "pos": "adverb",
+      "definition": "as a basic, built-in quality",
+      "synonyms": [
+        "intrinsically",
+        "innately",
+        "fundamentally"
+      ],
+      "antonyms": [
+        "superficially",
+        "extrinsically"
+      ],
+      "sentence": "Fire is inherently dangerous, so treat it with care.",
+      "level": 3
+    },
+    {
+      "word": "conversely",
+      "pos": "adverb",
+      "definition": "in an opposite way; on the other hand",
+      "synonyms": [
+        "oppositely",
+        "contrarily",
+        "inversely"
+      ],
+      "antonyms": [
+        "likewise",
+        "similarly"
+      ],
+      "sentence": "Cats like warmth; conversely, penguins thrive in the cold.",
+      "level": 3
+    },
+    {
+      "word": "arbitrarily",
+      "pos": "adverb",
+      "definition": "based on random choice, not reason",
+      "synonyms": [
+        "randomly",
+        "haphazardly",
+        "capriciously"
+      ],
+      "antonyms": [
+        "systematically",
+        "methodically"
+      ],
+      "sentence": "The game picks a winner arbitrarily from the list.",
+      "level": 3
     }
   ],
   "affixes": [
@@ -4284,6 +7175,474 @@
         "hight"
       ],
       "level": 2
+    },
+    {
+      "correct": "because",
+      "misspellings": [
+        "becuase",
+        "becaus",
+        "beacause"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "beautiful",
+      "misspellings": [
+        "beautifull",
+        "beutiful",
+        "beatiful"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "different",
+      "misspellings": [
+        "diffrent",
+        "diferent",
+        "differant"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "people",
+      "misspellings": [
+        "poeple",
+        "peple",
+        "peopel"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "said",
+      "misspellings": [
+        "siad",
+        "sayd",
+        "saed"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "which",
+      "misspellings": [
+        "wich",
+        "whitch",
+        "wihch"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "would",
+      "misspellings": [
+        "woud",
+        "wuold",
+        "woulld"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "enough",
+      "misspellings": [
+        "enuff",
+        "enogh",
+        "enouf"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "favorite",
+      "misspellings": [
+        "favrite",
+        "faverite",
+        "favorit"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "answer",
+      "misspellings": [
+        "anser",
+        "answar",
+        "awnser"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "really",
+      "misspellings": [
+        "realy",
+        "relly",
+        "reallly"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "important",
+      "misspellings": [
+        "importent",
+        "inportant",
+        "importnat"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "animal",
+      "misspellings": [
+        "aminal",
+        "animle",
+        "anamal"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "family",
+      "misspellings": [
+        "famly",
+        "familly",
+        "fameli"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "school",
+      "misspellings": [
+        "skool",
+        "shcool",
+        "scool"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "island",
+      "misspellings": [
+        "iland",
+        "ilsand",
+        "islend"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "every",
+      "misspellings": [
+        "evry",
+        "evrey",
+        "everey"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "many",
+      "misspellings": [
+        "meny",
+        "mayny",
+        "mony"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "little",
+      "misspellings": [
+        "littel",
+        "litle",
+        "lettle"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "thought",
+      "misspellings": [
+        "thougth",
+        "thoght",
+        "thougt"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "caught",
+      "misspellings": [
+        "cought",
+        "caugt",
+        "cawt"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "laugh",
+      "misspellings": [
+        "laff",
+        "lauf",
+        "lagh"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "early",
+      "misspellings": [
+        "erly",
+        "earley",
+        "urly"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "minute",
+      "misspellings": [
+        "minit",
+        "minnute",
+        "mintue"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "circle",
+      "misspellings": [
+        "sircle",
+        "circel",
+        "cirkle"
+      ],
+      "level": 1
+    },
+    {
+      "correct": "address",
+      "misspellings": [
+        "adress",
+        "addres",
+        "adresss"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "acquire",
+      "misspellings": [
+        "aquire",
+        "acquier",
+        "acqire"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "amateur",
+      "misspellings": [
+        "amatuer",
+        "amature",
+        "ammateur"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "colleague",
+      "misspellings": [
+        "collegue",
+        "colleage",
+        "coleague"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "especially",
+      "misspellings": [
+        "expecially",
+        "especialy",
+        "espeshally"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "forty",
+      "misspellings": [
+        "fourty",
+        "fortey",
+        "fortty"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "grateful",
+      "misspellings": [
+        "greatful",
+        "gratefull",
+        "graitful"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "ignorance",
+      "misspellings": [
+        "ignorence",
+        "ignorrance",
+        "ignorince"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "miniature",
+      "misspellings": [
+        "miniture",
+        "minature",
+        "minaiture"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "occasionally",
+      "misspellings": [
+        "occasionaly",
+        "ocasionally",
+        "occassionally"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "pastime",
+      "misspellings": [
+        "pasttime",
+        "pastyme",
+        "passtime"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "possess",
+      "misspellings": [
+        "posess",
+        "pocess",
+        "possese"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "referred",
+      "misspellings": [
+        "refered",
+        "reffered",
+        "referd"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "relevant",
+      "misspellings": [
+        "relevent",
+        "revelant",
+        "relavant"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "resistance",
+      "misspellings": [
+        "resistence",
+        "resistanse",
+        "ressistance"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "twelfth",
+      "misspellings": [
+        "twelth",
+        "twelvth",
+        "twelfh"
+      ],
+      "level": 2
+    },
+    {
+      "correct": "bureaucracy",
+      "misspellings": [
+        "beaurocracy",
+        "burocracy",
+        "bureacracy"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "conscientious",
+      "misspellings": [
+        "consciencious",
+        "concientious",
+        "conscientous"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "entrepreneur",
+      "misspellings": [
+        "entrepeneur",
+        "entreprenuer",
+        "enterpreneur"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "fluorescent",
+      "misspellings": [
+        "flourecent",
+        "flourescent",
+        "fluorescant"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "hierarchy",
+      "misspellings": [
+        "heirarchy",
+        "hierachy",
+        "hierarcy"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "liaison",
+      "misspellings": [
+        "liason",
+        "liaision",
+        "laison"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "medieval",
+      "misspellings": [
+        "medevil",
+        "mideval",
+        "medival"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "playwright",
+      "misspellings": [
+        "playwrite",
+        "playright",
+        "plawright"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "sergeant",
+      "misspellings": [
+        "sargent",
+        "sergent",
+        "sargeant"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "supersede",
+      "misspellings": [
+        "supercede",
+        "superseed",
+        "supresede"
+      ],
+      "level": 3
+    },
+    {
+      "correct": "threshold",
+      "misspellings": [
+        "threshhold",
+        "treshold",
+        "thresold"
+      ],
+      "level": 3
     }
   ],
   "roots": [
@@ -4814,6 +8173,992 @@
         "double"
       ],
       "level": 2
+    }
+  ],
+  "compounds": [
+    {
+      "a": "sun",
+      "b": "flower",
+      "word": "sunflower",
+      "definition": "a tall plant with a big yellow bloom",
+      "distractors": [
+        "tree",
+        "rock",
+        "pond"
+      ],
+      "level": 1
+    },
+    {
+      "a": "rain",
+      "b": "bow",
+      "word": "rainbow",
+      "definition": "an arc of colors in the sky after a storm",
+      "distractors": [
+        "ring",
+        "line",
+        "hoop"
+      ],
+      "level": 1
+    },
+    {
+      "a": "foot",
+      "b": "ball",
+      "word": "football",
+      "definition": "a sport where teams score touchdowns",
+      "distractors": [
+        "cup",
+        "hat",
+        "door"
+      ],
+      "level": 1
+    },
+    {
+      "a": "bed",
+      "b": "room",
+      "word": "bedroom",
+      "definition": "the space in a house where you sleep",
+      "distractors": [
+        "hall",
+        "door",
+        "shop"
+      ],
+      "level": 1
+    },
+    {
+      "a": "butter",
+      "b": "fly",
+      "word": "butterfly",
+      "definition": "an insect with large, colorful wings",
+      "distractors": [
+        "bug",
+        "bee",
+        "moth"
+      ],
+      "level": 1
+    },
+    {
+      "a": "tooth",
+      "b": "brush",
+      "word": "toothbrush",
+      "definition": "a small tool for cleaning your teeth",
+      "distractors": [
+        "mop",
+        "rag",
+        "broom"
+      ],
+      "level": 1
+    },
+    {
+      "a": "cup",
+      "b": "cake",
+      "word": "cupcake",
+      "definition": "a small sweet treat baked in a paper liner",
+      "distractors": [
+        "pie",
+        "bun",
+        "loaf"
+      ],
+      "level": 1
+    },
+    {
+      "a": "pop",
+      "b": "corn",
+      "word": "popcorn",
+      "definition": "kernels that puff up when heated",
+      "distractors": [
+        "bean",
+        "rice",
+        "seed"
+      ],
+      "level": 1
+    },
+    {
+      "a": "snow",
+      "b": "man",
+      "word": "snowman",
+      "definition": "a figure built from packed white flakes",
+      "distractors": [
+        "pig",
+        "boy",
+        "cat"
+      ],
+      "level": 1
+    },
+    {
+      "a": "star",
+      "b": "fish",
+      "word": "starfish",
+      "definition": "a sea animal with five arms",
+      "distractors": [
+        "crab",
+        "bird",
+        "frog"
+      ],
+      "level": 1
+    },
+    {
+      "a": "rain",
+      "b": "coat",
+      "word": "raincoat",
+      "definition": "a jacket that keeps you dry in wet weather",
+      "distractors": [
+        "shirt",
+        "vest",
+        "sock"
+      ],
+      "level": 1
+    },
+    {
+      "a": "pan",
+      "b": "cake",
+      "word": "pancake",
+      "definition": "a flat, round breakfast food made on a griddle",
+      "distractors": [
+        "pie",
+        "bread",
+        "cookie"
+      ],
+      "level": 1
+    },
+    {
+      "a": "home",
+      "b": "work",
+      "word": "homework",
+      "definition": "school tasks you finish at your house",
+      "distractors": [
+        "play",
+        "job",
+        "class"
+      ],
+      "level": 1
+    },
+    {
+      "a": "play",
+      "b": "ground",
+      "word": "playground",
+      "definition": "an outdoor area with swings and slides",
+      "distractors": [
+        "hill",
+        "street",
+        "floor"
+      ],
+      "level": 1
+    },
+    {
+      "a": "book",
+      "b": "shelf",
+      "word": "bookshelf",
+      "definition": "furniture with ledges for holding novels",
+      "distractors": [
+        "box",
+        "desk",
+        "table"
+      ],
+      "level": 1
+    },
+    {
+      "a": "birth",
+      "b": "day",
+      "word": "birthday",
+      "definition": "the yearly date you were born",
+      "distractors": [
+        "week",
+        "hour",
+        "month"
+      ],
+      "level": 1
+    },
+    {
+      "a": "fire",
+      "b": "fly",
+      "word": "firefly",
+      "definition": "a beetle that glows at night",
+      "distractors": [
+        "bee",
+        "ant",
+        "moth"
+      ],
+      "level": 1
+    },
+    {
+      "a": "grand",
+      "b": "mother",
+      "word": "grandmother",
+      "definition": "the mom of your mom or dad",
+      "distractors": [
+        "sister",
+        "lady",
+        "girl"
+      ],
+      "level": 1
+    },
+    {
+      "a": "water",
+      "b": "fall",
+      "word": "waterfall",
+      "definition": "a stream pouring over a steep cliff edge",
+      "distractors": [
+        "tumble",
+        "dive",
+        "crash"
+      ],
+      "level": 1
+    },
+    {
+      "a": "note",
+      "b": "book",
+      "word": "notebook",
+      "definition": "a pad of lined paper for writing",
+      "distractors": [
+        "shelf",
+        "bag",
+        "desk"
+      ],
+      "level": 1
+    },
+    {
+      "a": "jelly",
+      "b": "fish",
+      "word": "jellyfish",
+      "definition": "a soft sea animal that can sting",
+      "distractors": [
+        "crab",
+        "shark",
+        "whale"
+      ],
+      "level": 1
+    },
+    {
+      "a": "back",
+      "b": "pack",
+      "word": "backpack",
+      "definition": "a bag you carry on your shoulders",
+      "distractors": [
+        "box",
+        "purse",
+        "case"
+      ],
+      "level": 1
+    },
+    {
+      "a": "sand",
+      "b": "castle",
+      "word": "sandcastle",
+      "definition": "a tower kids build on the beach",
+      "distractors": [
+        "house",
+        "palace",
+        "fort"
+      ],
+      "level": 1
+    },
+    {
+      "a": "door",
+      "b": "bell",
+      "word": "doorbell",
+      "definition": "a button that rings when visitors arrive",
+      "distractors": [
+        "horn",
+        "drum",
+        "whistle"
+      ],
+      "level": 1
+    },
+    {
+      "a": "sea",
+      "b": "shell",
+      "word": "seashell",
+      "definition": "a hard cover left by an ocean creature",
+      "distractors": [
+        "stone",
+        "leaf",
+        "bone"
+      ],
+      "level": 1
+    },
+    {
+      "a": "hand",
+      "b": "shake",
+      "word": "handshake",
+      "definition": "a greeting where two people clasp palms",
+      "distractors": [
+        "snap",
+        "nod",
+        "hug"
+      ],
+      "level": 1
+    },
+    {
+      "a": "lady",
+      "b": "bug",
+      "word": "ladybug",
+      "definition": "a small red beetle with black spots",
+      "distractors": [
+        "ant",
+        "moth",
+        "worm"
+      ],
+      "level": 1
+    },
+    {
+      "a": "air",
+      "b": "plane",
+      "word": "airplane",
+      "definition": "a flying machine with wings and engines",
+      "distractors": [
+        "car",
+        "train",
+        "truck"
+      ],
+      "level": 1
+    },
+    {
+      "a": "day",
+      "b": "dream",
+      "word": "daydream",
+      "definition": "pleasant, drifting thoughts while awake",
+      "distractors": [
+        "sleep",
+        "wish",
+        "nap"
+      ],
+      "level": 1
+    },
+    {
+      "a": "earth",
+      "b": "quake",
+      "word": "earthquake",
+      "definition": "a sudden shaking of the ground",
+      "distractors": [
+        "shake",
+        "storm",
+        "slide"
+      ],
+      "level": 1
+    },
+    {
+      "a": "mail",
+      "b": "box",
+      "word": "mailbox",
+      "definition": "where letters are dropped off or delivered",
+      "distractors": [
+        "crate",
+        "cup",
+        "jar"
+      ],
+      "level": 1
+    },
+    {
+      "a": "head",
+      "b": "ache",
+      "word": "headache",
+      "definition": "an aching feeling in your skull",
+      "distractors": [
+        "pain",
+        "sore",
+        "burn"
+      ],
+      "level": 1
+    },
+    {
+      "a": "pine",
+      "b": "apple",
+      "word": "pineapple",
+      "definition": "a spiky tropical fruit with sweet yellow flesh",
+      "distractors": [
+        "pear",
+        "peach",
+        "plum"
+      ],
+      "level": 1
+    },
+    {
+      "a": "gold",
+      "b": "fish",
+      "word": "goldfish",
+      "definition": "a small orange pet that swims in a bowl",
+      "distractors": [
+        "bird",
+        "cat",
+        "frog"
+      ],
+      "level": 1
+    },
+    {
+      "a": "class",
+      "b": "room",
+      "word": "classroom",
+      "definition": "a place where students learn",
+      "distractors": [
+        "hall",
+        "house",
+        "space"
+      ],
+      "level": 1
+    },
+    {
+      "a": "skate",
+      "b": "board",
+      "word": "skateboard",
+      "definition": "a deck on wheels for riding and tricks",
+      "distractors": [
+        "plank",
+        "cart",
+        "sled"
+      ],
+      "level": 1
+    },
+    {
+      "a": "snow",
+      "b": "flake",
+      "word": "snowflake",
+      "definition": "a single tiny ice crystal that falls",
+      "distractors": [
+        "chip",
+        "bit",
+        "dot"
+      ],
+      "level": 1
+    },
+    {
+      "a": "under",
+      "b": "stand",
+      "word": "understand",
+      "definition": "to grasp the meaning of something",
+      "distractors": [
+        "sit",
+        "walk",
+        "jump"
+      ],
+      "level": 2
+    },
+    {
+      "a": "over",
+      "b": "whelm",
+      "word": "overwhelm",
+      "definition": "to overpower with too much feeling or work",
+      "distractors": [
+        "whirl",
+        "helm",
+        "swell"
+      ],
+      "level": 2
+    },
+    {
+      "a": "thunder",
+      "b": "storm",
+      "word": "thunderstorm",
+      "definition": "bad weather with lightning and loud booms",
+      "distractors": [
+        "rain",
+        "wind",
+        "sky"
+      ],
+      "level": 2
+    },
+    {
+      "a": "head",
+      "b": "line",
+      "word": "headline",
+      "definition": "the title printed above a news story",
+      "distractors": [
+        "text",
+        "row",
+        "print"
+      ],
+      "level": 2
+    },
+    {
+      "a": "every",
+      "b": "thing",
+      "word": "everything",
+      "definition": "all of the items there are",
+      "distractors": [
+        "stuff",
+        "piece",
+        "part"
+      ],
+      "level": 2
+    },
+    {
+      "a": "some",
+      "b": "times",
+      "word": "sometimes",
+      "definition": "now and then; not always",
+      "distractors": [
+        "hours",
+        "weeks",
+        "turns"
+      ],
+      "level": 2
+    },
+    {
+      "a": "break",
+      "b": "fast",
+      "word": "breakfast",
+      "definition": "the first meal of the morning",
+      "distractors": [
+        "lunch",
+        "food",
+        "snack"
+      ],
+      "level": 2
+    },
+    {
+      "a": "black",
+      "b": "board",
+      "word": "blackboard",
+      "definition": "a dark slate a teacher writes on",
+      "distractors": [
+        "wall",
+        "sheet",
+        "desk"
+      ],
+      "level": 2
+    },
+    {
+      "a": "life",
+      "b": "guard",
+      "word": "lifeguard",
+      "definition": "a person who watches swimmers at a pool",
+      "distractors": [
+        "watch",
+        "keeper",
+        "helper"
+      ],
+      "level": 2
+    },
+    {
+      "a": "wild",
+      "b": "life",
+      "word": "wildlife",
+      "definition": "animals living free in nature",
+      "distractors": [
+        "pets",
+        "crowd",
+        "zoo"
+      ],
+      "level": 2
+    },
+    {
+      "a": "light",
+      "b": "house",
+      "word": "lighthouse",
+      "definition": "a tall tower that guides ships at night",
+      "distractors": [
+        "hut",
+        "barn",
+        "shed"
+      ],
+      "level": 2
+    },
+    {
+      "a": "grass",
+      "b": "hopper",
+      "word": "grasshopper",
+      "definition": "a green insect that jumps far",
+      "distractors": [
+        "leaper",
+        "skipper",
+        "runner"
+      ],
+      "level": 2
+    },
+    {
+      "a": "sky",
+      "b": "scraper",
+      "word": "skyscraper",
+      "definition": "a very tall city building",
+      "distractors": [
+        "tower",
+        "builder",
+        "climber"
+      ],
+      "level": 2
+    },
+    {
+      "a": "foot",
+      "b": "print",
+      "word": "footprint",
+      "definition": "a mark left behind by a shoe or sole",
+      "distractors": [
+        "stamp",
+        "sketch",
+        "trace"
+      ],
+      "level": 2
+    },
+    {
+      "a": "fire",
+      "b": "place",
+      "word": "fireplace",
+      "definition": "a spot in a home for a cozy indoor blaze",
+      "distractors": [
+        "wall",
+        "room",
+        "corner"
+      ],
+      "level": 2
+    },
+    {
+      "a": "honey",
+      "b": "moon",
+      "word": "honeymoon",
+      "definition": "a trip taken just after a wedding",
+      "distractors": [
+        "sun",
+        "star",
+        "month"
+      ],
+      "level": 2
+    },
+    {
+      "a": "waste",
+      "b": "basket",
+      "word": "wastebasket",
+      "definition": "a container for trash and scraps",
+      "distractors": [
+        "bucket",
+        "box",
+        "bag"
+      ],
+      "level": 2
+    },
+    {
+      "a": "sea",
+      "b": "weed",
+      "word": "seaweed",
+      "definition": "plants and algae that grow in the ocean",
+      "distractors": [
+        "bush",
+        "vine",
+        "stalk"
+      ],
+      "level": 2
+    },
+    {
+      "a": "hair",
+      "b": "cut",
+      "word": "haircut",
+      "definition": "a trim given by a barber",
+      "distractors": [
+        "chop",
+        "snip",
+        "rake"
+      ],
+      "level": 2
+    },
+    {
+      "a": "moon",
+      "b": "light",
+      "word": "moonlight",
+      "definition": "the soft glow cast at night by Earth's satellite",
+      "distractors": [
+        "ray",
+        "lamp",
+        "flash"
+      ],
+      "level": 2
+    },
+    {
+      "a": "eye",
+      "b": "brow",
+      "word": "eyebrow",
+      "definition": "the arch of hair above your lid",
+      "distractors": [
+        "cap",
+        "top",
+        "hat"
+      ],
+      "level": 2
+    },
+    {
+      "a": "news",
+      "b": "paper",
+      "word": "newspaper",
+      "definition": "a daily printed report of current events",
+      "distractors": [
+        "page",
+        "card",
+        "board"
+      ],
+      "level": 2
+    },
+    {
+      "a": "key",
+      "b": "board",
+      "word": "keyboard",
+      "definition": "the set of buttons used for typing",
+      "distractors": [
+        "sheet",
+        "panel",
+        "tray"
+      ],
+      "level": 2
+    },
+    {
+      "a": "pass",
+      "b": "port",
+      "word": "passport",
+      "definition": "an official booklet needed for travel abroad",
+      "distractors": [
+        "gate",
+        "road",
+        "ship"
+      ],
+      "level": 2
+    },
+    {
+      "a": "touch",
+      "b": "down",
+      "word": "touchdown",
+      "definition": "a six-point score in football",
+      "distractors": [
+        "goal",
+        "run",
+        "kick"
+      ],
+      "level": 2
+    },
+    {
+      "a": "base",
+      "b": "ball",
+      "word": "baseball",
+      "definition": "a sport with a bat, a diamond, and nine innings",
+      "distractors": [
+        "game",
+        "glove",
+        "cap"
+      ],
+      "level": 2
+    },
+    {
+      "a": "earth",
+      "b": "worm",
+      "word": "earthworm",
+      "definition": "a pink, wriggly creature in garden soil",
+      "distractors": [
+        "bug",
+        "snake",
+        "ant"
+      ],
+      "level": 2
+    },
+    {
+      "a": "flash",
+      "b": "light",
+      "word": "flashlight",
+      "definition": "a small lamp you hold that runs on batteries",
+      "distractors": [
+        "glow",
+        "beam",
+        "torch"
+      ],
+      "level": 2
+    },
+    {
+      "a": "whole",
+      "b": "some",
+      "word": "wholesome",
+      "definition": "good for your health and well-being",
+      "distractors": [
+        "like",
+        "full",
+        "kind"
+      ],
+      "level": 3
+    },
+    {
+      "a": "note",
+      "b": "worthy",
+      "word": "noteworthy",
+      "definition": "deserving attention or praise",
+      "distractors": [
+        "wise",
+        "rich",
+        "proud"
+      ],
+      "level": 3
+    },
+    {
+      "a": "straight",
+      "b": "forward",
+      "word": "straightforward",
+      "definition": "simple and easy to understand",
+      "distractors": [
+        "onward",
+        "upward",
+        "beyond"
+      ],
+      "level": 3
+    },
+    {
+      "a": "break",
+      "b": "through",
+      "word": "breakthrough",
+      "definition": "a sudden, important discovery",
+      "distractors": [
+        "past",
+        "across",
+        "beyond"
+      ],
+      "level": 3
+    },
+    {
+      "a": "water",
+      "b": "proof",
+      "word": "waterproof",
+      "definition": "able to keep out moisture",
+      "distractors": [
+        "safe",
+        "strong",
+        "sure"
+      ],
+      "level": 3
+    },
+    {
+      "a": "whole",
+      "b": "sale",
+      "word": "wholesale",
+      "definition": "selling goods in large amounts to stores",
+      "distractors": [
+        "deal",
+        "trade",
+        "store"
+      ],
+      "level": 3
+    },
+    {
+      "a": "worth",
+      "b": "while",
+      "word": "worthwhile",
+      "definition": "deserving the time or effort spent",
+      "distractors": [
+        "when",
+        "much",
+        "long"
+      ],
+      "level": 3
+    },
+    {
+      "a": "with",
+      "b": "stand",
+      "word": "withstand",
+      "definition": "to hold up against force or pressure",
+      "distractors": [
+        "sit",
+        "bear",
+        "fight"
+      ],
+      "level": 3
+    },
+    {
+      "a": "life",
+      "b": "time",
+      "word": "lifetime",
+      "definition": "the whole span of someone's existence",
+      "distractors": [
+        "hour",
+        "year",
+        "term"
+      ],
+      "level": 3
+    },
+    {
+      "a": "over",
+      "b": "come",
+      "word": "overcome",
+      "definition": "to defeat or get past a difficulty",
+      "distractors": [
+        "win",
+        "beat",
+        "bend"
+      ],
+      "level": 3
+    },
+    {
+      "a": "common",
+      "b": "place",
+      "word": "commonplace",
+      "definition": "ordinary and found everywhere",
+      "distractors": [
+        "spot",
+        "area",
+        "site"
+      ],
+      "level": 3
+    },
+    {
+      "a": "counter",
+      "b": "part",
+      "word": "counterpart",
+      "definition": "one that matches another in role or purpose",
+      "distractors": [
+        "piece",
+        "half",
+        "twin"
+      ],
+      "level": 3
+    },
+    {
+      "a": "bench",
+      "b": "mark",
+      "word": "benchmark",
+      "definition": "a standard used for comparing things",
+      "distractors": [
+        "line",
+        "score",
+        "sign"
+      ],
+      "level": 3
+    },
+    {
+      "a": "fore",
+      "b": "cast",
+      "word": "forecast",
+      "definition": "a prediction of future weather",
+      "distractors": [
+        "guess",
+        "report",
+        "chart"
+      ],
+      "level": 3
+    },
+    {
+      "a": "loop",
+      "b": "hole",
+      "word": "loophole",
+      "definition": "a sneaky way around what a rule intends",
+      "distractors": [
+        "gap",
+        "crack",
+        "space"
+      ],
+      "level": 3
+    },
+    {
+      "a": "hind",
+      "b": "sight",
+      "word": "hindsight",
+      "definition": "understanding an event after it has happened",
+      "distractors": [
+        "view",
+        "look",
+        "vision"
+      ],
+      "level": 3
+    },
+    {
+      "a": "out",
+      "b": "come",
+      "word": "outcome",
+      "definition": "the final result of an event",
+      "distractors": [
+        "rise",
+        "sit",
+        "eat"
+      ],
+      "level": 3
     }
   ]
 }
