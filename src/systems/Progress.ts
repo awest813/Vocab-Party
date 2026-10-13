@@ -17,6 +17,10 @@ export interface ProgressData {
   gamesWon: number
   minigamesPlayed: number
   minigamesWon: number
+  /** Achievement id → unlock timestamp. */
+  achievements?: Record<string, number>
+  /** Board ids on which a human has won a party. */
+  boardsWon?: string[]
 }
 
 export type Mastery = 'mastered' | 'learning' | 'practice'
@@ -46,6 +50,10 @@ export function getProgress(): ProgressData {
   }
   cache = empty()
   return cache
+}
+
+export function saveProgress(): void {
+  save()
 }
 
 function save() {
@@ -91,10 +99,13 @@ export function recordMinigame(won: boolean): void {
   save()
 }
 
-export function recordGame(won: boolean): void {
+export function recordGame(won: boolean, boardId?: string): void {
   const p = getProgress()
   p.gamesPlayed += 1
-  if (won) p.gamesWon += 1
+  if (won) {
+    p.gamesWon += 1
+    if (boardId) p.boardsWon = Array.from(new Set([...(p.boardsWon ?? []), boardId]))
+  }
   save()
 }
 

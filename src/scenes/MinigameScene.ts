@@ -19,7 +19,8 @@ import {
   recordPersonalBest,
 } from '../minigames/registry'
 import { stopSpeech } from '../minigames/speech'
-import { recordMinigame, recordWords } from '../systems/Progress'
+import { getProgress, recordMinigame, recordWords } from '../systems/Progress'
+import { checkWordAchievements, unlock } from '../systems/Achievements'
 import type { MinigameContext, MinigameDef, MinigameInstance, PlayArea } from '../minigames/types'
 import { popText } from '../minigames/ui'
 
@@ -729,8 +730,12 @@ export class MinigameScene extends Phaser.Scene {
     const competitive = this.data_.participants.length > 1
     for (const p of this.humans) {
       recordWords(result.study[p.id] ?? [])
-      recordMinigame(competitive && result.placements[p.id] === 1)
+      const won = competitive && result.placements[p.id] === 1
+      recordMinigame(won)
+      if (won) unlock('minigame_win', this)
     }
+    if (getProgress().minigamesWon >= 10) unlock('minigame_10', this)
+    checkWordAchievements(this)
   }
 
   private showResults() {
@@ -826,6 +831,11 @@ export class MinigameScene extends Phaser.Scene {
     const score = result.scores[me.id] ?? 0
     const prevBest = getPersonalBests()[this.def.id] ?? 0
     const isBest = recordPersonalBest(this.def.id, score)
+    if (!isAutoSimMode()) {
+      if (score >= this.def.cpu.hard[1]) unlock('gold_medal', this)
+      const bests = getPersonalBests()
+      if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all', this)
+    }
 
     const panel = createPanel(this, {
       x: w / 2, y: h / 2 - 20, width: 760, height: 520, border: this.def.accent, headerColor: this.def.accent, headerHeight: 10, depth: 10,

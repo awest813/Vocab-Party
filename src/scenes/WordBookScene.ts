@@ -8,6 +8,7 @@ import { addVignette, paintStage } from '../ui/Panel'
 import { addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { ContentBank } from '../minigames/ContentBank'
+import { ACHIEVEMENTS, isUnlocked } from '../systems/Achievements'
 import type { MinigameSceneData } from './MinigameScene'
 
 type Filter = 'all' | Mastery
@@ -48,6 +49,7 @@ export class WordBookScene extends Phaser.Scene {
     this.page = 0
     this.selected = undefined
     this.tabButtons = []
+    this.achLayer = undefined
     this.bank = new ContentBank(this.cache)
 
     paintStage(this)
@@ -69,6 +71,10 @@ export class WordBookScene extends Phaser.Scene {
 
     const back = createButton(this, 86, 46, '◀ MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 50)
     back.on('pointerdown', () => this.scene.start('MenuScene'))
+
+    const unlockedCount = ACHIEVEMENTS.filter(a => isUnlocked(a.id)).length
+    const achBtn = createButton(this, w - 120, 46, `🏅 ${unlockedCount}/${ACHIEVEMENTS.length}`, COLORS.gold, COLORS.goldDeep, 180, 50)
+    achBtn.on('pointerdown', () => this.openAchievements())
 
     const stats = [
       `${records.length} words seen`,
@@ -132,13 +138,80 @@ export class WordBookScene extends Phaser.Scene {
       if (idx >= 0) this.setFilter(FILTERS[idx].id)
       else if (ev.code === 'ArrowLeft') this.turnPage(-1)
       else if (ev.code === 'ArrowRight') this.turnPage(1)
-      else if (ev.code === 'Escape') this.scene.start('MenuScene')
+      else if (ev.code === 'Escape') {
+        if (this.achLayer) this.closeAchievements()
+        else this.scene.start('MenuScene')
+      }
     }
     this.input.keyboard?.on('keydown', onKey)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.input.keyboard?.off('keydown', onKey))
 
     this.renderGrid()
     this.renderDetail()
+  }
+
+  private achLayer?: Phaser.GameObjects.Container
+
+  private closeAchievements() {
+    this.achLayer?.destroy()
+    this.achLayer = undefined
+  }
+
+  /** Badge gallery: unlocked achievements in color with dates, locked ones dimmed. */
+  private openAchievements() {
+    this.closeAchievements()
+    Sfx.uiClick()
+    const w = this.scale.width
+    const h = this.scale.height
+    const layer = this.add.container(0, 0).setDepth(100)
+    this.achLayer = layer
+    const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.75).setOrigin(0).setInteractive()
+    dim.on('pointerdown', () => this.closeAchievements())
+    layer.add(dim)
+    const pw = 1180
+    const ph = 600
+    const g = this.add.graphics()
+    g.fillStyle(COLORS.bgPanel, 0.98)
+    g.fillRoundedRect(w / 2 - pw / 2, h / 2 - ph / 2, pw, ph, 20)
+    g.lineStyle(3, COLORS.gold, 0.8)
+    g.strokeRoundedRect(w / 2 - pw / 2, h / 2 - ph / 2, pw, ph, 20)
+    layer.add([g, this.add.rectangle(w / 2, h / 2, pw, ph, 0, 0.001).setInteractive()])
+    const got = ACHIEVEMENTS.filter(a => isUnlocked(a.id)).length
+    layer.add(this.add.text(w / 2, h / 2 - ph / 2 + 36, `🏅 ACHIEVEMENTS  ${got}/${ACHIEVEMENTS.length}`, {
+      fontSize: '30px', fontFamily: FONT.display, color: hexColor(COLORS.gold), stroke: '#000000', strokeThickness: 5,
+    }).setOrigin(0.5))
+    const cols = 4
+    const cw = 276
+    const ch = 100
+    const x0 = w / 2 - (cols * cw + (cols - 1) * 12) / 2 + cw / 2
+    const y0 = h / 2 - ph / 2 + 80 + ch / 2
+    const stamps = getProgress().achievements ?? {}
+    ACHIEVEMENTS.forEach((a, i) => {
+      const on = isUnlocked(a.id)
+      const x = x0 + (i % cols) * (cw + 12)
+      const y = y0 + Math.floor(i / cols) * (ch + 8)
+      const cg = this.add.graphics()
+      cg.fillStyle(on ? 0x2a2410 : 0x0b1222, 0.95)
+      cg.fillRoundedRect(x - cw / 2, y - ch / 2, cw, ch, 14)
+      cg.lineStyle(2, on ? COLORS.gold : 0x2a3548, on ? 0.9 : 0.8)
+      cg.strokeRoundedRect(x - cw / 2, y - ch / 2, cw, ch, 14)
+      layer.add(cg)
+      layer.add(this.add.text(x - cw / 2 + 34, y - 8, on ? a.icon : '🔒', { fontSize: '34px' }).setOrigin(0.5).setAlpha(on ? 1 : 0.5))
+      layer.add(this.add.text(x - cw / 2 + 64, y - 30, a.title, {
+        fontSize: '18px', fontFamily: FONT.display, color: on ? '#ffffff' : hexColor(COLORS.mute),
+      }))
+      layer.add(this.add.text(x - cw / 2 + 64, y - 6, a.desc, {
+        fontSize: '13px', fontFamily: FONT.body, color: on ? hexColor(COLORS.mist) : hexColor(COLORS.mute), wordWrap: { width: cw - 76 },
+      }))
+      if (on && stamps[a.id]) {
+        layer.add(this.add.text(x + cw / 2 - 12, y + ch / 2 - 12, new Date(stamps[a.id]).toLocaleDateString(), {
+          fontSize: '11px', fontFamily: FONT.body, color: hexColor(COLORS.gold),
+        }).setOrigin(1, 1))
+      }
+    })
+    const close = createButton(this, w / 2, h / 2 + ph / 2 - 32, 'CLOSE', COLORS.chrome, COLORS.chromeDeep, 180, 46)
+    close.on('pointerdown', () => this.closeAchievements())
+    layer.add(close)
   }
 
   private entries(): [string, WordRecord][] {

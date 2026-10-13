@@ -9,7 +9,10 @@ import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import { Sfx } from '../systems/Sfx'
-import { recordGame } from '../systems/Progress'
+import { getProgress, recordGame } from '../systems/Progress'
+import { unlock } from '../systems/Achievements'
+import { getBoard } from '../systems/BoardLayout'
+import { getSettings } from '../systems/GameSettings'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -40,7 +43,18 @@ export class ResultsScene extends Phaser.Scene {
     })
 
     if (!isAutoSimMode() && state.players.some(p => !p.isCpu)) {
-      recordGame(!sorted[0].isCpu)
+      const humanWon = !sorted[0].isCpu
+      const boardId = getBoard(state.options?.board).id
+      recordGame(humanWon, boardId)
+      this.time.delayedCall(1800, () => {
+        unlock('first_party', this)
+        if (humanWon) unlock('first_win', this)
+        if ((getProgress().boardsWon ?? []).length >= 3) unlock('all_boards', this)
+        if ((state.roundsPerGame ?? 0) >= getBoard(boardId).nodes.length) unlock('full_map', this)
+        if (humanWon && getSettings().wordLevel === 'challenge') unlock('challenge_win', this)
+        const awards = state.bonusAwards ?? []
+        if (awards.length === 3 && state.players.some(p => !p.isCpu && awards.every(a => a.winners.includes(p.id)))) unlock('bonus_sweep', this)
+      })
     }
 
     if (typeof window !== 'undefined') {

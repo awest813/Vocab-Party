@@ -101,6 +101,8 @@ export interface GameState {
   options: PartyOptions
   /** Set once the "Last Stretch" comeback event has fired. */
   lastStretchDone: boolean
+  /** Rounds in this party (set by BoardScene; used for end-of-game achievements). */
+  roundsPerGame?: number
   /** Filled in by the bonus-star ceremony at game end. */
   bonusAwards?: BonusAward[]
 }

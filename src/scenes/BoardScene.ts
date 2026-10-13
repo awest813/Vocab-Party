@@ -32,6 +32,7 @@ import { Sfx } from '../systems/Sfx'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
 import { recordWords, wordFromQuestion } from '../systems/Progress'
+import { checkWordAchievements, unlock } from '../systems/Achievements'
 import type { BattleResult } from './BattleScene'
 import type { MinigameParticipant, MinigameResult, MinigameSceneData } from './MinigameScene'
 
@@ -215,6 +216,7 @@ export class BoardScene extends Phaser.Scene {
       this.roundsPerGame = resumed.roundsPerGame
       this.shopOwners = { ...resumed.shopOwners }
     }
+    this.state.roundsPerGame = this.roundsPerGame
     this.board = getBoard(this.state.options.board)
     this.nodes = this.board.nodes
 
@@ -1193,10 +1195,12 @@ export class BoardScene extends Phaser.Scene {
               if (!player.isCpu && !isAutoSimMode() && type === 'vocab' && result.question) {
                 const word = wordFromQuestion(result.question)
                 if (word) recordWords([{ word, correct: result.correct, note: result.explanation }])
+                checkWordAchievements(this)
               }
               if (result.correct) {
                 player.stats.correctAnswers += 1
                 player.answerStreak += 1
+                if (!player.isCpu && !isAutoSimMode() && player.answerStreak >= 5) unlock('streak_5', this)
                 const streakBonusCoins = player.answerStreak % QUESTION_STREAK_THRESHOLD === 0
                   ? QUESTION_STREAK_BONUS_COINS
                   : 0
@@ -1959,6 +1963,7 @@ export class BoardScene extends Phaser.Scene {
   private trackPeakCoins() {
     this.state.players.forEach(p => {
       p.stats.peakCoins = Math.max(p.stats.peakCoins, p.coins)
+      if (!p.isCpu && !isAutoSimMode() && p.coins >= 50) unlock('coins_50', this)
     })
   }
 

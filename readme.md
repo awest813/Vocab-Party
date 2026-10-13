@@ -75,6 +75,7 @@ npm run typecheck
 8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
 9. Games **autosave** at the start of every turn — pick **Continue Party** on the main menu to resume.
 10. The **📖 Word Book** (main menu) tracks every word you've practiced on this device, with mastery levels, definitions, and a *Practice weak words* mode.
+11. **🏅 Achievements** — 16 badges for parties, minigames, boards, and word mastery; view them from the Word Book.
 
 ### Minigames
 
