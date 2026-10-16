@@ -300,11 +300,12 @@ export class MinigameScene extends Phaser.Scene {
       headerColor: def.accent, headerHeight: 10, depth: 10,
     })
 
-    panel.add(this.add.text(-400, -236, def.icon, { fontSize: '76px' }).setOrigin(0, 0.5))
-    panel.add(this.add.text(-300, -252, def.title.toUpperCase(), {
+    panel.add(this.add.text(-400, -220, def.icon, { fontSize: '76px' }).setOrigin(0, 0.5))
+    // Title sits fully inside the card (it used to poke above the accent bar).
+    panel.add(this.add.text(-300, -234, def.title.toUpperCase(), {
       fontSize: '44px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0, 0.5))
-    const chip = this.add.text(-300, -206, ` ${def.category.toUpperCase()} · ${Math.round(def.durationMs / 1000)}s `, {
+    const chip = this.add.text(-300, -190, ` ${def.category.toUpperCase()} · ${Math.round(def.durationMs / 1000)}s `, {
       fontSize: '16px', fontFamily: FONT.display, color: '#0a101c', backgroundColor: hexColor(def.accent),
       padding: { x: 6, y: 3 },
     }).setOrigin(0, 0.5)

@@ -132,7 +132,8 @@ export class WordBookScene extends Phaser.Scene {
     })
     if (weak.length === 0) setButtonEnabled(practice, false)
 
-    this.add.text(w / 2, h - 12, isTouchPreferred(this.sys.game) ? 'Tap a word for details' : '1–4 filters · ←/→ pages · click a word for details · Esc back', {
+    // Right of the pager, so it never runs under the ▶ button.
+    this.add.text(w * 0.75, h - 12, isTouchPreferred(this.sys.game) ? 'Tap a word for details' : '1–4 filters · ←/→ pages · click a word for details · Esc back', {
       fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
     }).setOrigin(0.5, 1)
 

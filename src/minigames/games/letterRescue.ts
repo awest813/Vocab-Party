@@ -15,7 +15,7 @@ export const letterRescue: MinigameDef = {
   icon: '🎈',
   accent: 0xff7a59,
   category: 'Spelling',
-  tagline: 'Guess the hidden word letter by letter before the balloons pop!',
+  tagline: 'Guess the hidden word before the balloons pop!',
   howTo: [
     'Read the clue and guess letters to reveal the hidden word.',
     'Each wrong letter pops a balloon — lose all six and the word escapes.',

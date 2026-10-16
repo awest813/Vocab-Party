@@ -19,6 +19,24 @@ import { PauseScene } from './scenes/PauseScene'
 import { ArcadeScene } from './scenes/ArcadeScene'
 import { BonusStarsScene } from './scenes/BonusStarsScene'
 import { WordBookScene } from './scenes/WordBookScene'
+import { isTouchPreferred } from './systems/GameSettings'
+
+/**
+ * Phones scale the 1280×720 canvas to ~50%, which turns small labels into specks. On touch
+ * screens every text style gets a 14px floor (desktop keeps the designed sizes).
+ */
+const MIN_TOUCH_FONT_PX = 14
+if (isTouchPreferred()) {
+  const factory = Phaser.GameObjects.GameObjectFactory.prototype as unknown as {
+    text: (x: number, y: number, text: string | string[], style?: Phaser.Types.GameObjects.Text.TextStyle) => Phaser.GameObjects.Text
+  }
+  const makeText = factory.text
+  factory.text = function (x, y, text, style) {
+    const size = style?.fontSize !== undefined ? parseFloat(String(style.fontSize)) : NaN
+    const fixed = Number.isFinite(size) && size < MIN_TOUCH_FONT_PX ? { ...style, fontSize: `${MIN_TOUCH_FONT_PX}px` } : style
+    return makeText.call(this, x, y, text, fixed)
+  }
+}
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
