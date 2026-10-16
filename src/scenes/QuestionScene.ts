@@ -247,6 +247,7 @@ export class QuestionScene extends Phaser.Scene {
         secondsLeft--
         countdownText.setText(String(secondsLeft))
         if (secondsLeft <= 5) {
+          if (!answered && secondsLeft > 0) Sfx.warn()
           countdownText.setColor('#ff3333')
           this.tweens.add({
             targets: countdownText,

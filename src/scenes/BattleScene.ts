@@ -283,8 +283,10 @@ export class BattleScene extends Phaser.Scene {
       repeat: 10,
       callback: () => {
         textObj.setText(String(Phaser.Math.Between(1, 9)))
+        Sfx.rattle()
         count++
         if (count > 10) {
+          Sfx.diceLand(final)
           textObj.setText(String(final))
           textObj.setScale(1.5)
           this.tweens.add({ targets: textObj, scaleX: 1, scaleY: 1, duration: 200, ease: 'Back.easeOut' })
@@ -313,6 +315,7 @@ export class BattleScene extends Phaser.Scene {
       defender.shieldActive = false
       dmg = 0
       this.statusText.setText('🛡️ SHIELD BLOCKED!')
+      Sfx.block()
       if (!shouldReduceMotion()) this.cameras.main.flash(400, 68, 204, 255) // Blue shield flash
       this.time.delayedCall(this.d(2000), () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
@@ -329,6 +332,7 @@ export class BattleScene extends Phaser.Scene {
 
     if (dmg > 0) {
       this.statusText.setText(`💥 ${dmg} CRITICAL HIT!`)
+      Sfx.hit(dmg >= 4)
       if (!shouldReduceMotion()) {
         this.cameras.main.shake(300, 0.02)
         this.cameras.main.flash(200, 255, 0, 0, true)
@@ -377,6 +381,7 @@ export class BattleScene extends Phaser.Scene {
       })
     } else {
       this.statusText.setText(`✨ ${defender.name} dodged!`)
+      Sfx.dodge()
       // Dazzle burst around defender
       for (let i = 0; i < 8; i++) {
         const angle = (i / 8) * Math.PI * 2

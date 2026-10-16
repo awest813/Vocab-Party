@@ -22,6 +22,9 @@ export class PauseScene extends Phaser.Scene {
     const reduce = shouldReduceMotion()
 
     Sfx.pause()
+    // Music drops under the pause menu and comes back when it closes.
+    Sfx.duck(true)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => Sfx.duck(false))
     createDimmer(this, 0.68)
     addVignette(this, 0.72, 59)
 

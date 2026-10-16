@@ -350,10 +350,6 @@ export class MenuScene extends Phaser.Scene {
         this.modalOpen = false
         this.closeModal = null
       },
-      onChange: (s) => {
-        if (s.muted || s.musicVolume <= 0.01) Sfx.stopMusic()
-        else Sfx.startMusic('menu')
-      },
     })
   }
 

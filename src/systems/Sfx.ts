@@ -15,13 +15,36 @@ type ToneOpts = {
   filterFreq?: number
 }
 
+/**
+ * Mix levels. SFX sit a few dB above the music bed so feedback cuts through, and everything
+ * runs through a gentle compressor so stacked sounds (coin bursts, chords) can't clip.
+ */
+const SFX_LEVEL = 1.7
+const MUSIC_LEVEL = 0.6
+/** Music level while ducked (pause menu, big stings). */
+const DUCK_LEVEL = 0.3
+/** Same sound retriggered faster than this is dropped (coin spam, hover sweeps). */
+const RETRIGGER_MS = 35
+
 class SfxSystem {
   private ctx: AudioContext | null = null
+  /** User mute → speakers. */
   private master: GainNode | null = null
+  private sfxBus: GainNode | null = null
+  /** User music volume. */
   private musicGain: GainNode | null = null
+  /** Ducking stage between the music volume and the mix. */
+  private musicBus: GainNode | null = null
+  /** The playing track's own fader, so tracks can crossfade without touching the volume. */
+  private trackGain: GainNode | null = null
   private musicNodes: AudioNode[] = []
   private musicPlaying = false
+  /** A scene asked for music (kept while muted so unmuting brings it back). */
+  private wantMusic = false
+  private ducked = false
+  private duckUntil = 0
   private unlocked = false
+  private lastPlayed = new Map<string, number>()
   private detachSettings?: () => void
 
   private ensure(): AudioContext | null {
@@ -30,25 +53,55 @@ class SfxSystem {
     if (!AC) return null
     if (!this.ctx) {
       this.ctx = new AC()
-      this.master = this.ctx.createGain()
-      this.musicGain = this.ctx.createGain()
-      this.master.connect(this.ctx.destination)
-      this.musicGain.connect(this.master)
+      this.buildBus(this.ctx)
       this.applyVolumes()
-      this.detachSettings = onSettingsChange(() => this.applyVolumes())
+      this.detachSettings = onSettingsChange(() => this.onSettings())
+      if (typeof document !== 'undefined') {
+        // Don't leave synth voices running in a background tab.
+        document.addEventListener('visibilitychange', () => {
+          if (!this.ctx || !this.unlocked) return
+          if (document.hidden) void this.ctx.suspend()
+          else void this.ctx.resume()
+        })
+      }
     }
     return this.ctx
+  }
+
+  /** speakers ← master(mute) ← limiter ← { sfxBus, musicBus ← musicGain(volume) ← trackGain }. */
+  private buildBus(ctx: BaseAudioContext) {
+    this.master = ctx.createGain()
+    // Soft clipper as a safety limiter: transparent below ~-4 dBFS, rounds off peaks above.
+    // (DynamicsCompressor was audibly uneven here — it dulled short clicks and pumped fanfares.)
+    const limiter = ctx.createWaveShaper()
+    limiter.curve = softClipCurve()
+    limiter.oversample = '2x'
+    const pre = ctx.createGain()
+    pre.gain.value = 0.5
+    const post = ctx.createGain()
+    post.gain.value = 2
+    this.sfxBus = ctx.createGain()
+    this.sfxBus.gain.value = SFX_LEVEL
+    this.musicBus = ctx.createGain()
+    this.musicBus.gain.value = MUSIC_LEVEL
+    this.musicGain = ctx.createGain()
+    this.sfxBus.connect(pre)
+    this.musicGain.connect(this.musicBus)
+    this.musicBus.connect(pre)
+    pre.connect(limiter)
+    limiter.connect(post)
+    post.connect(this.master)
+    this.master.connect(ctx.destination)
   }
 
   /** Call from any user gesture so browsers allow audio. */
   unlock() {
     const ctx = this.ensure()
     if (!ctx) return
-    if (ctx.state === 'suspended') {
+    if (ctx.state === 'suspended' && !(typeof document !== 'undefined' && document.hidden)) {
       void ctx.resume()
     }
     this.unlocked = true
-    this.applyVolumes()
   }
 
   private applyVolumes() {
@@ -59,81 +112,135 @@ class SfxSystem {
     this.musicGain.gain.setTargetAtTime(s.musicVolume * mute, this.ctx.currentTime, 0.05)
   }
 
+  /** Volume changes apply live; muting or silencing music also stops (and later restarts) the synth. */
+  private onSettings() {
+    this.applyVolumes()
+    const s = getSettings()
+    const silent = s.muted || s.musicVolume <= 0.01
+    if (silent && this.musicPlaying) this.stopTrack(false)
+    else if (!silent && this.wantMusic && !this.musicPlaying) this.startMusic()
+  }
+
   private sfxGain(): number {
     const s = getSettings()
     if (s.muted) return 0
     return s.sfxVolume
   }
 
+  /** False when this sound fired a moment ago — stops machine-gun stacking. */
+  private fresh(name: string): boolean {
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now()
+    const last = this.lastPlayed.get(name) ?? -Infinity
+    if (now - last < RETRIGGER_MS) return false
+    this.lastPlayed.set(name, now)
+    return true
+  }
+
+  /** Lower the music under the pause menu (or a big sting) and bring it back after. */
+  duck(on: boolean) {
+    this.ducked = on
+    this.applyDuck()
+  }
+
+  /** Briefly dip the music so a fanfare reads clearly. */
+  private duckFor(seconds: number) {
+    const ctx = this.ctx
+    if (!ctx) return
+    this.duckUntil = Math.max(this.duckUntil, ctx.currentTime + seconds)
+    this.applyDuck()
+    window.setTimeout(() => this.applyDuck(), seconds * 1000 + 30)
+  }
+
+  private applyDuck() {
+    const ctx = this.ctx
+    if (!ctx || !this.musicBus) return
+    const down = this.ducked || ctx.currentTime < this.duckUntil
+    this.musicBus.gain.setTargetAtTime(MUSIC_LEVEL * (down ? DUCK_LEVEL : 1), ctx.currentTime, down ? 0.04 : 0.25)
+  }
+
   private tone(opts: ToneOpts) {
     const ctx = this.ensure()
-    if (!ctx || !this.master) return
+    if (!ctx || !this.sfxBus) return
+    const vol = this.sfxGain() * (opts.gain ?? 0.2)
+    if (vol <= 0) return
     const now = ctx.currentTime + (opts.delay ?? 0)
     const dur = opts.duration ?? 0.12
     const osc = ctx.createOscillator()
     const gain = ctx.createGain()
-    const vol = this.sfxGain() * (opts.gain ?? 0.2)
     osc.type = opts.type ?? 'sine'
     osc.frequency.setValueAtTime(opts.freq, now)
     if (opts.endFreq != null) {
       osc.frequency.exponentialRampToValueAtTime(Math.max(20, opts.endFreq), now + dur)
     }
     gain.gain.setValueAtTime(0.0001, now)
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol), now + 0.015)
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol), now + 0.012)
     gain.gain.exponentialRampToValueAtTime(0.0001, now + dur)
 
-    if (opts.filterFreq) {
+    // Buzzy waves get a gentle low-pass by default so they don't sound harsh on small speakers.
+    const cutoff = opts.filterFreq ?? (osc.type === 'square' || osc.type === 'sawtooth' ? 4200 : 0)
+    if (cutoff) {
       const filter = ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      filter.frequency.value = opts.filterFreq
+      filter.frequency.value = cutoff
       osc.connect(filter)
       filter.connect(gain)
     } else {
       osc.connect(gain)
     }
-    gain.connect(this.master)
+    gain.connect(this.sfxBus)
     osc.start(now)
     osc.stop(now + dur + 0.02)
   }
 
-  private noiseBurst(duration = 0.08, gain = 0.12, filterFreq = 1800) {
+  private noiseBuffer?: AudioBuffer
+  /** One shared second of white noise; bursts read from a random offset instead of allocating. */
+  private noise(ctx: BaseAudioContext): AudioBuffer {
+    if (!this.noiseBuffer || this.noiseBuffer.sampleRate !== ctx.sampleRate) {
+      const n = ctx.sampleRate
+      this.noiseBuffer = ctx.createBuffer(1, n, ctx.sampleRate)
+      const data = this.noiseBuffer.getChannelData(0)
+      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1
+    }
+    return this.noiseBuffer
+  }
+
+  private noiseBurst(duration = 0.08, gain = 0.12, filterFreq = 1800, delay = 0) {
     const ctx = this.ensure()
-    if (!ctx || !this.master) return
-    const samples = Math.floor(ctx.sampleRate * duration)
-    const buffer = ctx.createBuffer(1, samples, ctx.sampleRate)
-    const data = buffer.getChannelData(0)
-    for (let i = 0; i < samples; i++) data[i] = Math.random() * 2 - 1
+    if (!ctx || !this.sfxBus) return
+    const vol = this.sfxGain() * gain
+    if (vol <= 0) return
     const src = ctx.createBufferSource()
-    src.buffer = buffer
+    src.buffer = this.noise(ctx)
     const filter = ctx.createBiquadFilter()
     filter.type = 'bandpass'
     filter.frequency.value = filterFreq
     filter.Q.value = 0.8
     const g = ctx.createGain()
-    const vol = this.sfxGain() * gain
-    const now = ctx.currentTime
+    const now = ctx.currentTime + delay
     g.gain.setValueAtTime(vol, now)
     g.gain.exponentialRampToValueAtTime(0.0001, now + duration)
     src.connect(filter)
     filter.connect(g)
-    g.connect(this.master)
-    src.start(now)
+    g.connect(this.sfxBus)
+    src.start(now, Math.random() * 0.7)
     src.stop(now + duration)
   }
 
   uiClick() {
     this.unlock()
+    if (!this.fresh('click')) return
     this.tone({ freq: 660, endFreq: 880, type: 'triangle', duration: 0.06, gain: 0.12 })
   }
 
   uiHover() {
-    if (this.sfxGain() <= 0) return
-    this.tone({ freq: 520, type: 'sine', duration: 0.04, gain: 0.04 })
+    if (this.sfxGain() <= 0 || !this.fresh('hover')) return
+    this.tone({ freq: 520, type: 'sine', duration: 0.04, gain: 0.035 })
   }
 
   uiToggle() {
     this.unlock()
-    this.tone({ freq: 440, endFreq: 660, type: 'square', duration: 0.08, gain: 0.08 })
+    if (!this.fresh('toggle')) return
+    this.tone({ freq: 440, endFreq: 660, type: 'square', duration: 0.08, gain: 0.07 })
   }
 
   roll() {
@@ -143,8 +250,25 @@ class SfxSystem {
     this.tone({ freq: 320, type: 'triangle', duration: 0.05, gain: 0.06, delay: 0.08 })
   }
 
+  /** One clack of the die tumbling (called each frame of the roll animation). */
+  rattle() {
+    if (this.sfxGain() <= 0 || !this.fresh('rattle')) return
+    this.noiseBurst(0.025, 0.05, 2200 + Math.random() * 1600)
+    this.tone({ freq: 500 + Math.random() * 300, type: 'triangle', duration: 0.025, gain: 0.03 })
+  }
+
+  /** The die settles on a face: a woody knock that rises with the number rolled. */
+  diceLand(value: number) {
+    this.unlock()
+    const v = Math.max(0, Math.min(8, value))
+    this.noiseBurst(0.05, 0.08, 900)
+    this.tone({ freq: 220 + v * 40, endFreq: 160 + v * 30, type: 'triangle', duration: 0.1, gain: 0.13 })
+    if (v >= 6) this.tone({ freq: 880 + v * 40, type: 'sine', duration: 0.16, gain: 0.06, delay: 0.07 })
+  }
+
   correct() {
     this.unlock()
+    if (!this.fresh('correct')) return
     this.tone({ freq: 523.25, type: 'sine', duration: 0.1, gain: 0.14 })
     this.tone({ freq: 659.25, type: 'sine', duration: 0.12, gain: 0.12, delay: 0.08 })
     this.tone({ freq: 783.99, type: 'triangle', duration: 0.18, gain: 0.1, delay: 0.16 })
@@ -152,20 +276,61 @@ class SfxSystem {
 
   wrong() {
     this.unlock()
+    if (!this.fresh('wrong')) return
     this.tone({ freq: 220, endFreq: 110, type: 'sawtooth', duration: 0.18, gain: 0.1, filterFreq: 500 })
     this.noiseBurst(0.08, 0.06, 400)
   }
 
   coin() {
     this.unlock()
-    this.tone({ freq: 988, type: 'square', duration: 0.06, gain: 0.07 })
-    this.tone({ freq: 1319, type: 'square', duration: 0.1, gain: 0.06, delay: 0.05 })
+    if (!this.fresh('coin')) return
+    this.tone({ freq: 988, type: 'square', duration: 0.06, gain: 0.06 })
+    this.tone({ freq: 1319, type: 'square', duration: 0.1, gain: 0.05, delay: 0.05 })
+  }
+
+  /** Coins paid out or lost: a short falling jingle. */
+  coinLoss() {
+    this.unlock()
+    if (!this.fresh('coinLoss')) return
+    this.tone({ freq: 1175, endFreq: 880, type: 'square', duration: 0.07, gain: 0.05 })
+    this.tone({ freq: 880, endFreq: 587, type: 'square', duration: 0.12, gain: 0.05, delay: 0.07 })
+  }
+
+  /** Cash register for buying a shop or item. */
+  purchase() {
+    this.unlock()
+    this.noiseBurst(0.04, 0.06, 3200)
+    this.tone({ freq: 1568, type: 'square', duration: 0.05, gain: 0.05, delay: 0.03 })
+    this.tone({ freq: 2093, type: 'triangle', duration: 0.22, gain: 0.07, delay: 0.08 })
   }
 
   whoosh() {
     this.unlock()
-    this.noiseBurst(0.16, 0.08, 900)
-    this.tone({ freq: 400, endFreq: 120, type: 'triangle', duration: 0.16, gain: 0.06 })
+    if (!this.fresh('whoosh')) return
+    this.noiseBurst(0.18, 0.09, 900)
+    this.tone({ freq: 400, endFreq: 120, type: 'triangle', duration: 0.18, gain: 0.06 })
+  }
+
+  /** Bonus tile: bright upward sparkle. */
+  bonus() {
+    this.unlock()
+    ;[880, 1109, 1319, 1760].forEach((f, i) => this.tone({ freq: f, type: 'triangle', duration: 0.12, gain: 0.07, delay: i * 0.05 }))
+  }
+
+  /** Penalty tile: a deflating "wah-wah". */
+  penalty() {
+    this.unlock()
+    this.tone({ freq: 392, endFreq: 370, type: 'sawtooth', duration: 0.2, gain: 0.08, filterFreq: 900 })
+    this.tone({ freq: 349, endFreq: 262, type: 'sawtooth', duration: 0.34, gain: 0.08, filterFreq: 800, delay: 0.2 })
+  }
+
+  /** Mystery tile: wobbly question-mark warble. */
+  mystery() {
+    this.unlock()
+    for (let i = 0; i < 6; i++) {
+      this.tone({ freq: i % 2 ? 740 : 622, type: 'sine', duration: 0.07, gain: 0.07, delay: i * 0.06 })
+    }
+    this.tone({ freq: 523, endFreq: 1046, type: 'triangle', duration: 0.18, gain: 0.07, delay: 0.36 })
   }
 
   battle() {
@@ -175,16 +340,50 @@ class SfxSystem {
     this.noiseBurst(0.12, 0.1, 700)
   }
 
+  /** A blow lands — heavier for more damage. */
+  hit(heavy = false) {
+    this.unlock()
+    this.noiseBurst(heavy ? 0.16 : 0.1, heavy ? 0.1 : 0.07, 600)
+    this.tone({ freq: heavy ? 150 : 200, endFreq: 60, type: 'sine', duration: heavy ? 0.22 : 0.14, gain: heavy ? 0.12 : 0.08 })
+  }
+
+  /** A defend that absorbs the blow: metallic clang. */
+  block() {
+    this.unlock()
+    this.tone({ freq: 1245, type: 'square', duration: 0.18, gain: 0.05, filterFreq: 5000 })
+    this.tone({ freq: 1661, type: 'triangle', duration: 0.26, gain: 0.05, delay: 0.01 })
+    this.noiseBurst(0.05, 0.07, 4000)
+  }
+
+  /** A clean dodge. */
+  dodge() {
+    this.unlock()
+    this.noiseBurst(0.14, 0.07, 2600)
+    this.tone({ freq: 700, endFreq: 1400, type: 'sine', duration: 0.14, gain: 0.06 })
+  }
+
+  /** Whose-turn chime: two soft notes. */
+  turnStart() {
+    this.unlock()
+    if (!this.fresh('turn')) return
+    this.tone({ freq: 784, type: 'sine', duration: 0.1, gain: 0.07 })
+    this.tone({ freq: 1046.5, type: 'sine', duration: 0.16, gain: 0.07, delay: 0.09 })
+  }
+
   win() {
     this.unlock()
+    this.duckFor(1)
     const notes = [523.25, 659.25, 783.99, 1046.5]
     notes.forEach((f, i) => {
       this.tone({ freq: f, type: 'triangle', duration: 0.22, gain: 0.12, delay: i * 0.12 })
     })
+    this.tone({ freq: 1318.5, type: 'sine', duration: 0.4, gain: 0.06, delay: 0.48 })
   }
 
   star() {
     this.unlock()
+    if (!this.fresh('star')) return
+    this.duckFor(0.8)
     this.tone({ freq: 740, type: 'sine', duration: 0.12, gain: 0.12 })
     this.tone({ freq: 988, type: 'sine', duration: 0.18, gain: 0.1, delay: 0.1 })
     this.tone({ freq: 1480, type: 'triangle', duration: 0.25, gain: 0.08, delay: 0.2 })
@@ -198,6 +397,7 @@ class SfxSystem {
   /** Minigame splash / countdown sting. */
   splash() {
     this.unlock()
+    if (!this.fresh('splash')) return
     this.tone({ freq: 392, endFreq: 587, type: 'triangle', duration: 0.14, gain: 0.1 })
     this.tone({ freq: 784, type: 'sine', duration: 0.16, gain: 0.08, delay: 0.1 })
     this.noiseBurst(0.1, 0.06, 1400)
@@ -213,21 +413,23 @@ class SfxSystem {
   /** Drum hit for the rhythm minigame groove: kick, snare or hat. */
   drum(kind: 'kick' | 'snare' | 'hat') {
     if (this.sfxGain() <= 0) return
-    if (kind === 'kick') this.tone({ freq: 140, endFreq: 45, type: 'sine', duration: 0.14, gain: 0.32 })
-    else if (kind === 'snare') this.noiseBurst(0.1, 0.1, 1800)
+    // Balanced against the plucks — the kick used to be ~10 dB louder than anything else.
+    if (kind === 'kick') this.tone({ freq: 140, endFreq: 45, type: 'sine', duration: 0.14, gain: 0.09 })
+    else if (kind === 'snare') this.noiseBurst(0.1, 0.09, 1800)
     else this.noiseBurst(0.03, 0.035, 7000)
   }
 
   /** Board step blip; pitch rises as the remaining steps run down. */
   boardStep(remaining: number) {
     if (this.sfxGain() <= 0) return
-    const freq = 520 + Math.max(0, 6 - remaining) * 60
+    const freq = 520 + Math.max(0, 8 - remaining) * 50
     this.tone({ freq, type: 'triangle', duration: 0.07, gain: 0.07 })
   }
 
   /** Muted "clunk" for a missed or wrong rhythm note. */
   clunk() {
     this.unlock()
+    if (!this.fresh('clunk')) return
     this.tone({ freq: 110, endFreq: 70, type: 'square', duration: 0.12, gain: 0.07, filterFreq: 500 })
   }
 
@@ -235,6 +437,13 @@ class SfxSystem {
   tick(final = false) {
     this.unlock()
     this.tone({ freq: final ? 1046.5 : 659.25, type: 'square', duration: final ? 0.22 : 0.09, gain: 0.07 })
+  }
+
+  /** Last seconds on a question clock: a soft, urgent tick. */
+  warn() {
+    this.unlock()
+    if (!this.fresh('warn')) return
+    this.tone({ freq: 1568, type: 'sine', duration: 0.05, gain: 0.05 })
   }
 
   /** Minigame clock expired. */
@@ -246,7 +455,7 @@ class SfxSystem {
 
   /** Slot-reel tick for the minigame roulette. */
   reel() {
-    if (this.sfxGain() <= 0) return
+    if (this.sfxGain() <= 0 || !this.fresh('reel')) return
     this.tone({ freq: 1200, type: 'triangle', duration: 0.03, gain: 0.05 })
   }
 
@@ -263,6 +472,7 @@ class SfxSystem {
   startMusic(track?: MusicTrack) {
     this.unlock()
     const next = track ?? this.currentTrack
+    this.wantMusic = true
     const ctx = this.ensure()
     if (!ctx || !this.musicGain) return
     if (getSettings().muted || getSettings().musicVolume <= 0.01) {
@@ -270,10 +480,16 @@ class SfxSystem {
       return
     }
     if (this.musicPlaying && this.currentTrack === next) return
-    if (this.musicPlaying) this.stopMusic(true)
+    // Crossfade: the old track fades on its own fader while the new one fades in.
+    if (this.musicPlaying) this.stopTrack(true)
     this.currentTrack = next
     this.musicPlaying = true
     this.applyVolumes()
+    const fader = ctx.createGain()
+    fader.gain.setValueAtTime(0.0001, ctx.currentTime)
+    fader.gain.exponentialRampToValueAtTime(1, ctx.currentTime + 0.35)
+    fader.connect(this.musicGain)
+    this.trackGain = fader
     this.step = 0
     this.nextStepTime = ctx.currentTime + 0.08
     const tick = () => this.scheduleMusic()
@@ -281,38 +497,38 @@ class SfxSystem {
     this.schedulerId = window.setInterval(tick, 25)
   }
 
+  /** Stop the music (a scene that wants silence). Settings changes won't restart it. */
   stopMusic(fade = true) {
+    this.wantMusic = false
+    this.stopTrack(fade)
+  }
+
+  private stopTrack(fade: boolean) {
     if (this.schedulerId !== undefined) {
       window.clearInterval(this.schedulerId)
       this.schedulerId = undefined
     }
-    const ctx = this.ctx
     this.musicPlaying = false
-    if (!ctx || !this.musicGain) {
-      this.musicNodes = []
-      return
-    }
-    const now = ctx.currentTime
+    const ctx = this.ctx
+    const fader = this.trackGain
     const nodes = [...this.musicNodes]
     this.musicNodes = []
-    if (fade) {
-      this.musicGain.gain.cancelScheduledValues(now)
-      this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, now)
-      this.musicGain.gain.linearRampToValueAtTime(0.0001, now + 0.3)
-    }
+    this.trackGain = null
+    if (!ctx || !fader) return
+    const now = ctx.currentTime
+    const fadeSecs = fade ? 0.3 : 0.02
+    fader.gain.cancelScheduledValues(now)
+    fader.gain.setValueAtTime(Math.max(0.0001, fader.gain.value), now)
+    fader.gain.exponentialRampToValueAtTime(0.0001, now + fadeSecs)
     window.setTimeout(() => {
       nodes.forEach(n => {
         try {
-          if ('stop' in n && typeof (n as OscillatorNode).stop === 'function') (n as OscillatorNode).stop()
+          if (n instanceof AudioScheduledSourceNode) n.stop()
           n.disconnect()
         } catch { /* already stopped */ }
       })
-      if (!this.musicPlaying) this.applyVolumes()
-    }, fade ? 320 : 0)
-    if (fade) {
-      // Restore the bus level for the next track once the fade is done.
-      window.setTimeout(() => this.applyVolumes(), 340)
-    }
+      fader.disconnect()
+    }, fadeSecs * 1000 + 40)
   }
 
   private currentTrack: MusicTrack = 'menu'
@@ -322,13 +538,13 @@ class SfxSystem {
 
   private scheduleMusic() {
     const ctx = this.ctx
-    if (!ctx || !this.musicGain || !this.musicPlaying) return
+    if (!ctx || !this.trackGain || !this.musicPlaying) return
     const def = MUSIC_TRACKS[this.currentTrack]
     const stepDur = 60 / def.bpm / 4
     // After a throttled/background tab, skip missed steps instead of firing them all at once.
     if (this.nextStepTime < ctx.currentTime) this.nextStepTime = ctx.currentTime + 0.05
     if (typeof document !== 'undefined' && document.hidden) return
-    // Drop stale nodes so the list doesn't grow forever.
+    // Drop finished nodes so the list doesn't grow forever.
     if (this.musicNodes.length > 400) this.musicNodes.splice(0, this.musicNodes.length - 200)
     while (this.nextStepTime < ctx.currentTime + 0.14) {
       this.playStep(def, this.step, this.nextStepTime, stepDur)
@@ -342,19 +558,19 @@ class SfxSystem {
     const s = step % 16
     const chord = def.chords[bar]
     if (def.bass.includes(s)) {
-      this.musicVoice(midiFreq(chord[0] - 12), t, stepDur * 1.8, 'triangle', 0.32, 900)
+      this.musicVoice(midiFreq(chord[0] - 12), t, stepDur * 1.8, 'triangle', 0.3, 900)
     }
     if (s % 2 === 0) {
       const tone = chord[def.arp[(s / 2) % def.arp.length] % chord.length] + 12
-      this.musicVoice(midiFreq(tone), t, stepDur * 0.9, 'square', 0.05, 2200)
+      this.musicVoice(midiFreq(tone), t, stepDur * 0.9, 'square', 0.045, 1800)
     }
     const lead = def.lead[bar]?.[s]
     if (lead !== undefined && lead !== null) {
-      this.musicVoice(midiFreq(lead), t, stepDur * 1.6, 'triangle', 0.13, 3200)
+      this.musicVoice(midiFreq(lead), t, stepDur * 1.6, 'triangle', 0.15, 3200)
     }
     if (def.kick.includes(s)) this.musicKick(t)
-    if (def.snare.includes(s)) this.musicNoise(t, 0.09, 0.12, 1800, 'bandpass')
-    if (def.hat.includes(s)) this.musicNoise(t, 0.03, 0.05, 7000, 'highpass')
+    if (def.snare.includes(s)) this.musicNoise(t, 0.09, 0.1, 1800, 'bandpass')
+    if (def.hat.includes(s)) this.musicNoise(t, 0.03, 0.04, 7000, 'highpass')
   }
 
   private musicVoice(freq: number, t: number, dur: number, type: OscillatorType, gain: number, cutoff: number) {
@@ -371,7 +587,7 @@ class SfxSystem {
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
     osc.connect(f)
     f.connect(g)
-    g.connect(this.musicGain!)
+    g.connect(this.trackGain!)
     osc.start(t)
     osc.stop(t + dur + 0.02)
     this.musicNodes.push(osc, g, f)
@@ -384,26 +600,20 @@ class SfxSystem {
     osc.type = 'sine'
     osc.frequency.setValueAtTime(140, t)
     osc.frequency.exponentialRampToValueAtTime(45, t + 0.12)
-    g.gain.setValueAtTime(0.42, t)
+    // Kept modest: at full level the kick spiked 20 dB over the melody.
+    g.gain.setValueAtTime(0.22, t)
     g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16)
     osc.connect(g)
-    g.connect(this.musicGain!)
+    g.connect(this.trackGain!)
     osc.start(t)
     osc.stop(t + 0.18)
     this.musicNodes.push(osc, g)
   }
 
-  private noiseBuffer?: AudioBuffer
   private musicNoise(t: number, dur: number, gain: number, freq: number, type: BiquadFilterType) {
     const ctx = this.ctx!
-    if (!this.noiseBuffer) {
-      const n = Math.floor(ctx.sampleRate * 0.2)
-      this.noiseBuffer = ctx.createBuffer(1, n, ctx.sampleRate)
-      const data = this.noiseBuffer.getChannelData(0)
-      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1
-    }
     const src = ctx.createBufferSource()
-    src.buffer = this.noiseBuffer
+    src.buffer = this.noise(ctx)
     const f = ctx.createBiquadFilter()
     f.type = type
     f.frequency.value = freq
@@ -412,8 +622,8 @@ class SfxSystem {
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
     src.connect(f)
     f.connect(g)
-    g.connect(this.musicGain!)
-    src.start(t)
+    g.connect(this.trackGain!)
+    src.start(t, Math.random() * 0.7)
     src.stop(t + dur + 0.02)
     this.musicNodes.push(src, f, g)
   }
@@ -501,6 +711,22 @@ const MUSIC_TRACKS: Record<MusicTrack, TrackDef> = {
     snare: [12],
     hat: [4, 12],
   },
+}
+
+/**
+ * Waveshaper curve over input [-2, 2] (scaled by 0.5 going in, 2 coming out): linear up to
+ * ±0.6, then a tanh knee that never exceeds ±1.
+ */
+function softClipCurve(): Float32Array<ArrayBuffer> {
+  const n = 2048
+  const curve = new Float32Array(new ArrayBuffer(n * 4))
+  for (let i = 0; i < n; i++) {
+    const r = ((i / (n - 1)) * 2 - 1) * 2
+    const a = Math.abs(r)
+    const y = a <= 0.6 ? a : 0.6 + 0.4 * Math.tanh((a - 0.6) / 0.4)
+    curve[i] = (Math.sign(r) * y) / 2
+  }
+  return curve
 }
 
 function midiFreq(m: number): number {

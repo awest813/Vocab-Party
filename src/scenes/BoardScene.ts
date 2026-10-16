@@ -794,6 +794,7 @@ export class BoardScene extends Phaser.Scene {
     }
 
     if (!this.rolling && !isAutoSimMode()) {
+      Sfx.turnStart()
       await this.showAnnouncement(`${p.emoji} ${p.name.toUpperCase()}'S TURN!`, hexColor(characterDef(p.characterIndex).color))
     }
 
@@ -889,6 +890,7 @@ export class BoardScene extends Phaser.Scene {
       repeat: 14,
       callback: () => {
         const face = Phaser.Math.Between(1, 6)
+        Sfx.rattle()
         this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face - 1])
         this.diceSprite.setScale(1.2 + Math.random() * 0.3)
         this.diceSprite.setAngle(Math.random() * 20 - 10)
@@ -922,6 +924,7 @@ export class BoardScene extends Phaser.Scene {
     player.dashActive = false
     if (hadSpeedBoost) player.speedBoostTurns = Math.max(0, player.speedBoostTurns - 1)
 
+    Sfx.diceLand(face.move)
     // Show the rolled face: pip texture for 1–6, big label for 0 and 7+.
     if (face.move >= 1 && face.move <= 6) {
       this.diceSprite.setTexture(DICE_TEXTURE_KEYS[face.move - 1]).setAlpha(1)
@@ -1009,6 +1012,7 @@ export class BoardScene extends Phaser.Scene {
       player.stats.spacesMoved = (player.stats.spacesMoved ?? 0) + 1
       if (prev > 0 && player.position === 0) {
         player.coins += 5
+        Sfx.coin()
         this.showFloatyText(player, '+5 Lap Coins!', '#ffcc66')
       }
       const {x, y} = this.getTileXY(player.position)
@@ -1145,6 +1149,7 @@ export class BoardScene extends Phaser.Scene {
         const temp = player.position
         player.position = target.position
         target.position = temp
+        Sfx.whoosh()
         this.updatePlayerTokens()
         this.showFloatyText(target, '🔄 SWAPPED!', '#ff88ff')
         break
@@ -1154,6 +1159,7 @@ export class BoardScene extends Phaser.Scene {
           ? cpuChooseWarpPosition(this.nodes.length, this.board.tiles as string[], player.cpuLevel, this.nodes.map(n => n.next))
           : Phaser.Math.Between(0, this.nodes.length - 1)
         this.updatePlayerTokens()
+        Sfx.whoosh()
         this.showFloatyText(player, '🌀 Warped!', '#88ccff')
         break
       case 'shield':
@@ -1168,6 +1174,7 @@ export class BoardScene extends Phaser.Scene {
           : chosenTarget!
         const target = this.state.players[targetIdx]
         target.coins = Math.max(0, target.coins - 8)
+        Sfx.coinLoss()
         this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
         break
       }
@@ -1225,6 +1232,7 @@ export class BoardScene extends Phaser.Scene {
           const mult = this.isLastStretch() ? 2 : 1
           player.score += 5 * mult
           player.coins += 4 * mult
+          Sfx.bonus()
           this.showImpactText(this.scale.width / 2, this.scale.height / 2, mult > 1 ? '⭐ DOUBLE! ⭐' : '⭐ NICE! ⭐', '#FFD700')
           this.showFloatyText(player, `⭐ +${5 * mult} pts +${4 * mult} coins!`, '#FFD700')
           this.showDamageNumber(player, 5 * mult, 'pts')
@@ -1239,8 +1247,10 @@ export class BoardScene extends Phaser.Scene {
           const mult = this.isLastStretch() ? 2 : 1
           if (player.shieldActive) {
             player.shieldActive = false
+            Sfx.block()
             this.showFloatyText(player, '🛡️ Shield Block!', '#44ccff')
           } else {
+            Sfx.penalty()
             player.score = Math.max(0, player.score - 4 * mult)
             player.coins = Math.max(0, player.coins - 5 * mult)
             this.showImpactText(this.scale.width / 2, this.scale.height / 2, '💀 OUCH! 💀', '#ff4444')
@@ -1316,6 +1326,7 @@ export class BoardScene extends Phaser.Scene {
           void this.handleDuelTile(player, playerIndex)
           break
         case 'mystery':
+          Sfx.mystery()
           this.handleMystery(player)
           break
         case 'swap':
@@ -1677,6 +1688,7 @@ export class BoardScene extends Phaser.Scene {
       }
       if (player.coins >= SHOP_PRICE_COINS) {
         player.coins -= SHOP_PRICE_COINS
+        Sfx.purchase()
         this.shopOwners[tileIndex] = player.id
         this.refreshShopOwnerBadge(tileIndex)
         this.statusText.setText(`🏪 ${player.name} bought this shop!`)
@@ -1715,6 +1727,7 @@ export class BoardScene extends Phaser.Scene {
 
     if (player.shieldActive) {
       player.shieldActive = false
+      Sfx.block()
       this.statusText.setText(`🏪 Shielded from rent!`)
       this.showFloatyText(player, '🛡️ Shielded!', '#44ccff')
       this.time.delayedCall(this.d(1200), () => this.endTurn())
@@ -1724,6 +1737,7 @@ export class BoardScene extends Phaser.Scene {
     const pay = Math.min(player.coins, rent)
     player.coins -= pay
     owner.coins += pay
+    if (pay > 0) Sfx.coinLoss()
     this.statusText.setText(`🏪 Rent to ${owner.name}! (${owned} shops)`)
     this.showFloatyText(player, `-${pay} rent`, '#ff8888')
     this.showFloatyText(owner, `+${pay} rent!`, '#88ff88')
@@ -1783,6 +1797,7 @@ export class BoardScene extends Phaser.Scene {
       // Same consolation for everyone (CPUs used to skip it).
       player.coins += 2
       this.statusText.setText(`🏆 Save up! Stars cost ${STAR_COST_COINS} coins.`)
+      Sfx.coin()
       this.showFloatyText(player, '+2 pity coins', '#aaccff')
     } else if (await this.offerStars(player, false) > 0) {
       // Bought — the splash already played.
@@ -1980,6 +1995,7 @@ export class BoardScene extends Phaser.Scene {
     target.position = tmpPos
 
     const swapDur = isAutoSimMode() ? 60 : 500
+    Sfx.whoosh()
     this.updatePlayerTokens(swapDur)
 
     this.statusText.setText(`🔄 ${player.name} & ${target.name} swapped!`)
@@ -2295,6 +2311,7 @@ export class BoardScene extends Phaser.Scene {
     }
     if (player.coins >= item.cost) {
       player.coins -= item.cost
+      Sfx.purchase()
       player.inventory.push(item.type)
       this.statusText.setText(`🛍️ ${player.name} bought ${item.name}!`)
       this.showFloatyText(player, `-${item.cost} 🪙 · ${item.emoji} ${item.name}`, '#44ccff')
