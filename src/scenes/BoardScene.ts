@@ -2269,7 +2269,7 @@ export class BoardScene extends Phaser.Scene {
         const stolen = opponent ? Math.min(DUEL_STEAL, opponent.coins) : DUEL_STEAL
         if (opponent) {
           opponent.coins -= stolen
-          this.showDamageNumber(opponent, -stolen, '🪙', true)
+          if (stolen > 0) this.showDamageNumber(opponent, -stolen, '🪙', true)
         }
         player.coins += stolen
         this.showFloatyText(player, `Duel won! +${stolen} 🪙`, '#44ff88')
@@ -2280,7 +2280,7 @@ export class BoardScene extends Phaser.Scene {
         const stolen = Math.min(DUEL_STEAL, player.coins)
         player.coins -= stolen
         opponent.coins += stolen
-        this.showDamageNumber(player, -stolen, '🪙', true)
+        if (stolen > 0) this.showDamageNumber(player, -stolen, '🪙', true)
         this.showFloatyText(opponent, `Duel won! +${stolen} 🪙`, '#44ff88')
       } else {
         this.showFloatyText(player, 'The Rival Bot wins this one…', '#ff8888')
@@ -2550,7 +2550,8 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private pauseGame() {
-    if (this.scene.isActive('PauseScene') || this.coachOpen) return
+    // Esc inside a shop/prompt/item menu means "cancel" there, not "pause".
+    if (this.scene.isActive('PauseScene') || this.coachOpen || this.choiceModal || this.itemMenu) return
     Sfx.pause()
     this.scene.pause()
     this.scene.launch('PauseScene')

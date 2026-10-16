@@ -831,7 +831,7 @@ export class SetupScene extends Phaser.Scene {
     if (!row || typeof window.prompt !== 'function') return
     const entered = window.prompt(`Name for player ${index + 1}`, row.value)
     if (entered === null) return
-    const clean = Array.from(entered).filter(ch => ch >= ' ').join('').trim().slice(0, 16)
+    const clean = Array.from(Array.from(entered).filter(ch => ch >= ' ').join('').trim()).slice(0, 16).join('')
     if (!clean) return
     row.value = clean
     this.updateRowDisplay(index)

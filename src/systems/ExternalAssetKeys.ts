@@ -51,7 +51,6 @@ export const TEXTURE_KEYS = {
   particleWhite: 'ext_particle_white',
   particleGreen: 'ext_particle_green',
   flame1: 'ext_flame1',
-  flame2: 'ext_flame2',
   muzzleflash: 'ext_muzzleflash',
   gem: 'ext_gem',
   diamond: 'ext_diamond',

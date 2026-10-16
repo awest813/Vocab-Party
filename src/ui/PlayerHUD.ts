@@ -73,10 +73,11 @@ export class PlayerHUD {
       const maxNameW = panelW - 120
       if (nameText.width > maxNameW) nameText.setFontSize(14)
       if (nameText.width > maxNameW) {
-        let name = player.name
-        while (name.length > 1 && nameText.width > maxNameW) {
-          name = name.slice(0, -1)
-          nameText.setText(`${name.trimEnd()}…`)
+        // Trim by whole characters so emoji are never split in half.
+        const chars = Array.from(player.name)
+        while (chars.length > 1 && nameText.width > maxNameW) {
+          chars.pop()
+          nameText.setText(`${chars.join('').trimEnd()}…`)
         }
       }
       children.push(nameText)

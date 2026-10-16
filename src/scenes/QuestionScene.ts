@@ -163,12 +163,15 @@ export class QuestionScene extends Phaser.Scene {
     const labels = ['A', 'B', 'C', 'D']
     let answered = false
     let secondsLeft = 15
+    /** Set once the timer is built; clears it away when the question is answered. */
+    let hideTimer = () => {}
 
     const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
       if (answered) return
       answered = true
       countdownTimer?.remove()
       timerBarTween?.stop()
+      hideTimer()
       const correct = i === q.correct
       const timeBonus = correct ? Math.max(1, Math.ceil(secondsLeft / 3)) : 0
       const speedSurge = correct && secondsLeft >= 10
@@ -262,6 +265,10 @@ export class QuestionScene extends Phaser.Scene {
       }
     })
 
+    hideTimer = () => {
+      this.tweens.add({ targets: [timerTrack, timerBar, countdownText], alpha: 0, duration: 200 })
+    }
+
     const timerBarTween = this.tweens.add({
       targets: timerBar,
       width: 0,
@@ -288,6 +295,7 @@ export class QuestionScene extends Phaser.Scene {
         answered = true
         countdownTimer.remove()
         timerBarTween.stop()
+        hideTimer()
         const wantCorrect = Phaser.Math.FloatBetween(0, 1) < cpuResolve.correctChance
         const wrongIndices = q.answers.map((_, i) => i).filter(i => i !== q.correct)
         const pickIndex = wantCorrect
@@ -325,7 +333,7 @@ export class QuestionScene extends Phaser.Scene {
           this.time.delayedCall(i * 20, () => {
             const bolt = this.add.text(w / 2 + Math.cos(angle) * 30, h / 2 + Math.sin(angle) * 30, '⚡', {
               fontSize: '24px'
-            }).setOrigin(0.5).setAlpha(1)
+            }).setOrigin(0.5).setAlpha(1).setDepth(202)
             this.tweens.add({
               targets: bolt,
               x: bolt.x + Math.cos(angle) * 120,
@@ -377,17 +385,22 @@ export class QuestionScene extends Phaser.Scene {
 
     if (explanation) {
       this.time.delayedCall(this.d(300), () => {
-        this.add.text(w / 2, h / 2 + 230, `💡 ${explanation}`, {
+        // Above the card and dimmer, on its own plate over the (finished) timer bar.
+        this.add.text(w / 2, h / 2 + 225, `💡 ${explanation}`, {
           fontSize: '18px',
           fontFamily: 'Fredoka, Arial',
           color: '#ffffaa',
+          backgroundColor: '#0b1222',
+          padding: { x: 14, y: 8 },
           wordWrap: { width: 820 },
           align: 'center'
-        }).setOrigin(0.5)
+        }).setOrigin(0.5).setDepth(202)
       })
     }
 
-    this.time.delayedCall(this.d(2200), () => onComplete({
+    // Leave time to read the explanation, longest after a miss (that's when it teaches most).
+    const readMs = explanation ? (correct ? 3000 : 4200) : 2200
+    this.time.delayedCall(this.d(readMs), () => onComplete({
       correct,
       timeBonus,
       speedSurge: correct && speedSurge,

@@ -42,6 +42,7 @@ class SfxSystem {
   /** A scene asked for music (kept while muted so unmuting brings it back). */
   private wantMusic = false
   private ducked = false
+  private duckPoll?: number
   private duckUntil = 0
   private unlocked = false
   private lastPlayed = new Map<string, number>()
@@ -61,7 +62,7 @@ class SfxSystem {
         document.addEventListener('visibilitychange', () => {
           if (!this.ctx || !this.unlocked) return
           if (document.hidden) void this.ctx.suspend()
-          else void this.ctx.resume()
+          else void this.ctx.resume().then(() => this.applyDuck())
         })
       }
     }
@@ -156,6 +157,13 @@ class SfxSystem {
     if (!ctx || !this.musicBus) return
     const down = this.ducked || ctx.currentTime < this.duckUntil
     this.musicBus.gain.setTargetAtTime(MUSIC_LEVEL * (down ? DUCK_LEVEL : 1), ctx.currentTime, down ? 0.04 : 0.25)
+    // The audio clock stops while suspended (hidden tab), so re-check until the sting window passes.
+    if (!this.ducked && down && this.duckPoll === undefined) {
+      this.duckPoll = window.setTimeout(() => {
+        this.duckPoll = undefined
+        this.applyDuck()
+      }, 250)
+    }
   }
 
   private tone(opts: ToneOpts) {
