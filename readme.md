@@ -238,6 +238,32 @@ Add to the `minigame_context_clues` array:
 
 ---
 
+## Deploying (GitHub Pages)
+
+The build uses relative asset paths (`base: './'` in `vite.config.js`), so `dist/` works from any sub-path.
+
+1. In the repo on GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. **Actions → Deploy to GitHub Pages → Run workflow.** The game is published at `https://<user>.github.io/<repo>/`.
+
+Any static host works the same way: run `npm run build` and upload `dist/`.
+
+---
+
+## Privacy
+
+Vocab Party makes no network requests beyond loading its own files: no analytics, ads, accounts or third-party fonts. Settings, saved games and Word Book progress stay in the browser's local storage on that device.
+
+---
+
+## Credits
+
+- Art: [Kenney](https://kenney.nl) Board Game Pack and Game Icons (CC0), [Quaternius](https://quaternius.com) LowPoly RPG Characters (CC0). Licence copies are in `public/assets/*/`.
+- Tokens, tiles, dice, particles and skies are drawn procedurally in code; all music and sound effects are synthesized live with the Web Audio API.
+- Font: [Fredoka](https://fonts.google.com/specimen/Fredoka) (SIL Open Font License), self-hosted via `@fontsource/fredoka`.
+- Engine: [Phaser 3](https://phaser.io) (MIT). Project template: ourcade/phaser3-typescript-vite-template (MIT).
+
+---
+
 ## License
 
-MIT
+Code: MIT (see `LICENSE`). Third-party assets keep their own licences listed above.

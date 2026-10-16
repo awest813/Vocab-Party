@@ -34,14 +34,45 @@ function empty(): ProgressData {
 
 let cache: ProgressData | null = null
 
+const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0)
+
+/** Keep only well-formed fields from stored progress, so one bad entry can't break the Word Book. */
+function sanitize(p: Partial<ProgressData>): ProgressData {
+  const words: Record<string, WordRecord> = {}
+  for (const [word, rec] of Object.entries(p.words ?? {})) {
+    const r = rec as Partial<WordRecord> | null
+    if (!r || typeof r !== 'object' || typeof word !== 'string' || !word.trim()) continue
+    words[word] = {
+      correct: count(r.correct),
+      wrong: count(r.wrong),
+      lastSeen: count(r.lastSeen),
+      ...(typeof r.note === 'string' ? { note: r.note } : {}),
+    }
+  }
+  const achievements: Record<string, number> = {}
+  if (p.achievements && typeof p.achievements === 'object' && !Array.isArray(p.achievements)) {
+    for (const [id, at] of Object.entries(p.achievements)) if (typeof at === 'number' && Number.isFinite(at)) achievements[id] = at
+  }
+  return {
+    version: 1,
+    words,
+    gamesPlayed: count(p.gamesPlayed),
+    gamesWon: count(p.gamesWon),
+    minigamesPlayed: count(p.minigamesPlayed),
+    minigamesWon: count(p.minigamesWon),
+    achievements,
+    boardsWon: Array.isArray(p.boardsWon) ? p.boardsWon.filter((b): b is string => typeof b === 'string') : [],
+  }
+}
+
 export function getProgress(): ProgressData {
   if (cache) return cache
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) {
-      const p = JSON.parse(raw) as ProgressData
+      const p = JSON.parse(raw) as Partial<ProgressData> | null
       if (p?.version === 1 && p.words && typeof p.words === 'object') {
-        cache = { ...empty(), ...p }
+        cache = sanitize(p)
         return cache
       }
     }

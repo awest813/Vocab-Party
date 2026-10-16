@@ -69,13 +69,23 @@ export class PlayerHUD {
         stroke: '#000000',
         strokeThickness: 3,
       })
+      // Long names shrink, then truncate, so they never run into the rank label or the next card.
+      const maxNameW = panelW - 120
+      if (nameText.width > maxNameW) nameText.setFontSize(14)
+      if (nameText.width > maxNameW) {
+        let name = player.name
+        while (name.length > 1 && nameText.width > maxNameW) {
+          name = name.slice(0, -1)
+          nameText.setText(`${name.trimEnd()}…`)
+        }
+      }
       children.push(nameText)
 
       if (player.isCpu) {
         const lvl = player.cpuLevel === 'hard' ? 'Hard' : player.cpuLevel === 'easy' ? 'Easy' : 'Normal'
         children.push(
           this.scene.add.text(-panelW / 2 + 68, -8, `CPU · ${lvl}`, {
-            fontSize: '11px',
+            fontSize: '13px',
             fontFamily: FONT.display,
             color: player.cpuLevel === 'hard' ? '#ffb4a2' : player.cpuLevel === 'easy' ? '#b8f0c8' : '#9ad4ff',
           }).setOrigin(0, 0.5)

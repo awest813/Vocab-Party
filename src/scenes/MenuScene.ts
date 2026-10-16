@@ -263,7 +263,7 @@ export class MenuScene extends Phaser.Scene {
       wordWrap: { width: 900 },
     }).setOrigin(0.5).setDepth(6).setAlpha(0)
 
-    const version = this.add.text(w / 2, h - 22, 'v2.0  ·  Phaser 3', {
+    const version = this.add.text(w / 2, h - 22, `v${__APP_VERSION__}  ·  Art: Kenney & Quaternius (CC0)`, {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -296,7 +296,7 @@ export class MenuScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-W', goBook)
     this.input.keyboard?.on('keydown-A', goArcade)
     this.input.keyboard?.on('keydown', openHowToFromKeyboard)
-    this.input.keyboard?.on('keydown-KeyH', onHelpKey)
+    this.input.keyboard?.on('keydown-H', onHelpKey)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.keyboard?.off('keydown-ESC', onEsc)
       this.input.keyboard?.off('keydown-ENTER', onEnterKey)
@@ -304,7 +304,7 @@ export class MenuScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown-W', goBook)
       this.input.keyboard?.off('keydown-A', goArcade)
       this.input.keyboard?.off('keydown', openHowToFromKeyboard)
-      this.input.keyboard?.off('keydown-KeyH', onHelpKey)
+      this.input.keyboard?.off('keydown-H', onHelpKey)
     })
 
     this.cameras.main.fadeIn(420, 7, 11, 20)

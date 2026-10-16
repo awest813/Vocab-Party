@@ -1,6 +1,12 @@
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
 
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
+
 export default defineConfig({
+  // Relative asset URLs so the build works from any sub-path (e.g. GitHub Pages /vocab-party/).
+  base: './',
+  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [],
   server: { host: '0.0.0.0', port: 8000 },
   clearScreen: false,

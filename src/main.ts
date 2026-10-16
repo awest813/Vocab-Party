@@ -1,4 +1,9 @@
 import Phaser from 'phaser'
+// Self-hosted UI font (no third-party font requests from students' browsers).
+import '@fontsource/fredoka/400.css'
+import '@fontsource/fredoka/500.css'
+import '@fontsource/fredoka/600.css'
+import '@fontsource/fredoka/700.css'
 import { initGameFlagsFromLocation } from './systems/gameFlags'
 import { installAudioUnlock, Sfx } from './systems/Sfx'
 import { BootScene } from './scenes/BootScene'
@@ -24,7 +29,8 @@ const config: Phaser.Types.Core.GameConfig = {
     // letterboxing on non-16:9. Game logic always uses 1280x720 internally so menus
     // are deterministic regardless of window shape.
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
+    // #app's flexbox centres the canvas; Phaser's own centring margins would double it up.
+    autoCenter: Phaser.Scale.NO_CENTER,
     width: 1280,
     height: 720,
     expandParent: true,
@@ -49,13 +55,11 @@ const game = new Phaser.Game(config)
 // Handle for headless capture scripts / debugging.
 ;(window as unknown as { __VOCAB_PARTY_GAME__?: Phaser.Game }).__VOCAB_PARTY_GAME__ = game
 
-// Keep canvas sharp on resize / orientation changes (FIT already handles layout).
-window.addEventListener('orientationchange', () => {
-  window.setTimeout(() => game.scale.refresh(), 120)
-})
-window.addEventListener('resize', () => {
-  game.scale.refresh()
-})
+// Re-fit after the browser has applied the new layout (refreshing synchronously in the
+// resize event measured the previous size, so the canvas lagged one resize behind).
+const refitSoon = () => window.requestAnimationFrame(() => game.scale.refresh())
+window.addEventListener('resize', refitSoon)
+window.addEventListener('orientationchange', () => window.setTimeout(refitSoon, 150))
 
 // Warm SFX graph lazily; music starts from MenuScene.
 void Sfx

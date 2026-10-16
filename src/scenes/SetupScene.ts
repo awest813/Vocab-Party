@@ -683,7 +683,11 @@ export class SetupScene extends Phaser.Scene {
     const bg = this.add.rectangle(inputX, rowY, inputW, inputH, COLORS.bgPanel)
     bg.setStrokeStyle(2, COLORS.mute)
     bg.setInteractive()
-    bg.on('pointerdown', () => this.setActiveRow(index))
+    bg.on('pointerdown', () => {
+      this.setActiveRow(index)
+      // Phones and tablets have no hardware keyboard: use the system text prompt instead.
+      if (isTouchPreferred(this.sys.game)) this.promptName(index)
+    })
 
     const nameText = this.add.text(inputX - inputW / 2 + 14, rowY, DEFAULT_NAMES[index], {
       fontSize: '20px',
@@ -820,6 +824,17 @@ export class SetupScene extends Phaser.Scene {
       if (!isActive) row.cursor.setVisible(false)
       this.refreshCharacterVisual(i)
     })
+  }
+
+  private promptName(index: number) {
+    const row = this.rows[index]
+    if (!row || typeof window.prompt !== 'function') return
+    const entered = window.prompt(`Name for player ${index + 1}`, row.value)
+    if (entered === null) return
+    const clean = Array.from(entered).filter(ch => ch >= ' ').join('').trim().slice(0, 16)
+    if (!clean) return
+    row.value = clean
+    this.updateRowDisplay(index)
   }
 
   onKey(event: KeyboardEvent) {

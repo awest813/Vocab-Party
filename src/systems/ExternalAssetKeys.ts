@@ -4,34 +4,15 @@
  * - Kenney Game Icons (tile overlays) — https://kenney.nl/assets/game-icons
  * - Quaternius LowPoly RPG Characters (player pawn crops from albedo textures) —
  *   https://opengameart.org/content/lowpoly-rpg-characters
- * - Board tiles are 64×64 composites (Kenney tile faces + icons on procedural bevels).
+ * - Board tiles, tokens and dice are generated procedurally (SpriteFactory).
  * License copies: public/assets/kenney/*.txt, public/assets/quaternius/*.txt
  */
 
 /**
- * Bundled copies of assets from https://github.com/samme/phaser3-examples-assets
- * (mirrored under /public/assets/phaser-examples for offline play).
+ * Image files loaded at boot. Effect, sky and coin textures (particles, flames, gems, starfield,
+ * nebula) are drawn in code by ProceduralFx under the matching TEXTURE_KEYS.
  */
 export const EXTERNAL_ASSETS = {
-  starfield: 'assets/phaser-examples/skies/starfield.png',
-  particleYellow: 'assets/phaser-examples/particles/yellow.png',
-  particleRed: 'assets/phaser-examples/particles/red.png',
-  particleBlue: 'assets/phaser-examples/particles/blue.png',
-  particleSquare: 'assets/phaser-examples/particles/square.png',
-  particleWhite: 'assets/phaser-examples/particles/white.png',
-  particleGreen: 'assets/phaser-examples/particles/green.png',
-  flame1: 'assets/phaser-examples/particles/flame1.png',
-  flame2: 'assets/phaser-examples/particles/flame2.png',
-  muzzleflash: 'assets/phaser-examples/particles/muzzleflash3.png',
-  gem: 'assets/phaser-examples/sprites/gem.png',
-  diamond: 'assets/phaser-examples/sprites/diamond.png',
-  orbRed: 'assets/phaser-examples/sprites/orb-red.png',
-  orbBlue: 'assets/phaser-examples/sprites/orb-blue.png',
-  firstaid: 'assets/phaser-examples/sprites/firstaid.png',
-  coinSheet: 'assets/phaser-examples/sprites/coin-16x16x4.png',
-  starSmall: 'assets/phaser-examples/demoscene/star.png',
-  skySpace3: 'assets/phaser-examples/skies/space3.png',
-  skyNebula: 'assets/phaser-examples/skies/nebula.jpg',
   // Kenney game icons
   kenneyStar: 'assets/kenney/game-icons/star.png',
   kenneyTrophy: 'assets/kenney/game-icons/trophy.png',
@@ -54,22 +35,6 @@ export const EXTERNAL_ASSETS = {
   kenneyCardHearts: 'assets/kenney/boardgame/cards/cardHeartsA.png',
   kenneyCardClubs: 'assets/kenney/boardgame/cards/cardClubsA.png',
   kenneyCardDiamonds: 'assets/kenney/boardgame/cards/cardDiamondsA.png',
-  // Kenney board tile faces (64×64 art)
-  kenneyTileStart: 'assets/kenney/tiles/tile_start.png',
-  kenneyTileVocab: 'assets/kenney/tiles/tile_vocab.png',
-  kenneyTileGrammar: 'assets/kenney/tiles/tile_grammar.png',
-  kenneyTileBonus: 'assets/kenney/tiles/tile_bonus.png',
-  kenneyTileMystery: 'assets/kenney/tiles/tile_mystery.png',
-  kenneyTileMinigame: 'assets/kenney/tiles/tile_minigame.png',
-  kenneyTileSwap: 'assets/kenney/tiles/tile_swap.png',
-  kenneyTileShop: 'assets/kenney/tiles/tile_shop.png',
-  kenneyTileStar: 'assets/kenney/tiles/tile_star.png',
-  kenneyTileBrick: 'assets/kenney/tiles/tile_brick.png',
-  // Character sprites (MIT — photonstorm/phaser3-examples)
-  charPhaserDude: 'assets/phaser-examples/sprites/phaser-dude.png',
-  charMushroom: 'assets/phaser-examples/sprites/mushroom.png',
-  charBunny: 'assets/phaser-examples/sprites/bunny.png',
-  charMaster: 'assets/phaser-examples/sprites/master.png',
   // Quaternius LowPoly RPG class portraits (CC0)
   charRanger: 'assets/quaternius/rpg-characters/player_ranger.png',
   charRogue: 'assets/quaternius/rpg-characters/player_rogue.png',
@@ -119,21 +84,7 @@ export const TEXTURE_KEYS = {
   kenneyCardHearts: 'kenney_card_hearts',
   kenneyCardClubs: 'kenney_card_clubs',
   kenneyCardDiamonds: 'kenney_card_diamonds',
-  kenneyTileStart: 'kenney_tile_start',
-  kenneyTileVocab: 'kenney_tile_vocab',
-  kenneyTileGrammar: 'kenney_tile_grammar',
-  kenneyTileBonus: 'kenney_tile_bonus',
-  kenneyTileMystery: 'kenney_tile_mystery',
-  kenneyTileMinigame: 'kenney_tile_minigame',
-  kenneyTileSwap: 'kenney_tile_swap',
-  kenneyTileShop: 'kenney_tile_shop',
-  kenneyTileStar: 'kenney_tile_star',
-  kenneyTileBrick: 'kenney_tile_brick',
   // Character sprites
-  charPhaserDude: 'char_phaser_dude',
-  charMushroom: 'char_mushroom',
-  charBunny: 'char_bunny',
-  charMaster: 'char_master',
   charRanger: 'char_ranger',
   charRogue: 'char_rogue',
   charWarrior: 'char_warrior',

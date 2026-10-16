@@ -8,9 +8,12 @@ import {
 import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode } from '../systems/gameFlags'
+import { generateFxTextures } from '../systems/ProceduralFx'
+import { createButton } from '../ui/Button'
 
 export class PreloadScene extends Phaser.Scene {
   private loadFailed = false
+  private missingImages: string[] = []
 
   constructor() { super('PreloadScene') }
 
@@ -67,6 +70,7 @@ export class PreloadScene extends Phaser.Scene {
     })
 
     this.load.on('complete', () => {
+      if (this.loadFailed) return
       statusText.setText('Ready!')
       barFill.clear()
       barFill.fillStyle(COLORS.mint, 1)
@@ -74,8 +78,12 @@ export class PreloadScene extends Phaser.Scene {
     })
 
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
-      // The minigame lexicon has a built-in fallback, so it never blocks the game.
-      if (file.key === 'lexicon') return
+      // Only the question banks are essential: the lexicon has a built-in fallback and a missing
+      // image gets a blank placeholder, so neither should stop the game.
+      if (file.type !== 'json' || file.key === 'lexicon') {
+        this.missingImages.push(file.key)
+        return
+      }
       this.loadFailed = true
       console.error('PreloadScene: Load error on', file.src)
       statusText.setText('Load failed — check your connection and refresh.')
@@ -86,28 +94,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.json('grammar', 'data/grammar.json')
     this.load.json('lexicon', 'data/lexicon.json')
 
-    this.load.image(TEXTURE_KEYS.starfield, EXTERNAL_ASSETS.starfield)
-    this.load.image(TEXTURE_KEYS.particleYellow, EXTERNAL_ASSETS.particleYellow)
-    this.load.image(TEXTURE_KEYS.particleRed, EXTERNAL_ASSETS.particleRed)
-    this.load.image(TEXTURE_KEYS.particleBlue, EXTERNAL_ASSETS.particleBlue)
-    this.load.image(TEXTURE_KEYS.particleSquare, EXTERNAL_ASSETS.particleSquare)
-    this.load.image(TEXTURE_KEYS.particleWhite, EXTERNAL_ASSETS.particleWhite)
-    this.load.image(TEXTURE_KEYS.particleGreen, EXTERNAL_ASSETS.particleGreen)
-    this.load.image(TEXTURE_KEYS.flame1, EXTERNAL_ASSETS.flame1)
-    this.load.image(TEXTURE_KEYS.flame2, EXTERNAL_ASSETS.flame2)
-    this.load.image(TEXTURE_KEYS.muzzleflash, EXTERNAL_ASSETS.muzzleflash)
-    this.load.image(TEXTURE_KEYS.gem, EXTERNAL_ASSETS.gem)
-    this.load.image(TEXTURE_KEYS.diamond, EXTERNAL_ASSETS.diamond)
-    this.load.image(TEXTURE_KEYS.orbRed, EXTERNAL_ASSETS.orbRed)
-    this.load.image(TEXTURE_KEYS.orbBlue, EXTERNAL_ASSETS.orbBlue)
-    this.load.image(TEXTURE_KEYS.firstaid, EXTERNAL_ASSETS.firstaid)
-    this.load.image(TEXTURE_KEYS.starSmall, EXTERNAL_ASSETS.starSmall)
-    this.load.image(TEXTURE_KEYS.skySpace3, EXTERNAL_ASSETS.skySpace3)
-    this.load.image(TEXTURE_KEYS.skyNebula, EXTERNAL_ASSETS.skyNebula)
-    this.load.spritesheet(TEXTURE_KEYS.coin, EXTERNAL_ASSETS.coinSheet, {
-      frameWidth: 16,
-      frameHeight: 16,
-    })
     this.load.image(TEXTURE_KEYS.kenneyStar, EXTERNAL_ASSETS.kenneyStar)
     this.load.image(TEXTURE_KEYS.kenneyTrophy, EXTERNAL_ASSETS.kenneyTrophy)
     this.load.image(TEXTURE_KEYS.kenneyCart, EXTERNAL_ASSETS.kenneyCart)
@@ -127,10 +113,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TEXTURE_KEYS.kenneyCardHearts, EXTERNAL_ASSETS.kenneyCardHearts)
     this.load.image(TEXTURE_KEYS.kenneyCardClubs, EXTERNAL_ASSETS.kenneyCardClubs)
     this.load.image(TEXTURE_KEYS.kenneyCardDiamonds, EXTERNAL_ASSETS.kenneyCardDiamonds)
-    this.load.image(TEXTURE_KEYS.charPhaserDude, EXTERNAL_ASSETS.charPhaserDude)
-    this.load.image(TEXTURE_KEYS.charMushroom, EXTERNAL_ASSETS.charMushroom)
-    this.load.image(TEXTURE_KEYS.charBunny, EXTERNAL_ASSETS.charBunny)
-    this.load.image(TEXTURE_KEYS.charMaster, EXTERNAL_ASSETS.charMaster)
     this.load.image(TEXTURE_KEYS.charRanger, EXTERNAL_ASSETS.charRanger)
     this.load.image(TEXTURE_KEYS.charRogue, EXTERNAL_ASSETS.charRogue)
     this.load.image(TEXTURE_KEYS.charWarrior, EXTERNAL_ASSETS.charWarrior)
@@ -149,6 +131,10 @@ export class PreloadScene extends Phaser.Scene {
       return
     }
 
+    for (const key of this.missingImages) {
+      if (!this.textures.exists(key)) this.textures.addCanvas(key, document.createElement('canvas'))
+    }
+    generateFxTextures(this)
     generateDiceTextures(this)
     generatePlayerTextures(this)
     generateTileTextures(this)
@@ -165,19 +151,26 @@ export class PreloadScene extends Phaser.Scene {
   private showLoadError() {
     const w = this.scale.width
     const h = this.scale.height
-    this.add.text(w / 2, h / 2 - 20, 'Could not load game data', {
+    // Replace the loading UI entirely so the error isn't drawn over a half-full bar.
+    this.tweens.killAll()
+    this.children.removeAll(true)
+    paintStage(this)
+    this.add.text(w / 2, h / 2 - 60, 'Could not load the game', {
       fontSize: '28px',
       fontFamily: FONT.display,
       color: hexColor(COLORS.danger),
       stroke: '#000000',
       strokeThickness: 4,
     }).setOrigin(0.5)
-    this.add.text(w / 2, h / 2 + 28, 'Refresh the page or check that vocab.json and grammar.json are available.', {
+    this.add.text(w / 2, h / 2 - 10, 'The word lists didn’t download. Check your internet connection and try again.', {
       fontSize: '16px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mist),
       align: 'center',
       wordWrap: { width: 560 },
     }).setOrigin(0.5)
+    const retry = createButton(this, w / 2, h / 2 + 70, '↻  TRY AGAIN', COLORS.party, COLORS.partyDeep, 240, 54)
+    retry.on('pointerdown', () => window.location.reload())
+    this.input.keyboard?.once('keydown-ENTER', () => window.location.reload())
   }
 }
