@@ -73,7 +73,7 @@
       "level": 1
     },
     {
-      "question": "What type of sentence is this: 'Run!'",
+      "question": "What type of sentence is this: 'Please close the door.'",
       "answers": [
         "Declarative",
         "Interrogative",
@@ -148,7 +148,7 @@
       "question": "What is a compound sentence?",
       "answers": [
         "A sentence with one independent clause",
-        "A sentence joined by a coordinating conjunction",
+        "Two independent clauses joined by a conjunction",
         "A sentence with only a dependent clause",
         "A sentence with no verbs"
       ],
@@ -289,12 +289,12 @@
       "level": 1
     },
     {
-      "question": "Which sentence uses 'further' correctly?",
+      "question": "Which sentence uses 'farther' or 'further' correctly?",
       "answers": [
-        "I can't walk any further.",
+        "We need farther investigation.",
         "We need further investigation.",
-        "He ran further than me.",
-        "The store is further away."
+        "Let's discuss this farther tomorrow.",
+        "Do you have any farther questions?"
       ],
       "correct": 1,
       "explanation": "'Farther' refers to physical distance; 'further' refers to figurative depth or extent.",
@@ -387,10 +387,10 @@
     {
       "question": "Which sentence uses a dash correctly?",
       "answers": [
-        "The answer - is simple - really.",
-        "The answer is - simple - really.",
-        "The answer is simple - really!",
-        "The - answer is simple really."
+        "The answer—is simple—really.",
+        "The answer is—simple—really.",
+        "The answer is simple—really!",
+        "The—answer is simple really."
       ],
       "correct": 2,
       "explanation": "A dash (—) sets off a dramatic pause or emphasis within a sentence.",
@@ -457,12 +457,12 @@
       "level": 2
     },
     {
-      "question": "Which sentence uses an ellipsis correctly?",
+      "question": "What does an ellipsis (...) usually show in writing?",
       "answers": [
-        "I was thinking... maybe... we could go...",
-        "I was... thinking maybe we could go...",
-        "I... was thinking maybe we could go.",
-        "I was thinking maybe we... could go... to the park"
+        "A list is about to begin",
+        "A pause or unfinished thought",
+        "Strong excitement",
+        "Ownership"
       ],
       "correct": 1,
       "explanation": "An ellipsis (...) shows a pause or incomplete thought.",
@@ -481,15 +481,15 @@
       "level": 2
     },
     {
-      "question": "Which sentence has a dangling modifier?",
+      "question": "Which sentence does NOT have a dangling modifier?",
       "answers": [
         "Walking the dog, I saw a bird.",
         "Walking the dog, the bird was seen.",
         "Walking the dog, a bird appeared.",
         "Walking the dog, a bird saw me."
       ],
-      "correct": 1,
-      "explanation": "A dangling modifier has no clear subject in the sentence.",
+      "correct": 0,
+      "explanation": "The person doing the action ('I') must come right after the opening phrase; in the other sentences the bird seems to be walking the dog.",
       "level": 3
     },
     {
@@ -509,7 +509,7 @@
       "answers": [
         "The weather will effect our plans.",
         "The effect of the storm was devastating.",
-        "I want to effect change.",
+        "The loud music will effect the baby's sleep.",
         "Effect means to influence."
       ],
       "correct": 1,
@@ -736,7 +736,7 @@
       "question": "Which word correctly completes: 'An elephant is ___ than a mouse.'?",
       "answers": [
         "biggest",
-        "bigly",
+        "biger",
         "bigger",
         "more big"
       ],
@@ -921,7 +921,7 @@
         "the dog's toys"
       ],
       "correct": 1,
-      "explanation": "For a plural noun ending in s, add just an apostrophe after the s: 'dogs''.",
+      "explanation": "For a plural noun ending in s, add just an apostrophe after the s: dogs'.",
       "level": 2
     },
     {
@@ -2146,7 +2146,7 @@
       "level": 2
     },
     {
-      "prompt": "Which sentence makes the meaning clearest?",
+      "prompt": "Which sentence clearly shows that I was the one wearing pajamas?",
       "choices": [
         "A squirrel climbing a tree wore my pajamas.",
         "I saw a squirrel in my pajamas climbing a tree.",

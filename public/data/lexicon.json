@@ -7,7 +7,7 @@
       "synonyms": [
         "theory",
         "guess",
-        "premise"
+        "prediction"
       ],
       "antonyms": [
         "fact",
@@ -274,7 +274,7 @@
     {
       "word": "myth",
       "pos": "noun",
-      "definition": "a widely believed but false story",
+      "definition": "a traditional story, or a popular belief that is not true",
       "synonyms": [
         "legend",
         "fable",
@@ -405,7 +405,8 @@
       "synonyms": [
         "eagerness",
         "zeal",
-        "passion"
+        "passion",
+        "exuberance"
       ],
       "antonyms": [
         "apathy",
@@ -1004,7 +1005,7 @@
       "synonyms": [
         "bargain",
         "haggle",
-        "mediate"
+        "confer"
       ],
       "antonyms": [
         "dictate"
@@ -1539,7 +1540,8 @@
       "synonyms": [
         "conceited",
         "haughty",
-        "smug"
+        "smug",
+        "proud"
       ],
       "antonyms": [
         "humble",
@@ -1974,7 +1976,8 @@
       ],
       "antonyms": [
         "hidden",
-        "inconspicuous"
+        "inconspicuous",
+        "obscure"
       ],
       "sentence": "Her bright orange hat was conspicuous in the crowd.",
       "level": 3
@@ -2453,8 +2456,8 @@
         "narrowly"
       ],
       "antonyms": [
-        "plentifully",
-        "amply"
+        "fully",
+        "completely"
       ],
       "sentence": "I could scarcely see the stage from the back row.",
       "level": 2
@@ -3283,7 +3286,8 @@
       ],
       "antonyms": [
         "contract",
-        "shrink"
+        "shrink",
+        "reduce"
       ],
       "sentence": "A balloon will expand as you blow air into it.",
       "level": 1
@@ -4006,15 +4010,15 @@
       "pos": "noun",
       "definition": "a legal member of a country or town",
       "synonyms": [
-        "resident",
         "national",
-        "native"
+        "inhabitant",
+        "member"
       ],
       "antonyms": [
-        "foreigner",
-        "alien"
+        "noncitizen",
+        "foreigner"
       ],
-      "sentence": "Every citizen over eighteen can vote in the election.",
+      "sentence": "As a new citizen, she was proud to vote in her first election.",
       "level": 2
     },
     {
@@ -4752,7 +4756,7 @@
       "pos": "adverb",
       "definition": "for a short time",
       "synonyms": [
-        "shortly",
+        "concisely",
         "momentarily",
         "fleetingly"
       ],
@@ -4806,7 +4810,7 @@
       ],
       "antonyms": [
         "belief",
-        "faith"
+        "trust"
       ],
       "sentence": "The scientist met the bold claim with healthy skepticism.",
       "level": 3
@@ -4834,7 +4838,7 @@
       "synonyms": [
         "elation",
         "bliss",
-        "ecstasy"
+        "rapture"
       ],
       "antonyms": [
         "despair",
@@ -5230,7 +5234,8 @@
       "synonyms": [
         "exhaust",
         "drain",
-        "sap"
+        "sap",
+        "consume"
       ],
       "antonyms": [
         "replenish",
@@ -5277,7 +5282,8 @@
       "synonyms": [
         "circulate",
         "broadcast",
-        "propagate"
+        "propagate",
+        "distribute"
       ],
       "antonyms": [
         "suppress",
@@ -5293,7 +5299,8 @@
       "synonyms": [
         "explicate",
         "expound",
-        "demystify"
+        "demystify",
+        "illuminate"
       ],
       "antonyms": [
         "obscure",
@@ -5315,7 +5322,7 @@
         "confront",
         "face"
       ],
-      "sentence": "Engineers built a tunnel to circumvent the mountain.",
+      "sentence": "The new road lets drivers circumvent the busy downtown.",
       "level": 3
     },
     {
@@ -5547,7 +5554,7 @@
       "definition": "using more words than needed",
       "synonyms": [
         "wordy",
-        "longwinded",
+        "long-winded",
         "rambling"
       ],
       "antonyms": [
@@ -6830,7 +6837,7 @@
       "misspellings": [
         "harrass",
         "harras",
-        "hairass"
+        "harase"
       ],
       "level": 3
     },
@@ -8552,7 +8559,7 @@
       "a": "head",
       "b": "ache",
       "word": "headache",
-      "definition": "an aching feeling in your skull",
+      "definition": "a dull, throbbing hurt in your head",
       "distractors": [
         "pain",
         "sore",

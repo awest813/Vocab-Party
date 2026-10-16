@@ -474,7 +474,7 @@
         "Looking forward excitedly",
         "Feeling angry",
         "Being tired",
-        "A sentimental longing for the past"
+        "Longing fondly for the past"
       ],
       "correct": 3,
       "explanation": "Nostalgic means feeling a sentimental longing for the past.",
@@ -2037,7 +2037,7 @@
         "hushed",
         "confused",
         "booming",
-        "angry"
+        "harsh"
       ],
       "correct": 0,
       "level": 1
@@ -2131,7 +2131,7 @@
       "word": "savory",
       "choices": [
         "frozen",
-        "inedible",
+        "burnt",
         "savory",
         "bland"
       ],
@@ -2166,7 +2166,7 @@
       "sentence": "Because the instructions were _____, nobody knew how to assemble the furniture.",
       "word": "vague",
       "choices": [
-        "brief",
+        "colorful",
         "precise",
         "vague",
         "helpful"
@@ -2727,7 +2727,7 @@
       "level": 3
     },
     {
-      "sentence": "The _____ whale was longer than three school buses.",
+      "sentence": "The _____ whale was longer than two school buses.",
       "word": "gigantic",
       "choices": [
         "tiny",
@@ -3055,7 +3055,7 @@
       "word": "vivid",
       "choices": [
         "short",
-        "brightly clear",
+        "bright and clear",
         "noisy",
         "dull"
       ],
@@ -3298,7 +3298,7 @@
     {
       "word": "chaotic",
       "choices": [
-        "crazy",
+        "messy",
         "wild",
         "organized",
         "loud"
