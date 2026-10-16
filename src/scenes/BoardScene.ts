@@ -56,6 +56,12 @@ const TILE_LABELS: Record<TileType, string> = {
   penalty:   '💀'
 }
 
+/** Player-facing tile names (status text). */
+const TILE_NAMES: Record<TileType, string> = {
+  vocab: 'Vocab', grammar: 'Grammar', bonus: 'Bonus', mystery: 'Mystery', minigame: 'Duel', swap: 'Swap',
+  start: 'Start', shop: 'Shop', star: 'Star', brick: 'Brick', item_shop: 'Item Shop', penalty: 'Penalty',
+}
+
 const STAR_COST_COINS = 20
 const SHOP_PRICE_COINS = 6
 const SHOP_RENT_COINS = 5
@@ -123,8 +129,10 @@ export class BoardScene extends Phaser.Scene {
   private tileImages = new Map<number, Phaser.GameObjects.Image>()
   private activeAnnouncement?: Phaser.GameObjects.Container
 
+  /** Scaled delay: CPU turns play faster so humans aren't left waiting between their turns. */
   private d(ms: number) {
-    return scaleAutoSimDelay(ms)
+    const cpuTurn = this.state?.players?.[this.state.currentPlayer]?.isCpu
+    return scaleAutoSimDelay(cpuTurn ? Math.round(ms * 0.6) : ms)
   }
 
   constructor() { super('BoardScene') }
@@ -1193,7 +1201,7 @@ export class BoardScene extends Phaser.Scene {
     const type = this.getTileTypeAt(tileIndex)
     const token = this.playerTokens[playerIndex]
 
-    this.statusText.setText(`${player.emoji} ${player.name} landed on ${TILE_LABELS[type]} ${type.toUpperCase()}!`)
+    this.statusText.setText(`${player.emoji} ${player.name} landed on ${TILE_LABELS[type]} ${TILE_NAMES[type]}!`)
 
     // Landing Shockwave
     const ripple = this.add.circle(token.x, token.y, 10, 0xffffff, 0.4).setDepth(-1)
@@ -1382,9 +1390,11 @@ export class BoardScene extends Phaser.Scene {
   showDamageNumber(player: Player, amount: number, label: string = '', noShake = false) {
     const playerIndex = this.state.players.indexOf(player)
     const tokenPos = this.playerTokens[playerIndex]
-    const icon = label || (amount > 0 ? '+' : '')
-    const txt = this.add.text(tokenPos.x, tokenPos.y - 40, `${icon}${amount}`, {
-      fontSize: '56px',
+    // "+12 pts" / "-5 🪙"; points and coins sit side by side when both pop at once.
+    const text = `${amount > 0 ? '+' : ''}${amount}${label ? ` ${label}` : ''}`
+    const dx = label === '🪙' ? 56 : label === 'pts' ? -56 : 0
+    const txt = this.add.text(tokenPos.x + dx, tokenPos.y - 40, text, {
+      fontSize: '44px',
       fontFamily: 'Fredoka, Arial Black',
       color: amount > 0 ? '#44ff88' : '#ff4444',
       stroke: '#000000',
@@ -1599,42 +1609,52 @@ export class BoardScene extends Phaser.Scene {
       const h = this.scale.height
       this.closeChoiceModal()
       this.choiceModal = this.add.container(w / 2, h / 2).setDepth(110)
+      // Blocks the board behind; only PASS / Esc leave, so a stray tap can't skip the shop.
       const dim = this.add.rectangle(0, 0, w, h, 0x000000, 0.55).setInteractive()
+      const panelW = 780
+      const panelH = 450
       const bg = this.add.graphics()
-      bg.fillStyle(COLORS.bgPanel, 0.96)
-      bg.fillRoundedRect(-250, -210, 500, 440, 16)
+      bg.fillStyle(COLORS.bgPanel, 0.97)
+      bg.fillRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 16)
       bg.lineStyle(2.5, COLORS.teal, 0.55)
-      bg.strokeRoundedRect(-250, -210, 500, 440, 16)
-      const title = this.add.text(0, -170, 'ITEM SHOP', {
-        fontSize: '24px', fontFamily: FONT.display, color: hexColor(COLORS.teal),
+      bg.strokeRoundedRect(-panelW / 2, -panelH / 2, panelW, panelH, 16)
+      const title = this.add.text(0, -panelH / 2 + 30, '🛍️ ITEM SHOP', {
+        fontSize: '26px', fontFamily: FONT.display, color: hexColor(COLORS.teal),
       }).setOrigin(0.5)
-      this.choiceModal.add([dim, bg, title])
+      const wallet = this.add.text(0, -panelH / 2 + 62, `${player.name} has ${player.coins} 🪙 — pick one card`, {
+        fontSize: '16px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+      }).setOrigin(0.5)
+      this.choiceModal.add([dim, bg, title, wallet])
 
       const finish = (item: Item | null) => {
         this.closeChoiceModal()
         resolve(item)
       }
 
+      // Two columns so all seven cards fit with their descriptions.
+      const touch = isTouchPreferred(this.sys.game)
       available.forEach((item, i) => {
+        const x = i % 2 === 0 ? -184 : 184
+        const y = -112 + Math.floor(i / 2) * 80
         const affordable = player.coins >= item.cost
         const btn = createButton(
-          this, 0, -90 + i * 52,
-          `${item.emoji} ${item.name} (${item.cost}🪙)`,
+          this, x, y,
+          `${touch ? '' : `${i + 1}  `}${item.emoji} ${item.name} · ${item.cost}🪙`,
           affordable ? COLORS.bgPanelAlt : COLORS.mute,
           affordable ? COLORS.chromeDeep : 0x4a5a6e,
-          420, 38
+          352, 46
         )
         if (affordable) btn.on('pointerdown', () => finish(item))
+        else btn.setAlpha(0.55)
         this.choiceModal?.add(btn)
-        this.choiceModal?.add(this.add.text(0, -66 + i * 52, item.description, {
-          fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
-          wordWrap: { width: 400 }, align: 'center',
-        }).setOrigin(0.5))
+        this.choiceModal?.add(this.add.text(x, y + 32, item.description, {
+          fontSize: '13px', fontFamily: FONT.body, color: hexColor(affordable ? COLORS.mist : COLORS.mute),
+          wordWrap: { width: 340 }, align: 'center',
+        }).setOrigin(0.5, 0))
       })
 
-      const passBtn = createButton(this, 0, 195, 'PASS', COLORS.mute, 0x4a5a6e, 140, 40)
+      const passBtn = createButton(this, 184, 128, touch ? 'PASS' : 'PASS  (Esc)', COLORS.mute, 0x4a5a6e, 352, 46)
       passBtn.on('pointerdown', () => finish(null))
-      dim.on('pointerdown', () => finish(null))
       this.choiceModal.add(passBtn)
 
       const onKey = (ev: KeyboardEvent) => {
@@ -2188,7 +2208,7 @@ export class BoardScene extends Phaser.Scene {
     this.launchMinigame({
       mode: 'party',
       participants,
-      stakes: `Prizes: ${payouts.filter(c => c > 0).map((c, i) => `${['1st', '2nd', '3rd'][i]} +${c} 🪙`).join(' · ')}`,
+      stakes: `Prizes: ${payouts.filter(c => c > 0).map((c, i) => `${['1st', '2nd', '3rd', '4th'][i]} +${c} 🪙`).join(' · ')}`,
       rewardLabels: labels,
     }, (result) => {
       let delay = 0
@@ -2391,7 +2411,7 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private async promptForBranch(player: Player, options: number[]): Promise<number> {
-    this.statusText.setText('🗺️ Choose your path! (1/2 or click)')
+    this.statusText.setText(isTouchPreferred(this.sys.game) ? '🗺️ Choose your path — tap an arrow!' : '🗺️ Choose your path! (1/2 or click an arrow)')
     return new Promise<number>(resolve => {
       let settled = false
       const finish = (nodeId: number) => {
@@ -2408,7 +2428,9 @@ export class BoardScene extends Phaser.Scene {
       const overlays: Phaser.GameObjects.GameObject[] = []
       options.forEach(nodeId => {
         const { x, y } = this.getTileXY(nodeId)
-        const highlight = this.add.circle(x, y, TILE_SIZE * 0.5, 0x44ccff, 0.4).setDepth(20).setInteractive({ useHandCursor: true })
+        // Bigger target on touch screens, where the scaled board makes a tile-sized circle tiny.
+        const pickRadius = TILE_SIZE * (isTouchPreferred(this.sys.game) ? 0.85 : 0.5)
+        const highlight = this.add.circle(x, y, pickRadius, 0x44ccff, 0.4).setDepth(20).setInteractive({ useHandCursor: true })
         const arrow = this.add.text(x, y, '➤', { fontSize: '42px', color: '#ffffff', stroke: '#000000', strokeThickness: 4 }).setOrigin(0.5).setDepth(21)
         
         const cur = this.nodes[player.position]

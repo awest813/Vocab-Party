@@ -927,8 +927,10 @@ export class MinigameScene extends Phaser.Scene {
           fontSize: '17px', fontFamily: FONT.body, color: hexColor(COLORS.frost), wordWrap: { width: 700 },
         }).setOrigin(0.5))
       })
-    } else {
+    } else if (score > 0) {
       panel.add(this.add.text(0, 80, 'Flawless — no misses! ✨', { fontSize: '20px', fontFamily: FONT.display, color: '#44ff88' }).setOrigin(0.5))
+    } else {
+      panel.add(this.add.text(0, 80, 'Give it another go — you’ll get the hang of it!', { fontSize: '20px', fontFamily: FONT.display, color: hexColor(COLORS.mist) }).setOrigin(0.5))
     }
 
     if (isBest) {

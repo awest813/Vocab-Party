@@ -41,7 +41,7 @@ export const HOW_TO_RULES = [
 export const HOW_TO_CONTROLS_DESKTOP = [
   'Board: Space / Enter / R = Roll · Esc = Pause · 1/2 = fork paths',
   'Questions: 1–4 or A–D · Minigames: see each game\'s rules card',
-  'Shops & item cards: 1 = yes/buy · 2 or Esc = pass/cancel',
+  'Shops & stars: 1 = buy · 2 or Esc = pass  ·  Item shop: 1–7 = pick a card · Esc = pass',
   'Item backpack: 1–7 use a card · Esc closes',
   'Battle: 1 = Defend · 2 = Evade',
 ]

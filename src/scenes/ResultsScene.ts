@@ -161,10 +161,11 @@ export class ResultsScene extends Phaser.Scene {
       const nameT = this.add.text(x, cardY + 8, player.name, {
         fontSize: '20px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5).setAlpha(0)
-      const scoreT = this.add.text(x, cardY + 36, `${player.score} pts`, {
-        fontSize: '18px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
+      // Trophies decide the winner, so they lead; points (the tiebreak) come second.
+      const scoreT = this.add.text(x, cardY + 36, `🏆 ${player.trophies}`, {
+        fontSize: '22px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
       }).setOrigin(0.5).setAlpha(0)
-      const starT = this.add.text(x, cardY + 58, `🌟 ${player.trophies}${player.bricksCollected > 0 ? `   🧱 ${player.bricksCollected}` : ''}`, {
+      const starT = this.add.text(x, cardY + 60, `${player.score} pts${player.bricksCollected > 0 ? `   🧱 ${player.bricksCollected}` : ''}`, {
         fontSize: '14px', fontFamily: FONT.body, color: '#a8bdd4',
       }).setOrigin(0.5).setAlpha(0)
 
@@ -212,12 +213,11 @@ export class ResultsScene extends Phaser.Scene {
       })
 
       const totalRounds = state.round
-      const totalBricks = state.players.reduce((s, p) => s + p.bricksCollected, 0)
       const totalStars = state.players.reduce((s, p) => s + p.trophies, 0)
       const statsLine = this.add.text(
         w / 2,
         158,
-        `${totalRounds} round${totalRounds === 1 ? '' : 's'}  ·  ${totalStars} star${totalStars === 1 ? '' : 's'}  ·  ${totalBricks} brick${totalBricks === 1 ? '' : 's'}`,
+        `Most 🏆 wins — points break ties  ·  ${totalRounds} round${totalRounds === 1 ? '' : 's'}  ·  ${totalStars} 🏆 won`,
         { fontSize: '15px', fontFamily: FONT.body, color: hexColor(COLORS.mute) }
       ).setOrigin(0.5).setAlpha(0)
       this.tweens.add({ targets: statsLine, alpha: 1, duration: 400, delay: 400 })

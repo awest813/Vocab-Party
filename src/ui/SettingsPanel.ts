@@ -54,7 +54,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   })
   panel.add(plate)
 
-  const hint = scene.add.text(0, -155, 'Audio unlocks after your first tap', {
+  const hint = scene.add.text(0, -155, 'Settings are saved on this device', {
     fontSize: '14px',
     fontFamily: FONT.body,
     color: hexColor(COLORS.mute),

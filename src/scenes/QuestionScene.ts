@@ -94,7 +94,8 @@ export class QuestionScene extends Phaser.Scene {
     const player = state.players[playerIndex]
 
     // Deep environment wash
-    createDimmer(this, 0.78)
+    // Below the card (depth 40+) so the answer buttons stay clickable and tappable.
+    createDimmer(this, 0.78).setDepth(39)
 
     const panelW = 920
     const panelH = 520

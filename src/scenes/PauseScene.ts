@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { createButton } from '../ui/Button'
+import { createButton, setButtonLabel } from '../ui/Button'
 import { addVignette, createDimmer, createPanel } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
@@ -141,8 +141,19 @@ export class PauseScene extends Phaser.Scene {
     })
 
     const quitBtn = createButton(this, 0, 120, 'QUIT TO MENU', COLORS.danger, COLORS.dangerDeep, 320, 50)
+    // Two taps to quit, so a mis-tap doesn't end the party (the board is autosaved either way).
+    let confirmQuit = false
     quitBtn.on('pointerdown', () => {
       if (this.modalOpen) return
+      if (!confirmQuit) {
+        confirmQuit = true
+        setButtonLabel(quitBtn, 'TAP AGAIN TO QUIT')
+        this.time.delayedCall(3000, () => {
+          confirmQuit = false
+          if (quitBtn.active) setButtonLabel(quitBtn, 'QUIT TO MENU')
+        })
+        return
+      }
       Sfx.stopMusic()
       for (const sceneKey of ['QuestionScene', 'MinigameScene', 'BattleScene', 'BoardScene', 'PauseScene']) {
         if (this.scene.isActive(sceneKey) || this.scene.isPaused(sceneKey)) {

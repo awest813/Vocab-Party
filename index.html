@@ -64,8 +64,26 @@
 			letter-spacing: 0.02em;
 			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 		}
+		/* Tall phones: the 16:9 board is unreadable in portrait, so ask for landscape full-screen. */
 		@media (orientation: portrait) and (max-aspect-ratio: 4/5) {
-			#rotate-hint { display: block; }
+			#rotate-hint {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 14px;
+				inset: 0;
+				left: 0;
+				right: 0;
+				top: 0;
+				border-radius: 0;
+				border: none;
+				z-index: 20;
+				pointer-events: auto;
+				font-size: 22px;
+				background: #070b14;
+			}
+			#rotate-hint::before { content: '📱'; font-size: 64px; transform: rotate(-90deg); }
 		}
 		@media (prefers-reduced-motion: reduce) {
 			* { scroll-behavior: auto !important; }
@@ -75,7 +93,7 @@
 
 <body>
 	<noscript><p style="color:#fff;font-family:sans-serif;text-align:center;padding:2em">Vocab Party needs JavaScript turned on to play.</p></noscript>
-	<div id="rotate-hint">↻ Rotate to landscape for the best party view</div>
+	<div id="rotate-hint">Turn your device sideways to play</div>
 	<div id="app"></div>
 	<script type="module" src="src/main.ts"></script>
 </body>

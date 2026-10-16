@@ -129,10 +129,10 @@ export function addStudyMiss(player: Player, word: string, note?: string): void 
 
 export const ITEMS: Record<ItemType, Item> = {
   dash: { id: 'dash', type: 'dash', name: 'Dash Card', emoji: '🏃', cost: 5, description: 'Move 1–3 extra spaces this turn.' },
-  swap: { id: 'swap', type: 'swap', name: 'Swap Card', emoji: '🔄', cost: 10, description: 'Swap positions with a random player.' },
+  swap: { id: 'swap', type: 'swap', name: 'Swap Card', emoji: '🔄', cost: 10, description: 'Trade board places with a rival.' },
   warp: { id: 'warp', type: 'warp', name: 'Warp Card', emoji: '🌀', cost: 8, description: 'Teleport to a random board tile.' },
   shield: { id: 'shield', type: 'shield', name: 'Shield Card', emoji: '🛡️', cost: 6, description: 'Avoid the next penalty or battle loss.' },
-  double_score: { id: 'double_score', type: 'double_score', name: 'Double Card', emoji: '📈', cost: 8, description: 'Double the points and coins from your next correct answer.' },
+  double_score: { id: 'double_score', type: 'double_score', name: 'Double Card', emoji: '📈', cost: 8, description: '2× points and coins on your next right answer.' },
   poison_dart: { id: 'poison_dart', type: 'poison_dart', name: 'Poison Dart', emoji: '🎯', cost: 7, description: 'Hit a rival — they lose 8 coins immediately.' },
   golden_key: { id: 'golden_key', type: 'golden_key', name: 'Golden Key', emoji: '🔑', cost: 9, description: 'Your next roll is a guaranteed 6.' }
 }
