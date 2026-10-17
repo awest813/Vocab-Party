@@ -38,7 +38,7 @@ export interface AchievementDef {
 export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'first_party', icon: '🎈', title: 'Party Starter', desc: 'Finish your first party.' },
   { id: 'first_win', icon: '🏆', title: 'Champion', desc: 'Win a party.' },
-  { id: 'all_boards', icon: '🗺️', title: 'World Traveler', desc: 'Win a party on all three boards.' },
+  { id: 'all_boards', icon: '🗺️', title: 'World Traveler', desc: 'Win a party on all four boards.' },
   { id: 'full_map', icon: '🧭', title: 'Grand Tour', desc: 'Finish a Full Map party.' },
   { id: 'challenge_win', icon: '🎓', title: 'Scholar', desc: 'Win a party on Challenge word level.' },
   { id: 'bonus_sweep', icon: '🌟', title: 'Star Sweep', desc: 'Earn every bonus star in one party.' },

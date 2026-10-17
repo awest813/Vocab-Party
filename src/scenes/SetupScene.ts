@@ -111,6 +111,8 @@ export class SetupScene extends Phaser.Scene {
   private freqBtn?: Phaser.GameObjects.Container
   private bonusBtn?: Phaser.GameObjects.Container
   private boardBtn?: Phaser.GameObjects.Container
+  /** One-line description of the selected board (its shape and twist). */
+  private boardTagline?: Phaser.GameObjects.Text
   private levelBtn?: Phaser.GameObjects.Container
   private fullBlurb?: Phaser.GameObjects.Text
 
@@ -285,6 +287,9 @@ export class SetupScene extends Phaser.Scene {
     this.boardBtn = createButton(this, w / 2 - 352, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 300, 44)
     this.boardBtn.setDepth(6)
     this.boardBtn.on('pointerdown', () => this.cycleBoard())
+    this.boardTagline = this.add.text(w / 2, rulesY - 60, '', {
+      fontSize: '13px', fontFamily: FONT.body, color: hexColor(COLORS.mist), align: 'center', wordWrap: { width: 940 },
+    }).setOrigin(0.5).setDepth(6)
     this.levelBtn = createButton(this, w / 2 - 70, rulesY, '', COLORS.bgPanelAlt, COLORS.chromeDeep, 244, 44)
     this.levelBtn.setDepth(6)
     this.levelBtn.on('pointerdown', () => this.cycleWordLevel())
@@ -399,6 +404,7 @@ export class SetupScene extends Phaser.Scene {
     if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
     const board = getBoard(this.partyOptions.board)
     if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} ${board.name}`)
+    this.boardTagline?.setText(`${board.emoji} ${board.name}: ${board.tagline}`)
     this.fullBlurb?.setText(`${board.nodes.length} rounds · full lap`)
   }
 

@@ -12,7 +12,7 @@ import { Sfx } from '../systems/Sfx'
 import { getProgress, recordGame } from '../systems/Progress'
 import { rewardParty } from '../systems/Unlocks'
 import { unlock } from '../systems/Achievements'
-import { getBoard } from '../systems/BoardLayout'
+import { BOARDS, getBoard } from '../systems/BoardLayout'
 import { getSettings } from '../systems/GameSettings'
 
 export class ResultsScene extends Phaser.Scene {
@@ -57,7 +57,8 @@ export class ResultsScene extends Phaser.Scene {
       {
         unlock('first_party')
         if (humanWon) unlock('first_win')
-        if ((getProgress().boardsWon ?? []).length >= 3) unlock('all_boards')
+        const won = getProgress().boardsWon ?? []
+        if (BOARDS.every(b => won.includes(b.id))) unlock('all_boards')
         if ((state.roundsPerGame ?? 0) >= getBoard(boardId).nodes.length) unlock('full_map')
         if (humanWon && getSettings().wordLevel === 'challenge') unlock('challenge_win')
         const awards = state.bonusAwards ?? []

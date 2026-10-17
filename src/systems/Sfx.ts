@@ -368,6 +368,16 @@ class SfxSystem {
     this.tone({ freq: 400, endFreq: 120, type: 'triangle', duration: 0.18, gain: 0.06 })
   }
 
+  /** Tide Turn: a rolling wave wash, gliding down as the tide goes out or up as it comes in. */
+  tide(goingOut: boolean) {
+    this.unlock()
+    if (!this.fresh('tide')) return
+    this.duckFor(1.2)
+    for (let i = 0; i < 3; i++) this.noiseBurst(0.45, 0.08, 500 + i * 250, i * 0.28)
+    this.tone({ freq: goingOut ? 660 : 220, endFreq: goingOut ? 220 : 660, type: 'sine', duration: 0.9, gain: 0.07 })
+    this.tone({ freq: goingOut ? 988 : 330, endFreq: goingOut ? 330 : 988, type: 'triangle', duration: 0.7, gain: 0.04, delay: 0.15 })
+  }
+
   /** Bonus tile: bright upward sparkle. */
   bonus() {
     this.unlock()
