@@ -64,15 +64,22 @@ const FALLBACK_QUESTIONS: Record<'vocab' | 'grammar', QuestionData> = {
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-/** The sentence with the word (and any ending, e.g. "orbits") blanked out, or null if it isn't there. */
+/**
+ * The sentence with every use of the word (plus a simple ending: orbits, gathered, sailing…)
+ * blanked out, or null if it isn't there as a whole word ("art" must not blank "artist").
+ */
 function blankSentence(sentence: string | undefined, word: string): string | null {
   if (!sentence) return null
-  const m = new RegExp(`(^|[^\\p{L}])(${escapeRe(word)}\\p{L}*)`, 'iu').exec(sentence)
-  if (!m) return null
-  const idx = m.index + m[1].length
+  const re = new RegExp(`(^|[^\\p{L}])${escapeRe(word)}(?:s|es|ed|d|ing|er|ers)?(?![\\p{L}])`, 'giu')
+  let found = false
+  let out = sentence.replace(re, (_m, pre: string) => {
+    found = true
+    return `${pre}_____`
+  })
+  if (!found) return null
   // "a/an" right before the blank would give the answer away.
-  const before = sentence.slice(0, idx).replace(/\b(an?|An?) $/, a => (a[0] === 'A' ? 'A(n) ' : 'a(n) '))
-  return `${before}_____${sentence.slice(idx + m[2].length)}`
+  out = out.replace(/\b(an?|An?) _____/g, (_m, a: string) => `${a[0] === 'A' ? 'A(n)' : 'a(n)'} _____`)
+  return out
 }
 
 let customQuestionCount = 0
@@ -211,13 +218,19 @@ export class QuestionScene extends Phaser.Scene {
 
     this.tweens.add({ targets: header, alpha: 1, duration: isAutoSimMode() ? 30 : 300, delay: isAutoSimMode() ? 0 : 200 })
 
-    const qText = this.add.text(w / 2, h / 2 - 100, q.question, {
+    // Top-anchored under the key hint; long prompts (e.g. custom example sentences) shrink to fit
+    // the space above the answers instead of spilling over the header.
+    const qText = this.add.text(w / 2, h / 2 - 126, q.question, {
       fontSize: '24px',
       fontFamily: FONT.body,
       color: '#ffffff',
       wordWrap: { width: 820 },
       align: 'center',
-    }).setOrigin(0.5).setAlpha(0).setDepth(45)
+    }).setOrigin(0.5, 0).setAlpha(0).setDepth(45)
+    for (const size of [21, 18, 16]) {
+      if (qText.height <= 116) break
+      qText.setFontSize(size)
+    }
     this.tweens.add({ targets: qText, alpha: 1, duration: isAutoSimMode() ? 30 : 400, delay: isAutoSimMode() ? 0 : 300 })
 
     const answerColors = [COLORS.skyDeep, COLORS.coral, COLORS.mint, COLORS.warning]

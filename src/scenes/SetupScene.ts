@@ -3,7 +3,7 @@ import { createButton, setButtonEnabled, setButtonLabel } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
 import { addVignette, createInsetPlate, paintStage, showToast } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
-import { BOARDS, getBoard } from '../systems/BoardLayout'
+import { BOARDS, getBoard, lapLength } from '../systems/BoardLayout'
 import { characterDie } from '../systems/DiceSystem'
 import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
 import {
@@ -405,7 +405,7 @@ export class SetupScene extends Phaser.Scene {
     const board = getBoard(this.partyOptions.board)
     if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} ${board.name}`)
     this.boardTagline?.setText(`${board.emoji} ${board.name}: ${board.tagline}`)
-    this.fullBlurb?.setText(`${board.nodes.length} rounds · full lap`)
+    this.fullBlurb?.setText(`${lapLength(board)} rounds · full lap`)
   }
 
   private cycleWordLevel() {
@@ -450,7 +450,7 @@ export class SetupScene extends Phaser.Scene {
   }
 
   private currentMapRounds(): number {
-    if (this.mapPreset === 'full') return getBoard(this.partyOptions.board).nodes.length
+    if (this.mapPreset === 'full') return lapLength(getBoard(this.partyOptions.board))
     return MAP_PRESETS.find(p => p.id === this.mapPreset)?.rounds ?? 10
   }
 

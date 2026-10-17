@@ -249,7 +249,9 @@ export function updateListSource(id: string, source: string): ParseResult | null
 export function deleteList(id: string): void {
   const d = load()
   d.lists = d.lists.filter(l => l.id !== id)
-  if (d.activeId === id) d.activeId = d.lists[0]?.id ?? null
+  // Deleting the active list leaves none active (the game falls back to All levels with a
+  // message) rather than silently switching the class to some other list.
+  if (d.activeId === id) d.activeId = null
   save()
 }
 
@@ -304,7 +306,9 @@ export function wordLevelLabel(level: WordLevel = getSettings().wordLevel): stri
  */
 export function cycleWordLevel(): string | null {
   const cycle = wordLevelCycle()
-  const cur = getSettings().wordLevel
+  let cur = getSettings().wordLevel
+  // An unplayable 'custom' setting already shows as "All levels", so cycle on from there.
+  if (cur === 'custom' && playableEntries(getActiveList()).length < MIN_PLAYABLE_WORDS) cur = 'all'
   let next = cycle[(cycle.indexOf(cur) + 1) % cycle.length]
   let message: string | null = null
   if (next === 'custom') {

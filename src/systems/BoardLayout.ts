@@ -242,6 +242,8 @@ export interface BoardDef {
   theme: BoardTheme
   /** Brand plate placement in tile units (center), so it never covers path tiles. */
   logo: { cx: number; cy: number; w: number; h: number; compact?: boolean }
+  /** Tiles in one lap of the main route (Full Map length); defaults to every node. */
+  lapTiles?: number
   /** Ambient decorations placed in empty cells. */
   decor: { col: number; row: number; emoji: string }[]
   /** Optional signature gimmick. Boards without one use `nodes`/`tiles` unchanged. */
@@ -275,6 +277,11 @@ export interface TideEvent {
 export type BoardEvent = TideEvent
 
 export type BoardId = 'loop' | 'garden' | 'summit' | 'tides'
+
+/** Full Map length: one lap of the board's main route. */
+export function lapLength(board: BoardDef): number {
+  return board.lapTiles ?? board.nodes.length
+}
 
 export const BOARDS: BoardDef[] = [
   {
@@ -318,6 +325,8 @@ export const BOARDS: BoardDef[] = [
   },
   {
     id: 'tides',
+    // The cliff path and sandbar are shortcuts, not part of the coastal lap.
+    lapTiles: 44,
     name: 'Thesaurus Tides',
     emoji: '🌊',
     tagline: 'An island coast where the tide turns every 3 rounds. Low tide opens a sandbar shortcut and flips the 🌊 shore tiles.',
