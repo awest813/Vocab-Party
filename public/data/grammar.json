@@ -1295,6 +1295,2562 @@
       "correct": 0,
       "explanation": "A semicolon can join two closely related complete sentences.",
       "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Jamal and his sister ___ soccer every Saturday.'?",
+      "answers": [
+        "plays",
+        "play",
+        "playing",
+        "is play"
+      ],
+      "correct": 1,
+      "explanation": "Two subjects joined by 'and' make a plural subject, so use the plural verb 'play'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The cat ___ on the windowsill every morning.'?",
+      "answers": [
+        "sit",
+        "sitting",
+        "are sit",
+        "sits"
+      ],
+      "correct": 3,
+      "explanation": "A singular subject like 'cat' takes a verb ending in -s in the present tense.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'My friends ___ at the library right now.'?",
+      "answers": [
+        "are",
+        "is",
+        "was",
+        "am"
+      ],
+      "correct": 0,
+      "explanation": "The plural subject 'friends' and the words 'right now' call for the present plural verb 'are'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'He ___ not like spicy food.'?",
+      "answers": [
+        "do",
+        "done",
+        "does",
+        "doing"
+      ],
+      "correct": 2,
+      "explanation": "Singular subjects like 'he' use 'does' as a helping verb.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Last night, the wind ___ very hard.'?",
+      "answers": [
+        "blew",
+        "blowed",
+        "blows",
+        "blown"
+      ],
+      "correct": 0,
+      "explanation": "'Blow' is irregular; its past tense is 'blew'.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'run'?",
+      "answers": [
+        "Runned",
+        "Runs",
+        "Running",
+        "Ran"
+      ],
+      "correct": 3,
+      "explanation": "'Run' is irregular: today I run, yesterday I ran.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'write'?",
+      "answers": [
+        "Writed",
+        "Wrote",
+        "Writes",
+        "Writing"
+      ],
+      "correct": 1,
+      "explanation": "'Write' is irregular: today I write, yesterday I wrote.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'eat'?",
+      "answers": [
+        "Eated",
+        "Eats",
+        "Ate",
+        "Eating"
+      ],
+      "correct": 2,
+      "explanation": "'Eat' is irregular: its past tense is 'ate'.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'fly'?",
+      "answers": [
+        "Flied",
+        "Flyed",
+        "Flew",
+        "Flies"
+      ],
+      "correct": 2,
+      "explanation": "'Fly' is irregular: today birds fly, yesterday they flew.",
+      "level": 1
+    },
+    {
+      "question": "What is the past tense of 'draw'?",
+      "answers": [
+        "Drawed",
+        "Draws",
+        "Drew",
+        "Drawing"
+      ],
+      "correct": 2,
+      "explanation": "'Draw' is irregular: its past tense is 'drew'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Tomorrow, we ___ plant a garden.'?",
+      "answers": [
+        "did",
+        "were",
+        "was",
+        "will"
+      ],
+      "correct": 3,
+      "explanation": "'Tomorrow' points to the future, so use the helping verb 'will'.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence is in the present tense?",
+      "answers": [
+        "Kenji will read a comic book.",
+        "Kenji read a comic book last night.",
+        "Kenji had read a comic book.",
+        "Kenji reads a comic book."
+      ],
+      "correct": 3,
+      "explanation": "Present tense tells about something happening now or regularly: 'reads'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'foot'?",
+      "answers": [
+        "Foots",
+        "Feet",
+        "Feets",
+        "Footes"
+      ],
+      "correct": 1,
+      "explanation": "'Foot' has an irregular plural: 'feet'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'goose'?",
+      "answers": [
+        "Gooses",
+        "Geese",
+        "Geeses",
+        "Goosen"
+      ],
+      "correct": 1,
+      "explanation": "'Goose' has an irregular plural: 'geese'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'sheep'?",
+      "answers": [
+        "Sheeps",
+        "Sheepes",
+        "Sheepen",
+        "Sheep"
+      ],
+      "correct": 3,
+      "explanation": "'Sheep' stays the same whether you mean one or many.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'woman'?",
+      "answers": [
+        "Womans",
+        "Women",
+        "Womens",
+        "Womanes"
+      ],
+      "correct": 1,
+      "explanation": "'Woman' has an irregular plural: 'women'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'knife'?",
+      "answers": [
+        "Knives",
+        "Knifes",
+        "Knifs",
+        "Knive"
+      ],
+      "correct": 0,
+      "explanation": "Many nouns ending in -fe change to -ves: knife becomes knives.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'bus'?",
+      "answers": [
+        "Buss",
+        "Bus's",
+        "Busies",
+        "Buses"
+      ],
+      "correct": 3,
+      "explanation": "Nouns ending in -s add -es to become plural.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'city'?",
+      "answers": [
+        "Citys",
+        "Cities",
+        "Cityes",
+        "City's"
+      ],
+      "correct": 1,
+      "explanation": "When a noun ends in a consonant + y, change the y to i and add -es.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'potato'?",
+      "answers": [
+        "Potatos",
+        "Potatoes",
+        "Potato's",
+        "Potatoies"
+      ],
+      "correct": 1,
+      "explanation": "Some nouns ending in -o, like potato, add -es to become plural.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'person'?",
+      "answers": [
+        "People",
+        "Persones",
+        "Peoples",
+        "Personses"
+      ],
+      "correct": 0,
+      "explanation": "The usual plural of 'person' is the irregular word 'people'.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'wolf'?",
+      "answers": [
+        "Wolfs",
+        "Wolfes",
+        "Wolves",
+        "Wolvs"
+      ],
+      "correct": 2,
+      "explanation": "Many nouns ending in -f change the f to v and add -es: wolf becomes wolves.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'dish'?",
+      "answers": [
+        "Dishs",
+        "Dishes",
+        "Dish's",
+        "Dishies"
+      ],
+      "correct": 1,
+      "explanation": "Nouns ending in -sh add -es to become plural.",
+      "level": 1
+    },
+    {
+      "question": "What is the plural of 'monkey'?",
+      "answers": [
+        "Monkies",
+        "Monkeyes",
+        "Monkey's",
+        "Monkeys"
+      ],
+      "correct": 3,
+      "explanation": "When a noun ends in a vowel + y, just add -s.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the holiday correctly?",
+      "answers": [
+        "We eat dumplings on lunar new year.",
+        "We eat dumplings on Lunar new year.",
+        "We eat dumplings on Lunar New Year.",
+        "we eat dumplings on Lunar New Year."
+      ],
+      "correct": 2,
+      "explanation": "Capitalize every important word in the name of a holiday.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the month correctly?",
+      "answers": [
+        "My birthday is in October.",
+        "My Birthday is in october.",
+        "My birthday is in october.",
+        "my birthday is in October."
+      ],
+      "correct": 0,
+      "explanation": "Names of months are proper nouns, so they begin with a capital letter.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the word 'I' correctly?",
+      "answers": [
+        "Tomorrow I will visit my aunt.",
+        "Tomorrow i will visit my aunt.",
+        "tomorrow I will visit my aunt.",
+        "Tomorrow I will visit my Aunt."
+      ],
+      "correct": 0,
+      "explanation": "The pronoun 'I' is always capitalized, and so is the first word of a sentence.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the street name correctly?",
+      "answers": [
+        "Ravi lives on Maple Street.",
+        "Ravi lives on maple street.",
+        "Ravi lives on Maple street.",
+        "ravi lives on Maple Street."
+      ],
+      "correct": 0,
+      "explanation": "Capitalize each word in the name of a street because it is a proper noun.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the languages correctly?",
+      "answers": [
+        "Sofia speaks spanish and english.",
+        "Sofia speaks Spanish and english.",
+        "sofia speaks Spanish and English.",
+        "Sofia speaks Spanish and English."
+      ],
+      "correct": 3,
+      "explanation": "Names of languages are proper nouns and always begin with a capital letter.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the doctor's title and name correctly?",
+      "answers": [
+        "We met Dr. Patel at the clinic.",
+        "We met dr. Patel at the clinic.",
+        "We met Dr. patel at the clinic.",
+        "We met dr. patel at the clinic."
+      ],
+      "correct": 0,
+      "explanation": "Capitalize a title like 'Dr.' when it comes right before a person's name.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence capitalizes the name of the ocean correctly?",
+      "answers": [
+        "We swam in the Pacific Ocean.",
+        "We swam in the pacific ocean.",
+        "We swam in the Pacific ocean.",
+        "We Swam in the Pacific Ocean."
+      ],
+      "correct": 0,
+      "explanation": "Capitalize every word in the name of a specific ocean, river, or lake.",
+      "level": 1
+    },
+    {
+      "question": "Which end mark belongs at the end of: 'Where did you put my backpack'?",
+      "answers": [
+        "A period",
+        "A comma",
+        "An apostrophe",
+        "A question mark"
+      ],
+      "correct": 3,
+      "explanation": "A sentence that asks something ends with a question mark.",
+      "level": 1
+    },
+    {
+      "question": "Which end mark best fits: 'Watch out for that falling branch'?",
+      "answers": [
+        "A question mark",
+        "A comma",
+        "An exclamation point",
+        "A colon"
+      ],
+      "correct": 2,
+      "explanation": "Use an exclamation point to show strong feeling or a sudden warning.",
+      "level": 1
+    },
+    {
+      "question": "Which question is punctuated correctly?",
+      "answers": [
+        "Can we go to the park after lunch.",
+        "Can we go to the park, after lunch",
+        "Can we go? to the park after lunch",
+        "Can we go to the park after lunch?"
+      ],
+      "correct": 3,
+      "explanation": "A question needs a question mark at the very end.",
+      "level": 1
+    },
+    {
+      "question": "What type of sentence is: 'The library opens at nine.'?",
+      "answers": [
+        "Interrogative",
+        "Imperative",
+        "Exclamatory",
+        "Declarative"
+      ],
+      "correct": 3,
+      "explanation": "A declarative sentence makes a statement and ends with a period.",
+      "level": 1
+    },
+    {
+      "question": "What type of sentence is: 'Did you finish your science project?'",
+      "answers": [
+        "Declarative",
+        "Imperative",
+        "Exclamatory",
+        "Interrogative"
+      ],
+      "correct": 3,
+      "explanation": "An interrogative sentence asks a question.",
+      "level": 1
+    },
+    {
+      "question": "Which pronoun correctly completes: '___ went to the museum with our class.'?",
+      "answers": [
+        "Us",
+        "Our",
+        "We",
+        "Ours"
+      ],
+      "correct": 2,
+      "explanation": "Use the subject pronoun 'we' when it is doing the action.",
+      "level": 1
+    },
+    {
+      "question": "Which pronoun correctly completes: 'Ms. Chen handed the papers to ___.'?",
+      "answers": [
+        "them",
+        "they",
+        "their",
+        "theirs"
+      ],
+      "correct": 0,
+      "explanation": "After a preposition like 'to', use an object pronoun such as 'them'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Diego hurt ___ while skating.'?",
+      "answers": [
+        "hisself",
+        "him",
+        "himself",
+        "he"
+      ],
+      "correct": 2,
+      "explanation": "'Himself' is the correct reflexive pronoun; 'hisself' is not a standard word.",
+      "level": 1
+    },
+    {
+      "question": "Which pronoun can replace 'Nia and Omar' in: 'Nia and Omar built a fort.'?",
+      "answers": [
+        "They",
+        "Them",
+        "Their",
+        "Us"
+      ],
+      "correct": 0,
+      "explanation": "'They' is the subject pronoun for more than one person.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The robin built ___ nest in the oak tree.'?",
+      "answers": [
+        "its",
+        "it's",
+        "it",
+        "its'"
+      ],
+      "correct": 0,
+      "explanation": "'Its' with no apostrophe shows that something belongs to it.",
+      "level": 1
+    },
+    {
+      "question": "Which pronoun correctly completes: 'Please save a seat on the bus for ___.'?",
+      "answers": [
+        "I",
+        "my",
+        "myself",
+        "me"
+      ],
+      "correct": 3,
+      "explanation": "After a preposition like 'for', use the object pronoun 'me'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The turtle moved ___ across the sand.'?",
+      "answers": [
+        "slowness",
+        "slowly",
+        "slowed",
+        "slowing"
+      ],
+      "correct": 1,
+      "explanation": "An adverb like 'slowly' tells how the turtle moved.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Leila is a ___ reader who checks every word.'?",
+      "answers": [
+        "careful",
+        "carefully",
+        "carefulness",
+        "cared"
+      ],
+      "correct": 0,
+      "explanation": "An adjective like 'careful' describes a noun, such as 'reader'.",
+      "level": 1
+    },
+    {
+      "question": "In 'The tall giraffe ate leaves,' which word is an adjective?",
+      "answers": [
+        "giraffe",
+        "tall",
+        "ate",
+        "leaves"
+      ],
+      "correct": 1,
+      "explanation": "'Tall' describes the noun 'giraffe', so it is an adjective.",
+      "level": 1
+    },
+    {
+      "question": "In 'The children laughed loudly,' which word is an adverb?",
+      "answers": [
+        "children",
+        "laughed",
+        "The",
+        "loudly"
+      ],
+      "correct": 3,
+      "explanation": "'Loudly' tells how the children laughed, so it is an adverb.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The baby slept ___ through the night.'?",
+      "answers": [
+        "peaceful",
+        "peace",
+        "peacefully",
+        "peacefulness"
+      ],
+      "correct": 2,
+      "explanation": "Use the adverb 'peacefully' to tell how the baby slept.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses commas correctly to list the colors?",
+      "answers": [
+        "The flag is red white, and blue.",
+        "The flag is red, white, and blue.",
+        "The flag is, red, white and blue.",
+        "The flag, is red white and blue."
+      ],
+      "correct": 1,
+      "explanation": "Put commas between items in a list, not between the subject and the verb.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence writes the birth date correctly?",
+      "answers": [
+        "Kemal was born on March 3, 2016.",
+        "Kemal was born on March, 3 2016.",
+        "Kemal was born on March 3 2016.",
+        "Kemal was born, on March 3, 2016."
+      ],
+      "correct": 0,
+      "explanation": "In a date, place a comma between the day and the year.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses a comma correctly between a city and a state?",
+      "answers": [
+        "We flew to Denver Colorado.",
+        "We flew, to Denver Colorado.",
+        "We flew to Denver, Colorado.",
+        "We flew to, Denver, Colorado."
+      ],
+      "correct": 2,
+      "explanation": "Put a comma between the name of a city and its state.",
+      "level": 1
+    },
+    {
+      "question": "Which letter greeting is punctuated correctly?",
+      "answers": [
+        "Dear Aunt Rosa,",
+        "Dear, Aunt Rosa",
+        "Dear Aunt, Rosa",
+        "Dear Aunt Rosa?"
+      ],
+      "correct": 0,
+      "explanation": "In a friendly letter, put a comma after the greeting.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses a comma correctly after the word 'yes'?",
+      "answers": [
+        "Yes I would like, more soup.",
+        "Yes I, would like more soup.",
+        "Yes, I would like more soup.",
+        "Yes I would like more soup,"
+      ],
+      "correct": 2,
+      "explanation": "Put a comma after 'yes' or 'no' at the start of a sentence.",
+      "level": 1
+    },
+    {
+      "question": "Which sentence uses a comma correctly when speaking to someone by name?",
+      "answers": [
+        "Maya please, pass the crayons.",
+        "Maya, please pass the crayons.",
+        "Maya please pass, the crayons.",
+        "Maya please pass the, crayons."
+      ],
+      "correct": 1,
+      "explanation": "Use a comma to set off the name of the person you are speaking to.",
+      "level": 1
+    },
+    {
+      "question": "What is the contraction for 'cannot'?",
+      "answers": [
+        "cann't",
+        "can't",
+        "ca'nt",
+        "cant"
+      ],
+      "correct": 1,
+      "explanation": "In 'can't', the apostrophe takes the place of the missing letters.",
+      "level": 1
+    },
+    {
+      "question": "What is the contraction for 'will not'?",
+      "answers": [
+        "willn't",
+        "wo'nt",
+        "wont",
+        "won't"
+      ],
+      "correct": 3,
+      "explanation": "'Will not' becomes the special contraction 'won't'.",
+      "level": 1
+    },
+    {
+      "question": "What is the contraction for 'we are'?",
+      "answers": [
+        "we're",
+        "were",
+        "w'are",
+        "wer'e"
+      ],
+      "correct": 0,
+      "explanation": "In 'we're', the apostrophe replaces the letter 'a' in 'are'.",
+      "level": 1
+    },
+    {
+      "question": "Which two words make up the contraction 'I'll'?",
+      "answers": [
+        "I all",
+        "I would",
+        "It will",
+        "I will"
+      ],
+      "correct": 3,
+      "explanation": "'I'll' is a short way to write 'I will'.",
+      "level": 1
+    },
+    {
+      "question": "Which two words make up the contraction 'shouldn't'?",
+      "answers": [
+        "should have",
+        "should not",
+        "shall not",
+        "could not"
+      ],
+      "correct": 1,
+      "explanation": "'Shouldn't' joins 'should' and 'not', with an apostrophe for the missing 'o'.",
+      "level": 1
+    },
+    {
+      "question": "What is the contraction for 'let us'?",
+      "answers": [
+        "lets",
+        "le'ts",
+        "lets'",
+        "let's"
+      ],
+      "correct": 3,
+      "explanation": "'Let's' means 'let us'; the apostrophe replaces the 'u'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'I ate ___ many pancakes this morning.'?",
+      "answers": [
+        "too",
+        "to",
+        "two",
+        "toe"
+      ],
+      "correct": 0,
+      "explanation": "'Too' means more than enough; 'to' shows direction and 'two' is a number.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Can you ___ the birds singing?'",
+      "answers": [
+        "here",
+        "heer",
+        "hare",
+        "hear"
+      ],
+      "correct": 3,
+      "explanation": "'Hear' is what you do with your ears; 'here' means in this place.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: '___ backpack is on the bus.'?",
+      "answers": [
+        "You're",
+        "Yore",
+        "Your",
+        "You"
+      ],
+      "correct": 2,
+      "explanation": "'Your' shows ownership; 'you're' means 'you are'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Please ___ your name at the top of the page.'?",
+      "answers": [
+        "right",
+        "rite",
+        "write",
+        "wright"
+      ],
+      "correct": 2,
+      "explanation": "'Write' means to put words on paper; 'right' means correct or the opposite of left.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'We need to ___ milk at the store.'?",
+      "answers": [
+        "by",
+        "bye",
+        "buy",
+        "bay"
+      ],
+      "correct": 2,
+      "explanation": "'Buy' means to pay for something; 'by' means near and 'bye' is short for goodbye.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The bakery uses ___ to make bread.'?",
+      "answers": [
+        "flour",
+        "flower",
+        "flowr",
+        "flore"
+      ],
+      "correct": 0,
+      "explanation": "'Flour' is the powder used for baking; a 'flower' grows in a garden.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'I ___ the answer to that riddle!'",
+      "answers": [
+        "no",
+        "now",
+        "know",
+        "knot"
+      ],
+      "correct": 2,
+      "explanation": "'Know' means to understand something; 'no' is the opposite of yes.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'There are ___ ducks swimming in the pond.'?",
+      "answers": [
+        "ate",
+        "eight",
+        "eigth",
+        "ait"
+      ],
+      "correct": 1,
+      "explanation": "'Eight' is the number 8; 'ate' is the past tense of eat.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The flowers in the vase ___ pretty.'?",
+      "answers": [
+        "looks",
+        "look",
+        "looking",
+        "is look"
+      ],
+      "correct": 1,
+      "explanation": "The subject is 'flowers', which is plural, so use 'look'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'She ___ a new puppy named Biscuit.'?",
+      "answers": [
+        "have",
+        "has",
+        "having",
+        "are"
+      ],
+      "correct": 1,
+      "explanation": "Singular subjects like 'she' use 'has', not 'have'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'They ___ happy to see the snow yesterday.'?",
+      "answers": [
+        "was",
+        "is",
+        "were",
+        "be"
+      ],
+      "correct": 2,
+      "explanation": "'They' is plural and 'yesterday' is past, so use 'were'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'My brother ___ want to go to bed yet.'?",
+      "answers": [
+        "doesn't",
+        "don't",
+        "isn't",
+        "aren't"
+      ],
+      "correct": 0,
+      "explanation": "Use 'doesn't' with a singular subject like 'brother'.",
+      "level": 1
+    },
+    {
+      "question": "Which group of words is a complete sentence about the rain?",
+      "answers": [
+        "All night long.",
+        "Fell on the roof.",
+        "The rain fell all night.",
+        "The heavy, cold rain."
+      ],
+      "correct": 2,
+      "explanation": "A complete sentence needs both a subject and a verb and must express a complete thought.",
+      "level": 1
+    },
+    {
+      "question": "In 'The squirrel hid an acorn,' which word is the verb?",
+      "answers": [
+        "squirrel",
+        "hid",
+        "acorn",
+        "an"
+      ],
+      "correct": 1,
+      "explanation": "'Hid' tells what the squirrel did, so it is the verb.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'A cheetah runs ___ than a horse.'?",
+      "answers": [
+        "fastest",
+        "faster",
+        "more fast",
+        "fastly"
+      ],
+      "correct": 1,
+      "explanation": "Add -er to a short word to compare two things: 'faster than'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Of all the puppies, Max is the ___.'?",
+      "answers": [
+        "smaller",
+        "most small",
+        "smallerest",
+        "smallest"
+      ],
+      "correct": 3,
+      "explanation": "Use the -est form when comparing three or more things.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'Zara ate ___ orange at lunch.'?",
+      "answers": [
+        "a",
+        "these",
+        "an",
+        "many"
+      ],
+      "correct": 2,
+      "explanation": "Use 'an' before a word that begins with a vowel sound, like 'orange'.",
+      "level": 1
+    },
+    {
+      "question": "Which word correctly completes: 'The box of old photographs ___ in the attic.'?",
+      "answers": [
+        "is",
+        "are",
+        "were",
+        "have been"
+      ],
+      "correct": 0,
+      "explanation": "The subject is 'box', not 'photographs', so the verb must be singular.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Neither of my cousins ___ coming to the reunion.'?",
+      "answers": [
+        "are",
+        "is",
+        "were",
+        "have been"
+      ],
+      "correct": 1,
+      "explanation": "'Neither' is a singular indefinite pronoun, so it takes the singular verb 'is'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Both of the paintings ___ sold at the auction.'?",
+      "answers": [
+        "were",
+        "was",
+        "is",
+        "has been"
+      ],
+      "correct": 0,
+      "explanation": "'Both' is always plural, so it takes the plural verb 'were'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'There ___ several reasons to start the project early.'?",
+      "answers": [
+        "are",
+        "is",
+        "was",
+        "has been"
+      ],
+      "correct": 0,
+      "explanation": "In a sentence beginning with 'there', the verb agrees with the subject that follows: 'reasons'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The jury ___ reached its verdict.'?",
+      "answers": [
+        "has",
+        "have",
+        "are",
+        "were"
+      ],
+      "correct": 0,
+      "explanation": "A collective noun acting as one unit, like 'jury', takes a singular verb.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Somebody ___ left a water bottle on the bleachers.'?",
+      "answers": [
+        "have",
+        "are",
+        "has",
+        "were"
+      ],
+      "correct": 2,
+      "explanation": "Indefinite pronouns ending in -body, -one, or -thing are singular.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Ten dollars ___ too much for a small bag of popcorn.'?",
+      "answers": [
+        "are",
+        "were",
+        "have been",
+        "is"
+      ],
+      "correct": 3,
+      "explanation": "An amount of money treated as a single sum takes a singular verb.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Mathematics ___ my favorite subject this year.'?",
+      "answers": [
+        "are",
+        "were",
+        "is",
+        "have been"
+      ],
+      "correct": 2,
+      "explanation": "Some nouns ending in -s, like 'mathematics' and 'news', are singular.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Either the twins or their father ___ going to drive.'?",
+      "answers": [
+        "are",
+        "is",
+        "were",
+        "have been"
+      ],
+      "correct": 1,
+      "explanation": "With 'either...or', the verb agrees with the nearer subject, 'father', which is singular.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'A number of students ___ volunteered for the cleanup.'?",
+      "answers": [
+        "has",
+        "have",
+        "is",
+        "was"
+      ],
+      "correct": 1,
+      "explanation": "'A number of' means 'many', so it takes a plural verb.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Several of the players ___ practicing extra hours.'?",
+      "answers": [
+        "are",
+        "is",
+        "was",
+        "has been"
+      ],
+      "correct": 0,
+      "explanation": "'Several' is a plural indefinite pronoun and takes a plural verb.",
+      "level": 2
+    },
+    {
+      "question": "Which pronoun correctly completes: 'The students packed ___ lunches for the field trip.'?",
+      "answers": [
+        "his",
+        "its",
+        "their",
+        "there"
+      ],
+      "correct": 2,
+      "explanation": "A pronoun must agree with its antecedent; 'students' is plural, so use 'their'.",
+      "level": 2
+    },
+    {
+      "question": "Which pronoun correctly completes: 'Neither Maria nor Ana remembered ___ umbrella.'?",
+      "answers": [
+        "her",
+        "their",
+        "they're",
+        "our"
+      ],
+      "correct": 0,
+      "explanation": "With 'neither...nor' and two singular antecedents, use a singular pronoun.",
+      "level": 2
+    },
+    {
+      "question": "Which pronoun correctly completes: 'The committee announced ___ decision on Friday.'?",
+      "answers": [
+        "its",
+        "it's",
+        "they're",
+        "there"
+      ],
+      "correct": 0,
+      "explanation": "A collective noun acting as a single unit takes the singular possessive pronoun 'its'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence has a clear pronoun reference?",
+      "answers": [
+        "When Leo met Sam, he shook his hand.",
+        "Leo shook Sam's hand when they met.",
+        "Leo told Sam that he was late.",
+        "Leo and Sam left, and then he called."
+      ],
+      "correct": 1,
+      "explanation": "A pronoun must clearly point to its antecedent; 'they' can only mean both boys, while 'he' and 'his' are unclear.",
+      "level": 2
+    },
+    {
+      "question": "Which shows that the essay belongs to James?",
+      "answers": [
+        "James's essay",
+        "James' essay's",
+        "Jame's essay",
+        "Jameses essay"
+      ],
+      "correct": 0,
+      "explanation": "Most style guides add apostrophe + s to a singular noun to show possession, even when it ends in s.",
+      "level": 2
+    },
+    {
+      "question": "Which shows the lounge shared by many teachers?",
+      "answers": [
+        "the teacher's' lounge",
+        "the teachers' lounge",
+        "the teachers lounge",
+        "the teacherses lounge"
+      ],
+      "correct": 1,
+      "explanation": "For a plural noun ending in s, add only an apostrophe to show possession.",
+      "level": 2
+    },
+    {
+      "question": "Which correctly shows the team belonging to the women?",
+      "answers": [
+        "the women's team",
+        "the womens' team",
+        "the womens team",
+        "the woman's' team"
+      ],
+      "correct": 0,
+      "explanation": "'Women' is plural but does not end in s, so add apostrophe + s.",
+      "level": 2
+    },
+    {
+      "question": "Which shows that Ana and Leo worked on one project together?",
+      "answers": [
+        "Ana's and Leo project",
+        "Ana and Leos' project",
+        "Anas and Leos project",
+        "Ana and Leo's project"
+      ],
+      "correct": 3,
+      "explanation": "For joint ownership, add the apostrophe + s only to the last name.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: '___ jacket was left in the gym?'",
+      "answers": [
+        "Who's",
+        "Whos",
+        "Whose",
+        "Who'se"
+      ],
+      "correct": 2,
+      "explanation": "'Whose' shows possession; 'who's' means 'who is' or 'who has'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly refers to the house that belongs to the Garcia family?",
+      "answers": [
+        "We had dinner at the Garcia's house.",
+        "We had dinner at the Garcias' house.",
+        "We had dinner at the Garcias house.",
+        "We had dinner at the Garcias's house."
+      ],
+      "correct": 1,
+      "explanation": "Make the family name plural (Garcias), then add an apostrophe to show possession.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly writes the plural of the family name Kim?",
+      "answers": [
+        "The Kim's are moving next week.",
+        "The Kims' are moving next week.",
+        "The Kims are moving next week.",
+        "The Kim's' are moving next week."
+      ],
+      "correct": 2,
+      "explanation": "Do not use an apostrophe to make a name plural; 'Kims' simply means more than one Kim.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly uses a comma after an introductory clause?",
+      "answers": [
+        "When the rain stopped we, went outside.",
+        "When the rain, stopped we went outside.",
+        "When the rain stopped, we went outside.",
+        "When, the rain stopped we went outside."
+      ],
+      "correct": 2,
+      "explanation": "Place a comma after an introductory dependent clause, before the main clause begins.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly sets off the appositive with commas?",
+      "answers": [
+        "Mr. Osei our band teacher, plays the trumpet.",
+        "Mr. Osei, our band teacher, plays the trumpet.",
+        "Mr. Osei, our band teacher plays the trumpet.",
+        "Mr. Osei our, band teacher plays the trumpet."
+      ],
+      "correct": 1,
+      "explanation": "A nonessential appositive is set off with a comma on both sides.",
+      "level": 2
+    },
+    {
+      "question": "Which compound sentence is punctuated correctly?",
+      "answers": [
+        "Keiko wanted to swim but, the pool was closed.",
+        "Keiko wanted to swim, but the pool was closed.",
+        "Keiko wanted, to swim but the pool was closed.",
+        "Keiko wanted to swim but the pool, was closed."
+      ],
+      "correct": 1,
+      "explanation": "Put a comma before the coordinating conjunction that joins two independent clauses.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly uses a comma after an introductory phrase?",
+      "answers": [
+        "After a long day, at school Marcus took a nap.",
+        "After a long day at school, Marcus took a nap.",
+        "After a long day at school Marcus, took a nap.",
+        "After, a long day at school Marcus took a nap."
+      ],
+      "correct": 1,
+      "explanation": "A long introductory prepositional phrase is followed by a comma.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence punctuates the quotation correctly?",
+      "answers": [
+        "\"Let's start the game\", said Coach Rivera.",
+        "\"Let's start the game,\" said Coach Rivera,",
+        "\"Let's start the game\" said, Coach Rivera.",
+        "\"Let's start the game,\" said Coach Rivera."
+      ],
+      "correct": 3,
+      "explanation": "In American English, the comma goes inside the closing quotation mark.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly uses commas around 'however'?",
+      "answers": [
+        "The test was long; it was however, easier than I expected.",
+        "The test was long; it was, however easier than I expected.",
+        "The test was, long; it was however easier than I expected.",
+        "The test was long; it was, however, easier than I expected."
+      ],
+      "correct": 3,
+      "explanation": "An interrupting word like 'however' needs commas on both sides.",
+      "level": 2
+    },
+    {
+      "question": "Which of these is a sentence fragment?",
+      "answers": [
+        "Ayesha ran down the hallway.",
+        "She carried a heavy backpack.",
+        "The hallway was crowded.",
+        "Running down the hallway with a backpack."
+      ],
+      "correct": 3,
+      "explanation": "A fragment is missing a subject or a complete verb and does not express a complete thought.",
+      "level": 2
+    },
+    {
+      "question": "Which of these is a run-on sentence?",
+      "answers": [
+        "We wanted pizza, but the restaurant was closed.",
+        "We wanted pizza the restaurant was closed.",
+        "We wanted pizza; the restaurant was closed.",
+        "Because the restaurant was closed, we ate at home."
+      ],
+      "correct": 1,
+      "explanation": "A run-on joins two independent clauses without proper punctuation or a conjunction.",
+      "level": 2
+    },
+    {
+      "question": "Which choice correctly fixes the comma splice: 'The movie was long, we enjoyed it anyway.'?",
+      "answers": [
+        "The movie was long, we, enjoyed it anyway.",
+        "The movie, was long we enjoyed it anyway.",
+        "The movie was long we enjoyed it anyway.",
+        "The movie was long, but we enjoyed it anyway."
+      ],
+      "correct": 3,
+      "explanation": "Fix a comma splice by adding a coordinating conjunction after the comma.",
+      "level": 2
+    },
+    {
+      "question": "Which choice correctly fixes the fragment: 'Because the bus was late.'?",
+      "answers": [
+        "Because the bus was late and.",
+        "Because, the bus was late.",
+        "Because the bus was late, we missed the assembly.",
+        "Because the bus was late, and."
+      ],
+      "correct": 2,
+      "explanation": "A dependent clause must be joined to an independent clause to form a complete sentence.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is in the passive voice?",
+      "answers": [
+        "The art club painted the mural.",
+        "The art club is painting a mural.",
+        "The art club will paint a mural.",
+        "The mural was painted by the art club."
+      ],
+      "correct": 3,
+      "explanation": "In the passive voice, the subject receives the action, often with 'was' + past participle + 'by'.",
+      "level": 2
+    },
+    {
+      "question": "Which choice rewrites 'The trophy was won by our team.' in the active voice?",
+      "answers": [
+        "The trophy had been won by our team.",
+        "The trophy is won by our team.",
+        "Our team won the trophy.",
+        "Won by our team was the trophy."
+      ],
+      "correct": 2,
+      "explanation": "In the active voice, the subject (our team) performs the action.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is in the imperative mood?",
+      "answers": [
+        "You turned off the lights.",
+        "Did you turn off the lights?",
+        "If I were you, I would turn off the lights.",
+        "Turn off the lights before you leave."
+      ],
+      "correct": 3,
+      "explanation": "The imperative mood gives a command or request.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is in the indicative mood?",
+      "answers": [
+        "Close the museum at five o'clock.",
+        "The museum closes at five o'clock.",
+        "If only the museum were open later!",
+        "Please close the museum at five."
+      ],
+      "correct": 1,
+      "explanation": "The indicative mood states a fact or asks a question.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'This puzzle is ___ than the one we did yesterday.'?",
+      "answers": [
+        "challenginger",
+        "most challenging",
+        "more challenging",
+        "more challenginger"
+      ],
+      "correct": 2,
+      "explanation": "Use 'more' with longer adjectives to compare two things.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Of the two essays, Lucia's is the ___.'?",
+      "answers": [
+        "best",
+        "goodest",
+        "more better",
+        "better"
+      ],
+      "correct": 3,
+      "explanation": "When comparing exactly two things, use the comparative form: 'better'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'That was the ___ exciting game of the whole season.'?",
+      "answers": [
+        "more",
+        "mostest",
+        "much",
+        "most"
+      ],
+      "correct": 3,
+      "explanation": "Use 'most' to form the superlative of longer adjectives when comparing three or more.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Of all the routes, this one is the ___ crowded.'?",
+      "answers": [
+        "less",
+        "least",
+        "lesser",
+        "littlest"
+      ],
+      "correct": 1,
+      "explanation": "'Least' is the superlative of 'little', used to compare three or more things.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence has parallel structure?",
+      "answers": [
+        "Ines likes hiking, swimming, and to bike.",
+        "Ines likes hiking, swimming, and biking.",
+        "Ines likes to hike, swimming, and biking.",
+        "Ines likes hiking, to swim, and bikes."
+      ],
+      "correct": 1,
+      "explanation": "Items in a series should share the same grammatical form.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence has parallel structure in its list of tasks?",
+      "answers": [
+        "We need to sweep the floor, washing the dishes, and fold the towels.",
+        "We need to sweep the floor, wash the dishes, and the towels folded.",
+        "We need sweeping the floor, to wash the dishes, and fold the towels.",
+        "We need to sweep the floor, wash the dishes, and fold the towels."
+      ],
+      "correct": 3,
+      "explanation": "Keep each item in a list in the same form, such as verb + object.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence has parallel structure in describing the speaker?",
+      "answers": [
+        "The speaker was clear, confident, and had humor.",
+        "The speaker was clear, confident, and funny.",
+        "The speaker was clear, had confidence, and funny.",
+        "The speaker was clearly, confident, and funny."
+      ],
+      "correct": 1,
+      "explanation": "Parallel lists use matching parts of speech, here three adjectives.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Divide the snacks ___ the three groups.'?",
+      "answers": [
+        "between",
+        "beside",
+        "beneath",
+        "among"
+      ],
+      "correct": 3,
+      "explanation": "Use 'among' for three or more; use 'between' for two.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The secret stays ___ you and me.'?",
+      "answers": [
+        "among",
+        "besides",
+        "between",
+        "amid"
+      ],
+      "correct": 2,
+      "explanation": "Use 'between' when referring to two people or things.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Rosa jumped ___ the pool with a big splash.'?",
+      "answers": [
+        "within",
+        "onto",
+        "into",
+        "among"
+      ],
+      "correct": 2,
+      "explanation": "'Into' shows movement from outside to inside; 'in' shows location.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses the correct preposition after 'different'?",
+      "answers": [
+        "My answer is different of yours.",
+        "My answer is different at yours.",
+        "My answer is different from yours.",
+        "My answer is different with yours."
+      ],
+      "correct": 2,
+      "explanation": "In formal writing, 'different from' is the standard phrase.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses the preposition 'off' correctly?",
+      "answers": [
+        "The cat jumped off the table.",
+        "The cat jumped off of the table.",
+        "The cat jumped of the table.",
+        "The cat jumped off from the table."
+      ],
+      "correct": 0,
+      "explanation": "'Off of' is redundant; 'off' alone is correct in formal writing.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Who else is coming ___ Ming and Sara?'",
+      "answers": [
+        "besides",
+        "beside",
+        "between",
+        "beneath"
+      ],
+      "correct": 0,
+      "explanation": "'Besides' means 'in addition to'; 'beside' means 'next to'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'By noon, the snow ___ melted completely.'?",
+      "answers": [
+        "has",
+        "have",
+        "having",
+        "had"
+      ],
+      "correct": 3,
+      "explanation": "Use the past perfect 'had melted' for an action completed before a past time.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Arjun has ___ the lead role in the play.'?",
+      "answers": [
+        "chosen",
+        "chose",
+        "choosed",
+        "choose"
+      ],
+      "correct": 0,
+      "explanation": "After 'has', use the past participle: 'chosen'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The vase had ___ before we got home.'?",
+      "answers": [
+        "broke",
+        "broken",
+        "breaked",
+        "breaking"
+      ],
+      "correct": 1,
+      "explanation": "After 'had', use the past participle 'broken'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'She has already ___ to the store.'?",
+      "answers": [
+        "went",
+        "go",
+        "gone",
+        "goed"
+      ],
+      "correct": 2,
+      "explanation": "'Went' is past tense; after 'has', use the past participle 'gone'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence about Ayo keeps the verb tense consistent?",
+      "answers": [
+        "Ayo opens the door and stepped inside.",
+        "Ayo opened the door and stepped inside.",
+        "Ayo opened the door and steps inside.",
+        "Ayo will open the door and stepped inside."
+      ],
+      "correct": 1,
+      "explanation": "Keep verbs in the same tense when actions happen in the same time frame.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Please don't ___ your library card.'?",
+      "answers": [
+        "loose",
+        "lost",
+        "lose",
+        "loss"
+      ],
+      "correct": 2,
+      "explanation": "'Lose' means to misplace; 'loose' means not tight.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'I will ___ the invitation to the party.'?",
+      "answers": [
+        "except",
+        "excess",
+        "accept",
+        "expect"
+      ],
+      "correct": 2,
+      "explanation": "'Accept' means to receive or agree to; 'except' means 'other than'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The kids ran past the gate and then ___ the fence.'?",
+      "answers": [
+        "threw",
+        "thorough",
+        "through",
+        "though"
+      ],
+      "correct": 2,
+      "explanation": "'Through' means in one side and out the other; 'threw' is the past tense of throw.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The cabin is ___ down the trail than the lake.'?",
+      "answers": [
+        "farther",
+        "father",
+        "farthest",
+        "more far"
+      ],
+      "correct": 0,
+      "explanation": "Use the comparative 'farther' to compare two physical distances.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses 'whose' correctly?",
+      "answers": [
+        "The girl who's kite flew highest won a prize.",
+        "The girl whos kite flew highest won a prize.",
+        "The girl who kite flew highest won a prize.",
+        "The girl whose kite flew highest won a prize."
+      ],
+      "correct": 3,
+      "explanation": "'Whose' is the possessive form of 'who'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses a colon correctly to introduce an explanation?",
+      "answers": [
+        "We had one goal: win the championship.",
+        "We had: one goal win the championship.",
+        "We had one: goal win the championship.",
+        "We: had one goal win the championship."
+      ],
+      "correct": 0,
+      "explanation": "A colon can follow a complete sentence to introduce an explanation or example.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence about the juice avoids a double negative?",
+      "answers": [
+        "There isn't no juice left in the fridge.",
+        "There ain't no juice left in the fridge.",
+        "There isn't hardly any juice left in the fridge.",
+        "There isn't any juice left in the fridge."
+      ],
+      "correct": 3,
+      "explanation": "Use only one negative word, such as 'isn't', in a clause.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses 'than' and 'then' correctly?",
+      "answers": [
+        "Finish your homework first, and then you can play longer than usual.",
+        "Finish your homework first, and than you can play longer then usual.",
+        "Finish your homework first, and then you can play longer then usual.",
+        "Finish your homework first, and than you can play longer than usual."
+      ],
+      "correct": 0,
+      "explanation": "'Then' refers to time or order; 'than' is used for comparisons.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'Each of the dogs ___ its own bed.'?",
+      "answers": [
+        "have",
+        "are having",
+        "were having",
+        "has"
+      ],
+      "correct": 3,
+      "explanation": "'Each' is singular, even when followed by a plural noun in a phrase.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence uses 'good' and 'well' correctly?",
+      "answers": [
+        "Rahul is a good singer, and he dances well too.",
+        "Rahul is a well singer, and he dances good too.",
+        "Rahul is a good singer, and he dances good too.",
+        "Rahul is a well singer, and he dances well too."
+      ],
+      "correct": 0,
+      "explanation": "'Good' is an adjective that describes nouns; 'well' is an adverb that describes verbs.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence shows a correct comparison?",
+      "answers": [
+        "Our garden is more bigger than Mrs. Lin's garden.",
+        "Our garden is biggest than Mrs. Lin's garden.",
+        "Our garden is bigger than Mrs. Lin's garden.",
+        "Our garden is most big than Mrs. Lin's garden."
+      ],
+      "correct": 2,
+      "explanation": "Use the -er form alone to compare two things; never combine it with 'more'.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is in the conditional mood?",
+      "answers": [
+        "I would help you if I had more time.",
+        "I help you when I have time.",
+        "Help me when you have time.",
+        "Do you have time to help?"
+      ],
+      "correct": 0,
+      "explanation": "The conditional mood uses 'would' to describe what would happen under certain conditions.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence correctly punctuates a compound predicate?",
+      "answers": [
+        "Lena finished her homework, and went to bed.",
+        "Lena, finished her homework and went to bed.",
+        "Lena finished, her homework and went to bed.",
+        "Lena finished her homework and went to bed."
+      ],
+      "correct": 3,
+      "explanation": "Do not use a comma between two verbs that share one subject.",
+      "level": 2
+    },
+    {
+      "question": "Which pronoun correctly completes: 'Ms. Ito asked Keanu and ___ to lead the discussion.'?",
+      "answers": [
+        "I",
+        "me",
+        "myself",
+        "mine"
+      ],
+      "correct": 1,
+      "explanation": "Use the object pronoun 'me' when it receives the action; try it alone: 'asked me'.",
+      "level": 2
+    },
+    {
+      "question": "Which word correctly completes: 'The coach required that every player ___ on time.'?",
+      "answers": [
+        "is",
+        "was",
+        "are",
+        "be"
+      ],
+      "correct": 3,
+      "explanation": "After verbs of demand or requirement like 'require that', use the base-form subjunctive: 'be'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'It is essential that she ___ the form by Friday.'?",
+      "answers": [
+        "submit",
+        "submits",
+        "submitted",
+        "submitting"
+      ],
+      "correct": 0,
+      "explanation": "After 'It is essential that', use the subjunctive base form without -s: 'submit'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'If Marisol ___ the principal, she would extend lunch.'?",
+      "answers": [
+        "were",
+        "was",
+        "is",
+        "be"
+      ],
+      "correct": 0,
+      "explanation": "Use the subjunctive 'were' for a hypothetical, contrary-to-fact condition.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly expresses a past hypothetical?",
+      "answers": [
+        "If I had known about the quiz, I would have studied.",
+        "If I would have known about the quiz, I would have studied.",
+        "If I knew about the quiz, I would have studied.",
+        "If I had knew about the quiz, I would have studied."
+      ],
+      "correct": 0,
+      "explanation": "For a past hypothetical, use 'had' + past participle in the if-clause and 'would have' in the result.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids a dangling modifier?",
+      "answers": [
+        "Rushing to catch the bus, Tomas dropped his phone.",
+        "Rushing to catch the bus, the phone fell.",
+        "Rushing to catch the bus, Tomas's phone dropped.",
+        "Rushing to catch the bus, a phone was dropped."
+      ],
+      "correct": 0,
+      "explanation": "An opening modifier must be followed by the person or thing doing the action.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids a dangling modifier about the essay?",
+      "answers": [
+        "After revising the essay twice, confidence grew.",
+        "After revising the essay twice, Nadia felt confident.",
+        "After revising the essay twice, it seemed ready.",
+        "After revising the essay twice, the grade was high."
+      ],
+      "correct": 1,
+      "explanation": "The subject right after the introductory phrase must be the one who did the revising.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence places the modifier 'only' to mean that one student passed?",
+      "answers": [
+        "Kwame only passed the test.",
+        "Only Kwame passed the test.",
+        "Kwame passed only the test.",
+        "Kwame passed the only test."
+      ],
+      "correct": 1,
+      "explanation": "Place 'only' directly before the word it limits; here it limits 'Kwame'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence fixes the misplaced modifier in: 'The dog chased the ball with brown spots.'?",
+      "answers": [
+        "With brown spots, the ball was chased by the dog.",
+        "The dog chased with brown spots the ball.",
+        "The dog chased the ball, with brown spots.",
+        "The dog with brown spots chased the ball."
+      ],
+      "correct": 3,
+      "explanation": "Keep a modifier next to the word it describes so the meaning is clear.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence fixes the misplaced modifier in: 'We saw a deer driving home from the game.'?",
+      "answers": [
+        "We saw a deer that was driving home from the game.",
+        "A deer driving home from the game was seen by us.",
+        "Driving home from the game, we saw a deer.",
+        "A deer, driving home from the game, was seen."
+      ],
+      "correct": 2,
+      "explanation": "Move the modifier so it clearly describes 'we', the ones who were driving.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'almost' to show the class completed most, but not all, of the problems?",
+      "answers": [
+        "The class almost finished all of the problems.",
+        "The class finished almost all of the problems.",
+        "Almost the class finished all of the problems.",
+        "The class finished all of the almost problems."
+      ],
+      "correct": 1,
+      "explanation": "Place 'almost' directly before the word it modifies, here 'all'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses a semicolon correctly with 'however'?",
+      "answers": [
+        "The trail was steep, however; the view was worth it.",
+        "The trail was steep; however the view, was worth it.",
+        "The trail was steep however; the view was worth it.",
+        "The trail was steep; however, the view was worth it."
+      ],
+      "correct": 3,
+      "explanation": "Use a semicolon before a conjunctive adverb like 'however' and a comma after it.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses semicolons correctly in a complex list?",
+      "answers": [
+        "We visited Austin; Texas, Tulsa; Oklahoma, and Reno; Nevada.",
+        "We visited Austin, Texas, Tulsa, Oklahoma; and Reno, Nevada.",
+        "We visited; Austin, Texas, Tulsa, Oklahoma, and Reno, Nevada.",
+        "We visited Austin, Texas; Tulsa, Oklahoma; and Reno, Nevada."
+      ],
+      "correct": 3,
+      "explanation": "Use semicolons to separate list items that already contain commas.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses a colon correctly to introduce the spices?",
+      "answers": [
+        "The recipe requires three spices: cumin, turmeric, and ginger.",
+        "The recipe requires: cumin, turmeric, and ginger.",
+        "The recipe: requires cumin, turmeric, and ginger.",
+        "The spices in the recipe are: cumin, turmeric, and ginger."
+      ],
+      "correct": 0,
+      "explanation": "A colon should follow a complete independent clause, not split a verb from its object.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses dashes correctly to set off an interruption?",
+      "answers": [
+        "My grandmother who grew up—in Manila taught me—to cook adobo.",
+        "My grandmother—who grew up in Manila—taught me to cook adobo.",
+        "My—grandmother who grew up in Manila taught me to cook adobo.",
+        "My grandmother who grew up in Manila—taught me to cook—adobo."
+      ],
+      "correct": 1,
+      "explanation": "A pair of dashes sets off interrupting information, with one dash on each side.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses a single dash correctly for emphasis?",
+      "answers": [
+        "After months of practice, she achieved her goal—a perfect score.",
+        "After months of practice—she achieved her goal a perfect score.",
+        "After—months of practice, she achieved her goal a perfect score.",
+        "After months of practice, she—achieved her goal a perfect score."
+      ],
+      "correct": 0,
+      "explanation": "A single dash can introduce a dramatic conclusion or emphasized phrase at the end of a sentence.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly joins two independent clauses?",
+      "answers": [
+        "The library was quiet, everyone was studying for finals.",
+        "The library was quiet everyone was studying for finals.",
+        "The library was quiet; everyone was studying for finals.",
+        "The library was quiet; and everyone was studying for finals."
+      ],
+      "correct": 2,
+      "explanation": "A semicolon can join two closely related independent clauses without a conjunction.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The award will go to ___ writes the most creative story.'?",
+      "answers": [
+        "whomever",
+        "whoever",
+        "whom",
+        "whose"
+      ],
+      "correct": 1,
+      "explanation": "The pronoun is the subject of 'writes', so use the subject form 'whoever'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'You may invite ___ you like to the party.'?",
+      "answers": [
+        "whoever",
+        "who",
+        "whose",
+        "whomever"
+      ],
+      "correct": 3,
+      "explanation": "The pronoun is the object of 'like' (you like them), so use 'whomever'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'For ___ was this package left?'",
+      "answers": [
+        "who",
+        "whoever",
+        "who's",
+        "whom"
+      ],
+      "correct": 3,
+      "explanation": "After a preposition such as 'for', use the object form 'whom'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The scientist ___ we interviewed studies coral reefs.'?",
+      "answers": [
+        "who",
+        "whom",
+        "whose",
+        "which"
+      ],
+      "correct": 1,
+      "explanation": "The pronoun is the object of 'interviewed' (we interviewed her), so use 'whom'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Tell me ___ you think will win the science fair.'?",
+      "answers": [
+        "whom",
+        "who",
+        "whomever",
+        "whose"
+      ],
+      "correct": 1,
+      "explanation": "Ignore 'you think': the pronoun is the subject of 'will win', so use 'who'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly punctuates a nonrestrictive clause?",
+      "answers": [
+        "Lake Tahoe which lies on the border of two states is very deep.",
+        "Lake Tahoe, which lies on the border of two states, is very deep.",
+        "Lake Tahoe, that lies on the border of two states, is very deep.",
+        "Lake Tahoe which lies on the border of two states, is very deep."
+      ],
+      "correct": 1,
+      "explanation": "Nonrestrictive clauses add extra information, use 'which', and are set off by commas.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly uses a restrictive clause?",
+      "answers": [
+        "The book that you lent me is on my desk.",
+        "The book, that you lent me, is on my desk.",
+        "The book, that you lent me is on my desk.",
+        "The book that, you lent me, is on my desk."
+      ],
+      "correct": 0,
+      "explanation": "A restrictive clause identifies which one is meant, so it is not set off with commas.",
+      "level": 3
+    },
+    {
+      "question": "In 'Students who study regularly earn higher grades,' why are there no commas around the clause?",
+      "answers": [
+        "The clause is essential to identify which students",
+        "The clause adds only extra information",
+        "The clause is a separate sentence",
+        "The clause begins with a preposition"
+      ],
+      "correct": 0,
+      "explanation": "Restrictive clauses are necessary to the meaning and are not set off by commas.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'not only...but also' with parallel structure?",
+      "answers": [
+        "The festival not only offered live music but also local food.",
+        "The festival offered not only live music but also local food.",
+        "The festival offered not only live music but also had local food.",
+        "Not only the festival offered live music but also local food."
+      ],
+      "correct": 1,
+      "explanation": "The words after 'not only' and 'but also' should be the same grammatical form.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'either...or' with parallel structure?",
+      "answers": [
+        "You can either take the train or ride your bike.",
+        "You can either take the train or your bike.",
+        "Either you can take the train or ride your bike.",
+        "You can either take the train or riding your bike."
+      ],
+      "correct": 0,
+      "explanation": "Correlative conjunctions must be followed by matching grammatical elements.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence maintains parallel structure in a complex sentence?",
+      "answers": [
+        "She argued that the policy was unfair and that it should be revised.",
+        "She argued that the policy was unfair and it should be revised by them.",
+        "She argued that the policy was unfair and for revising it.",
+        "She argued that the policy was unfair and to revise it."
+      ],
+      "correct": 0,
+      "explanation": "Repeat 'that' to keep two parallel noun clauses in matching form.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence is parallel in its comparison?",
+      "answers": [
+        "Reading a novel is more relaxing than to watch the news.",
+        "To read a novel is more relaxing than watching the news.",
+        "Reading a novel is more relaxing than watching the news.",
+        "Reading a novel is more relaxing than the news watching."
+      ],
+      "correct": 2,
+      "explanation": "Compared items should share the same form, here two gerund phrases.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence best combines: 'The storm knocked out power. Classes were canceled.'?",
+      "answers": [
+        "The storm knocked out power, classes were canceled.",
+        "The storm knocked out power because classes were canceled.",
+        "Because the storm knocked out power classes, were canceled.",
+        "Because the storm knocked out power, classes were canceled."
+      ],
+      "correct": 3,
+      "explanation": "A subordinating conjunction like 'because' shows the cause-and-effect relationship.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence best combines: 'Dr. Mensah is a biologist. She studies frogs. The frogs live in rainforests.'?",
+      "answers": [
+        "Dr. Mensah is a biologist who studies rainforest frogs.",
+        "Dr. Mensah is a biologist, she studies frogs, they live in rainforests.",
+        "Dr. Mensah, a biologist, she studies frogs living in rainforests.",
+        "Dr. Mensah is a biologist and studies frogs and they live in rainforests."
+      ],
+      "correct": 0,
+      "explanation": "Use a relative clause and modifiers to combine ideas concisely and correctly.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence best combines: 'The museum was crowded. We still saw every exhibit.'?",
+      "answers": [
+        "The museum was crowded, we still saw every exhibit.",
+        "Because the museum was crowded, we still saw every exhibit.",
+        "Although the museum was crowded, we still saw every exhibit.",
+        "The museum was crowded so we still saw every exhibit."
+      ],
+      "correct": 2,
+      "explanation": "'Although' shows contrast between the two ideas.",
+      "level": 3
+    },
+    {
+      "question": "In 'Painting murals is Jae's favorite hobby,' what is 'Painting murals'?",
+      "answers": [
+        "A participial phrase",
+        "An infinitive phrase",
+        "A gerund phrase",
+        "A prepositional phrase"
+      ],
+      "correct": 2,
+      "explanation": "A gerund phrase begins with an -ing verb and acts as a noun, here the subject.",
+      "level": 3
+    },
+    {
+      "question": "In 'The girl holding the trophy is my cousin,' what is 'holding the trophy'?",
+      "answers": [
+        "A gerund phrase",
+        "An infinitive phrase",
+        "A participial phrase",
+        "An appositive phrase"
+      ],
+      "correct": 2,
+      "explanation": "A participial phrase acts as an adjective, here describing 'the girl'.",
+      "level": 3
+    },
+    {
+      "question": "In 'Our goal is to finish by noon,' what is 'to finish by noon'?",
+      "answers": [
+        "A gerund phrase",
+        "A participial phrase",
+        "A prepositional phrase",
+        "An infinitive phrase"
+      ],
+      "correct": 3,
+      "explanation": "An infinitive phrase begins with 'to' + a verb and can act as a noun.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence contains an infinitive used as an adverb?",
+      "answers": [
+        "Emeka's goal was to improve his serve.",
+        "Emeka practiced daily to improve his serve.",
+        "Improving his serve, Emeka practiced daily.",
+        "Emeka enjoyed improving his serve."
+      ],
+      "correct": 1,
+      "explanation": "'To improve his serve' tells why he practiced, so it functions as an adverb.",
+      "level": 3
+    },
+    {
+      "question": "In formal writing, which word correctly completes: 'We appreciated ___ helping us move the piano.'?",
+      "answers": [
+        "your",
+        "you",
+        "you're",
+        "yours"
+      ],
+      "correct": 0,
+      "explanation": "Use a possessive pronoun before a gerund: 'your helping'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'imply' correctly?",
+      "answers": [
+        "From the clues, readers imply that the hero will return.",
+        "I implied from her smile that she was happy.",
+        "We implied the answer from the data.",
+        "The author implies that the hero will return."
+      ],
+      "correct": 3,
+      "explanation": "Speakers or writers imply (suggest); listeners or readers infer (conclude).",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'infer' correctly?",
+      "answers": [
+        "Her tone inferred that she was upset.",
+        "From her tone, I inferred that she was upset.",
+        "She inferred to us that she was upset.",
+        "Did you mean to infer that I was late?"
+      ],
+      "correct": 1,
+      "explanation": "To infer is to draw a conclusion from evidence or clues.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Yesterday the dog ___ in the sun all afternoon.'?",
+      "answers": [
+        "lay",
+        "laid",
+        "lied",
+        "layed"
+      ],
+      "correct": 0,
+      "explanation": "The past tense of 'lie' (to recline) is 'lay'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Ava ___ her keys on the counter when she got home.'?",
+      "answers": [
+        "lay",
+        "laid",
+        "lied",
+        "layed"
+      ],
+      "correct": 1,
+      "explanation": "'Lay' means to put something down; its past tense is 'laid'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The blanket has ___ on the floor since morning.'?",
+      "answers": [
+        "laid",
+        "lied",
+        "lain",
+        "layed"
+      ],
+      "correct": 2,
+      "explanation": "The past participle of 'lie' (to recline) is 'lain'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The scarf will ___ your green jacket nicely.'?",
+      "answers": [
+        "compliment",
+        "complement",
+        "complimentary",
+        "complacent"
+      ],
+      "correct": 1,
+      "explanation": "'Complement' means to complete or go well with; 'compliment' means praise.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The ___ of the school greeted us at the door.'?",
+      "answers": [
+        "principal",
+        "principle",
+        "principled",
+        "principality"
+      ],
+      "correct": 0,
+      "explanation": "'Principal' can mean the head of a school; a 'principle' is a rule or belief.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Honesty is an important ___ in our family.'?",
+      "answers": [
+        "principal",
+        "principally",
+        "principle",
+        "principality"
+      ],
+      "correct": 2,
+      "explanation": "A 'principle' is a basic truth, rule, or value.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Order the ___ for the wedding invitations from the print shop.'?",
+      "answers": [
+        "stationary",
+        "station",
+        "stationery",
+        "stationed"
+      ],
+      "correct": 2,
+      "explanation": "'Stationery' is writing paper; 'stationary' means not moving.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The weather report warned of ___ danger from the approaching storm.'?",
+      "answers": [
+        "eminent",
+        "immanent",
+        "imminent",
+        "emanate"
+      ],
+      "correct": 2,
+      "explanation": "'Imminent' means about to happen; 'eminent' means distinguished.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Please be ___ and keep the surprise party a secret.'?",
+      "answers": [
+        "discrete",
+        "discretion",
+        "descreet",
+        "discreet"
+      ],
+      "correct": 3,
+      "explanation": "'Discreet' means careful to keep things private; 'discrete' means separate and distinct.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The detective's question was meant to ___ a confession.'?",
+      "answers": [
+        "elicit",
+        "illicit",
+        "elude",
+        "allude"
+      ],
+      "correct": 0,
+      "explanation": "'Elicit' means to draw out; 'illicit' means illegal.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'In her speech, she chose to ___ to a famous poem without naming it.'?",
+      "answers": [
+        "elude",
+        "elicit",
+        "allude",
+        "illude"
+      ],
+      "correct": 2,
+      "explanation": "'Allude' means to refer indirectly; 'elude' means to escape or avoid.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Our class collected ___ cans than last year.'?",
+      "answers": [
+        "less",
+        "lesser",
+        "fewer",
+        "least"
+      ],
+      "correct": 2,
+      "explanation": "Use 'fewer' with plural count nouns like 'cans'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The new law will ___ thousands of commuters.'?",
+      "answers": [
+        "effect",
+        "affection",
+        "effectual",
+        "affect"
+      ],
+      "correct": 3,
+      "explanation": "As a verb meaning 'to influence', the correct word is 'affect'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The new principal hopes to ___ real change in the school.'?",
+      "answers": [
+        "affect",
+        "affective",
+        "effect",
+        "infect"
+      ],
+      "correct": 2,
+      "explanation": "As a verb, 'effect' means to bring about or cause.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence is the most concise?",
+      "answers": [
+        "At this point in time, we must make a decision.",
+        "We must decide now.",
+        "We must make a decision at this present moment.",
+        "It is necessary that we must decide right now at once."
+      ],
+      "correct": 1,
+      "explanation": "Concise writing removes wordy phrases like 'at this point in time'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids redundancy?",
+      "answers": [
+        "The two teams cooperated on the project.",
+        "The two teams cooperated together on the project.",
+        "The two teams mutually cooperated together on the project.",
+        "Both of the two teams cooperated together on the project."
+      ],
+      "correct": 0,
+      "explanation": "'Cooperated' already means 'worked together', so 'together' is redundant.",
+      "level": 3
+    },
+    {
+      "question": "Which revision of 'Due to the fact that it was raining, the game was postponed' is most concise?",
+      "answers": [
+        "Owing to the fact that it was raining, the game was postponed.",
+        "Due to the fact of rain, the game was postponed to a later time.",
+        "In light of the fact that it rained, the game was postponed.",
+        "Because it was raining, the game was postponed."
+      ],
+      "correct": 3,
+      "explanation": "Replace wordy phrases like 'due to the fact that' with 'because'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids redundancy in describing a gift?",
+      "answers": [
+        "Each guest received a free gift.",
+        "Each guest received a free complimentary gift.",
+        "Each guest received a gift that was free of charge.",
+        "Each guest received a gift."
+      ],
+      "correct": 3,
+      "explanation": "A gift is already free, so 'free gift' is redundant; 'a gift' alone is concise.",
+      "level": 3
+    },
+    {
+      "question": "In formal writing, which word correctly completes: 'Kofi is taller than ___.'?",
+      "answers": [
+        "me",
+        "myself",
+        "I",
+        "mine"
+      ],
+      "correct": 2,
+      "explanation": "In formal writing, the sentence means 'taller than I am', so use the subject pronoun 'I'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses pronouns correctly?",
+      "answers": [
+        "Between you and I, the test was easy.",
+        "Between you and me, the test was easy.",
+        "Between yourself and I, the test was easy.",
+        "Between you and myself, the test was easy."
+      ],
+      "correct": 1,
+      "explanation": "After a preposition like 'between', use object pronouns: 'you and me'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Neither the teachers nor the principal ___ aware of the change.'?",
+      "answers": [
+        "were",
+        "are",
+        "was",
+        "have been"
+      ],
+      "correct": 2,
+      "explanation": "With 'neither...nor', the verb agrees with the closer subject, 'principal'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'The quality of the photographs ___ impressive.'?",
+      "answers": [
+        "are",
+        "were",
+        "have been",
+        "is"
+      ],
+      "correct": 3,
+      "explanation": "The subject is 'quality', which is singular; 'of the photographs' is a prepositional phrase.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Ms. Okoro, along with her students, ___ planting trees today.'?",
+      "answers": [
+        "are",
+        "is",
+        "were",
+        "have been"
+      ],
+      "correct": 1,
+      "explanation": "Phrases like 'along with' do not change the subject, so the verb agrees with 'Ms. Okoro'.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Many people ___ to this country in search of new opportunities.'?",
+      "answers": [
+        "emigrate",
+        "immigrant",
+        "immigrate",
+        "emigrant"
+      ],
+      "correct": 2,
+      "explanation": "To 'immigrate' is to move into a country; to 'emigrate' is to leave one.",
+      "level": 3
+    },
+    {
+      "question": "Which word correctly completes: 'Some students are ___ to public speaking at first.'?",
+      "answers": [
+        "adverse",
+        "averse",
+        "aversion",
+        "adversely"
+      ],
+      "correct": 1,
+      "explanation": "'Averse' means having a strong dislike; 'adverse' means harmful or unfavorable.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'continual' correctly?",
+      "answers": [
+        "The continual interruptions made it hard to concentrate.",
+        "The river's continual flow never paused for a second.",
+        "The continual hum of the fridge never stopped once.",
+        "The alarm gave one continual blast."
+      ],
+      "correct": 0,
+      "explanation": "'Continual' means happening repeatedly with breaks; 'continuous' means without any break.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly uses a colon to introduce a quotation?",
+      "answers": [
+        "Jada remembered: her grandfather's advice \"Measure twice, cut once.\"",
+        "Jada: remembered her grandfather's advice \"Measure twice, cut once.\"",
+        "Jada remembered her grandfather's: advice \"Measure twice, cut once.\"",
+        "Jada remembered her grandfather's advice: \"Measure twice, cut once.\""
+      ],
+      "correct": 3,
+      "explanation": "A colon may follow a complete independent clause to introduce a quotation.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses parentheses correctly?",
+      "answers": [
+        "The festival (which began) in 1998 draws thousands each year.",
+        "The (festival which began in 1998) draws thousands each year.",
+        "The festival (which began in 1998) draws thousands each year.",
+        "The festival which began (in 1998 draws thousands) each year."
+      ],
+      "correct": 2,
+      "explanation": "Parentheses enclose extra information that could be removed without changing the sentence's meaning.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence avoids a shift in point of view?",
+      "answers": [
+        "When you study for a test, one should take breaks.",
+        "When a student studies for a test, you should take breaks.",
+        "When one studies for a test, you should take breaks.",
+        "When you study for a test, you should take breaks."
+      ],
+      "correct": 3,
+      "explanation": "Keep the same pronoun point of view throughout a sentence.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence correctly uses the subjunctive after 'recommended that'?",
+      "answers": [
+        "The doctor recommended that he rest for a week.",
+        "The doctor recommended that he rests for a week.",
+        "The doctor recommended that he is resting for a week.",
+        "The doctor recommended that he resting for a week."
+      ],
+      "correct": 0,
+      "explanation": "After verbs like 'recommend that', use the base form of the verb with no -s: 'he rest'.",
+      "level": 3
+    },
+    {
+      "question": "Which sentence uses 'which' and commas correctly for extra information?",
+      "answers": [
+        "My bike which I bought last summer, already needs new tires.",
+        "My bike, which I bought last summer already needs new tires.",
+        "My bike which, I bought last summer, already needs new tires.",
+        "My bike, which I bought last summer, already needs new tires."
+      ],
+      "correct": 3,
+      "explanation": "A nonrestrictive 'which' clause needs a comma before and after it.",
+      "level": 3
     }
   ],
   "minigame_comma": [

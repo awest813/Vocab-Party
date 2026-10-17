@@ -1991,6 +1991,4314 @@
       "correct": 2,
       "explanation": "Verbose means wordy or long-winded.",
       "level": 3
+    },
+    {
+      "question": "What does 'enormous' mean?",
+      "answers": [
+        "Very small in size",
+        "Brightly colored",
+        "Soft and fluffy",
+        "Very large in size"
+      ],
+      "correct": 3,
+      "explanation": "Enormous means very large, like an elephant or a mountain.",
+      "level": 1
+    },
+    {
+      "question": "What does 'fragile' mean?",
+      "answers": [
+        "Very heavy to lift",
+        "Easily broken or damaged",
+        "Hard to find",
+        "Covered in mud"
+      ],
+      "correct": 1,
+      "explanation": "Something fragile, like a glass ornament, can break easily.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'shy and easily frightened'?",
+      "answers": [
+        "Timid",
+        "Bold",
+        "Cheerful",
+        "Clumsy"
+      ],
+      "correct": 0,
+      "explanation": "Timid describes someone who is shy and easily scared.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'Kai was ___ when his tiny seedling grew taller than the fence.'",
+      "answers": [
+        "bored",
+        "sleepy",
+        "astonished",
+        "annoyed"
+      ],
+      "correct": 2,
+      "explanation": "Astonished means greatly surprised, which fits a seedling growing so tall.",
+      "level": 1
+    },
+    {
+      "question": "What does 'delighted' mean?",
+      "answers": [
+        "Very pleased and happy",
+        "Very tired and sleepy",
+        "A little bit scared",
+        "Bored and restless"
+      ],
+      "correct": 0,
+      "explanation": "Delighted means very pleased or full of joy.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'furious'?",
+      "answers": [
+        "Calm",
+        "Angry",
+        "Hungry",
+        "Proud"
+      ],
+      "correct": 1,
+      "explanation": "Furious means extremely angry, so 'angry' is a synonym.",
+      "level": 1
+    },
+    {
+      "question": "What does 'exhausted' mean?",
+      "answers": [
+        "Very excited",
+        "Slightly hungry",
+        "Extremely tired",
+        "Totally confused"
+      ],
+      "correct": 2,
+      "explanation": "Exhausted means so tired that you have no energy left.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'gentle'?",
+      "answers": [
+        "Soft",
+        "Rough",
+        "Kind",
+        "Tender"
+      ],
+      "correct": 1,
+      "explanation": "Gentle means soft and careful; its opposite is rough.",
+      "level": 1
+    },
+    {
+      "question": "What does 'glance' mean?",
+      "answers": [
+        "To stare for a long time",
+        "To close your eyes",
+        "To take a quick look",
+        "To point at something"
+      ],
+      "correct": 2,
+      "explanation": "To glance is to look at something quickly and briefly.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'to bring things together into one group'?",
+      "answers": [
+        "Gather",
+        "Scatter",
+        "Spill",
+        "Hide"
+      ],
+      "correct": 0,
+      "explanation": "Gather means to collect things or bring them together.",
+      "level": 1
+    },
+    {
+      "question": "Which word describes someone who always tells the truth?",
+      "answers": [
+        "Sneaky",
+        "Lazy",
+        "Bossy",
+        "Honest"
+      ],
+      "correct": 3,
+      "explanation": "An honest person tells the truth and does not cheat or lie.",
+      "level": 1
+    },
+    {
+      "question": "What does 'loyal' mean?",
+      "answers": [
+        "Faithful to a friend or group",
+        "Always running late",
+        "Easy to fool",
+        "Quick to change sides"
+      ],
+      "correct": 0,
+      "explanation": "A loyal friend sticks by you and stays faithful.",
+      "level": 1
+    },
+    {
+      "question": "What does 'observe' mean?",
+      "answers": [
+        "To speak loudly",
+        "To build quickly",
+        "To forget easily",
+        "To watch carefully"
+      ],
+      "correct": 3,
+      "explanation": "Scientists observe, or watch carefully, to learn how things work.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'peculiar'?",
+      "answers": [
+        "Ordinary",
+        "Strange",
+        "Tiny",
+        "Delicious"
+      ],
+      "correct": 1,
+      "explanation": "Peculiar means odd or unusual, so 'strange' is a synonym.",
+      "level": 1
+    },
+    {
+      "question": "What does 'fumble' mean?",
+      "answers": [
+        "To hold something tightly",
+        "To throw something far",
+        "To fix something carefully",
+        "To handle something clumsily"
+      ],
+      "correct": 3,
+      "explanation": "To fumble is to handle something in a clumsy way, like fumbling with a key.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'protect'?",
+      "answers": [
+        "Guard",
+        "Defend",
+        "Harm",
+        "Shield"
+      ],
+      "correct": 2,
+      "explanation": "To protect is to keep safe; to harm is the opposite.",
+      "level": 1
+    },
+    {
+      "question": "What does 'chuckle' mean?",
+      "answers": [
+        "To cry loudly",
+        "To shout angrily",
+        "To sneeze suddenly",
+        "To laugh quietly"
+      ],
+      "correct": 3,
+      "explanation": "A chuckle is a soft, quiet laugh.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'familiar'?",
+      "answers": [
+        "Known",
+        "Common",
+        "Unknown",
+        "Usual"
+      ],
+      "correct": 2,
+      "explanation": "Familiar means well known; unknown is its opposite.",
+      "level": 1
+    },
+    {
+      "question": "What does 'reveal' mean?",
+      "answers": [
+        "To show something that was hidden",
+        "To hide something away",
+        "To break something apart",
+        "To buy something new"
+      ],
+      "correct": 0,
+      "explanation": "To reveal is to uncover or show something that was secret or hidden.",
+      "level": 1
+    },
+    {
+      "question": "Read: 'Leo caught his foot on a root and began to stumble down the path.' What does 'stumble' mean?",
+      "answers": [
+        "To run very smoothly",
+        "To jump very high",
+        "To trip and almost fall",
+        "To walk backward"
+      ],
+      "correct": 2,
+      "explanation": "The clue 'caught his foot on a root' shows that stumble means to trip.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'to disappear suddenly'?",
+      "answers": [
+        "Vanish",
+        "Appear",
+        "Arrive",
+        "Return"
+      ],
+      "correct": 0,
+      "explanation": "Vanish means to disappear quickly and completely.",
+      "level": 1
+    },
+    {
+      "question": "What does 'tremble' mean?",
+      "answers": [
+        "To sleep deeply",
+        "To laugh loudly",
+        "To shake, often from fear or cold",
+        "To stand perfectly still"
+      ],
+      "correct": 2,
+      "explanation": "When you tremble, your body shakes a little, often because you are scared or cold.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'cautious'?",
+      "answers": [
+        "Reckless",
+        "Noisy",
+        "Careful",
+        "Hungry"
+      ],
+      "correct": 2,
+      "explanation": "Cautious means careful about avoiding danger or mistakes.",
+      "level": 1
+    },
+    {
+      "question": "What does 'eager' mean?",
+      "answers": [
+        "Not wanting to do anything",
+        "Wanting very much to do something",
+        "Feeling a little sick",
+        "Being very old"
+      ],
+      "correct": 1,
+      "explanation": "An eager student is excited and ready to begin.",
+      "level": 1
+    },
+    {
+      "question": "Which word best describes a lion's roar that sounds wild and scary?",
+      "answers": [
+        "Gentle",
+        "Tiny",
+        "Polite",
+        "Fierce"
+      ],
+      "correct": 3,
+      "explanation": "Fierce means wild, strong, and frightening.",
+      "level": 1
+    },
+    {
+      "question": "What does 'grateful' mean?",
+      "answers": [
+        "Feeling thankful",
+        "Feeling jealous",
+        "Feeling lonely",
+        "Feeling bored"
+      ],
+      "correct": 0,
+      "explanation": "Grateful means thankful for something someone did or gave.",
+      "level": 1
+    },
+    {
+      "question": "Which word describes someone who refuses to change their mind?",
+      "answers": [
+        "Flexible",
+        "Forgetful",
+        "Generous",
+        "Stubborn"
+      ],
+      "correct": 3,
+      "explanation": "A stubborn person will not change their mind, even when asked to.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'sturdy'?",
+      "answers": [
+        "Strong",
+        "Solid",
+        "Flimsy",
+        "Tough"
+      ],
+      "correct": 2,
+      "explanation": "Sturdy means strong and well built; flimsy means weak and easily broken.",
+      "level": 1
+    },
+    {
+      "question": "What does 'gaze' mean?",
+      "answers": [
+        "To look steadily for a long time",
+        "To blink very quickly",
+        "To shout across a room",
+        "To hum a quiet tune"
+      ],
+      "correct": 0,
+      "explanation": "To gaze is to look at something steadily, often with wonder.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'The eagle spread its wings and began to ___ high above the trees.'",
+      "answers": [
+        "sink",
+        "soar",
+        "crawl",
+        "dig"
+      ],
+      "correct": 1,
+      "explanation": "Soar means to fly or rise high in the air.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'drowsy'?",
+      "answers": [
+        "Alert",
+        "Thirsty",
+        "Brave",
+        "Sleepy"
+      ],
+      "correct": 3,
+      "explanation": "Drowsy means sleepy or ready to doze off.",
+      "level": 1
+    },
+    {
+      "question": "What does 'damp' mean?",
+      "answers": [
+        "Completely dry",
+        "Slightly wet",
+        "Burning hot",
+        "Freshly painted"
+      ],
+      "correct": 1,
+      "explanation": "Damp means a little bit wet, like a towel after a bath.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'distant'?",
+      "answers": [
+        "Far",
+        "Remote",
+        "Faraway",
+        "Near"
+      ],
+      "correct": 3,
+      "explanation": "Distant means far away; its opposite is near.",
+      "level": 1
+    },
+    {
+      "question": "What does 'expand' mean?",
+      "answers": [
+        "To get bigger",
+        "To get smaller",
+        "To change color",
+        "To stay the same"
+      ],
+      "correct": 0,
+      "explanation": "To expand is to grow larger, like a balloon filling with air.",
+      "level": 1
+    },
+    {
+      "question": "What does 'compare' mean?",
+      "answers": [
+        "To erase a mistake",
+        "To add up numbers",
+        "To see how things are alike and different",
+        "To guess an answer"
+      ],
+      "correct": 2,
+      "explanation": "When you compare things, you look at how they are the same and how they differ.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'habitat'?",
+      "answers": [
+        "A kind of food animals eat",
+        "The natural home of a plant or animal",
+        "A type of stormy weather",
+        "A group of baby animals"
+      ],
+      "correct": 1,
+      "explanation": "A habitat is the place where a plant or animal naturally lives.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'predator'?",
+      "answers": [
+        "An animal that eats only plants",
+        "An animal that sleeps all winter",
+        "An animal that lives in a shell",
+        "An animal that hunts other animals"
+      ],
+      "correct": 3,
+      "explanation": "A predator, like a hawk or a wolf, hunts other animals for food.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'The rabbit was ___ for the hungry fox.'",
+      "answers": [
+        "shelter",
+        "habitat",
+        "danger",
+        "prey"
+      ],
+      "correct": 3,
+      "explanation": "Prey is an animal that is hunted and eaten by another animal.",
+      "level": 1
+    },
+    {
+      "question": "What does 'migrate' mean?",
+      "answers": [
+        "To move to a new place as seasons change",
+        "To sleep through the winter",
+        "To build a nest",
+        "To change fur color"
+      ],
+      "correct": 0,
+      "explanation": "Many birds migrate, flying south in fall and north in spring.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'to spend the winter in a deep sleep'?",
+      "answers": [
+        "Migrate",
+        "Hibernate",
+        "Evaporate",
+        "Celebrate"
+      ],
+      "correct": 1,
+      "explanation": "Animals such as bears and bats hibernate through the cold winter.",
+      "level": 1
+    },
+    {
+      "question": "What happens when water 'evaporates'?",
+      "answers": [
+        "It freezes into ice",
+        "It changes into a gas",
+        "It sinks into the ground",
+        "It changes color"
+      ],
+      "correct": 1,
+      "explanation": "Evaporate means to change from a liquid into a gas, or vapor.",
+      "level": 1
+    },
+    {
+      "question": "What does 'volunteer' mean as a verb?",
+      "answers": [
+        "To refuse to help",
+        "To get paid for work",
+        "To ask someone for help",
+        "To offer to help for free"
+      ],
+      "correct": 3,
+      "explanation": "When you volunteer, you choose to help without being paid.",
+      "level": 1
+    },
+    {
+      "question": "What is an 'opinion'?",
+      "answers": [
+        "What someone thinks or believes",
+        "A fact that can be proven",
+        "A list of steps to follow",
+        "A word that rhymes"
+      ],
+      "correct": 0,
+      "explanation": "An opinion is a personal belief, like 'Soccer is the best sport.'",
+      "level": 1
+    },
+    {
+      "question": "Who is the 'narrator' of a story?",
+      "answers": [
+        "The one who drew the pictures",
+        "The one who printed the book",
+        "The one who sells the book",
+        "The one who tells the story"
+      ],
+      "correct": 3,
+      "explanation": "The narrator is the voice that tells the events of the story.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'caption'?",
+      "answers": [
+        "The title of a chapter",
+        "A list of characters",
+        "Words that explain a picture",
+        "The last page of a book"
+      ],
+      "correct": 2,
+      "explanation": "A caption is a short line of text under a photo or drawing that tells what it shows.",
+      "level": 1
+    },
+    {
+      "question": "What does 'summarize' mean?",
+      "answers": [
+        "To copy every word exactly",
+        "To make up a new ending",
+        "To tell the main points in a short way",
+        "To read very slowly"
+      ],
+      "correct": 2,
+      "explanation": "When you summarize, you retell only the most important ideas briefly.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'ignore'?",
+      "answers": [
+        "Overlook",
+        "Neglect",
+        "Notice",
+        "Skip"
+      ],
+      "correct": 2,
+      "explanation": "To ignore is to pay no attention; to notice is to pay attention.",
+      "level": 1
+    },
+    {
+      "question": "What does 'mischief' mean?",
+      "answers": [
+        "Playful behavior that causes small trouble",
+        "Hard work done quietly",
+        "A big holiday meal",
+        "A careful, polite plan"
+      ],
+      "correct": 0,
+      "explanation": "Mischief is naughty but usually harmless behavior, like hiding someone's shoes.",
+      "level": 1
+    },
+    {
+      "question": "What does 'nibble' mean?",
+      "answers": [
+        "To eat with small bites",
+        "To swallow food whole",
+        "To cook food slowly",
+        "To serve a large meal"
+      ],
+      "correct": 0,
+      "explanation": "To nibble is to take tiny bites, like a mouse eating cheese.",
+      "level": 1
+    },
+    {
+      "question": "What does 'scold' mean?",
+      "answers": [
+        "To thank someone warmly",
+        "To speak angrily to someone about a mistake",
+        "To tell someone a joke",
+        "To sing someone a song"
+      ],
+      "correct": 1,
+      "explanation": "To scold is to tell someone off in an angry way.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'When the lights came on, the mice began to ___ under the stove.'",
+      "answers": [
+        "float",
+        "relax",
+        "scurry",
+        "yawn"
+      ],
+      "correct": 2,
+      "explanation": "Scurry means to move quickly with short, hurried steps.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'splendid'?",
+      "answers": [
+        "Terrible",
+        "Ordinary",
+        "Wonderful",
+        "Muddy"
+      ],
+      "correct": 2,
+      "explanation": "Splendid means excellent or very impressive.",
+      "level": 1
+    },
+    {
+      "question": "What does 'startle' mean?",
+      "answers": [
+        "To calm someone down",
+        "To put someone to sleep",
+        "To surprise or frighten suddenly",
+        "To teach someone a lesson"
+      ],
+      "correct": 2,
+      "explanation": "A loud noise can startle you and make you jump.",
+      "level": 1
+    },
+    {
+      "question": "What does 'stroll' mean?",
+      "answers": [
+        "To sprint as fast as you can",
+        "To walk slowly and calmly",
+        "To climb a ladder",
+        "To swim underwater"
+      ],
+      "correct": 1,
+      "explanation": "A stroll is a relaxed, unhurried walk.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'cluttered'?",
+      "answers": [
+        "Organized",
+        "Messy",
+        "Crowded",
+        "Jumbled"
+      ],
+      "correct": 0,
+      "explanation": "Cluttered means messy and crowded; organized is the opposite.",
+      "level": 1
+    },
+    {
+      "question": "What does a sponge do when it 'absorbs' water?",
+      "answers": [
+        "It pushes the water away",
+        "It soaks the water up",
+        "It turns the water into ice",
+        "It makes the water dirty"
+      ],
+      "correct": 1,
+      "explanation": "Absorb means to soak up or take in.",
+      "level": 1
+    },
+    {
+      "question": "What does 'celebrate' mean?",
+      "answers": [
+        "To do something fun for a special event",
+        "To sit quietly alone",
+        "To clean up after a mess",
+        "To argue about a rule"
+      ],
+      "correct": 0,
+      "explanation": "People celebrate birthdays and holidays with parties, food, and fun.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'disaster'?",
+      "answers": [
+        "A small, happy surprise",
+        "An event that causes great damage",
+        "A kind of sweet dessert",
+        "A calm and sunny day"
+      ],
+      "correct": 1,
+      "explanation": "A disaster, like a flood or an earthquake, causes a lot of harm.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'fortunate'?",
+      "answers": [
+        "Unhappy",
+        "Lucky",
+        "Careless",
+        "Hungry"
+      ],
+      "correct": 1,
+      "explanation": "Fortunate means having good luck.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'fossil'?",
+      "answers": [
+        "Remains of ancient life found in rock",
+        "A shiny new seashell",
+        "A kind of volcano",
+        "A type of crystal"
+      ],
+      "correct": 0,
+      "explanation": "A fossil is the preserved remains or print of a plant or animal from long ago.",
+      "level": 1
+    },
+    {
+      "question": "What does 'harvest' mean?",
+      "answers": [
+        "To pick crops when they are ripe",
+        "To plant seeds in spring",
+        "To water a garden",
+        "To pull up weeds"
+      ],
+      "correct": 0,
+      "explanation": "Farmers harvest crops like corn and apples when they are ready.",
+      "level": 1
+    },
+    {
+      "question": "What does 'identical' mean?",
+      "answers": [
+        "Totally different",
+        "A little bigger",
+        "Exactly the same",
+        "Very old"
+      ],
+      "correct": 2,
+      "explanation": "Identical things are exactly alike in every way.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'to follow rules or orders'?",
+      "answers": [
+        "Refuse",
+        "Forget",
+        "Question",
+        "Obey"
+      ],
+      "correct": 3,
+      "explanation": "To obey is to do what a rule or a person tells you to do.",
+      "level": 1
+    },
+    {
+      "question": "What does 'prepare' mean?",
+      "answers": [
+        "To get ready",
+        "To give up",
+        "To fall asleep",
+        "To run away"
+      ],
+      "correct": 0,
+      "explanation": "To prepare is to get something or someone ready, like preparing for a test.",
+      "level": 1
+    },
+    {
+      "question": "What does 'recycle' mean?",
+      "answers": [
+        "To throw things in the trash",
+        "To buy only brand-new things",
+        "To hide things in a box",
+        "To turn used things into something new"
+      ],
+      "correct": 3,
+      "explanation": "When we recycle cans and paper, they are made into new products.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'respond'?",
+      "answers": [
+        "Answer",
+        "Ask",
+        "Wonder",
+        "Forget"
+      ],
+      "correct": 0,
+      "explanation": "To respond is to reply or answer.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'similar'?",
+      "answers": [
+        "Different",
+        "Alike",
+        "Matching",
+        "Same"
+      ],
+      "correct": 0,
+      "explanation": "Similar means almost the same; different is the opposite.",
+      "level": 1
+    },
+    {
+      "question": "What does 'accurate' mean?",
+      "answers": [
+        "Wrong and messy",
+        "Correct and exact",
+        "Very fast",
+        "Brand new"
+      ],
+      "correct": 1,
+      "explanation": "An accurate answer is correct with no mistakes.",
+      "level": 1
+    },
+    {
+      "question": "What does 'insist' mean?",
+      "answers": [
+        "To say firmly that something must happen",
+        "To quietly agree with others",
+        "To forget what you wanted",
+        "To ask only once, politely"
+      ],
+      "correct": 0,
+      "explanation": "When you insist, you demand something and will not back down.",
+      "level": 1
+    },
+    {
+      "question": "What does 'plead' mean?",
+      "answers": [
+        "To give an order",
+        "To beg or ask very strongly",
+        "To refuse an offer",
+        "To laugh at a joke"
+      ],
+      "correct": 1,
+      "explanation": "To plead is to ask for something in an urgent, emotional way.",
+      "level": 1
+    },
+    {
+      "question": "Which word describes a story character who is sneaky and tricky?",
+      "answers": [
+        "Sly",
+        "Honest",
+        "Clumsy",
+        "Gentle"
+      ],
+      "correct": 0,
+      "explanation": "A sly character, like the fox in many fables, uses tricks to get what it wants.",
+      "level": 1
+    },
+    {
+      "question": "What does 'sulk' mean?",
+      "answers": [
+        "To cheer loudly for a team",
+        "To laugh at a funny joke",
+        "To share toys happily",
+        "To pout silently because you are upset"
+      ],
+      "correct": 3,
+      "explanation": "When you sulk, you stay quiet and moody because you are unhappy about something.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'ancient'?",
+      "answers": [
+        "Old",
+        "Historic",
+        "Modern",
+        "Aged"
+      ],
+      "correct": 2,
+      "explanation": "Ancient means very old; modern means new or recent.",
+      "level": 1
+    },
+    {
+      "question": "What does the prefix 'un-' mean in 'unlock'?",
+      "answers": [
+        "Again",
+        "The opposite of",
+        "Before",
+        "Too much"
+      ],
+      "correct": 1,
+      "explanation": "The prefix un- means not or the opposite of, so unlock means the opposite of lock.",
+      "level": 1
+    },
+    {
+      "question": "What does the prefix 're-' mean in 'rewrite'?",
+      "answers": [
+        "Not",
+        "Before",
+        "Under",
+        "Again"
+      ],
+      "correct": 3,
+      "explanation": "The prefix re- means again, so rewrite means to write again.",
+      "level": 1
+    },
+    {
+      "question": "What does the prefix 'pre-' mean in 'preheat'?",
+      "answers": [
+        "After",
+        "Again",
+        "Not",
+        "Before"
+      ],
+      "correct": 3,
+      "explanation": "The prefix pre- means before, so preheat means to heat before using.",
+      "level": 1
+    },
+    {
+      "question": "What does 'disagree' mean?",
+      "answers": [
+        "To agree again",
+        "To agree before",
+        "To not agree",
+        "To agree strongly"
+      ],
+      "correct": 2,
+      "explanation": "The prefix dis- means not, so disagree means to not agree.",
+      "level": 1
+    },
+    {
+      "question": "What does the prefix 'mis-' mean in 'misspell'?",
+      "answers": [
+        "Again",
+        "Wrongly",
+        "Before",
+        "Quickly"
+      ],
+      "correct": 1,
+      "explanation": "The prefix mis- means wrongly or badly, so misspell means to spell wrongly.",
+      "level": 1
+    },
+    {
+      "question": "What does the suffix '-less' mean in 'fearless'?",
+      "answers": [
+        "Full of",
+        "Again",
+        "One who",
+        "Without"
+      ],
+      "correct": 3,
+      "explanation": "The suffix -less means without, so fearless means without fear.",
+      "level": 1
+    },
+    {
+      "question": "What does 'hopeful' mean?",
+      "answers": [
+        "Full of hope",
+        "Without any hope",
+        "Hoping again",
+        "Hoping too late"
+      ],
+      "correct": 0,
+      "explanation": "The suffix -ful means full of, so hopeful means full of hope.",
+      "level": 1
+    },
+    {
+      "question": "What does the suffix '-er' mean in 'teacher'?",
+      "answers": [
+        "Not or opposite",
+        "Full of",
+        "Again",
+        "A person who does something"
+      ],
+      "correct": 3,
+      "explanation": "The suffix -er can mean a person who does something, so a teacher is a person who teaches.",
+      "level": 1
+    },
+    {
+      "question": "What does 'washable' mean?",
+      "answers": [
+        "Already washed",
+        "Never washed",
+        "Able to be washed",
+        "Washed again"
+      ],
+      "correct": 2,
+      "explanation": "The suffix -able means able to be, so washable means able to be washed.",
+      "level": 1
+    },
+    {
+      "question": "In 'The bat flew out of the dark cave,' what is a 'bat'?",
+      "answers": [
+        "A stick for hitting a ball",
+        "A quick blink of an eye",
+        "A kind of bird nest",
+        "A small flying animal"
+      ],
+      "correct": 3,
+      "explanation": "Bat has more than one meaning; flying out of a cave tells us it is the animal.",
+      "level": 1
+    },
+    {
+      "question": "In 'Please wave to Grandma as she drives away,' what does 'wave' mean?",
+      "answers": [
+        "A moving ridge of ocean water",
+        "To move your hand back and forth",
+        "A sudden rush of feeling",
+        "A curl in someone's hair"
+      ],
+      "correct": 1,
+      "explanation": "Wave has several meanings; here it means to move your hand to say goodbye.",
+      "level": 1
+    },
+    {
+      "question": "In 'Ama tied a red bow on the gift,' what is a 'bow'?",
+      "answers": [
+        "A knot tied with loops",
+        "A bend at the waist",
+        "The front of a ship",
+        "A tool for shooting arrows"
+      ],
+      "correct": 0,
+      "explanation": "Bow has several meanings; on a gift, it is a decorative knot with loops.",
+      "level": 1
+    },
+    {
+      "question": "In 'The pitcher poured lemonade into each glass,' what is a 'pitcher'?",
+      "answers": [
+        "A baseball player who throws",
+        "A jug for pouring drinks",
+        "A painting of a farm",
+        "A kind of drinking straw"
+      ],
+      "correct": 1,
+      "explanation": "Pitcher has two meanings; pouring lemonade shows it is a jug.",
+      "level": 1
+    },
+    {
+      "question": "In 'Draw a straight line with your ruler,' what is a 'ruler'?",
+      "answers": [
+        "A leader of a country",
+        "A kind of colored pencil",
+        "A tool for measuring",
+        "A type of eraser"
+      ],
+      "correct": 2,
+      "explanation": "Ruler can mean a leader, but drawing a straight line shows it is a measuring tool.",
+      "level": 1
+    },
+    {
+      "question": "In 'The brilliant stars lit up the sky,' what does 'brilliant' mean?",
+      "answers": [
+        "Very smart",
+        "Very bright",
+        "Very cold",
+        "Very small"
+      ],
+      "correct": 1,
+      "explanation": "Brilliant can mean smart, but here it describes stars that shine very brightly.",
+      "level": 1
+    },
+    {
+      "question": "Mira speaks up in class and shares her ideas. Which word describes her in the most positive way?",
+      "answers": [
+        "Bossy",
+        "Pushy",
+        "Noisy",
+        "Confident"
+      ],
+      "correct": 3,
+      "explanation": "Confident has a positive feeling; bossy, pushy, and noisy all sound negative.",
+      "level": 1
+    },
+    {
+      "question": "Which word describes a lively puppy in the most positive way?",
+      "answers": [
+        "Wild",
+        "Playful",
+        "Rowdy",
+        "Unruly"
+      ],
+      "correct": 1,
+      "explanation": "Playful has a pleasant, positive feeling, while the other words suggest bad behavior.",
+      "level": 1
+    },
+    {
+      "question": "What does 'frantic' mean?",
+      "answers": [
+        "Calm and patient",
+        "Sleepy and slow",
+        "Wild with worry or hurry",
+        "Proud and pleased"
+      ],
+      "correct": 2,
+      "explanation": "Frantic describes someone rushing around in a worried, out-of-control way.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'Tired from the long hike, the campers ___ slowly back to their tents.'",
+      "answers": [
+        "trudged",
+        "skipped",
+        "raced",
+        "danced"
+      ],
+      "correct": 0,
+      "explanation": "Trudge means to walk slowly and heavily, often because you are tired.",
+      "level": 1
+    },
+    {
+      "question": "What does 'plunge' mean?",
+      "answers": [
+        "To float gently upward",
+        "To walk in a circle",
+        "To sit very still",
+        "To dive or fall quickly downward"
+      ],
+      "correct": 3,
+      "explanation": "To plunge is to jump or drop suddenly into something, like a pool.",
+      "level": 1
+    },
+    {
+      "question": "What does 'invent' mean?",
+      "answers": [
+        "To find something that was lost",
+        "To copy a friend's idea",
+        "To fix something old",
+        "To create something that never existed"
+      ],
+      "correct": 3,
+      "explanation": "To invent is to make something new for the very first time.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'recall'?",
+      "answers": [
+        "Remember",
+        "Forget",
+        "Repeat",
+        "Invent"
+      ],
+      "correct": 0,
+      "explanation": "To recall is to bring something back to mind, or remember it.",
+      "level": 1
+    },
+    {
+      "question": "Which word is a synonym of 'select'?",
+      "answers": [
+        "Reject",
+        "Lose",
+        "Choose",
+        "Borrow"
+      ],
+      "correct": 2,
+      "explanation": "To select is to pick or choose from a group.",
+      "level": 1
+    },
+    {
+      "question": "What does 'wobble' mean?",
+      "answers": [
+        "To stand firm and still",
+        "To move unsteadily from side to side",
+        "To bounce very high",
+        "To slide straight ahead"
+      ],
+      "correct": 1,
+      "explanation": "A wobbly table rocks back and forth because it is not steady.",
+      "level": 1
+    },
+    {
+      "question": "What does 'puzzled' mean?",
+      "answers": [
+        "Angry and loud",
+        "Happy and calm",
+        "Tired and slow",
+        "Confused and unsure"
+      ],
+      "correct": 3,
+      "explanation": "When you are puzzled, you do not understand something.",
+      "level": 1
+    },
+    {
+      "question": "What does 'jealous' mean?",
+      "answers": [
+        "Glad about a friend's success",
+        "Upset because someone has what you want",
+        "Afraid of the dark",
+        "Too tired to play"
+      ],
+      "correct": 1,
+      "explanation": "Jealous describes the unhappy feeling of wanting what someone else has.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'gloomy'?",
+      "answers": [
+        "Dreary",
+        "Dark",
+        "Cheerful",
+        "Dull"
+      ],
+      "correct": 2,
+      "explanation": "Gloomy means dark or sad; cheerful means bright and happy.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'community'?",
+      "answers": [
+        "A single house on a hill",
+        "A group of people who live in one area",
+        "A kind of road map",
+        "A holiday party"
+      ],
+      "correct": 1,
+      "explanation": "A community is a group of people who live, work, or play in the same place.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'citizen'?",
+      "answers": [
+        "An official member of a town or country",
+        "A tourist passing through",
+        "A kind of tall building",
+        "A map of a city"
+      ],
+      "correct": 0,
+      "explanation": "A citizen belongs to a town or country and has rights and duties there.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'Ben thought hard and finally found a ___ to the tricky math problem.'",
+      "answers": [
+        "reason",
+        "mistake",
+        "signal",
+        "solution"
+      ],
+      "correct": 3,
+      "explanation": "A solution is an answer to a problem.",
+      "level": 1
+    },
+    {
+      "question": "What does 'purpose' mean?",
+      "answers": [
+        "The color of something",
+        "The ending of a story",
+        "The reason something is done",
+        "The size of a group"
+      ],
+      "correct": 2,
+      "explanation": "Purpose is the reason why something is done or made.",
+      "level": 1
+    },
+    {
+      "question": "What does 'estimate' mean?",
+      "answers": [
+        "To count every single item",
+        "To erase a wrong number",
+        "To make a careful guess about an amount",
+        "To divide things evenly"
+      ],
+      "correct": 2,
+      "explanation": "When you estimate, you make a smart guess instead of finding the exact amount.",
+      "level": 1
+    },
+    {
+      "question": "What is 'dialogue' in a story?",
+      "answers": [
+        "The pictures in the book",
+        "The title on the cover",
+        "The words characters say to each other",
+        "The list of chapters"
+      ],
+      "correct": 2,
+      "explanation": "Dialogue is conversation between characters, usually shown in quotation marks.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'glossary' in a book?",
+      "answers": [
+        "A list of chapter titles",
+        "A picture on the cover",
+        "A note about the author",
+        "A list of words and their meanings"
+      ],
+      "correct": 3,
+      "explanation": "A glossary, usually at the back of a book, defines important words.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'include'?",
+      "answers": [
+        "Contain",
+        "Involve",
+        "Exclude",
+        "Add"
+      ],
+      "correct": 2,
+      "explanation": "Include means to make something part of a group; exclude means to leave it out.",
+      "level": 1
+    },
+    {
+      "question": "What does 'flexible' mean?",
+      "answers": [
+        "Hard and stiff",
+        "Shiny and smooth",
+        "Heavy and thick",
+        "Able to bend without breaking"
+      ],
+      "correct": 3,
+      "explanation": "Something flexible, like a rubber band, bends easily.",
+      "level": 1
+    },
+    {
+      "question": "Which word means 'to join together as one'?",
+      "answers": [
+        "Unite",
+        "Divide",
+        "Depart",
+        "Escape"
+      ],
+      "correct": 0,
+      "explanation": "Unite means to come together or combine into one group.",
+      "level": 1
+    },
+    {
+      "question": "What does 'require' mean?",
+      "answers": [
+        "To refuse",
+        "To borrow",
+        "To need",
+        "To skip"
+      ],
+      "correct": 2,
+      "explanation": "If a recipe requires eggs, it needs eggs.",
+      "level": 1
+    },
+    {
+      "question": "Which word is an antonym of 'major'?",
+      "answers": [
+        "Main",
+        "Minor",
+        "Large",
+        "Chief"
+      ],
+      "correct": 1,
+      "explanation": "Major means big or important; minor means small or less important.",
+      "level": 1
+    },
+    {
+      "question": "What is a 'signal'?",
+      "answers": [
+        "A long, winding road",
+        "A sign or sound that sends a message",
+        "A kind of musical instrument",
+        "A tall brick tower"
+      ],
+      "correct": 1,
+      "explanation": "A signal, like a traffic light or a whistle, tells people what to do.",
+      "level": 1
+    },
+    {
+      "question": "Choose the word that best completes: 'The detective came to ___ the case of the missing cookies.'",
+      "answers": [
+        "celebrate",
+        "investigate",
+        "decorate",
+        "imitate"
+      ],
+      "correct": 1,
+      "explanation": "Investigate means to look closely into something to find out the truth.",
+      "level": 1
+    },
+    {
+      "question": "What does 'hesitate' mean?",
+      "answers": [
+        "To pause before doing something",
+        "To rush ahead without thinking",
+        "To shout very loudly",
+        "To finish very early"
+      ],
+      "correct": 0,
+      "explanation": "When you hesitate, you stop for a moment because you are unsure.",
+      "level": 1
+    },
+    {
+      "question": "What does 'abrupt' mean?",
+      "answers": [
+        "Slow and gradual",
+        "Sudden and unexpected",
+        "Gentle and polite",
+        "Planned in advance"
+      ],
+      "correct": 1,
+      "explanation": "An abrupt stop happens suddenly, without warning.",
+      "level": 2
+    },
+    {
+      "question": "Which word means 'good enough for what is needed'?",
+      "answers": [
+        "Excessive",
+        "Adequate",
+        "Inferior",
+        "Optional"
+      ],
+      "correct": 1,
+      "explanation": "Adequate means sufficient or acceptable for a purpose.",
+      "level": 2
+    },
+    {
+      "question": "What does 'advocate' mean as a verb?",
+      "answers": [
+        "To secretly oppose a plan",
+        "To publicly support a cause or idea",
+        "To vote against a rule",
+        "To stay neutral in a debate"
+      ],
+      "correct": 1,
+      "explanation": "To advocate is to speak or act in support of something.",
+      "level": 2
+    },
+    {
+      "question": "Choose the word that best completes: 'The club will ___ half of its budget to the field trip.'",
+      "answers": [
+        "deny",
+        "allocate",
+        "conceal",
+        "borrow"
+      ],
+      "correct": 1,
+      "explanation": "Allocate means to set aside or assign for a specific purpose.",
+      "level": 2
+    },
+    {
+      "question": "What does 'ambitious' mean?",
+      "answers": [
+        "Content to do very little",
+        "Unsure about the future",
+        "Afraid of taking chances",
+        "Having a strong desire to succeed"
+      ],
+      "correct": 3,
+      "explanation": "An ambitious person sets big goals and works hard to reach them.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'anticipate'?",
+      "answers": [
+        "Regret",
+        "Forget",
+        "Expect",
+        "Delay"
+      ],
+      "correct": 2,
+      "explanation": "To anticipate is to expect or look ahead to something.",
+      "level": 2
+    },
+    {
+      "question": "What does 'apparent' mean?",
+      "answers": [
+        "Completely hidden",
+        "Hard to believe",
+        "Clearly seen or understood",
+        "Recently changed"
+      ],
+      "correct": 2,
+      "explanation": "Apparent means obvious or easy to notice.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'arrogant'?",
+      "answers": [
+        "Humble",
+        "Proud",
+        "Conceited",
+        "Boastful"
+      ],
+      "correct": 0,
+      "explanation": "Arrogant means acting superior to others; humble means modest.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'barrier'?",
+      "answers": [
+        "Something that blocks the way",
+        "A path that leads home",
+        "A reward for hard work",
+        "A sign that gives directions"
+      ],
+      "correct": 0,
+      "explanation": "A barrier, like a fence or a wall, stops movement or progress.",
+      "level": 2
+    },
+    {
+      "question": "What does 'erode' mean?",
+      "answers": [
+        "To build up quickly",
+        "To freeze solid",
+        "To wear away slowly over time",
+        "To melt instantly"
+      ],
+      "correct": 2,
+      "explanation": "Wind and water erode rock, wearing it away little by little.",
+      "level": 2
+    },
+    {
+      "question": "What does 'chronological order' mean?",
+      "answers": [
+        "Arranged from shortest to longest",
+        "Arranged in the order events happened",
+        "Arranged alphabetically",
+        "Arranged by importance"
+      ],
+      "correct": 1,
+      "explanation": "Chronological order follows time, from first event to last.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'coincidence'?",
+      "answers": [
+        "A plan made far in advance",
+        "A rule everyone must follow",
+        "A reward for good behavior",
+        "Events that happen together by chance"
+      ],
+      "correct": 3,
+      "explanation": "A coincidence is a surprising chance event, like two friends wearing the same shirt.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'competent'?",
+      "answers": [
+        "Capable",
+        "Clumsy",
+        "Hesitant",
+        "Careless"
+      ],
+      "correct": 0,
+      "explanation": "Competent means having the skill to do something well.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'conceal'?",
+      "answers": [
+        "Hide",
+        "Expose",
+        "Cover",
+        "Bury"
+      ],
+      "correct": 1,
+      "explanation": "Conceal means to hide; expose means to uncover or show.",
+      "level": 2
+    },
+    {
+      "question": "In science, what happens when water vapor 'condenses'?",
+      "answers": [
+        "It turns into a gas",
+        "It freezes solid",
+        "It turns into a liquid",
+        "It disappears"
+      ],
+      "correct": 2,
+      "explanation": "Condensation is when a gas cools and changes into a liquid, like dew forming.",
+      "level": 2
+    },
+    {
+      "question": "What does 'confide' mean?",
+      "answers": [
+        "To argue with a friend",
+        "To forget a promise",
+        "To trust someone with a secret",
+        "To spread gossip"
+      ],
+      "correct": 2,
+      "explanation": "When you confide in someone, you share private thoughts because you trust them.",
+      "level": 2
+    },
+    {
+      "question": "Read: 'In a room full of gray suits, her bright yellow coat was conspicuous.' What does 'conspicuous' mean?",
+      "answers": [
+        "Out of style",
+        "Easy to notice",
+        "Very expensive",
+        "Hard to see"
+      ],
+      "correct": 1,
+      "explanation": "The contrast between gray suits and a bright coat shows that conspicuous means standing out.",
+      "level": 2
+    },
+    {
+      "question": "What does 'contemplate' mean?",
+      "answers": [
+        "To decide without thinking",
+        "To think about something deeply",
+        "To complain loudly",
+        "To ignore completely"
+      ],
+      "correct": 1,
+      "explanation": "To contemplate is to consider something carefully for a long time.",
+      "level": 2
+    },
+    {
+      "question": "Which word means 'to communicate or make known'?",
+      "answers": [
+        "Conceal",
+        "Convey",
+        "Confuse",
+        "Consume"
+      ],
+      "correct": 1,
+      "explanation": "Convey means to express or communicate a message or feeling.",
+      "level": 2
+    },
+    {
+      "question": "What does 'gullible' mean?",
+      "answers": [
+        "Easily tricked into believing things",
+        "Very hard to fool",
+        "Quick to get angry",
+        "Slow to learn new skills"
+      ],
+      "correct": 0,
+      "explanation": "A gullible person believes almost anything they are told.",
+      "level": 2
+    },
+    {
+      "question": "What does 'deceive' mean?",
+      "answers": [
+        "To tell someone the truth",
+        "To help someone learn",
+        "To make someone believe something false",
+        "To forgive a mistake"
+      ],
+      "correct": 2,
+      "explanation": "To deceive is to trick or mislead someone.",
+      "level": 2
+    },
+    {
+      "question": "Choose the word that best completes: 'Without more evidence, scientists can only ___ about what caused the crater.'",
+      "answers": [
+        "decorate",
+        "evaporate",
+        "collaborate",
+        "speculate"
+      ],
+      "correct": 3,
+      "explanation": "To speculate is to form ideas or guesses without firm evidence.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'dilemma'?",
+      "answers": [
+        "A problem with an easy fix",
+        "A situation requiring a hard choice",
+        "A happy ending",
+        "A detailed set of directions"
+      ],
+      "correct": 1,
+      "explanation": "A dilemma is a difficult choice between two or more options.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'discard'?",
+      "answers": [
+        "Throw away",
+        "Keep safe",
+        "Pick up",
+        "Hand out"
+      ],
+      "correct": 0,
+      "explanation": "To discard is to get rid of something you no longer want.",
+      "level": 2
+    },
+    {
+      "question": "What does 'nocturnal' mean?",
+      "answers": [
+        "Active at night",
+        "Active during the day",
+        "Living underwater",
+        "Eating only plants"
+      ],
+      "correct": 0,
+      "explanation": "Nocturnal animals, like owls, are active at night and sleep during the day.",
+      "level": 2
+    },
+    {
+      "question": "What is an 'excerpt'?",
+      "answers": [
+        "A short passage taken from a longer work",
+        "A complete book series",
+        "A list of sources",
+        "A review of a movie"
+      ],
+      "correct": 0,
+      "explanation": "An excerpt is a selected part of a book, speech, or article.",
+      "level": 2
+    },
+    {
+      "question": "What does 'dormant' mean when describing a volcano?",
+      "answers": [
+        "Inactive but able to erupt again",
+        "Erupting right now",
+        "Brand-new and growing",
+        "Covered in tall trees"
+      ],
+      "correct": 0,
+      "explanation": "A dormant volcano is quiet for now but could become active again.",
+      "level": 2
+    },
+    {
+      "question": "What does 'prioritize' mean?",
+      "answers": [
+        "To do tasks in random order",
+        "To skip the hardest tasks",
+        "To finish tasks late",
+        "To arrange tasks by importance"
+      ],
+      "correct": 3,
+      "explanation": "To prioritize is to decide which things matter most and do them first.",
+      "level": 2
+    },
+    {
+      "question": "What does 'eliminate' mean?",
+      "answers": [
+        "To remove or get rid of completely",
+        "To add more of something",
+        "To repeat something",
+        "To make something larger"
+      ],
+      "correct": 0,
+      "explanation": "To eliminate is to remove something entirely.",
+      "level": 2
+    },
+    {
+      "question": "What does 'hoard' mean?",
+      "answers": [
+        "To share freely with others",
+        "To throw away old things",
+        "To collect and hide away a large supply",
+        "To sell at a low price"
+      ],
+      "correct": 2,
+      "explanation": "Squirrels hoard nuts, storing them away for later.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'enhance'?",
+      "answers": [
+        "Improve",
+        "Boost",
+        "Enrich",
+        "Worsen"
+      ],
+      "correct": 3,
+      "explanation": "Enhance means to improve; worsen means to make worse.",
+      "level": 2
+    },
+    {
+      "question": "What does 'exaggerate' mean?",
+      "answers": [
+        "To describe something exactly",
+        "To make something seem smaller",
+        "To keep something secret",
+        "To make something seem bigger than it is"
+      ],
+      "correct": 3,
+      "explanation": "To exaggerate is to overstate, like saying you waited 'forever' for a bus.",
+      "level": 2
+    },
+    {
+      "question": "What does 'excavate' mean?",
+      "answers": [
+        "To bury deeply",
+        "To build upward",
+        "To dig out and uncover",
+        "To paint carefully"
+      ],
+      "correct": 2,
+      "explanation": "Archaeologists excavate sites to uncover objects from the past.",
+      "level": 2
+    },
+    {
+      "question": "What is an 'expedition'?",
+      "answers": [
+        "A short nap",
+        "A local shop",
+        "A journey made for a special purpose",
+        "A daily chore"
+      ],
+      "correct": 2,
+      "explanation": "An expedition is an organized trip, often to explore or research.",
+      "level": 2
+    },
+    {
+      "question": "What does 'ration' mean as a verb?",
+      "answers": [
+        "To waste freely",
+        "To give out in limited amounts",
+        "To sell for profit",
+        "To store forever"
+      ],
+      "correct": 1,
+      "explanation": "To ration is to share out a limited supply carefully, like water on a long hike.",
+      "level": 2
+    },
+    {
+      "question": "What does 'feasible' mean?",
+      "answers": [
+        "Impossible to imagine",
+        "Already finished",
+        "Possible to do",
+        "Against the rules"
+      ],
+      "correct": 2,
+      "explanation": "A feasible plan is one that can realistically be done.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'feeble'?",
+      "answers": [
+        "Weak",
+        "Strong",
+        "Frail",
+        "Fragile"
+      ],
+      "correct": 1,
+      "explanation": "Feeble means weak; strong is the opposite.",
+      "level": 2
+    },
+    {
+      "question": "What does 'flourish' mean?",
+      "answers": [
+        "To wilt and fade",
+        "To grow well and thrive",
+        "To stay exactly the same",
+        "To be cut down"
+      ],
+      "correct": 1,
+      "explanation": "Plants flourish when they get the sunlight, water, and soil they need.",
+      "level": 2
+    },
+    {
+      "question": "What does 'futile' mean?",
+      "answers": [
+        "Very successful",
+        "Done just in time",
+        "Planned with care",
+        "Having no useful result"
+      ],
+      "correct": 3,
+      "explanation": "A futile effort is useless because it cannot succeed.",
+      "level": 2
+    },
+    {
+      "question": "What does 'harmony' mean?",
+      "answers": [
+        "A loud disagreement",
+        "A state of peaceful agreement",
+        "A sudden surprise",
+        "A long silence"
+      ],
+      "correct": 1,
+      "explanation": "People living in harmony get along peacefully.",
+      "level": 2
+    },
+    {
+      "question": "What does 'hinder' mean?",
+      "answers": [
+        "To help something along",
+        "To make it harder for something to happen",
+        "To finish ahead of time",
+        "To pay for something"
+      ],
+      "correct": 1,
+      "explanation": "To hinder is to get in the way or slow progress.",
+      "level": 2
+    },
+    {
+      "question": "What does 'idle' mean?",
+      "answers": [
+        "Extremely busy",
+        "Moving very fast",
+        "Carefully organized",
+        "Not working or active"
+      ],
+      "correct": 3,
+      "explanation": "Idle means not in use or not doing anything.",
+      "level": 2
+    },
+    {
+      "question": "Which word means 'to light up'?",
+      "answers": [
+        "Illuminate",
+        "Eliminate",
+        "Imitate",
+        "Isolate"
+      ],
+      "correct": 0,
+      "explanation": "Illuminate means to brighten with light or to make clear.",
+      "level": 2
+    },
+    {
+      "question": "What does 'versatile' mean?",
+      "answers": [
+        "Able to do only one thing",
+        "Able to do many different things well",
+        "Unwilling to try new things",
+        "Too tired to keep going"
+      ],
+      "correct": 1,
+      "explanation": "A versatile athlete can play many positions well.",
+      "level": 2
+    },
+    {
+      "question": "What does 'impulsive' mean?",
+      "answers": [
+        "Planning every detail ahead",
+        "Refusing to make decisions",
+        "Moving slowly and steadily",
+        "Acting suddenly without thinking"
+      ],
+      "correct": 3,
+      "explanation": "An impulsive person acts on sudden urges instead of thinking first.",
+      "level": 2
+    },
+    {
+      "question": "What is an 'incentive'?",
+      "answers": [
+        "A penalty for breaking a rule",
+        "Something that motivates a person to act",
+        "A reason to give up",
+        "A mistake in a plan"
+      ],
+      "correct": 1,
+      "explanation": "An incentive, like a prize, encourages someone to do something.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'hypocrite'?",
+      "answers": [
+        "A person who claims beliefs they do not follow",
+        "A person who always keeps promises",
+        "A person who studies history",
+        "A person who avoids arguments"
+      ],
+      "correct": 0,
+      "explanation": "A hypocrite says one thing but does another.",
+      "level": 2
+    },
+    {
+      "question": "What does 'inhabit' mean?",
+      "answers": [
+        "To leave a place forever",
+        "To visit a place briefly",
+        "To live in a place",
+        "To draw a map of a place"
+      ],
+      "correct": 2,
+      "explanation": "Animals and people inhabit the places where they live.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'initiate'?",
+      "answers": [
+        "Conclude",
+        "Pause",
+        "Begin",
+        "Abandon"
+      ],
+      "correct": 2,
+      "explanation": "To initiate is to start or begin something.",
+      "level": 2
+    },
+    {
+      "question": "What does 'integrity' mean?",
+      "answers": [
+        "Being popular and well known",
+        "Being fast and strong",
+        "Being honest and having strong morals",
+        "Being wealthy and powerful"
+      ],
+      "correct": 2,
+      "explanation": "A person with integrity does the right thing even when no one is watching.",
+      "level": 2
+    },
+    {
+      "question": "What does 'interpret' mean?",
+      "answers": [
+        "To explain the meaning of something",
+        "To ignore a message",
+        "To memorize a list",
+        "To interrupt a speaker"
+      ],
+      "correct": 0,
+      "explanation": "To interpret is to figure out or explain what something means.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'irritate'?",
+      "answers": [
+        "Annoy",
+        "Soothe",
+        "Amuse",
+        "Comfort"
+      ],
+      "correct": 0,
+      "explanation": "To irritate is to annoy or bother someone.",
+      "level": 2
+    },
+    {
+      "question": "What does 'lenient' mean?",
+      "answers": [
+        "Very harsh and strict",
+        "Fast and efficient",
+        "Not strict; gentle with rules",
+        "Loud and demanding"
+      ],
+      "correct": 2,
+      "explanation": "A lenient teacher might give extra time instead of a penalty.",
+      "level": 2
+    },
+    {
+      "question": "Choose the word that best completes: 'The smell of fresh bread seemed to ___ in the kitchen for hours.'",
+      "answers": [
+        "vanish",
+        "sprint",
+        "linger",
+        "shrink"
+      ],
+      "correct": 2,
+      "explanation": "Linger means to stay in a place longer than expected.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'mandatory'?",
+      "answers": [
+        "Required",
+        "Compulsory",
+        "Necessary",
+        "Optional"
+      ],
+      "correct": 3,
+      "explanation": "Mandatory means required; optional means you may choose.",
+      "level": 2
+    },
+    {
+      "question": "What does 'monotonous' mean?",
+      "answers": [
+        "Exciting and full of surprises",
+        "Loud and colorful",
+        "Dull because it never changes",
+        "Short and sweet"
+      ],
+      "correct": 2,
+      "explanation": "Monotonous describes something boring and repetitive.",
+      "level": 2
+    },
+    {
+      "question": "What does 'mutual' mean?",
+      "answers": [
+        "Belonging to only one person",
+        "Shared by two or more people",
+        "Completely secret",
+        "Lost long ago"
+      ],
+      "correct": 1,
+      "explanation": "Mutual respect is respect that both people feel for each other.",
+      "level": 2
+    },
+    {
+      "question": "What does 'neglect' mean?",
+      "answers": [
+        "To fail to take care of",
+        "To pay close attention to",
+        "To repair carefully",
+        "To give as a gift"
+      ],
+      "correct": 0,
+      "explanation": "To neglect something is to not give it the care it needs.",
+      "level": 2
+    },
+    {
+      "question": "What does 'obsolete' mean?",
+      "answers": [
+        "Brand new and popular",
+        "Rare and valuable",
+        "No longer used; out of date",
+        "Large and heavy"
+      ],
+      "correct": 2,
+      "explanation": "Obsolete things, like old floppy disks, have been replaced by newer ones.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'tactful'?",
+      "answers": [
+        "Blunt",
+        "Rude",
+        "Careless",
+        "Diplomatic"
+      ],
+      "correct": 3,
+      "explanation": "Tactful means careful not to upset others, so 'diplomatic' is a synonym.",
+      "level": 2
+    },
+    {
+      "question": "What does 'omit' mean?",
+      "answers": [
+        "To add in",
+        "To leave out",
+        "To repeat twice",
+        "To underline"
+      ],
+      "correct": 1,
+      "explanation": "To omit is to leave something out, like skipping a word in a sentence.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'optimistic'?",
+      "answers": [
+        "Hopeful",
+        "Positive",
+        "Pessimistic",
+        "Cheerful"
+      ],
+      "correct": 2,
+      "explanation": "Optimistic means expecting good things; pessimistic means expecting bad things.",
+      "level": 2
+    },
+    {
+      "question": "What does 'persuade' mean?",
+      "answers": [
+        "To force someone with threats",
+        "To agree with everything",
+        "To stop listening to someone",
+        "To convince someone to do or believe something"
+      ],
+      "correct": 3,
+      "explanation": "To persuade is to use reasons to change someone's mind.",
+      "level": 2
+    },
+    {
+      "question": "What does 'plagiarize' mean?",
+      "answers": [
+        "To present someone else's work as your own",
+        "To cite a source correctly",
+        "To rewrite your own draft",
+        "To read a book aloud"
+      ],
+      "correct": 0,
+      "explanation": "To plagiarize is to use another person's words or ideas without giving credit.",
+      "level": 2
+    },
+    {
+      "question": "What does 'consecutive' mean?",
+      "answers": [
+        "Following one after another in order",
+        "Happening at random times",
+        "Taking place all at once",
+        "Skipping every other one"
+      ],
+      "correct": 0,
+      "explanation": "Three consecutive wins are three wins in a row.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'prohibit'?",
+      "answers": [
+        "Forbid",
+        "Ban",
+        "Permit",
+        "Prevent"
+      ],
+      "correct": 2,
+      "explanation": "Prohibit means to forbid; permit means to allow.",
+      "level": 2
+    },
+    {
+      "question": "What does 'prosper' mean?",
+      "answers": [
+        "To succeed and do well",
+        "To fail and give up",
+        "To move away",
+        "To stay hidden"
+      ],
+      "correct": 0,
+      "explanation": "To prosper is to be successful, often by growing or earning more.",
+      "level": 2
+    },
+    {
+      "question": "What does 'provoke' mean?",
+      "answers": [
+        "To deliberately cause a strong reaction",
+        "To calm someone down",
+        "To avoid a conversation",
+        "To apologize for something"
+      ],
+      "correct": 0,
+      "explanation": "To provoke is to stir up anger or another strong feeling on purpose.",
+      "level": 2
+    },
+    {
+      "question": "What does 'contaminate' mean?",
+      "answers": [
+        "To make impure or unclean",
+        "To clean thoroughly",
+        "To measure carefully",
+        "To store safely"
+      ],
+      "correct": 0,
+      "explanation": "To contaminate is to pollute something, like oil contaminating a river.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'reckless'?",
+      "answers": [
+        "Careless",
+        "Cautious",
+        "Wild",
+        "Rash"
+      ],
+      "correct": 1,
+      "explanation": "Reckless means careless about danger; cautious means careful.",
+      "level": 2
+    },
+    {
+      "question": "What does 'rehearse' mean?",
+      "answers": [
+        "To cancel a show",
+        "To sell tickets",
+        "To write a review",
+        "To practice before a performance"
+      ],
+      "correct": 3,
+      "explanation": "Actors and musicians rehearse so they are ready for the real show.",
+      "level": 2
+    },
+    {
+      "question": "What does 'remote' mean in 'a remote island'?",
+      "answers": [
+        "Crowded with visitors",
+        "Far from other places",
+        "Recently built",
+        "Covered in snow"
+      ],
+      "correct": 1,
+      "explanation": "Remote means far away and hard to reach.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'retain'?",
+      "answers": [
+        "Release",
+        "Lose",
+        "Keep",
+        "Share"
+      ],
+      "correct": 2,
+      "explanation": "To retain is to keep or hold on to something.",
+      "level": 2
+    },
+    {
+      "question": "What does 'retrieve' mean?",
+      "answers": [
+        "To throw something away",
+        "To get something back",
+        "To break something",
+        "To lend something out"
+      ],
+      "correct": 1,
+      "explanation": "To retrieve is to go and bring something back, like a dog retrieving a ball.",
+      "level": 2
+    },
+    {
+      "question": "What does 'revise' mean when you talk about an essay?",
+      "answers": [
+        "To print it out",
+        "To change it to make it better",
+        "To read it aloud",
+        "To turn it in late"
+      ],
+      "correct": 1,
+      "explanation": "Writers revise by changing words, ideas, and order to improve their work.",
+      "level": 2
+    },
+    {
+      "question": "What does 'rigid' mean?",
+      "answers": [
+        "Soft and stretchy",
+        "Warm and cozy",
+        "Thin and see-through",
+        "Stiff and not able to bend"
+      ],
+      "correct": 3,
+      "explanation": "Rigid means firm and unbending, like a metal rod.",
+      "level": 2
+    },
+    {
+      "question": "Which word is an antonym of 'rural'?",
+      "answers": [
+        "Rustic",
+        "Pastoral",
+        "Agricultural",
+        "Urban"
+      ],
+      "correct": 3,
+      "explanation": "Rural describes the countryside; urban describes the city.",
+      "level": 2
+    },
+    {
+      "question": "What does 'seldom' mean?",
+      "answers": [
+        "Not often; rarely",
+        "Every single day",
+        "Right away",
+        "Always on time"
+      ],
+      "correct": 0,
+      "explanation": "Seldom means rarely, as in 'It seldom snows in Miami.'",
+      "level": 2
+    },
+    {
+      "question": "What does 'boisterous' mean?",
+      "answers": [
+        "Quiet and calm",
+        "Sad and lonely",
+        "Noisy and full of energy",
+        "Polite and formal"
+      ],
+      "correct": 2,
+      "explanation": "A boisterous crowd is loud, lively, and energetic.",
+      "level": 2
+    },
+    {
+      "question": "What does 'solemn' mean?",
+      "answers": [
+        "Silly and playful",
+        "Loud and wild",
+        "Serious and dignified",
+        "Bright and colorful"
+      ],
+      "correct": 2,
+      "explanation": "A solemn ceremony is serious and formal.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'summit'?",
+      "answers": [
+        "The bottom of a valley",
+        "A narrow river",
+        "The highest point of a mountain",
+        "A deep cave"
+      ],
+      "correct": 2,
+      "explanation": "The summit is the very top of a mountain.",
+      "level": 2
+    },
+    {
+      "question": "Which word is a synonym of 'tentative'?",
+      "answers": [
+        "Definite",
+        "Final",
+        "Uncertain",
+        "Confident"
+      ],
+      "correct": 2,
+      "explanation": "Tentative means not yet certain or fixed, like a tentative plan.",
+      "level": 2
+    },
+    {
+      "question": "Choose the word that best completes: 'Curious about the noise, Amira ___ into the dark garage with a flashlight.'",
+      "answers": [
+        "ventured",
+        "retreated",
+        "dozed",
+        "wept"
+      ],
+      "correct": 0,
+      "explanation": "Venture means to go somewhere daring or unknown, which fits Amira's curiosity.",
+      "level": 2
+    },
+    {
+      "question": "What does 'transparent' mean?",
+      "answers": [
+        "Clear enough to see through",
+        "Too dark to see",
+        "Painted on both sides",
+        "Very heavy"
+      ],
+      "correct": 0,
+      "explanation": "Transparent materials, like window glass, let light pass through.",
+      "level": 2
+    },
+    {
+      "question": "What does 'trivial' mean?",
+      "answers": [
+        "Extremely serious",
+        "Of little importance",
+        "Very old",
+        "Difficult to solve"
+      ],
+      "correct": 1,
+      "explanation": "Trivial details are small and unimportant.",
+      "level": 2
+    },
+    {
+      "question": "What does 'unanimous' mean?",
+      "answers": [
+        "Supported by only one person",
+        "Decided by chance",
+        "Agreed on by everyone",
+        "Kept completely secret"
+      ],
+      "correct": 2,
+      "explanation": "A unanimous vote means every single person agreed.",
+      "level": 2
+    },
+    {
+      "question": "What does 'cite' mean in a research paper?",
+      "answers": [
+        "To name a source of information",
+        "To copy without giving credit",
+        "To summarize the ending",
+        "To draw a chart"
+      ],
+      "correct": 0,
+      "explanation": "When you cite a source, you tell readers where your information came from.",
+      "level": 2
+    },
+    {
+      "question": "What does 'vibrant' mean?",
+      "answers": [
+        "Dull and lifeless",
+        "Quiet and empty",
+        "Full of energy and life",
+        "Old and faded"
+      ],
+      "correct": 2,
+      "explanation": "Vibrant describes something bright, lively, and energetic.",
+      "level": 2
+    },
+    {
+      "question": "What does 'meddle' mean?",
+      "answers": [
+        "To interfere in other people's business",
+        "To help only when asked",
+        "To stay out of trouble",
+        "To finish a task early"
+      ],
+      "correct": 0,
+      "explanation": "To meddle is to get involved in something that is not your concern.",
+      "level": 2
+    },
+    {
+      "question": "The root 'bio' in 'biology' and 'biography' means what?",
+      "answers": [
+        "Life",
+        "Earth",
+        "Water",
+        "Light"
+      ],
+      "correct": 0,
+      "explanation": "Bio means life: biology is the study of life, and a biography is a life story.",
+      "level": 2
+    },
+    {
+      "question": "The root 'graph' in 'autograph' and 'paragraph' means what?",
+      "answers": [
+        "See",
+        "Write",
+        "Hear",
+        "Carry"
+      ],
+      "correct": 1,
+      "explanation": "Graph means to write or draw, as in an autograph, or signature.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'port' mean in 'transport' and 'portable'?",
+      "answers": [
+        "Break",
+        "Look",
+        "Speak",
+        "Carry"
+      ],
+      "correct": 3,
+      "explanation": "Port means carry, so a portable object can be carried.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'geo' mean in 'geography'?",
+      "answers": [
+        "Time",
+        "Earth",
+        "Sound",
+        "People"
+      ],
+      "correct": 1,
+      "explanation": "Geo means earth, so geography is the study of Earth and its features.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'tele-' mean in 'telescope'?",
+      "answers": [
+        "Far",
+        "Small",
+        "Under",
+        "Many"
+      ],
+      "correct": 0,
+      "explanation": "Tele- means far, so a telescope helps you see faraway objects.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'micro-' mean in 'microscope'?",
+      "answers": [
+        "Very far",
+        "Very loud",
+        "Very old",
+        "Very small"
+      ],
+      "correct": 3,
+      "explanation": "Micro- means very small, so a microscope lets you see tiny things.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'aud' mean in 'audience' and 'audible'?",
+      "answers": [
+        "See",
+        "Touch",
+        "Walk",
+        "Hear"
+      ],
+      "correct": 3,
+      "explanation": "Aud means hear, so an audible sound is one you can hear.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'dict' mean in 'predict' and 'dictate'?",
+      "answers": [
+        "Write",
+        "Run",
+        "Say",
+        "Hold"
+      ],
+      "correct": 2,
+      "explanation": "Dict means to say or tell, so to predict is to say what will happen.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'struct' mean in 'construct' and 'structure'?",
+      "answers": [
+        "Break",
+        "Hide",
+        "Count",
+        "Build"
+      ],
+      "correct": 3,
+      "explanation": "Struct means build, so to construct something is to build it.",
+      "level": 2
+    },
+    {
+      "question": "What does the root 'rupt' mean in 'erupt' and 'interrupt'?",
+      "answers": [
+        "Grow",
+        "Join",
+        "Break",
+        "Sleep"
+      ],
+      "correct": 2,
+      "explanation": "Rupt means break, so to interrupt is to break into a conversation.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'inter-' mean in 'international'?",
+      "answers": [
+        "Between or among",
+        "Inside of",
+        "Against",
+        "Without"
+      ],
+      "correct": 0,
+      "explanation": "Inter- means between or among, so international means between nations.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'trans-' mean in 'transatlantic'?",
+      "answers": [
+        "Under",
+        "Before",
+        "Against",
+        "Across"
+      ],
+      "correct": 3,
+      "explanation": "Trans- means across, so a transatlantic flight crosses the Atlantic.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'sub-' mean in 'submarine'?",
+      "answers": [
+        "Above",
+        "Beside",
+        "Around",
+        "Under"
+      ],
+      "correct": 3,
+      "explanation": "Sub- means under, so a submarine travels under the sea.",
+      "level": 2
+    },
+    {
+      "question": "What does the prefix 'anti-' mean in 'antibacterial'?",
+      "answers": [
+        "For",
+        "With",
+        "After",
+        "Against"
+      ],
+      "correct": 3,
+      "explanation": "Anti- means against, so an antibacterial soap works against bacteria.",
+      "level": 2
+    },
+    {
+      "question": "What does 'semicircle' mean?",
+      "answers": [
+        "Half of a circle",
+        "Many circles",
+        "A circle drawn twice",
+        "A circle inside a square"
+      ],
+      "correct": 0,
+      "explanation": "The prefix semi- means half, so a semicircle is half a circle.",
+      "level": 2
+    },
+    {
+      "question": "What does the suffix '-ology' mean in 'zoology'?",
+      "answers": [
+        "The fear of",
+        "A person who",
+        "The study of",
+        "Full of"
+      ],
+      "correct": 2,
+      "explanation": "The suffix -ology means the study of, so zoology is the study of animals.",
+      "level": 2
+    },
+    {
+      "question": "In 'The current pulled the canoe downstream,' what does 'current' mean?",
+      "answers": [
+        "Happening now",
+        "A small dried fruit",
+        "A flow of electricity",
+        "A flow of water"
+      ],
+      "correct": 3,
+      "explanation": "Current has several meanings; pulling a canoe downstream shows it is moving water.",
+      "level": 2
+    },
+    {
+      "question": "In 'Ms. Adeyemi gave a firm handshake,' what does 'firm' mean?",
+      "answers": [
+        "A business company",
+        "Soft and limp",
+        "Unsure and shaky",
+        "Strong and steady"
+      ],
+      "correct": 3,
+      "explanation": "Firm can mean a company, but describing a handshake, it means strong and steady.",
+      "level": 2
+    },
+    {
+      "question": "In 'Priya had a novel idea for the science fair,' what does 'novel' mean?",
+      "answers": [
+        "A long fictional book",
+        "Old and familiar",
+        "Silly and useless",
+        "New and original"
+      ],
+      "correct": 3,
+      "explanation": "Novel can mean a book, but describing an idea, it means new and unusual.",
+      "level": 2
+    },
+    {
+      "question": "In 'Hana finished the first draft of her essay,' what is a 'draft'?",
+      "answers": [
+        "An early version of writing",
+        "A cool breeze in a room",
+        "A drink from a fountain",
+        "A drawing of a building"
+      ],
+      "correct": 0,
+      "explanation": "Draft has several meanings; for an essay, it is an early version that will be revised.",
+      "level": 2
+    },
+    {
+      "question": "In 'The coach gave the team a stern warning,' what does 'stern' mean?",
+      "answers": [
+        "The back of a boat",
+        "Serious and strict",
+        "Cheerful and friendly",
+        "Quiet and gentle"
+      ],
+      "correct": 1,
+      "explanation": "Stern can mean the back of a boat, but a stern warning is serious and strict.",
+      "level": 2
+    },
+    {
+      "question": "Which word describes someone who keeps trying in the most positive way?",
+      "answers": [
+        "Stubborn",
+        "Pigheaded",
+        "Determined",
+        "Inflexible"
+      ],
+      "correct": 2,
+      "explanation": "Determined has a positive connotation, while the others suggest refusing to listen.",
+      "level": 2
+    },
+    {
+      "question": "Which word describes someone careful with money in the most positive way?",
+      "answers": [
+        "Stingy",
+        "Thrifty",
+        "Cheap",
+        "Tightfisted"
+      ],
+      "correct": 1,
+      "explanation": "Thrifty is positive, suggesting wise saving; the other words suggest being unwilling to share.",
+      "level": 2
+    },
+    {
+      "question": "Which word for someone who asks a lot of questions has the most negative connotation?",
+      "answers": [
+        "Curious",
+        "Interested",
+        "Inquiring",
+        "Nosy"
+      ],
+      "correct": 3,
+      "explanation": "Nosy suggests prying into others' business, while the others are neutral or positive.",
+      "level": 2
+    },
+    {
+      "question": "Which sentence contains a simile?",
+      "answers": [
+        "The lake was as smooth as glass.",
+        "The lake was smooth glass.",
+        "The lake was very smooth.",
+        "The lake whispered secrets."
+      ],
+      "correct": 0,
+      "explanation": "A simile compares two things using 'like' or 'as.'",
+      "level": 2
+    },
+    {
+      "question": "What is 'personification'?",
+      "answers": [
+        "Comparing two things with 'like'",
+        "Repeating the same first sound",
+        "Exaggerating for effect",
+        "Giving human traits to nonhuman things"
+      ],
+      "correct": 3,
+      "explanation": "Personification gives human qualities to objects or animals, like 'The wind howled.'",
+      "level": 2
+    },
+    {
+      "question": "Which sentence is an example of 'hyperbole'?",
+      "answers": [
+        "I have several chores to do today.",
+        "I have a million chores to do today.",
+        "I finished my chores before lunch.",
+        "The chores waited patiently for me."
+      ],
+      "correct": 1,
+      "explanation": "Hyperbole is extreme exaggeration used for emphasis.",
+      "level": 2
+    },
+    {
+      "question": "What is 'foreshadowing' in a story?",
+      "answers": [
+        "A scene from the past",
+        "The last line of the story",
+        "A description of the setting",
+        "Hints about what will happen later"
+      ],
+      "correct": 3,
+      "explanation": "Foreshadowing gives clues that prepare the reader for future events.",
+      "level": 2
+    },
+    {
+      "question": "What is a 'flashback' in a story?",
+      "answers": [
+        "A scene set far in the future",
+        "A scene that shows an earlier time",
+        "A sudden plot twist",
+        "A summary at the end"
+      ],
+      "correct": 1,
+      "explanation": "A flashback interrupts the story to show events that happened before.",
+      "level": 2
+    },
+    {
+      "question": "Which phrase uses 'alliteration'?",
+      "answers": [
+        "The dog barked loudly at night",
+        "Her laugh was like music",
+        "The bell rang as we left",
+        "Seven silly snakes slithered south"
+      ],
+      "correct": 3,
+      "explanation": "Alliteration repeats the same beginning consonant sound in nearby words.",
+      "level": 2
+    },
+    {
+      "question": "What does 'acquiesce' mean?",
+      "answers": [
+        "To argue against something fiercely",
+        "To question something repeatedly",
+        "To plan something in secret",
+        "To accept something without protest"
+      ],
+      "correct": 3,
+      "explanation": "To acquiesce is to agree or give in quietly, often reluctantly.",
+      "level": 3
+    },
+    {
+      "question": "Which word means 'to warn or scold gently but firmly'?",
+      "answers": [
+        "Admonish",
+        "Applaud",
+        "Abandon",
+        "Appease"
+      ],
+      "correct": 0,
+      "explanation": "To admonish is to caution or reprimand someone in a firm way.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'opulent'?",
+      "answers": [
+        "Luxurious",
+        "Shabby",
+        "Modest",
+        "Plain"
+      ],
+      "correct": 0,
+      "explanation": "Opulent means rich and lavish, so 'luxurious' is a synonym.",
+      "level": 3
+    },
+    {
+      "question": "What is an 'anachronism'?",
+      "answers": [
+        "Something placed in the wrong time period",
+        "A word with two opposite meanings",
+        "A story told backward",
+        "A repeated vowel sound"
+      ],
+      "correct": 0,
+      "explanation": "An anachronism is out of its time, like a wristwatch in a story about ancient Rome.",
+      "level": 3
+    },
+    {
+      "question": "What does 'anomaly' mean?",
+      "answers": [
+        "A pattern that repeats exactly",
+        "Something that differs from what is normal",
+        "A widely accepted rule",
+        "A carefully planned event"
+      ],
+      "correct": 1,
+      "explanation": "An anomaly is an irregularity or exception, like an unexpected result in data.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'apathy'?",
+      "answers": [
+        "Enthusiasm",
+        "Indifference",
+        "Boredom",
+        "Detachment"
+      ],
+      "correct": 0,
+      "explanation": "Apathy is a lack of interest or feeling; enthusiasm is eager interest.",
+      "level": 3
+    },
+    {
+      "question": "What does 'arbitrary' mean?",
+      "answers": [
+        "Based on random choice, not reason",
+        "Based on careful research",
+        "Required by law",
+        "Agreed on by everyone"
+      ],
+      "correct": 0,
+      "explanation": "An arbitrary decision is made on a whim rather than for a logical reason.",
+      "level": 3
+    },
+    {
+      "question": "What does 'indignant' mean?",
+      "answers": [
+        "Calm and unbothered",
+        "Grateful and pleased",
+        "Angry about something unfair",
+        "Confused and uncertain"
+      ],
+      "correct": 2,
+      "explanation": "An indignant person feels angry because something seems unjust.",
+      "level": 3
+    },
+    {
+      "question": "What does 'audacious' mean?",
+      "answers": [
+        "Timid and overly cautious",
+        "Quiet and easily ignored",
+        "Showing bold willingness to take risks",
+        "Careful to follow tradition"
+      ],
+      "correct": 2,
+      "explanation": "Audacious describes daring, fearless boldness.",
+      "level": 3
+    },
+    {
+      "question": "What does 'austere' mean?",
+      "answers": [
+        "Richly decorated",
+        "Noisy and crowded",
+        "Severely plain and simple",
+        "Warm and inviting"
+      ],
+      "correct": 2,
+      "explanation": "An austere room has little decoration or comfort.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'banal'?",
+      "answers": [
+        "Unoriginal",
+        "Innovative",
+        "Startling",
+        "Profound"
+      ],
+      "correct": 0,
+      "explanation": "Banal means so ordinary or overused that it is boring.",
+      "level": 3
+    },
+    {
+      "question": "What does 'jeopardize' mean?",
+      "answers": [
+        "To protect something",
+        "To put something at risk",
+        "To repair something",
+        "To celebrate something"
+      ],
+      "correct": 1,
+      "explanation": "To jeopardize is to endanger, as in jeopardizing your grade by skipping homework.",
+      "level": 3
+    },
+    {
+      "question": "In medicine, what does it mean when a growth is 'benign'?",
+      "answers": [
+        "Not harmful",
+        "Spreading rapidly",
+        "Recently discovered",
+        "Extremely painful"
+      ],
+      "correct": 0,
+      "explanation": "Benign means gentle or harmless; in medicine, it means not dangerous.",
+      "level": 3
+    },
+    {
+      "question": "What does 'undermine' mean?",
+      "answers": [
+        "To support something openly",
+        "To weaken something gradually",
+        "To repair something quickly",
+        "To explain something clearly"
+      ],
+      "correct": 1,
+      "explanation": "To undermine is to weaken something, often in a hidden or gradual way.",
+      "level": 3
+    },
+    {
+      "question": "What does 'brusque' mean?",
+      "answers": [
+        "Warm and gracious",
+        "Slow and thoughtful",
+        "Abrupt and blunt in manner",
+        "Shy and soft-spoken"
+      ],
+      "correct": 2,
+      "explanation": "A brusque reply is short and somewhat rude.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'cacophony'?",
+      "answers": [
+        "A harsh mixture of loud sounds",
+        "A soft, soothing melody",
+        "A complete silence",
+        "A single clear note"
+      ],
+      "correct": 0,
+      "explanation": "Cacophony is jarring, unpleasant noise, like many car horns at once.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'callous'?",
+      "answers": [
+        "Insensitive",
+        "Heartless",
+        "Cold",
+        "Compassionate"
+      ],
+      "correct": 3,
+      "explanation": "Callous means unfeeling toward others; compassionate means caring.",
+      "level": 3
+    },
+    {
+      "question": "What does 'ostracize' mean?",
+      "answers": [
+        "To welcome someone warmly",
+        "To exclude someone from a group",
+        "To elect someone as leader",
+        "To give someone advice"
+      ],
+      "correct": 1,
+      "explanation": "To ostracize is to shut someone out of a group or society.",
+      "level": 3
+    },
+    {
+      "question": "What does 'circumvent' mean?",
+      "answers": [
+        "To face a problem head-on",
+        "To find a way around an obstacle",
+        "To build a wall",
+        "To measure a circle"
+      ],
+      "correct": 1,
+      "explanation": "To circumvent is to avoid or get around something, often a rule or barrier.",
+      "level": 3
+    },
+    {
+      "question": "What does 'clandestine' mean?",
+      "answers": [
+        "Done secretly",
+        "Done publicly",
+        "Done carelessly",
+        "Done repeatedly"
+      ],
+      "correct": 0,
+      "explanation": "A clandestine meeting is kept hidden from others.",
+      "level": 3
+    },
+    {
+      "question": "What does 'cogent' mean when describing an argument?",
+      "answers": [
+        "Clear, logical, and convincing",
+        "Weak and poorly reasoned",
+        "Loud and emotional",
+        "Long and rambling"
+      ],
+      "correct": 0,
+      "explanation": "A cogent argument persuades through strong reasoning.",
+      "level": 3
+    },
+    {
+      "question": "What does 'complacent' mean?",
+      "answers": [
+        "Anxious about every detail",
+        "Eager to change everything",
+        "Too satisfied to see a need to improve",
+        "Angry about past mistakes"
+      ],
+      "correct": 2,
+      "explanation": "A complacent team stops working hard because it assumes it will succeed.",
+      "level": 3
+    },
+    {
+      "question": "Choose the word that best completes: 'After reviewing the evidence, the debater had to ___ that her opponent made a valid point.'",
+      "answers": [
+        "deny",
+        "concede",
+        "conceal",
+        "dispute"
+      ],
+      "correct": 1,
+      "explanation": "To concede is to admit that something is true, often reluctantly.",
+      "level": 3
+    },
+    {
+      "question": "What does 'condone' mean?",
+      "answers": [
+        "To punish behavior severely",
+        "To report behavior to others",
+        "To accept or allow behavior that is wrong",
+        "To forget behavior entirely"
+      ],
+      "correct": 2,
+      "explanation": "To condone is to overlook or approve of something that should be disapproved.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'dichotomy'?",
+      "answers": [
+        "A blend of many similar parts",
+        "A single unified whole",
+        "A division into two contrasting parts",
+        "A long chain of events"
+      ],
+      "correct": 2,
+      "explanation": "A dichotomy splits something into two opposing groups, like work and play.",
+      "level": 3
+    },
+    {
+      "question": "What does 'conscientious' mean?",
+      "answers": [
+        "Unaware of one's surroundings",
+        "Careful to do one's work well and correctly",
+        "Quick to blame others",
+        "Happy to cut corners"
+      ],
+      "correct": 1,
+      "explanation": "A conscientious student double-checks work and meets deadlines.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'contrite'?",
+      "answers": [
+        "Defiant",
+        "Remorseful",
+        "Boastful",
+        "Indifferent"
+      ],
+      "correct": 1,
+      "explanation": "Contrite means feeling sorry for having done wrong.",
+      "level": 3
+    },
+    {
+      "question": "What does 'convoluted' mean?",
+      "answers": [
+        "Simple and direct",
+        "Short and funny",
+        "Bright and colorful",
+        "Extremely complicated and hard to follow"
+      ],
+      "correct": 3,
+      "explanation": "A convoluted explanation twists and turns until it is confusing.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'copious'?",
+      "answers": [
+        "Plentiful",
+        "Abundant",
+        "Ample",
+        "Scant"
+      ],
+      "correct": 3,
+      "explanation": "Copious means plentiful; scant means barely enough.",
+      "level": 3
+    },
+    {
+      "question": "What does 'cursory' mean?",
+      "answers": [
+        "Hasty and not thorough",
+        "Slow and extremely detailed",
+        "Rude and insulting",
+        "Formal and official"
+      ],
+      "correct": 0,
+      "explanation": "A cursory glance is quick and superficial.",
+      "level": 3
+    },
+    {
+      "question": "What does 'dearth' mean?",
+      "answers": [
+        "An overflowing supply",
+        "A sudden increase",
+        "A fair division",
+        "A scarcity or lack of something"
+      ],
+      "correct": 3,
+      "explanation": "A dearth is a shortage, as in a dearth of evidence.",
+      "level": 3
+    },
+    {
+      "question": "What does 'deference' mean?",
+      "answers": [
+        "Open rebellion against authority",
+        "Polite respect for another's wishes",
+        "A complete lack of interest",
+        "Jealousy of another's success"
+      ],
+      "correct": 1,
+      "explanation": "Showing deference means yielding respectfully to someone else's judgment.",
+      "level": 3
+    },
+    {
+      "question": "What does 'deleterious' mean?",
+      "answers": [
+        "Causing harm or damage",
+        "Providing great benefit",
+        "Having no effect",
+        "Easy to delete"
+      ],
+      "correct": 0,
+      "explanation": "Deleterious effects are harmful, like pollution's effect on rivers.",
+      "level": 3
+    },
+    {
+      "question": "What does 'demeanor' mean?",
+      "answers": [
+        "A person's legal name",
+        "A person's outward behavior or manner",
+        "A person's family history",
+        "A person's home address"
+      ],
+      "correct": 1,
+      "explanation": "Demeanor refers to how someone looks and acts, such as a calm demeanor.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'deride'?",
+      "answers": [
+        "Praise",
+        "Defend",
+        "Mock",
+        "Admire"
+      ],
+      "correct": 2,
+      "explanation": "To deride is to ridicule or mock with contempt.",
+      "level": 3
+    },
+    {
+      "question": "What does 'despondent' mean?",
+      "answers": [
+        "Full of energy and hope",
+        "Calm and satisfied",
+        "Mildly amused",
+        "In low spirits from loss of hope"
+      ],
+      "correct": 3,
+      "explanation": "Despondent describes deep discouragement or hopelessness.",
+      "level": 3
+    },
+    {
+      "question": "What does 'didactic' mean?",
+      "answers": [
+        "Intended only to entertain",
+        "Written in rhyme",
+        "Meant to confuse the reader",
+        "Intended to teach a lesson"
+      ],
+      "correct": 3,
+      "explanation": "A didactic story, like a fable, is meant to instruct.",
+      "level": 3
+    },
+    {
+      "question": "What does 'inherent' mean?",
+      "answers": [
+        "Added on later",
+        "Existing as a natural, permanent part",
+        "Borrowed from others",
+        "Easily removed"
+      ],
+      "correct": 1,
+      "explanation": "An inherent quality is built into something's basic nature.",
+      "level": 3
+    },
+    {
+      "question": "What does 'infallible' mean?",
+      "answers": [
+        "Likely to fail often",
+        "Easily distracted",
+        "Incapable of making mistakes",
+        "Slow to respond"
+      ],
+      "correct": 2,
+      "explanation": "No person is infallible; everyone makes mistakes sometimes.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'disparage'?",
+      "answers": [
+        "Belittle",
+        "Commend",
+        "Criticize",
+        "Ridicule"
+      ],
+      "correct": 1,
+      "explanation": "To disparage is to speak of something as unimportant; to commend is to praise.",
+      "level": 3
+    },
+    {
+      "question": "What does 'disparate' mean?",
+      "answers": [
+        "Fundamentally different",
+        "Nearly identical",
+        "Equally divided",
+        "Closely connected"
+      ],
+      "correct": 0,
+      "explanation": "Disparate things are so unlike that they are hard to compare.",
+      "level": 3
+    },
+    {
+      "question": "What does 'dogmatic' mean?",
+      "answers": [
+        "Open to many viewpoints",
+        "Insisting one's beliefs are undeniably true",
+        "Unsure about everything",
+        "Uninterested in ideas"
+      ],
+      "correct": 1,
+      "explanation": "A dogmatic person refuses to consider other opinions.",
+      "level": 3
+    },
+    {
+      "question": "What does 'eclectic' mean?",
+      "answers": [
+        "Limited to one narrow style",
+        "Drawing from a wide range of sources",
+        "Strictly traditional",
+        "Copied from a single model"
+      ],
+      "correct": 1,
+      "explanation": "An eclectic playlist mixes many different genres.",
+      "level": 3
+    },
+    {
+      "question": "Choose the word that best completes: 'The teacher's question was designed to ___ thoughtful responses from the class.'",
+      "answers": [
+        "illicit",
+        "elicit",
+        "elude",
+        "erase"
+      ],
+      "correct": 1,
+      "explanation": "To elicit is to draw out a response; illicit, a sound-alike, means illegal.",
+      "level": 3
+    },
+    {
+      "question": "What does 'elusive' mean?",
+      "answers": [
+        "Easy to grasp",
+        "Always visible",
+        "Freely offered",
+        "Difficult to find, catch, or achieve"
+      ],
+      "correct": 3,
+      "explanation": "An elusive answer keeps slipping out of reach.",
+      "level": 3
+    },
+    {
+      "question": "What does 'embellish' mean?",
+      "answers": [
+        "To remove all decoration",
+        "To tell the plain truth",
+        "To add details to make more attractive",
+        "To shorten considerably"
+      ],
+      "correct": 2,
+      "explanation": "To embellish is to decorate or to add (sometimes untrue) details to a story.",
+      "level": 3
+    },
+    {
+      "question": "What does 'empirical' mean?",
+      "answers": [
+        "Based on observation or experiment",
+        "Based on pure theory",
+        "Based on rumor",
+        "Based on tradition"
+      ],
+      "correct": 0,
+      "explanation": "Empirical evidence comes from what can be observed and measured.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'emulate'?",
+      "answers": [
+        "Ignore",
+        "Oppose",
+        "Criticize",
+        "Imitate"
+      ],
+      "correct": 3,
+      "explanation": "To emulate is to imitate someone you admire, hoping to equal them.",
+      "level": 3
+    },
+    {
+      "question": "What is an 'enigma'?",
+      "answers": [
+        "Something completely obvious",
+        "A detailed explanation",
+        "A well-known fact",
+        "Someone or something mysterious"
+      ],
+      "correct": 3,
+      "explanation": "An enigma is a puzzle or mystery that is hard to understand.",
+      "level": 3
+    },
+    {
+      "question": "What does 'erudite' mean?",
+      "answers": [
+        "Lacking any education",
+        "Quick to anger",
+        "Having great knowledge from study",
+        "Easily fooled"
+      ],
+      "correct": 2,
+      "explanation": "An erudite scholar has read and learned a great deal.",
+      "level": 3
+    },
+    {
+      "question": "What does 'esoteric' mean?",
+      "answers": [
+        "Known by almost everyone",
+        "Understood by only a small group",
+        "Easy for beginners",
+        "Recently invented"
+      ],
+      "correct": 1,
+      "explanation": "Esoteric knowledge is specialized and not widely understood.",
+      "level": 3
+    },
+    {
+      "question": "What does 'exemplary' mean?",
+      "answers": [
+        "Barely acceptable",
+        "Deeply flawed",
+        "Completely average",
+        "Serving as an excellent model"
+      ],
+      "correct": 3,
+      "explanation": "Exemplary behavior is so good that others should copy it.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'expedite'?",
+      "answers": [
+        "Hasten",
+        "Delay",
+        "Accelerate",
+        "Rush"
+      ],
+      "correct": 1,
+      "explanation": "To expedite is to speed up a process; to delay is to slow it.",
+      "level": 3
+    },
+    {
+      "question": "What does 'facetious' mean?",
+      "answers": [
+        "Joking at an inappropriate time",
+        "Serious and sincere",
+        "Angry and bitter",
+        "Quiet and thoughtful"
+      ],
+      "correct": 0,
+      "explanation": "A facetious remark treats a serious matter as a joke.",
+      "level": 3
+    },
+    {
+      "question": "What does 'pensive' mean?",
+      "answers": [
+        "Laughing loudly",
+        "Moving quickly",
+        "Angry and impatient",
+        "Deep in serious thought"
+      ],
+      "correct": 3,
+      "explanation": "A pensive person is quietly thinking hard about something.",
+      "level": 3
+    },
+    {
+      "question": "What does 'fortuitous' mean?",
+      "answers": [
+        "Carefully planned in advance",
+        "Deeply unfortunate",
+        "Legally required",
+        "Happening by lucky chance"
+      ],
+      "correct": 3,
+      "explanation": "A fortuitous meeting happens by chance and turns out well.",
+      "level": 3
+    },
+    {
+      "question": "What is 'hubris'?",
+      "answers": [
+        "Deep humility",
+        "Sudden fear",
+        "Excessive pride or self-confidence",
+        "Quiet patience"
+      ],
+      "correct": 2,
+      "explanation": "Hubris is overconfidence, a flaw that often leads to a tragic hero's downfall.",
+      "level": 3
+    },
+    {
+      "question": "What does 'incessant' mean?",
+      "answers": [
+        "Happening only once",
+        "Starting and stopping",
+        "Barely noticeable",
+        "Continuing without pause"
+      ],
+      "correct": 3,
+      "explanation": "Incessant noise goes on and on without stopping.",
+      "level": 3
+    },
+    {
+      "question": "What does 'incongruous' mean?",
+      "answers": [
+        "Perfectly suited",
+        "Carefully matched",
+        "Completely ordinary",
+        "Out of place or not fitting in"
+      ],
+      "correct": 3,
+      "explanation": "Something incongruous seems strange in its setting, like a snowsuit at the beach.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'inept'?",
+      "answers": [
+        "Clumsy",
+        "Incompetent",
+        "Skillful",
+        "Awkward"
+      ],
+      "correct": 2,
+      "explanation": "Inept means lacking skill; skillful is the opposite.",
+      "level": 3
+    },
+    {
+      "question": "What does 'insatiable' mean?",
+      "answers": [
+        "Easily pleased",
+        "Impossible to satisfy",
+        "Already full",
+        "Completely bored"
+      ],
+      "correct": 1,
+      "explanation": "An insatiable curiosity can never be fully satisfied.",
+      "level": 3
+    },
+    {
+      "question": "What does 'inundate' mean?",
+      "answers": [
+        "To provide very little of",
+        "To slowly drain away",
+        "To overwhelm with a great amount",
+        "To sort into groups"
+      ],
+      "correct": 2,
+      "explanation": "To inundate is to flood, as in being inundated with emails.",
+      "level": 3
+    },
+    {
+      "question": "What does 'irreverent' mean?",
+      "answers": [
+        "Deeply respectful",
+        "Strictly obedient",
+        "Showing a lack of respect for serious things",
+        "Easily frightened"
+      ],
+      "correct": 2,
+      "explanation": "Irreverent humor pokes fun at things others treat seriously.",
+      "level": 3
+    },
+    {
+      "question": "What does 'juxtapose' mean?",
+      "answers": [
+        "To hide one behind another",
+        "To merge into one",
+        "To place side by side for contrast",
+        "To arrange alphabetically"
+      ],
+      "correct": 2,
+      "explanation": "Writers juxtapose ideas to highlight their differences.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'lethargic'?",
+      "answers": [
+        "Sluggish",
+        "Listless",
+        "Energetic",
+        "Drowsy"
+      ],
+      "correct": 2,
+      "explanation": "Lethargic means sluggish and lacking energy; energetic is the opposite.",
+      "level": 3
+    },
+    {
+      "question": "What does 'malleable' mean?",
+      "answers": [
+        "Impossible to change",
+        "Extremely fragile",
+        "Able to be shaped or influenced",
+        "Sharp and pointed"
+      ],
+      "correct": 2,
+      "explanation": "Malleable metals like gold can be hammered into shapes; malleable minds can be influenced.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'exasperate'?",
+      "answers": [
+        "Infuriate",
+        "Soothe",
+        "Delight",
+        "Reassure"
+      ],
+      "correct": 0,
+      "explanation": "To exasperate is to irritate someone intensely.",
+      "level": 3
+    },
+    {
+      "question": "What does 'mundane' mean?",
+      "answers": [
+        "Thrilling and unusual",
+        "Mysterious and magical",
+        "Grand and impressive",
+        "Ordinary and lacking excitement"
+      ],
+      "correct": 3,
+      "explanation": "Mundane tasks, like folding laundry, are routine and dull.",
+      "level": 3
+    },
+    {
+      "question": "What does 'nonchalant' mean?",
+      "answers": [
+        "Visibly anxious",
+        "Wildly enthusiastic",
+        "Bitterly angry",
+        "Calm and casually unconcerned"
+      ],
+      "correct": 3,
+      "explanation": "A nonchalant person seems relaxed and untroubled.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'novice'?",
+      "answers": [
+        "Expert",
+        "Beginner",
+        "Apprentice",
+        "Newcomer"
+      ],
+      "correct": 0,
+      "explanation": "A novice is a beginner; an expert has great skill or knowledge.",
+      "level": 3
+    },
+    {
+      "question": "What does 'ostentatious' mean?",
+      "answers": [
+        "Showy and meant to impress",
+        "Modest and understated",
+        "Old and worn out",
+        "Practical and useful"
+      ],
+      "correct": 0,
+      "explanation": "Ostentatious displays are designed to attract attention and admiration.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'paradox'?",
+      "answers": [
+        "A statement that is plainly false",
+        "A statement that seems to contradict itself",
+        "A word that imitates a sound",
+        "A long, detailed comparison"
+      ],
+      "correct": 1,
+      "explanation": "A paradox seems contradictory but may reveal a truth, like 'Less is more.'",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'prudent'?",
+      "answers": [
+        "Wise",
+        "Rash",
+        "Hasty",
+        "Naive"
+      ],
+      "correct": 0,
+      "explanation": "Prudent means showing good judgment and care for the future.",
+      "level": 3
+    },
+    {
+      "question": "What does 'aloof' mean?",
+      "answers": [
+        "Warm and welcoming",
+        "Eager to join in",
+        "Not friendly; keeping one's distance",
+        "Loud and excitable"
+      ],
+      "correct": 2,
+      "explanation": "An aloof person stays emotionally distant from others.",
+      "level": 3
+    },
+    {
+      "question": "What does 'prodigious' mean?",
+      "answers": [
+        "Tiny and unimportant",
+        "Ordinary and average",
+        "Weak and fragile",
+        "Remarkably great in size or ability"
+      ],
+      "correct": 3,
+      "explanation": "A prodigious talent is impressively large or extraordinary.",
+      "level": 3
+    },
+    {
+      "question": "Choose the word that best completes: 'To ___ the upset customer, the manager offered a full refund.'",
+      "answers": [
+        "provoke",
+        "placate",
+        "replicate",
+        "abdicate"
+      ],
+      "correct": 1,
+      "explanation": "To placate is to calm someone by making concessions.",
+      "level": 3
+    },
+    {
+      "question": "What does 'prolific' mean?",
+      "answers": [
+        "Producing very little",
+        "Working only in secret",
+        "Producing a great deal of work",
+        "Refusing to share"
+      ],
+      "correct": 2,
+      "explanation": "A prolific author writes many books.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'propensity'?",
+      "answers": [
+        "A natural tendency to behave a certain way",
+        "A legal right to property",
+        "A sudden change of heart",
+        "A rule set by others"
+      ],
+      "correct": 0,
+      "explanation": "A propensity is an inclination, as in a propensity for daydreaming.",
+      "level": 3
+    },
+    {
+      "question": "What does 'recalcitrant' mean?",
+      "answers": [
+        "Stubbornly uncooperative",
+        "Eager to please",
+        "Quick to apologize",
+        "Easily persuaded"
+      ],
+      "correct": 0,
+      "explanation": "A recalcitrant person resists authority or control.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'refute'?",
+      "answers": [
+        "Disprove",
+        "Rebut",
+        "Contradict",
+        "Confirm"
+      ],
+      "correct": 3,
+      "explanation": "To refute is to prove something false; to confirm is to show it is true.",
+      "level": 3
+    },
+    {
+      "question": "What does 'rejuvenate' mean?",
+      "answers": [
+        "To make fresh or youthful again",
+        "To make tired or worn",
+        "To make older",
+        "To make smaller"
+      ],
+      "correct": 0,
+      "explanation": "A vacation can rejuvenate you, restoring your energy.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'nuance'?",
+      "answers": [
+        "A dramatic change in plot",
+        "A slight difference in meaning or tone",
+        "A loud, obvious contrast",
+        "A word with no meaning"
+      ],
+      "correct": 1,
+      "explanation": "A nuance is a fine shade of difference that careful readers notice.",
+      "level": 3
+    },
+    {
+      "question": "What does 'repudiate' mean?",
+      "answers": [
+        "To accept with gratitude",
+        "To reject as untrue or unjust",
+        "To repeat word for word",
+        "To repair carefully"
+      ],
+      "correct": 1,
+      "explanation": "To repudiate a claim is to refuse to accept it.",
+      "level": 3
+    },
+    {
+      "question": "Which word is a synonym of 'resolute'?",
+      "answers": [
+        "Wavering",
+        "Uncertain",
+        "Fickle",
+        "Steadfast"
+      ],
+      "correct": 3,
+      "explanation": "Resolute means firmly determined and unwavering, so 'steadfast' is a synonym.",
+      "level": 3
+    },
+    {
+      "question": "What does 'reverence' mean?",
+      "answers": [
+        "Bitter resentment",
+        "Mild amusement",
+        "Casual indifference",
+        "Deep respect and admiration"
+      ],
+      "correct": 3,
+      "explanation": "Reverence is profound respect, like reverence for one's elders.",
+      "level": 3
+    },
+    {
+      "question": "What is 'rhetoric'?",
+      "answers": [
+        "The art of persuasive speaking or writing",
+        "The study of ancient rocks",
+        "A form of mathematics",
+        "A style of painting"
+      ],
+      "correct": 0,
+      "explanation": "Rhetoric is the skillful use of language to persuade an audience.",
+      "level": 3
+    },
+    {
+      "question": "What does 'sanguine' mean?",
+      "answers": [
+        "Optimistic, especially in a hard situation",
+        "Hopeless and gloomy",
+        "Furious and bitter",
+        "Bored and restless"
+      ],
+      "correct": 0,
+      "explanation": "A sanguine outlook stays cheerful and confident despite difficulty.",
+      "level": 3
+    },
+    {
+      "question": "What is 'satire'?",
+      "answers": [
+        "A sad poem about loss",
+        "A factual news report",
+        "Humor used to criticize foolishness",
+        "A formal legal document"
+      ],
+      "correct": 2,
+      "explanation": "Satire uses irony, exaggeration, or ridicule to expose and criticize flaws.",
+      "level": 3
+    },
+    {
+      "question": "What does 'verbatim' mean?",
+      "answers": [
+        "In a shortened form",
+        "In a different language",
+        "In your own words",
+        "In exactly the same words"
+      ],
+      "correct": 3,
+      "explanation": "A verbatim quote repeats the original words exactly.",
+      "level": 3
+    },
+    {
+      "question": "What does 'sporadic' mean?",
+      "answers": [
+        "Happening on a strict schedule",
+        "Never happening at all",
+        "Occurring at irregular intervals",
+        "Happening constantly"
+      ],
+      "correct": 2,
+      "explanation": "Sporadic rain falls now and then, not continuously.",
+      "level": 3
+    },
+    {
+      "question": "What does 'spurious' mean?",
+      "answers": [
+        "Authentic and verified",
+        "Simple and obvious",
+        "False, though made to seem genuine",
+        "Ancient and rare"
+      ],
+      "correct": 2,
+      "explanation": "A spurious claim looks believable but is not true.",
+      "level": 3
+    },
+    {
+      "question": "What does 'stoic' mean?",
+      "answers": [
+        "Complaining constantly",
+        "Easily moved to tears",
+        "Enduring hardship without showing feelings",
+        "Wildly emotional"
+      ],
+      "correct": 2,
+      "explanation": "A stoic person bears pain or trouble calmly and without complaint.",
+      "level": 3
+    },
+    {
+      "question": "What does 'tacit' mean?",
+      "answers": [
+        "Announced loudly",
+        "Written in a contract",
+        "Understood without being stated",
+        "Debated at length"
+      ],
+      "correct": 2,
+      "explanation": "A tacit agreement is understood by everyone even though no one says it aloud.",
+      "level": 3
+    },
+    {
+      "question": "What does 'tenuous' mean?",
+      "answers": [
+        "Very weak or slight",
+        "Strong and secure",
+        "Long and detailed",
+        "Bright and obvious"
+      ],
+      "correct": 0,
+      "explanation": "A tenuous connection is flimsy and could easily break.",
+      "level": 3
+    },
+    {
+      "question": "What is a 'catalyst'?",
+      "answers": [
+        "Something that stops all change",
+        "Something that causes or speeds up change",
+        "A rule that cannot be broken",
+        "A record of past events"
+      ],
+      "correct": 1,
+      "explanation": "A catalyst sparks change, in chemistry or in events.",
+      "level": 3
+    },
+    {
+      "question": "What does 'vacillate' mean?",
+      "answers": [
+        "To waver between different opinions",
+        "To decide quickly and firmly",
+        "To refuse to speak",
+        "To agree with everyone"
+      ],
+      "correct": 0,
+      "explanation": "To vacillate is to go back and forth, unable to decide.",
+      "level": 3
+    },
+    {
+      "question": "What does 'lament' mean?",
+      "answers": [
+        "To celebrate a victory",
+        "To explain a process",
+        "To predict the future",
+        "To express deep sorrow or regret"
+      ],
+      "correct": 3,
+      "explanation": "To lament is to mourn or express grief about something.",
+      "level": 3
+    },
+    {
+      "question": "What does 'veracity' mean?",
+      "answers": [
+        "Truthfulness or accuracy",
+        "Speed or quickness",
+        "Dishonesty or deceit",
+        "Strength or force"
+      ],
+      "correct": 0,
+      "explanation": "Veracity is the quality of being true; reporters check the veracity of claims.",
+      "level": 3
+    },
+    {
+      "question": "What does 'vigilant' mean?",
+      "answers": [
+        "Careless and inattentive",
+        "Sleepy and slow",
+        "Cheerful and carefree",
+        "Keeping careful watch for danger"
+      ],
+      "correct": 3,
+      "explanation": "A vigilant lifeguard watches the water closely at all times.",
+      "level": 3
+    },
+    {
+      "question": "Which word is an antonym of 'lucrative'?",
+      "answers": [
+        "Profitable",
+        "Unprofitable",
+        "Rewarding",
+        "Moneymaking"
+      ],
+      "correct": 1,
+      "explanation": "Lucrative means producing a lot of money; unprofitable is the opposite.",
+      "level": 3
+    },
+    {
+      "question": "What does 'zealous' mean?",
+      "answers": [
+        "Showing no interest at all",
+        "Feeling deeply ashamed",
+        "Showing great energy for a cause",
+        "Acting with suspicion"
+      ],
+      "correct": 2,
+      "explanation": "A zealous volunteer works with intense enthusiasm.",
+      "level": 3
+    },
+    {
+      "question": "What does the prefix 'omni-' mean in 'omnivore'?",
+      "answers": [
+        "All",
+        "None",
+        "Half",
+        "Few"
+      ],
+      "correct": 0,
+      "explanation": "Omni- means all, so an omnivore eats all kinds of food, plants and animals.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'chron' mean in 'chronic' and 'synchronize'?",
+      "answers": [
+        "Color",
+        "Time",
+        "Sound",
+        "Light"
+      ],
+      "correct": 1,
+      "explanation": "Chron means time, so to synchronize is to make things happen at the same time.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'phil' mean in 'philanthropy'?",
+      "answers": [
+        "Fear",
+        "Study",
+        "Hatred",
+        "Love"
+      ],
+      "correct": 3,
+      "explanation": "Phil means love, and philanthropy literally means love of humanity.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'path' mean in 'sympathy' and 'apathy'?",
+      "answers": [
+        "Road",
+        "Thought",
+        "Feeling",
+        "Power"
+      ],
+      "correct": 2,
+      "explanation": "Path means feeling or suffering, so apathy means without feeling.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'ver' mean in 'verify' and 'verdict'?",
+      "answers": [
+        "Truth",
+        "Speed",
+        "Green",
+        "Turn"
+      ],
+      "correct": 0,
+      "explanation": "Ver means truth, so a verdict is a judgment of what is true.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'loqu' mean in 'eloquent' and 'loquacious'?",
+      "answers": [
+        "Write",
+        "Speak",
+        "Hear",
+        "See"
+      ],
+      "correct": 1,
+      "explanation": "Loqu means to speak, so a loquacious person talks a great deal.",
+      "level": 3
+    },
+    {
+      "question": "What does the root 'magn' mean in 'magnify' and 'magnitude'?",
+      "answers": [
+        "Small",
+        "Pull",
+        "Great",
+        "Bright"
+      ],
+      "correct": 2,
+      "explanation": "Magn means great or large, so to magnify is to make something appear larger.",
+      "level": 3
+    },
+    {
+      "question": "What does the prefix 'circum-' mean in 'circumnavigate'?",
+      "answers": [
+        "Across",
+        "Below",
+        "Against",
+        "Around"
+      ],
+      "correct": 3,
+      "explanation": "Circum- means around, so to circumnavigate is to sail all the way around.",
+      "level": 3
+    },
+    {
+      "question": "What does the prefix 'mal-' mean in 'malfunction' and 'malnourished'?",
+      "answers": [
+        "Again",
+        "Fully",
+        "Badly",
+        "Partly"
+      ],
+      "correct": 2,
+      "explanation": "Mal- means bad or badly, so a malfunction is a failure to work properly.",
+      "level": 3
+    },
+    {
+      "question": "What does the prefix 'pseudo-' mean in 'pseudonym'?",
+      "answers": [
+        "Ancient",
+        "Famous",
+        "False",
+        "Shared"
+      ],
+      "correct": 2,
+      "explanation": "Pseudo- means false, so a pseudonym is a false name, like a pen name.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Arid is to desert as humid is to ___.'",
+      "answers": [
+        "glacier",
+        "rainforest",
+        "mountain",
+        "canyon"
+      ],
+      "correct": 1,
+      "explanation": "Arid describes a desert's climate, and humid describes a rainforest's climate.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Apprentice is to master as student is to ___.'",
+      "answers": [
+        "classroom",
+        "teacher",
+        "lesson",
+        "classmate"
+      ],
+      "correct": 1,
+      "explanation": "An apprentice learns from a master just as a student learns from a teacher.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Sculptor is to chisel as surgeon is to ___.'",
+      "answers": [
+        "scalpel",
+        "hospital",
+        "patient",
+        "operation"
+      ],
+      "correct": 0,
+      "explanation": "A chisel is the sculptor's tool, and a scalpel is the surgeon's tool.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Drought is to water as famine is to ___.'",
+      "answers": [
+        "heat",
+        "rain",
+        "farm",
+        "food"
+      ],
+      "correct": 3,
+      "explanation": "A drought is a severe lack of water; a famine is a severe lack of food.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Generous is to miserly as candid is to ___.'",
+      "answers": [
+        "honest",
+        "frank",
+        "open",
+        "evasive"
+      ],
+      "correct": 3,
+      "explanation": "Generous and miserly are antonyms, so candid pairs with its antonym, evasive.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Fledgling is to bird as sapling is to ___.'",
+      "answers": [
+        "flower",
+        "seed",
+        "forest",
+        "tree"
+      ],
+      "correct": 3,
+      "explanation": "A fledgling is a young bird, and a sapling is a young tree.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Diligent is to lazy as transparent is to ___.'",
+      "answers": [
+        "clear",
+        "opaque",
+        "glassy",
+        "visible"
+      ],
+      "correct": 1,
+      "explanation": "Diligent and lazy are opposites, so transparent pairs with its opposite, opaque.",
+      "level": 3
+    },
+    {
+      "question": "Complete the analogy: 'Thermometer is to temperature as odometer is to ___.'",
+      "answers": [
+        "speed",
+        "distance",
+        "weight",
+        "time"
+      ],
+      "correct": 1,
+      "explanation": "A thermometer measures temperature, and an odometer measures distance traveled.",
+      "level": 3
+    },
+    {
+      "question": "Which word for someone who saves money has the most negative connotation?",
+      "answers": [
+        "Economical",
+        "Prudent",
+        "Sensible",
+        "Miserly"
+      ],
+      "correct": 3,
+      "explanation": "Miserly suggests a selfish, extreme unwillingness to spend; the others are neutral or positive.",
+      "level": 3
+    },
+    {
+      "question": "A student states her views firmly but respectfully. Which word describes her most positively?",
+      "answers": [
+        "Aggressive",
+        "Assertive",
+        "Domineering",
+        "Overbearing"
+      ],
+      "correct": 1,
+      "explanation": "Assertive has a positive connotation of confident respect; the others suggest hostility or control.",
+      "level": 3
+    },
+    {
+      "question": "Which word for a plan carries the most negative connotation?",
+      "answers": [
+        "Scheme",
+        "Strategy",
+        "Proposal",
+        "Blueprint"
+      ],
+      "correct": 0,
+      "explanation": "Scheme often suggests a secret or dishonest plan, unlike the neutral alternatives.",
+      "level": 3
+    },
+    {
+      "question": "In 'The blacksmith tempered the steel to make it stronger,' what does 'tempered' mean?",
+      "answers": [
+        "Hardened by heating and cooling",
+        "Lost control of emotions",
+        "Softened a harsh statement",
+        "Measured the temperature of"
+      ],
+      "correct": 0,
+      "explanation": "Temper has several meanings; with steel, it means to strengthen through heat treatment.",
+      "level": 3
+    },
+    {
+      "question": "In 'She qualified her claim by adding \"in most cases,\"' what does 'qualified' mean?",
+      "answers": [
+        "Earned a place in",
+        "Proved completely",
+        "Became licensed for",
+        "Limited or modified"
+      ],
+      "correct": 3,
+      "explanation": "To qualify a statement is to limit it so it is not absolute.",
+      "level": 3
+    },
+    {
+      "question": "In 'The new medicine arrested the spread of the infection,' what does 'arrested' mean?",
+      "answers": [
+        "Took into police custody",
+        "Sped up dramatically",
+        "Stopped or halted",
+        "Attracted the attention of"
+      ],
+      "correct": 2,
+      "explanation": "Arrest can mean to take into custody, but here it means to stop progress.",
+      "level": 3
     }
   ],
   "minigame_context_clues": [
