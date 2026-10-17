@@ -64,6 +64,8 @@ interface UnlockData {
   equipped: { dice: string; confetti: string; music: string; golden: string[] }
   /** One-time rewards already paid (e.g. arcade medal tiers per game). */
   claimed: string[]
+  /** Practice participation tickets paid today (capped so mashing keys can't farm tickets). */
+  practice: { day: string; paid: number }
 }
 
 const KEY = 'vocab-party-unlocks'
@@ -77,6 +79,7 @@ function fresh(): UnlockData {
     owned: [...FREE],
     equipped: { dice: 'dice_classic', confetti: 'confetti_classic', music: 'music_board', golden: [] },
     claimed: [],
+    practice: { day: '', paid: 0 },
   }
 }
 
@@ -107,6 +110,10 @@ function load(): UnlockData {
             golden: strings(eq.golden).filter(id => owned.includes(id)),
           },
           claimed: strings(p.claimed),
+          practice: {
+            day: typeof p.practice?.day === 'string' ? p.practice.day : '',
+            paid: nat(p.practice?.paid),
+          },
         }
         return cache
       }
@@ -243,9 +250,21 @@ export function rewardParty(opts: { bestHumanTrophies: number; humanWon: boolean
   return earnTickets(base + opts.bestHumanTrophies * 4 + (opts.humanWon ? 15 : 0), 'Party finished')
 }
 
-/** Arcade practice: a little for playing, plus a one-time bonus per medal tier per game. */
-export function rewardArcade(gameId: string, tier: 0 | 1 | 2 | 3): number {
-  let total = earnTickets(2, 'Practice round')
+const PRACTICE_DAILY_CAP = 30
+
+/**
+ * Arcade practice: a little for a real attempt (daily cap), plus a one-time bonus per medal tier
+ * per game. `earnest` = the score reached at least an Easy CPU's floor.
+ */
+export function rewardArcade(gameId: string, tier: 0 | 1 | 2 | 3, earnest = true): number {
+  const d = load()
+  const today = new Date().toISOString().slice(0, 10)
+  if (d.practice.day !== today) d.practice = { day: today, paid: 0 }
+  let total = 0
+  if (earnest && d.practice.paid < PRACTICE_DAILY_CAP) {
+    d.practice.paid += 2
+    total += earnTickets(2, 'Practice round')
+  }
   const bonus = [0, 5, 10, 20]
   for (let t = 1; t <= tier; t++) total += earnTickets(bonus[t], ['', 'Bronze medal', 'Silver medal', 'Gold medal'][t], `medal:${gameId}:${t}`)
   return total
