@@ -278,7 +278,7 @@ export class MenuScene extends Phaser.Scene {
 
     const hint = this.add.text(w / 2, h - 48, touch
       ? `Tap ${save ? 'CONTINUE PARTY' : 'ENTER PARTY'} to begin`
-      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  L = Word Lists  ·  P = Shop  ·  ? = Help' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  L = Word Lists  ·  P = Shop  ·  ? = Help', {
+      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  T = Word Lists  ·  P = Shop  ·  ? = Help' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  T = Word Lists  ·  P = Shop  ·  ? = Help', {
       fontSize: '14px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -319,7 +319,7 @@ export class MenuScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-W', goBook)
     this.input.keyboard?.on('keydown-P', goShop)
     this.input.keyboard?.on('keydown-A', goArcade)
-    this.input.keyboard?.on('keydown-L', goLists)
+    this.input.keyboard?.on('keydown-T', goLists)
     this.input.keyboard?.on('keydown', openHowToFromKeyboard)
     this.input.keyboard?.on('keydown-H', onHelpKey)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -329,7 +329,7 @@ export class MenuScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown-W', goBook)
       this.input.keyboard?.off('keydown-P', goShop)
       this.input.keyboard?.off('keydown-A', goArcade)
-      this.input.keyboard?.off('keydown-L', goLists)
+      this.input.keyboard?.off('keydown-T', goLists)
       this.input.keyboard?.off('keydown', openHowToFromKeyboard)
       this.input.keyboard?.off('keydown-H', onHelpKey)
     })

@@ -85,7 +85,7 @@ node scripts/check-boards.mjs
 8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
 9. Games **autosave** at the start of every turn — pick **Continue Party** on the main menu to resume.
 10. The **📖 Word Book** (main menu) tracks every word you've practiced on this device, with mastery levels, definitions, and a *Practice weak words* mode.
-11. **🏅 Achievements** — 27 badges for parties, minigames, boards, word mastery and collecting; view them from the Word Book. Each one pays 15 Party Tickets.
+11. **🏅 Achievements** — 26 badges for parties, minigames, boards, word mastery and collecting; view them from the Word Book. Each one pays 15 Party Tickets.
 12. **📝 Word Lists (for teachers)** — paste this week's vocabulary (`word - definition | example sentence`, `word: definition`, spreadsheet columns or CSV) or start from a sample list, then set it active. Board vocab questions and the minigames then play with your words. Lists stay on this device.
 13. **🎟️ Party Shop** — earn Party Tickets by finishing parties (more for trophies and wins against CPUs), Arcade practice and medals (capped daily), and achievements. Spend them on cosmetics only: dice colours, golden characters, confetti styles and extra board music. No learning content is ever locked.
 
@@ -160,7 +160,7 @@ Vocab-Party/
     │   ├── SaveGame.ts      # Autosave / Continue Party
     │   ├── Progress.ts      # Word Book progress (localStorage)
     │   ├── CpuPolicy.ts     # CPU decision-making
-    │   ├── GameSettings.ts  # Audio and accessibility settings
+    │   ├── GameSettings.ts  # Audio, accessibility and CPU speed settings
     │   ├── SpriteFactory.ts # Procedural tiles, tokens, Kenney compositing
     │   ├── ExternalAssetKeys.ts
     │   └── Sfx.ts           # Sound effects and music

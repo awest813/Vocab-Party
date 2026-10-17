@@ -27,7 +27,7 @@ import {
 } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
-import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { getSettings, isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx, type MusicTrack } from '../systems/Sfx'
 import { equippedBoardTrack, isEquipped } from '../systems/Unlocks'
 import type { QuestionResolution } from './QuestionScene'
@@ -140,7 +140,7 @@ export class BoardScene extends Phaser.Scene {
   /** Scaled delay: CPU turns play faster so humans aren't left waiting between their turns. */
   private d(ms: number) {
     const cpuTurn = this.state?.players?.[this.state.currentPlayer]?.isCpu
-    return scaleAutoSimDelay(cpuTurn ? Math.round(ms * 0.6) : ms)
+    return scaleAutoSimDelay(cpuTurn ? Math.round(ms * (getSettings().cpuSpeed === 'fast' ? 0.35 : 0.6)) : ms)
   }
 
   constructor() { super('BoardScene') }

@@ -14,7 +14,11 @@ export type GameSettings = {
   reducedMotion: boolean
   /** Vocabulary difficulty for questions and minigames. */
   wordLevel: WordLevel
+  /** How quickly CPU players take their board turns. */
+  cpuSpeed: CpuSpeed
 }
+
+export type CpuSpeed = 'normal' | 'fast'
 
 /** 'custom' plays the teacher's active word list (see WordLists.ts); it filters like 'all'. */
 export type WordLevel = 'all' | 'starter' | 'standard' | 'challenge' | 'custom'
@@ -56,6 +60,7 @@ const DEFAULTS: GameSettings = {
   musicVolume: 0.35,
   reducedMotion: false,
   wordLevel: 'all',
+  cpuSpeed: 'normal',
 }
 
 let cached: GameSettings | null = null
@@ -77,6 +82,7 @@ export function getSettings(): GameSettings {
         musicVolume: clamp01(typeof parsed.musicVolume === 'number' ? parsed.musicVolume : DEFAULTS.musicVolume),
         reducedMotion: Boolean(parsed.reducedMotion),
         wordLevel: STORED_LEVELS.includes(parsed.wordLevel as WordLevel) ? parsed.wordLevel as WordLevel : DEFAULTS.wordLevel,
+        cpuSpeed: parsed.cpuSpeed === 'fast' ? 'fast' : 'normal',
       }
       return { ...cached }
     }

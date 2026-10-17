@@ -246,7 +246,7 @@ export class SetupScene extends Phaser.Scene {
 
     this.add.text(w / 2, rosterTop + 24, touch
       ? 'Tap portrait or name tag to change character  ·  Tap START'
-      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  L words  ·  W word lists  ·  M minigames  ·  B bonus  ·  Enter', {
+      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  L words  ·  T word lists  ·  M minigames  ·  B bonus  ·  Enter', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -355,7 +355,7 @@ export class SetupScene extends Phaser.Scene {
       else if (ev.code === 'KeyG') this.cycleBoard()
       else if (ev.code === 'KeyL') this.cycleWordLevel()
       else if (ev.code === 'KeyB') this.toggleBonusStars()
-      else if (ev.code === 'KeyW') this.openWordLists()
+      else if (ev.code === 'KeyT') this.openWordLists()
     }
     this.input.keyboard?.on('keydown', onRules)
     this.events.once('shutdown', () => this.input.keyboard?.off('keydown', onRules))

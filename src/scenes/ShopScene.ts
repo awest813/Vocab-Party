@@ -26,6 +26,8 @@ export class ShopScene extends Phaser.Scene {
   private grid?: Phaser.GameObjects.Container
   private ticketText!: Phaser.GameObjects.Text
   private tabButtons: Phaser.GameObjects.Container[] = []
+  /** Music track being previewed in the shop, if any. */
+  private previewing?: string
 
   constructor() { super('ShopScene') }
 
@@ -33,6 +35,7 @@ export class ShopScene extends Phaser.Scene {
     const w = this.scale.width
     const h = this.scale.height
     this.tab = 'dice'
+    this.previewing = undefined
     this.grid = undefined
     this.tabButtons = []
 
@@ -134,6 +137,18 @@ export class ShopScene extends Phaser.Scene {
     c.add(g)
 
     c.add(this.preview(item, 0, -CARD_H / 2 + 54))
+    // Music can be heard before buying: ▶ plays the track while you browse the shop.
+    if (item.kind === 'music' && item.track) {
+      const track = item.track
+      const play = createButton(this, CARD_W / 2 - 40, -CARD_H / 2 + 34, '▶', COLORS.bgPanelAlt, COLORS.chromeDeep, 54, 40)
+      play.on('pointerdown', () => {
+        Sfx.startMusic(track)
+        this.previewing = track
+        this.renderGrid()
+      })
+      if (this.previewing === track) setButtonFill(play, COLORS.party)
+      c.add(play)
+    }
     c.add(this.add.text(0, 6, item.name, {
       fontSize: '19px', fontFamily: FONT.display, color: '#ffffff',
     }).setOrigin(0.5))

@@ -33,7 +33,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
     x: w / 2,
     y: h / 2,
     width: 520,
-    height: 500,
+    height: 580,
     fill: COLORS.bgPanel,
     border: COLORS.gold,
     borderAlpha: 0.4,
@@ -45,7 +45,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
     animateIn: true,
   })
 
-  const plate = createInsetPlate(scene, 0, 20, 460, 320, {
+  const plate = createInsetPlate(scene, 0, 45, 460, 370, {
     fill: COLORS.bgDeep,
     fillAlpha: 0.35,
     border: COLORS.strokeSoft,
@@ -177,7 +177,28 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   })
   panel.add(motionBtn)
 
-  const controlsNote = scene.add.text(0, 158, 'Tip: Esc pauses · 1–4 answers questions', {
+  // CPU turn speed
+  makeLabel(170, 'CPU turn speed')
+  const cpuBtn = createButton(
+    scene,
+    140,
+    170,
+    settings.cpuSpeed === 'fast' ? 'FAST' : 'NORMAL',
+    settings.cpuSpeed === 'fast' ? COLORS.skyBtn : COLORS.chrome,
+    settings.cpuSpeed === 'fast' ? COLORS.skyBtnDeep : COLORS.chromeDeep,
+    140,
+    44
+  )
+  cpuBtn.on('pointerdown', () => {
+    settings = setSettings({ cpuSpeed: settings.cpuSpeed === 'fast' ? 'normal' : 'fast' })
+    setButtonLabel(cpuBtn, settings.cpuSpeed === 'fast' ? 'FAST' : 'NORMAL')
+    setButtonFill(cpuBtn, settings.cpuSpeed === 'fast' ? COLORS.skyBtn : COLORS.chrome)
+    Sfx.uiToggle()
+    opts.onChange?.(settings)
+  })
+  panel.add(cpuBtn)
+
+  const controlsNote = scene.add.text(0, 212, 'Tip: Esc pauses · 1–4 answers questions', {
     fontSize: '13px',
     fontFamily: FONT.body,
     color: hexColor(COLORS.mute),
@@ -186,7 +207,7 @@ export function openSettingsPanel(scene: Phaser.Scene, opts: SettingsPanelOpts =
   }).setOrigin(0.5)
   panel.add(controlsNote)
 
-  const closeBtn = createButton(scene, 0, 214, '✕  CLOSE', COLORS.danger, COLORS.dangerDeep, 200, 48)
+  const closeBtn = createButton(scene, 0, 252, '✕  CLOSE', COLORS.danger, COLORS.dangerDeep, 200, 48)
   panel.add(closeBtn)
 
   root.add([overlay, panel])

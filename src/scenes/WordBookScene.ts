@@ -9,10 +9,10 @@ import { addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { ContentBank } from '../minigames/ContentBank'
 import { ACHIEVEMENTS, isUnlocked } from '../systems/Achievements'
-import { findListEntry } from '../systems/WordLists'
+import { findListEntry, getActiveList } from '../systems/WordLists'
 import type { MinigameSceneData } from './MinigameScene'
 
-type Filter = 'all' | Mastery
+type Filter = 'all' | Mastery | 'list'
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: 'all', label: 'ALL' },
@@ -103,8 +103,12 @@ export class WordBookScene extends Phaser.Scene {
       fontSize: '13px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
     }).setOrigin(0, 0.5)
 
-    FILTERS.forEach((f, i) => {
-      const btn = createButton(this, 140 + i * 186, 160, f.label, COLORS.bgPanelAlt, COLORS.chromeDeep, 176, 44)
+    // With a teacher's list active, a fifth tab shows every list word (seen or not yet).
+    this.filters = getActiveList() ? [...FILTERS, { id: 'list', label: '📝 MY LIST' }] : FILTERS
+    const tabW = this.filters.length > 4 ? 152 : 176
+    const tabStep = tabW + 10
+    this.filters.forEach((f, i) => {
+      const btn = createButton(this, 40 + tabW / 2 + i * tabStep, 160, f.label, COLORS.bgPanelAlt, COLORS.chromeDeep, tabW, 44)
       btn.on('pointerdown', () => this.setFilter(f.id))
       this.tabButtons.push(btn)
     })
@@ -134,13 +138,13 @@ export class WordBookScene extends Phaser.Scene {
     if (weak.length === 0) setButtonEnabled(practice, false)
 
     // Right of the pager, so it never runs under the ▶ button.
-    this.add.text(w * 0.75, h - 12, isTouchPreferred(this.sys.game) ? 'Tap a word for details' : '1–4 filters · ←/→ pages · click a word for details · Esc back', {
+    this.add.text(w * 0.75, h - 12, isTouchPreferred(this.sys.game) ? 'Tap a word for details' : 'Number keys filter · ←/→ pages · click a word for details · Esc back', {
       fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute),
     }).setOrigin(0.5, 1)
 
     const onKey = (ev: KeyboardEvent) => {
-      const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4'].indexOf(ev.code)
-      if (idx >= 0) this.setFilter(FILTERS[idx].id)
+      const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5'].indexOf(ev.code)
+      if (idx >= 0 && this.filters[idx]) this.setFilter(this.filters[idx].id)
       else if (ev.code === 'ArrowLeft') this.turnPage(-1)
       else if (ev.code === 'ArrowRight') this.turnPage(1)
       else if (ev.code === 'Escape') {
@@ -233,7 +237,17 @@ export class WordBookScene extends Phaser.Scene {
     }
   }
 
+  private filters = FILTERS
+
   private entries(): [string, WordRecord][] {
+    if (this.filter === 'list') {
+      const words = getProgress().words
+      const unseen: WordRecord = { correct: 0, wrong: 0, lastSeen: 0 }
+      return (getActiveList()?.words ?? []).map(e => {
+        const key = e.word.trim().toLowerCase()
+        return [key, words[key] ?? unseen] as [string, WordRecord]
+      })
+    }
     return Object.entries(getProgress().words)
       .filter(([, r]) => this.filter === 'all' || masteryOf(r) === this.filter)
       .sort((a, b) => b[1].lastSeen - a[1].lastSeen)
@@ -260,7 +274,7 @@ export class WordBookScene extends Phaser.Scene {
     this.gridLayer?.destroy()
     const layer = this.add.container(0, 0)
     this.gridLayer = layer
-    this.tabButtons.forEach((b, i) => b.setAlpha(FILTERS[i].id === this.filter ? 1 : 0.6))
+    this.tabButtons.forEach((b, i) => b.setAlpha(this.filters[i]?.id === this.filter ? 1 : 0.6))
 
     const list = this.entries()
     const pages = Math.max(1, Math.ceil(list.length / PER_PAGE))
