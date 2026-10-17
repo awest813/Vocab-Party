@@ -61,7 +61,13 @@ export class BonusStarsScene extends Phaser.Scene {
     if (!reduce) addAmbientMotes(this, 24)
 
     const awards = applyBonusAwards(state)
-    const toResults = () => this.scene.start('ResultsScene', { state })
+    // Guard: a click + Enter in the same frame must not start Results (and pay the party) twice.
+    let leaving = false
+    const toResults = () => {
+      if (leaving) return
+      leaving = true
+      this.scene.start('ResultsScene', { state })
+    }
 
     const title = this.add.text(w / 2, 74, '🌟 BONUS STARS! 🌟', {
       fontSize: '58px', fontFamily: FONT.display, color: hexColor(COLORS.gold),

@@ -125,6 +125,13 @@ function load(): UnlockData {
   return cache
 }
 
+// Another tab changed tickets/unlocks: drop the cache so we never overwrite its newer data.
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', e => {
+    if (e.key === KEY || e.key === null) cache = null
+  })
+}
+
 function save() {
   try {
     if (cache) localStorage.setItem(KEY, JSON.stringify(cache))
@@ -139,16 +146,6 @@ export function getTickets(): number {
 
 export function getLifetimeTickets(): number {
   return load().earned
-}
-
-/** How many different minigames have a medal of at least `tier` (1 bronze, 2 silver, 3 gold). */
-export function medalCount(tier: 1 | 2 | 3): number {
-  const games = new Set<string>()
-  for (const c of load().claimed) {
-    const m = /^medal:(.+):([123])$/.exec(c)
-    if (m && Number(m[2]) >= tier) games.add(m[1])
-  }
-  return games.size
 }
 
 export function isOwned(id: string): boolean {
@@ -258,7 +255,8 @@ const PRACTICE_DAILY_CAP = 30
  */
 export function rewardArcade(gameId: string, tier: 0 | 1 | 2 | 3, earnest = true): number {
   const d = load()
-  const today = new Date().toISOString().slice(0, 10)
+  const now = new Date()
+  const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
   if (d.practice.day !== today) d.practice = { day: today, paid: 0 }
   let total = 0
   if (earnest && d.practice.paid < PRACTICE_DAILY_CAP) {

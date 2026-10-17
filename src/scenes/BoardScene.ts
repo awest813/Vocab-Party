@@ -29,7 +29,7 @@ import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
-import { equippedBoardTrack } from '../systems/Unlocks'
+import { equippedBoardTrack, isEquipped } from '../systems/Unlocks'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
 import { recordWords, wordFromQuestion } from '../systems/Progress'
@@ -2519,7 +2519,8 @@ export class BoardScene extends Phaser.Scene {
     const swap = p.isCpu ? '' : isTouchPreferred(this.sys.game) ? '   (tap die ⇄)' : '   (D ⇄)'
     this.dieLabel.setText(`${die.emoji} ${die.name}: ${faceSummary(die)}${swap}`)
     // Lightened tint keeps dark character colors (e.g. the ninja) readable on the die.
-    if (p.useCharacterDie) this.diceSprite.setTint(Phaser.Display.Color.IntegerToColor(characterDef(p.characterIndex).color).lighten(35).color)
+    // Character dice are tinted only on the classic skin; tinting a Party Shop colour muddies it.
+    if (p.useCharacterDie && isEquipped('dice_classic')) this.diceSprite.setTint(Phaser.Display.Color.IntegerToColor(characterDef(p.characterIndex).color).lighten(35).color)
     else this.diceSprite.clearTint()
     this.dieFaceText?.setText('')
     this.diceSprite.setAlpha(1)

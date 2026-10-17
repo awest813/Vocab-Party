@@ -49,7 +49,8 @@ export class ResultsScene extends Phaser.Scene {
       recordGame(humanWon, boardId)
       rewardParty({
         bestHumanTrophies: Math.max(0, ...state.players.filter(p => !p.isCpu).map(p => p.trophies)),
-        humanWon,
+        // The win bonus needs a CPU rival, so a solo player running several "humans" can't farm it.
+        humanWon: humanWon && state.players.some(p => p.isCpu),
         rounds: state.round,
       })
       // Record immediately (leaving Results quickly must not lose them); toasts are DOM overlays.

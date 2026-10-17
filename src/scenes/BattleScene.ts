@@ -338,7 +338,7 @@ export class BattleScene extends Phaser.Scene {
 
     if (dmg > 0) {
       this.statusText.setText(dmg >= 5 ? `💥 CRITICAL HIT! ${dmg} damage!` : `💥 HIT! ${dmg} damage`)
-      Sfx.hit(dmg >= 4)
+      Sfx.hit(dmg >= 5)
       if (!shouldReduceMotion()) {
         this.cameras.main.shake(300, 0.02)
         this.cameras.main.flash(200, 255, 0, 0, true)

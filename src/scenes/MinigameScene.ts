@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { CPU_LEVEL_LABEL, type CpuLevel } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
-import { medalCount, rewardArcade } from '../systems/Unlocks'
+import { rewardArcade } from '../systems/Unlocks'
 import { Sfx } from '../systems/Sfx'
 import { characterTextureKey } from '../systems/SpriteFactory'
 import { createButton } from '../ui/Button'
@@ -839,10 +839,11 @@ export class MinigameScene extends Phaser.Scene {
       // Reactions: the winner hops with a crown, last place droops.
       if (!shouldReduceMotion() && !isAutoSimMode()) {
         const last = place === Math.max(...rows.map(r => result.placements[r.id])) && rows.length > 1
-        if (place === 1) {
+        const someoneBehind = rows.some(r => result.placements[r.id] > 1)
+        if (place === 1 && someoneBehind) {
           row.add(this.add.text(-240, -40, '👑', { fontSize: '26px' }).setOrigin(0.5))
           this.tweens.add({ targets: face, y: -9, duration: 320, yoyo: true, repeat: -1, ease: 'Quad.easeOut', delay: this.d(900) })
-        } else if (last) {
+        } else if (last && someoneBehind) {
           this.tweens.add({ targets: face, angle: -12, y: 4, duration: 700, delay: this.d(1100), ease: 'Sine.easeInOut' })
           row.add(this.add.text(-208, -26, '💧', { fontSize: '18px' }).setOrigin(0.5).setAlpha(0.85))
         }
@@ -916,8 +917,10 @@ export class MinigameScene extends Phaser.Scene {
       if (score >= this.def.cpu.hard[1]) unlock('gold_medal')
       const bests = getPersonalBests()
       if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all')
-      if (medalCount(3) >= 5) unlock('gold_5')
-      if (medalCount(1) >= MINIGAMES.length) unlock('bronze_all')
+      // Medal achievements follow the same personal-best thresholds the Arcade shows.
+      const medalled = (tier: 'easy' | 'hard') => MINIGAMES.filter(m => (bests[m.id] ?? 0) >= m.cpu[tier][1]).length
+      if (medalled('hard') >= 5) unlock('gold_5')
+      if (medalled('easy') >= MINIGAMES.length) unlock('bronze_all')
     }
 
     const panel = createPanel(this, {

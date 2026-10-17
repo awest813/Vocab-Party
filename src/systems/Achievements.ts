@@ -4,11 +4,25 @@ import { getProgress, masteryOf, saveProgress } from './Progress'
 import { shouldReduceMotion } from './GameSettings'
 import { getLifetimeTickets, getTickets, onTickets, rewardAchievement } from './Unlocks'
 
-// Every ticket reward gets the same corner toast as achievements.
+// Ticket rewards that arrive together (practice + medal bonuses, an achievement's payout, …)
+// are summed into one corner toast instead of a queue of tiny ones.
+let pendingTickets = 0
+let pendingReasons: string[] = []
+let ticketFlush: ReturnType<typeof setTimeout> | undefined
 onTickets((gained, reason) => {
-  showAchievementToast({
-    id: 'tickets', icon: '🎟️', kicker: 'PARTY TICKETS', title: `+${gained} tickets`, desc: `${reason} · ${getTickets()} to spend in the Party Shop`,
-  })
+  pendingTickets += gained
+  if (!pendingReasons.includes(reason)) pendingReasons.push(reason)
+  if (ticketFlush === undefined) {
+    ticketFlush = setTimeout(() => {
+      const why = pendingReasons.length > 2 ? `${pendingReasons.slice(0, 2).join(', ')} and more` : pendingReasons.join(' + ')
+      showAchievementToast({
+        id: 'tickets', icon: '🎟️', kicker: 'PARTY TICKETS', title: `+${pendingTickets} tickets`, desc: `${why} · ${getTickets()} to spend in the Party Shop`,
+      })
+      pendingTickets = 0
+      pendingReasons = []
+      ticketFlush = undefined
+    }, 400)
+  }
   if (getLifetimeTickets() >= 500) unlock('tickets_500')
 })
 

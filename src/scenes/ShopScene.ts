@@ -173,7 +173,8 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private activate(item: UnlockItem) {
-    if (!isOwned(item.id)) {
+    const purchased = !isOwned(item.id)
+    if (purchased) {
       const result = buy(item.id)
       if (result !== 'ok') {
         Sfx.clunk()
@@ -191,7 +192,7 @@ export class ShopScene extends Phaser.Scene {
     if (item.kind === 'dice') generateDiceTextures(this)
     if (item.kind === 'golden') generatePlayerTextures(this)
     if (item.kind === 'music' && item.track && isEquipped(item.id)) Sfx.startMusic(item.track)
-    if (item.kind === 'confetti' && isEquipped(item.id)) showConfetti(this, this.scale.width / 2, 220)
+    if (item.kind === 'confetti' && isEquipped(item.id) && !purchased) showConfetti(this, this.scale.width / 2, 220)
     this.refreshWallet()
     this.renderGrid()
   }

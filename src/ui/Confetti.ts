@@ -56,7 +56,9 @@ function showEmojiConfetti(scene: Phaser.Scene, cx: number, cy: number, emoji: s
 
 /** Single-palette burst (e.g. Gold Rush) using the white glow particle, tinted. */
 function showTintedConfetti(scene: Phaser.Scene, cx: number, cy: number, colors: number[]): void {
-  const key = scene.textures.exists(TEXTURE_KEYS.particleWhite) ? TEXTURE_KEYS.particleWhite : TEXTURE_KEYS.particleSquare
+  // The Canvas renderer ignores tint, so it uses the pre-coloured yellow glow instead.
+  const canvas = scene.game.renderer.type === Phaser.CANVAS
+  const key = canvas ? TEXTURE_KEYS.particleYellow : scene.textures.exists(TEXTURE_KEYS.particleWhite) ? TEXTURE_KEYS.particleWhite : TEXTURE_KEYS.particleSquare
   if (!scene.textures.exists(key)) return
   const emitter = scene.add.particles(cx, cy, key, {
     speed: { min: 140, max: 400 },
