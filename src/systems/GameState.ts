@@ -107,6 +107,8 @@ export interface GameState {
   roundsPerGame?: number
   /** Filled in by the bonus-star ceremony at game end. */
   bonusAwards?: BonusAward[]
+  /** Current tide on boards with a tide event (saved so Continue restores the same graph). */
+  tide?: 'high' | 'low'
 }
 
 export interface BonusAward {

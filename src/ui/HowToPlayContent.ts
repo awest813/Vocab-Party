@@ -25,7 +25,7 @@ export const HOW_TO_TILES: HowToTile[] = [
 ]
 
 export const HOW_TO_RULES = [
-  '🎭 Setup: pick characters, a board, a word level, and Quick / Classic / Full Map',
+  '🎭 Setup: pick characters, one of 4 boards (G), a word level, and Quick / Classic / Full Map',
   '🎲 Roll to move — or switch to your character\'s special die (D / tap the die)',
   '📖 Vocab & grammar tiles ask questions for points',
   '🏆 Stars: land on OR walk past a star tile to buy — rich players can buy several at once',
@@ -33,6 +33,7 @@ export const HOW_TO_RULES = [
   '⚔️ Landing on another player starts a battle',
   '🎉 After each round everyone plays a vocab minigame — 1st place wins 10 coins',
   '🔥 Last Stretch: final rounds double bonus/penalty tiles; last place gets a boost',
+  '🌊 Thesaurus Tides: the tide turns every 3 rounds — low tide opens a sandbar shortcut',
   '🌟 Bonus Stars at the end: Word Wizard, Minigame Master, Explorer (+1 🏆 each)',
   '🎯 First to 5 trophies wins — or most trophies (then score) when rounds end',
   '💾 Games autosave every turn · 📖 the Word Book tracks every word you practice',

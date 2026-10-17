@@ -186,6 +186,39 @@ const SUMMIT_TILES: TileType[] = [
   'vocab', 'penalty', 'bonus', 'vocab', 'penalty',
 ]
 
+/**
+ * Thesaurus Tides: an island coastline. A cliff path (11 -> 44 -> 15) skips the star cove, and a
+ * sandbar causeway (28 -> 45..48 -> 39) cuts across the bay, but only while the tide is out.
+ */
+const TIDES_COORDS: [number, number][] = [
+  [0, 5], [0, 4], [0, 3], [0, 2], [1, 2], [1, 1], [2, 1], [2, 0], [3, 0], [4, 0], // 0-9: west cliffs
+  [5, 0], [6, 0], [6, 1], [7, 1], [8, 1], [8, 0], [9, 0], [10, 0], [11, 0], [11, 1], // 10-19: north cove
+  [11, 2], [11, 3], [11, 4], [11, 5], [11, 6], [11, 7], [10, 7], [9, 7], [8, 7], [8, 6], // 20-29: east shore
+  [8, 5], [8, 4], [7, 4], [6, 4], [5, 4], [4, 4], [3, 4], [3, 5], [3, 6], [3, 7], // 30-39: around the bay
+  [2, 7], [1, 7], [0, 7], [0, 6], // 40-43: south beach
+  [7, 0], // 44: cliff path
+  [7, 7], [6, 7], [5, 7], [4, 7], // 45-48: sandbar causeway
+]
+const TIDES_NODES: BoardNode[] = TIDES_COORDS.map(([col, row], id) => {
+  let next: number[]
+  if (id === 11) next = [12, 44]
+  else if (id === 43) next = [0]
+  else if (id === 44) next = [15]
+  else if (id === 48) next = [39]
+  else next = [id + 1]
+  return { id, col, row, next }
+})
+
+const TIDES_TILES: TileType[] = [
+  'start', 'vocab', 'grammar', 'star', 'vocab', 'bonus', 'shop', 'grammar', 'mystery', 'vocab',
+  'item_shop', 'grammar', 'bonus', 'star', 'penalty', 'vocab', 'shop', 'minigame', 'vocab', 'penalty',
+  'grammar', 'bonus', 'item_shop', 'star', 'penalty', 'brick', 'mystery', 'swap', 'vocab', 'penalty',
+  'shop', 'minigame', 'vocab', 'bonus', 'star', 'grammar', 'brick', 'penalty', 'vocab', 'minigame',
+  'shop', 'vocab', 'bonus', 'mystery',
+  'brick',
+  'bonus', 'mystery', 'item_shop', 'grammar',
+]
+
 export interface BoardTheme {
   stageTop: number
   stageBottom: number
@@ -211,9 +244,37 @@ export interface BoardDef {
   logo: { cx: number; cy: number; w: number; h: number; compact?: boolean }
   /** Ambient decorations placed in empty cells. */
   decor: { col: number; row: number; emoji: string }[]
+  /** Optional signature gimmick. Boards without one use `nodes`/`tiles` unchanged. */
+  event?: BoardEvent
 }
 
-export type BoardId = 'loop' | 'garden' | 'summit'
+export type TidePhase = 'high' | 'low'
+
+/**
+ * "Tide Turn": the tide flips every `period` rounds (rounds 1..period are high tide).
+ * At low tide extra edges open (a sandbar causeway) and some shore tiles swap type.
+ * At high tide the sandbar nodes are submerged: nothing leads onto them, and anyone
+ * standing there when the water returns is washed back to `washTo`.
+ * `nodes`/`tiles` on the board describe high tide; see resolveNodes / resolveTiles.
+ */
+export interface TideEvent {
+  kind: 'tides'
+  period: number
+  /** Edges that only exist at low tide (appended to the `from` node's next[]). */
+  lowTideEdges: { from: number; to: number }[]
+  /** Nodes under water at high tide (only reachable via a low-tide edge). */
+  sandbar: number[]
+  /** Where players on a flooding sandbar are washed to. */
+  washTo: number
+  /** Tile types that replace the normal ones at low tide (shore tiles). */
+  lowTideTiles: Record<number, TileType>
+  /** Purely visual sea cells (empty grid cells drawn as animated water). */
+  water: { col: number; row: number }[]
+}
+
+export type BoardEvent = TideEvent
+
+export type BoardId = 'loop' | 'garden' | 'summit' | 'tides'
 
 export const BOARDS: BoardDef[] = [
   {
@@ -255,6 +316,33 @@ export const BOARDS: BoardDef[] = [
       { col: 9, row: 3, emoji: '❄️' }, { col: 1, row: 3, emoji: '🌲' }, { col: 1, row: 5, emoji: '🌲' },
     ],
   },
+  {
+    id: 'tides',
+    name: 'Thesaurus Tides',
+    emoji: '🌊',
+    tagline: 'An island coast where the tide turns every 3 rounds. Low tide opens a sandbar shortcut and flips the 🌊 shore tiles.',
+    nodes: TIDES_NODES,
+    tiles: TIDES_TILES,
+    theme: { stageTop: 0x03101c, stageBottom: 0x0a2638, cell: 0x2a2617, cellLine: 0x5c4e2c, frame: 0x6fe0f0, glow: 0x48cae4 },
+    logo: { cx: 6, cy: 3, w: 420, h: 88, compact: true },
+    decor: [
+      { col: 0, row: 0, emoji: '⛵' }, { col: 6, row: 6, emoji: '🐬' }, { col: 2, row: 5, emoji: '🐚' },
+      { col: 9, row: 5, emoji: '🦀' }, { col: 10, row: 4, emoji: '🌴' }, { col: 10, row: 2, emoji: '🏝️' },
+    ],
+    event: {
+      kind: 'tides',
+      period: 3,
+      lowTideEdges: [{ from: 28, to: 45 }],
+      sandbar: [45, 46, 47, 48],
+      washTo: 28,
+      lowTideTiles: { 29: 'bonus', 33: 'penalty', 37: 'bonus', 42: 'penalty' },
+      water: [
+        { col: 0, row: 0 }, { col: 1, row: 0 }, { col: 0, row: 1 },
+        { col: 4, row: 5 }, { col: 5, row: 5 }, { col: 6, row: 5 }, { col: 7, row: 5 },
+        { col: 4, row: 6 }, { col: 5, row: 6 }, { col: 6, row: 6 }, { col: 7, row: 6 },
+      ],
+    },
+  },
 ]
 
 export function getBoard(id: string | undefined): BoardDef {
@@ -264,3 +352,30 @@ export function getBoard(id: string | undefined): BoardDef {
 /** Default board (legacy exports kept for callers that only need the classic layout). */
 export const BOARD_NODES = LOOP_NODES
 export const BOARD_PATH_LENGTH = LOOP_NODES.length
+
+/** Tide phase for a round (1-based): `period` rounds of high tide, then `period` of low, ... */
+export function tideForRound(event: TideEvent, round: number): TidePhase {
+  return Math.floor((Math.max(1, round) - 1) / Math.max(1, event.period)) % 2 === 0 ? 'high' : 'low'
+}
+
+/** The board graph as it currently stands (low-tide edges added when the tide is out). */
+export function resolveNodes(board: BoardDef, tide?: TidePhase): BoardNode[] {
+  const ev = board.event
+  if (!ev || tide !== 'low') return board.nodes
+  return board.nodes.map(n => {
+    const extra = ev.lowTideEdges.filter(e => e.from === n.id).map(e => e.to)
+    return extra.length > 0 ? { ...n, next: [...n.next, ...extra] } : n
+  })
+}
+
+/** Tile types as they currently stand (shore tiles swap at low tide). */
+export function resolveTiles(board: BoardDef, tide?: TidePhase): TileType[] {
+  const ev = board.event
+  if (!ev || tide !== 'low') return board.tiles
+  return board.tiles.map((t, i) => ev.lowTideTiles[i] ?? t)
+}
+
+/** True when `node` is under water right now (no player may stand there). */
+export function isSubmerged(board: BoardDef, tide: TidePhase | undefined, node: number): boolean {
+  return board.event?.kind === 'tides' && tide === 'high' && board.event.sandbar.includes(node)
+}

@@ -38,6 +38,9 @@ npm run preview
 # Lint and typecheck
 npm run lint
 npm run typecheck
+
+# Board balance check (reachability, star spread, tile mix — every board and tide phase)
+node scripts/check-boards.mjs
 ```
 
 ---
@@ -45,7 +48,7 @@ npm run typecheck
 ## Game Instructions
 
 1. **1–4 players** take turns (human or CPU). Pick characters, a map length, a board, and party rules in setup:
-   - **Boards:** 📚 Lexicon Loop (classic ring + inner shortcut) · 🌷 Grammar Garden (ring split by a garden path) · 🏔️ Spelling Summit (long switchback climb with a skip-ahead ledge)
+   - **Board** (press **G** in setup to cycle) — see the board table below
    - **Quick** — 5 rounds · **Classic** — 10 rounds · **Full Map** — one round per tile on the chosen board
    - **Words:** All levels, Starter (grades 3–5), Standard (6–8), or Challenge (9–12) — applies to board questions and every minigame
    - **Minigames:** every round (default), every other round, or duel tiles only
@@ -67,6 +70,13 @@ npm run typecheck
 | 🏆 Star | Spend 20 coins for a trophy (+12 score). You can also buy when you walk past a star tile, and you can buy several in one visit if you can afford them; if you can't afford it, you get +2 pity coins |
 | 🧱 Brick | Collect pieces for build bonuses |
 | 🛍️ Item Shop | Pick a power-up card or pass |
+
+| Board | Tiles | Shape | Twist |
+|-------|-------|-------|-------|
+| 📚 Lexicon Loop | 44 | Classic ring with an inner shortcut | — |
+| 🌷 Grammar Garden | 42 | Ring split by a straight garden path | — |
+| 🏔️ Spelling Summit | 55 | Long switchback climb with a skip-ahead ledge | — |
+| 🌊 Thesaurus Tides | 49 | Island coastline with a cliff path past the star cove | **Tide Turn:** the tide flips every 3 rounds (rounds 1–3 high, 4–6 low, …). At low tide a sandbar causeway opens across the bay (a 4-tile shortcut that skips 10 tiles) and the 🌊-marked shore tiles flip ⭐ Bonus ↔ 💀 Penalty. When the tide comes back in, anyone on the sandbar is washed ashore. |
 
 4. **Party minigames:** after every round, all players compete in a randomly chosen minigame (a roulette picks it). Placement pays coins: 1st +10, 2nd +5, 3rd +2. Several humans take turns on the same device (hot-seat); CPUs play alongside with live "ghost" scores.
 5. **Last Stretch:** in the final rounds, bonus and penalty tiles double and the last-place player gets a +10 coin comeback boost.

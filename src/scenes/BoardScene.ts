@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS } from '../systems/GameState'
 import { characterDie, faceSummary, maxMove, rollBlockDie, rollDie, STANDARD_DIE, type DieDef } from '../systems/DiceSystem'
-import { BOARD_COLS, BOARD_ROWS, BoardNode, getBoard, type BoardDef } from '../systems/BoardLayout'
+import { BOARD_COLS, BOARD_ROWS, BoardNode, getBoard, isSubmerged, resolveNodes, resolveTiles, tideForRound, type BoardDef, type TidePhase } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
 import { PlayerHUD } from '../ui/PlayerHUD'
 import { showConfetti } from '../ui/Confetti'
@@ -100,8 +100,15 @@ const DUEL_WIN_POINTS = 10
 
 export class BoardScene extends Phaser.Scene {
   private state!: GameState
+  /** Current board graph (changes with the tide on boards that have a tide event). */
   private nodes!: BoardNode[]
+  /** Current tile types (shore tiles change with the tide). */
+  private tiles!: TileType[]
   private board!: BoardDef
+  /** Tile index → centre glyph (retextured when the tide flips shore tiles). */
+  private tileGlyphs = new Map<number, Phaser.GameObjects.Text>()
+  /** Water sheets drawn over the sandbar while it is submerged. */
+  private floodSheets: Phaser.GameObjects.GameObject[] = []
   private roundsPerGame = DEFAULT_ROUNDS_PER_GAME
   private boardOriginX!: number
   private boardOriginY!: number
@@ -138,7 +145,7 @@ export class BoardScene extends Phaser.Scene {
   constructor() { super('BoardScene') }
 
   private getTileTypeAt(tileIndex: number): TileType {
-    return this.board.tiles[tileIndex] ?? 'vocab'
+    return this.tiles[tileIndex] ?? 'vocab'
   }
 
   private countOwnedShops(ownerId: number): number {
@@ -146,6 +153,20 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private describeTile(tileIndex: number, type: TileType): string {
+    const base = this.describeTileBase(tileIndex, type)
+    const ev = this.board.event
+    if (ev?.kind !== 'tides') return base
+    if (ev.sandbar.includes(tileIndex)) {
+      return `${base}  🏖️ Sandbar: ${this.state.tide === 'low' ? 'open until the tide comes in' : 'under water until low tide'}.`
+    }
+    if (ev.lowTideTiles[tileIndex]) {
+      const other = this.state.tide === 'low' ? this.board.tiles[tileIndex] : ev.lowTideTiles[tileIndex]
+      return `${base}  🌊 Shore tile: becomes ${TILE_NAMES[other]} when the tide turns.`
+    }
+    return base
+  }
+
+  private describeTileBase(tileIndex: number, type: TileType): string {
     switch (type) {
       case 'start':
         return `Tile ${tileIndex}: START — pass by for +5 coins, land for +3 score/+3 coins.`
@@ -203,6 +224,8 @@ export class BoardScene extends Phaser.Scene {
     this.shopOwners = {}
     this.shopOwnerDots = new Map()
     this.tileImages = new Map()
+    this.tileGlyphs = new Map()
+    this.floodSheets = []
     this.rolling = false
     this.choiceModal = undefined
     this.itemMenu = undefined
@@ -230,7 +253,16 @@ export class BoardScene extends Phaser.Scene {
     }
     this.state.roundsPerGame = this.roundsPerGame
     this.board = getBoard(this.state.options.board)
-    this.nodes = this.board.nodes
+    if (this.board.event?.kind === 'tides') {
+      const saved = this.state.tide
+      this.state.tide = saved === 'high' || saved === 'low' ? saved : tideForRound(this.board.event, this.state.round)
+    } else {
+      delete this.state.tide
+    }
+    this.nodes = resolveNodes(this.board, this.state.tide)
+    this.tiles = resolveTiles(this.board, this.state.tide)
+    // A save can never strand anyone underwater (e.g. hand-edited or from an older build).
+    this.state.players.forEach(p => { p.position = this.dryLand(p.position) })
 
     const boardW = BOARD_COLS * TILE_SIZE
     const boardH = BOARD_ROWS * TILE_SIZE
@@ -398,6 +430,10 @@ export class BoardScene extends Phaser.Scene {
       await this.showAnnouncement("🎉 LET'S PARTY! 🎉", hexColor(COLORS.gold))
       if (this.state.players.some(p => !p.isCpu) && !hasSeenCoach()) await this.showCoachCard()
       else await this.showAnnouncement(`First to ${TROPHIES_TO_WIN} 🏆 wins!`, hexColor(COLORS.sky))
+      const ev = this.board.event
+      if (ev?.kind === 'tides') {
+        await this.showAnnouncement(`🌊 The tide turns every ${ev.period} rounds!`, '#48cae4')
+      }
     }
     this.rolling = false
     this.updateStatus()
@@ -427,7 +463,7 @@ export class BoardScene extends Phaser.Scene {
 
   private cpuBoardCtx() {
     return {
-      tileTypes: this.board.tiles as string[],
+      tileTypes: this.tiles as string[],
       boardLength: this.nodes.length,
       nextByNode: this.nodes.map(n => n.next),
       round: this.state.round,
@@ -477,9 +513,10 @@ export class BoardScene extends Phaser.Scene {
     }
 
     const nodeSet = new Set(this.nodes.map(p => `${p.col},${p.row}`))
+    const waterSet = new Set((this.board.event?.water ?? []).map(c => `${c.col},${c.row}`))
     for (let row = 0; row < BOARD_ROWS; row++) {
       for (let col = 0; col < BOARD_COLS; col++) {
-        if (nodeSet.has(`${col},${row}`)) continue
+        if (nodeSet.has(`${col},${row}`) || waterSet.has(`${col},${row}`)) continue
         const x = this.boardOriginX + col * TILE_SIZE + TILE_SIZE / 2
         const y = this.boardOriginY + row * TILE_SIZE + TILE_SIZE / 2
         const cell = this.add.graphics().setDepth(-1)
@@ -490,14 +527,18 @@ export class BoardScene extends Phaser.Scene {
       }
     }
 
+    this.drawWater()
+
     // Path underlay glow connecting tiles
     // A visible "road" under the tiles, then a thin glow line along it.
     const road = this.add.graphics().setDepth(-1)
     const roadCol = Phaser.Display.Color.IntegerToColor(this.board.theme.cellLine).lighten(10).color
     road.lineStyle(30, roadCol, 0.55)
-    this.nodes.forEach(node => {
+    // Draw every edge the board can ever have, so the sandbar road is visible under the water.
+    const allNodes = resolveNodes(this.board, 'low')
+    allNodes.forEach(node => {
       node.next.forEach(nextId => {
-        const to = this.nodes[nextId]
+        const to = allNodes[nextId]
         if (!to || Math.abs(to.col - node.col) + Math.abs(to.row - node.row) !== 1) return
         road.lineBetween(
           this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2, this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2,
@@ -508,11 +549,11 @@ export class BoardScene extends Phaser.Scene {
     const pathGlow = this.add.graphics().setDepth(-1)
     pathGlow.lineStyle(6, this.board.theme.glow, 0.35)
     // Follow the real graph edges (index order jumps across the board at the fork).
-    this.nodes.forEach(node => {
+    allNodes.forEach(node => {
       const x1 = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
       const y1 = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
       node.next.forEach(nextId => {
-        const to = this.nodes[nextId]
+        const to = allNodes[nextId]
         if (!to) return
         const x2 = this.boardOriginX + to.col * TILE_SIZE + TILE_SIZE / 2
         const y2 = this.boardOriginY + to.row * TILE_SIZE + TILE_SIZE / 2
@@ -545,6 +586,7 @@ export class BoardScene extends Phaser.Scene {
 
     this.nodes.forEach((node, i) => {
       const type = this.getTileTypeAt(i)
+      const liveType = () => this.getTileTypeAt(i)
       const x = this.boardOriginX + node.col * TILE_SIZE + TILE_SIZE / 2
       const y = this.boardOriginY + node.row * TILE_SIZE + TILE_SIZE / 2
 
@@ -572,7 +614,7 @@ export class BoardScene extends Phaser.Scene {
           duration: 100,
           ease: 'Sine.easeOut',
         })
-        this.tileHintText?.setText(this.describeTile(i, type))
+        this.tileHintText?.setText(this.describeTile(i, liveType()))
       })
       img.on('pointerout', () => {
         this.tweens.add({
@@ -585,7 +627,7 @@ export class BoardScene extends Phaser.Scene {
         this.tileHintText?.setText(this.tileInspectHint())
       })
       img.on('pointerdown', () => {
-        this.tileHintText?.setText(this.describeTile(i, type))
+        this.tileHintText?.setText(this.describeTile(i, liveType()))
         Sfx.uiHover()
       })
 
@@ -600,6 +642,7 @@ export class BoardScene extends Phaser.Scene {
 
       // Center glyph so tile types read at a glance.
       const glyph = this.add.text(x, y + 2, TILE_LABELS[type], { fontSize: '24px' }).setOrigin(0.5).setDepth(1)
+      this.tileGlyphs.set(i, glyph)
       glyph.setScale(0)
       this.tweens.add({ targets: glyph, scale: 1, duration: 400, delay: i * 18 + 120, ease: 'Back.easeOut' })
 
@@ -615,7 +658,14 @@ export class BoardScene extends Phaser.Scene {
       if (type === 'shop') {
         this.refreshShopOwnerBadge(i)
       }
+
+      // Shore tiles carry a little wave badge: they change type when the tide turns.
+      if (this.board.event?.kind === 'tides' && this.board.event.lowTideTiles[i]) {
+        this.add.text(x + TILE_SIZE / 2 - 6, y - TILE_SIZE / 2 + 4, '🌊', { fontSize: '13px' }).setOrigin(1, 0).setDepth(1.5)
+      }
     })
+
+    this.drawFlood(false)
 
     // Brand plate sits in open interior space defined per board, so it never covers path tiles.
     const logo = this.board.logo
@@ -669,9 +719,25 @@ export class BoardScene extends Phaser.Scene {
   }
 
   private tileInspectHint() {
+    const ev = this.board.event
+    if (ev?.kind === 'tides' && this.state) {
+      const n = this.roundsUntilTide()
+      const when = `turns in ${n} round${n === 1 ? '' : 's'}`
+      const tide = this.state.tide === 'low'
+        ? `🏖️ LOW TIDE: sandbar shortcut open, 🌊 shore tiles flipped · ${when}`
+        : `🌊 HIGH TIDE: sandbar flooded · ${when}`
+      return `${tide} · ${isTouchPreferred(this.sys.game) ? 'Tap' : 'Hover'} tiles to inspect.`
+    }
     return isTouchPreferred(this.sys.game)
       ? 'Tap a tile to inspect its effect.'
       : 'Hover or tap a tile to inspect its effect.'
+  }
+
+  /** Rounds until the tide next turns (it flips at the start of round 1 + k·period). */
+  private roundsUntilTide(): number {
+    const ev = this.board.event
+    if (ev?.kind !== 'tides') return 0
+    return ev.period - ((this.state.round - 1) % ev.period)
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
@@ -987,7 +1053,7 @@ export class BoardScene extends Phaser.Scene {
           const idx = cpuChooseBranch(
             player.position,
             options,
-            this.board.tiles as string[],
+            this.tiles as string[],
             player.coins,
             player.trophies,
             player.cpuLevel,
@@ -1147,7 +1213,7 @@ export class BoardScene extends Phaser.Scene {
           ? cpuChooseSwapTarget(
               playerIndex,
               this.state.players,
-              this.board.tiles as string[],
+              this.tiles as string[],
               this.nodes.length,
               player.cpuLevel,
               this.nodes.map(n => n.next),
@@ -1164,8 +1230,9 @@ export class BoardScene extends Phaser.Scene {
       }
       case 'warp':
         player.position = player.isCpu
-          ? cpuChooseWarpPosition(this.nodes.length, this.board.tiles as string[], player.cpuLevel, this.nodes.map(n => n.next))
+          ? cpuChooseWarpPosition(this.nodes.length, this.tiles as string[], player.cpuLevel, this.nodes.map(n => n.next))
           : Phaser.Math.Between(0, this.nodes.length - 1)
+        player.position = this.dryLand(player.position)
         this.updatePlayerTokens()
         Sfx.whoosh()
         this.showFloatyText(player, '🌀 Warped!', '#88ccff')
@@ -2002,7 +2069,7 @@ export class BoardScene extends Phaser.Scene {
       ? cpuChooseSwapTarget(
           playerIndex,
           this.state.players,
-          this.board.tiles as string[],
+          this.tiles as string[],
           this.nodes.length,
           player.cpuLevel,
           this.nodes.map(n => n.next),
@@ -2065,20 +2132,148 @@ export class BoardScene extends Phaser.Scene {
     if (this.state.currentPlayer === 0) {
       this.state.round++
       this.payShopDividends()
-      // Rounds remaining including the one starting now.
-      const roundsLeft = this.roundsPerGame - this.state.round + 1
-      if (!this.state.lastStretchDone && this.state.round >= this.lastStretchStartRound()) {
-        void this.startLastStretch()
+      const ev = this.board.event
+      if (ev?.kind === 'tides' && tideForRound(ev, this.state.round) !== this.state.tide) {
+        this.rolling = true
+        void this.turnTide(tideForRound(ev, this.state.round)).then(() => {
+          this.rolling = false
+          this.startRoundEvents()
+        })
         return
       }
-      if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
-        const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
-        if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
-        this.cameras.main.flash(400, 255, 100, 0, true)
-        this.showAnnouncement(warning, '#ff8800')
-      }
+      this.startRoundEvents()
+      return
     }
     this.updateStatus()
+  }
+
+  /** Round-start beats shared by every board: Last Stretch, then the rounds-left warning. */
+  private startRoundEvents() {
+    // Rounds remaining including the one starting now.
+    const roundsLeft = this.roundsPerGame - this.state.round + 1
+    if (!this.state.lastStretchDone && this.state.round >= this.lastStretchStartRound()) {
+      void this.startLastStretch()
+      return
+    }
+    if (roundsLeft <= 5 && roundsLeft > 0 && !isAutoSimMode()) {
+      const warning = roundsLeft === 1 ? '⚠️ FINAL ROUND! ⚠️' : `⚠️ ${roundsLeft} ROUNDS LEFT! ⚠️`
+      if (!shouldReduceMotion()) this.cameras.main.shake(300, 0.008)
+      this.cameras.main.flash(400, 255, 100, 0, true)
+      this.showAnnouncement(warning, '#ff8800')
+    }
+    this.updateStatus()
+  }
+
+  /** Move a position off a submerged sandbar tile (warps can't strand anyone underwater). */
+  private dryLand(pos: number): number {
+    const ev = this.board.event
+    if (ev?.kind !== 'tides' || !isSubmerged(this.board, this.state.tide, pos)) return pos
+    return ev.washTo
+  }
+
+  /** Animated sea cells (bay, coves) for boards with a tide event. */
+  private drawWater() {
+    const ev = this.board.event
+    if (ev?.kind !== 'tides') return
+    const reduce = shouldReduceMotion()
+    ev.water.forEach((c, i) => {
+      const x = this.boardOriginX + c.col * TILE_SIZE + TILE_SIZE / 2
+      const y = this.boardOriginY + c.row * TILE_SIZE + TILE_SIZE / 2
+      const sea = this.add.graphics().setDepth(-1)
+      sea.fillStyle(0x0b4f74, 0.9)
+      sea.fillRoundedRect(x - TILE_SIZE / 2 + 2, y - TILE_SIZE / 2 + 2, TILE_SIZE - 4, TILE_SIZE - 4, 10)
+      sea.lineStyle(1, 0x48cae4, 0.35)
+      sea.strokeRoundedRect(x - TILE_SIZE / 2 + 2, y - TILE_SIZE / 2 + 2, TILE_SIZE - 4, TILE_SIZE - 4, 10)
+      const wave = this.add.text(x, y + 8, '〰', { fontSize: '22px', color: '#9be8ff' }).setOrigin(0.5).setDepth(-0.9).setAlpha(0.5)
+      if (!reduce) {
+        this.tweens.add({ targets: wave, x: x + 6, alpha: 0.2, duration: 1300 + (i % 4) * 230, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+      }
+    })
+  }
+
+  /** Water sheets over the sandbar while the tide is high (fades in/out when it turns). */
+  private drawFlood(animate: boolean) {
+    const ev = this.board.event
+    if (ev?.kind !== 'tides') return
+    const high = this.state.tide === 'high'
+    const ms = animate ? Math.max(60, this.d(900)) : 0
+    if (this.floodSheets.length === 0) {
+      ev.sandbar.forEach((id, i) => {
+        const { x, y } = this.getTileXY(id)
+        const sheet = this.add.rectangle(x, y, TILE_SIZE + 2, TILE_SIZE + 2, 0x0b5d88, 0.82).setDepth(1.6)
+        sheet.setStrokeStyle(2, 0x9be8ff, 0.5)
+        const wave = this.add.text(x, y, '🌊', { fontSize: '26px' }).setOrigin(0.5).setDepth(1.7)
+        if (!shouldReduceMotion()) {
+          this.tweens.add({ targets: wave, y: y - 5, angle: 6, duration: 900 + i * 140, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+          this.tweens.add({ targets: sheet, fillAlpha: 0.66, duration: 1400 + i * 120, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' })
+        }
+        this.floodSheets.push(sheet, wave)
+      })
+    }
+    this.floodSheets.forEach(o => {
+      const obj = o as Phaser.GameObjects.Components.Alpha & Phaser.GameObjects.GameObject
+      if (ms === 0) obj.setAlpha(high ? 1 : 0)
+      else this.tweens.add({ targets: obj, alpha: high ? 1 : 0, duration: ms, ease: 'Sine.easeInOut' })
+    })
+    ev.sandbar.forEach(id => this.tileImages.get(id)?.setAlpha(high ? 0.45 : 1))
+  }
+
+  /** Tide Turn: flip the board between high and low tide at the start of a round. */
+  private async turnTide(to: TidePhase) {
+    const ev = this.board.event
+    if (ev?.kind !== 'tides') return
+    this.state.tide = to
+    this.nodes = resolveNodes(this.board, to)
+    this.tiles = resolveTiles(this.board, to)
+    const low = to === 'low'
+    this.refreshNextEvent()
+
+    Sfx.tide(low)
+    if (!shouldReduceMotion()) this.cameras.main.shake(260, 0.004)
+    this.cameras.main.flash(380, 60, 170, 230, true)
+    this.drawFlood(true)
+
+    // Shore tiles swap type (bonus ↔ penalty) with a splash.
+    Object.keys(ev.lowTideTiles).map(Number).forEach(i => {
+      const type = this.getTileTypeAt(i)
+      const img = this.tileImages.get(i)
+      const glyph = this.tileGlyphs.get(i)
+      if (img) {
+        const sx = (TILE_SIZE - 2) / img.width
+        const sy = (TILE_SIZE - 2) / img.height
+        this.tweens.add({
+          targets: img, scaleX: 0, duration: Math.max(40, this.d(220)), ease: 'Sine.easeIn',
+          onComplete: () => {
+            img.setTexture(TILE_TEXTURE_KEY(type))
+            img.setScale(0, sy)
+            this.tweens.add({ targets: img, scaleX: sx, scaleY: sy, duration: Math.max(40, this.d(260)), ease: 'Back.easeOut' })
+          },
+        })
+        // Splash ring as the water washes over the tile.
+        const ring = this.add.circle(img.x, img.y, 12, 0x9be8ff, 0).setStrokeStyle(3, 0x9be8ff, 0.9).setDepth(2)
+        this.tweens.add({ targets: ring, radius: TILE_SIZE * 0.75, alpha: 0, duration: Math.max(60, this.d(600)), onComplete: () => ring.destroy() })
+      }
+      glyph?.setText(TILE_LABELS[type])
+    })
+
+    await this.showAnnouncement(low ? '🏖️ LOW TIDE! The sandbar is open!' : '🌊 HIGH TIDE! The sandbar floods!', '#48cae4')
+
+    // Anyone caught on the sandbar is washed back to shore.
+    if (!low) {
+      const swept = this.state.players.filter(p => ev.sandbar.includes(p.position))
+      if (swept.length > 0) {
+        swept.forEach(p => {
+          p.position = ev.washTo
+          this.showFloatyText(p, '🌊 Washed ashore!', '#9be8ff')
+        })
+        Sfx.whoosh()
+        this.updatePlayerTokens(500)
+        await new Promise(r => this.time.delayedCall(this.d(700), r))
+      }
+    }
+    if (!isAutoSimMode()) {
+      await this.showAnnouncement(low ? '🌊 Shore tiles flipped: 💀 ↔ ⭐' : '🌊 Shore tiles are back to normal', '#9be8ff')
+    }
   }
 
   /** Owned shops pay their owner a little every round, so a shop is an investment, not a gamble. */
@@ -2147,7 +2342,13 @@ export class BoardScene extends Phaser.Scene {
     const parts: string[] = []
     if (this.shouldRunPartyMinigame()) parts.push('🎉 Minigame next')
     if (this.isLastStretch()) parts.push('🔥 Last Stretch')
+    const ev = this.board.event
+    if (ev?.kind === 'tides') {
+      // Rounds until the tide next turns (it flips at the start of round 1 + k·period).
+      parts.push(`${this.state.tide === 'low' ? '🏖️ Low tide' : '🌊 High tide'} · turns in ${this.roundsUntilTide()}`)
+    }
     this.nextEventText.setText(parts.join('\n'))
+    if (ev) this.tileHintText?.setText(this.tileInspectHint())
   }
 
   private shouldRunPartyMinigame(): boolean {
@@ -2535,7 +2736,7 @@ export class BoardScene extends Phaser.Scene {
       return
     }
     const next = this.nodes.map(n => n.next)
-    const stars = new Set(this.board.tiles.map((t, i) => (t === 'star' ? i : -1)).filter(i => i > 0))
+    const stars = new Set(this.tiles.map((t, i) => (t === 'star' ? i : -1)).filter(i => i > 0))
     const dist = stepsToNearest(next, p.position, stars)
     const canBuy = p.coins >= STAR_COST_COINS
     const value = (d: DieDef) => {
