@@ -105,6 +105,8 @@ export class WordBookScene extends Phaser.Scene {
 
     // With a teacher's list active, a fifth tab shows every list word (seen or not yet).
     this.filters = getActiveList() ? [...FILTERS, { id: 'list', label: '📝 MY LIST' }] : FILTERS
+    // The remembered tab can vanish (e.g. MY LIST after the word list is switched off).
+    if (!this.filters.some(f => f.id === this.filter)) this.filter = 'all'
     const tabW = this.filters.length > 4 ? 152 : 176
     const tabStep = tabW + 10
     this.filters.forEach((f, i) => {
@@ -143,6 +145,8 @@ export class WordBookScene extends Phaser.Scene {
     }).setOrigin(0.5, 1)
 
     const onKey = (ev: KeyboardEvent) => {
+      // The achievements modal covers the grid: only Esc (close) reaches through.
+      if (this.achLayer && ev.code !== 'Escape') return
       const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5'].indexOf(ev.code)
       if (idx >= 0 && this.filters[idx]) this.setFilter(this.filters[idx].id)
       else if (ev.code === 'ArrowLeft') this.turnPage(-1)

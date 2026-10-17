@@ -166,9 +166,11 @@ export class ShopScene extends Phaser.Scene {
     if (!owned && !affordable) setButtonEnabled(btn, false)
     // Buying takes two taps so a stray tap can't spend a child's tickets.
     let armed = false
+    let armedAt = 0
     btn.on('pointerdown', () => {
       if (!owned && !armed) {
         armed = true
+        armedAt = this.time.now
         Sfx.uiToggle()
         setButtonLabel(btn, `TAP AGAIN TO BUY · 🎟️ ${item.cost}`)
         setButtonFill(btn, COLORS.party)
@@ -180,6 +182,8 @@ export class ShopScene extends Phaser.Scene {
         })
         return
       }
+      // A quick double-tap is one tap, not a confirmation.
+      if (!owned && this.time.now - armedAt < 350) return
       this.activate(item)
     })
     c.add(btn)

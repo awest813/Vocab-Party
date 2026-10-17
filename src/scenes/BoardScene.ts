@@ -1557,7 +1557,7 @@ export class BoardScene extends Phaser.Scene {
     opts?: { skipSwap?: boolean }
   ) {
     this.statusText.setText('⚔️ ENCOUNTER!')
-    if (!shouldReduceMotion()) this.cameras.main.flash(200, 255, 0, 0, true)
+    if (!shouldReduceMotion()) this.cameras.main.flash(200, 150, 30, 30, true)
 
     this.scene.launch('BattleScene', {
       state: this.state,

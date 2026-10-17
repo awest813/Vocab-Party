@@ -4,6 +4,7 @@ import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
 import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
+import { fitText } from '../ui/fitText'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { addVignette, paintStage } from '../ui/Panel'
@@ -136,7 +137,7 @@ export class BonusStarsScene extends Phaser.Scene {
       c.add(ring)
       const key = characterTextureKey(p.characterIndex)
       if (this.textures.exists(key)) c.add(this.add.image(px, 42, key).setDisplaySize(58, 72))
-      c.add(this.add.text(px, 100, p.name, { fontSize: winners.length > 2 ? '15px' : '20px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0.5))
+      c.add(fitText(this.add.text(px, 100, p.name, { fontSize: winners.length > 2 ? '15px' : '20px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0.5), spacing - 8, 11))
     })
     c.add(this.add.text(0, cardH / 2 - 34, '+1 🏆', {
       fontSize: '30px', fontFamily: FONT.display, color: '#44ff88', stroke: '#000000', strokeThickness: 5,

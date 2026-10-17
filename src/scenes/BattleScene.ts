@@ -83,7 +83,7 @@ export class BattleScene extends Phaser.Scene {
     defSide.x += 260
     this.tweens.add({ targets: atkSide, alpha: 1, x: '+=260', duration: this.d(380), delay: this.d(200), ease: 'Back.easeOut' })
     this.tweens.add({ targets: defSide, alpha: 1, x: '-=260', duration: this.d(380), delay: this.d(320), ease: 'Back.easeOut' })
-    if (!shouldReduceMotion()) this.cameras.main.flash(this.d(400), 255, 0, 0, true)
+    if (!shouldReduceMotion()) this.cameras.main.flash(this.d(400), 150, 30, 30, true)
 
     this.time.delayedCall(this.d(1500), () => {
       this.tweens.add({ targets: vsContainer, alpha: 0, duration: this.d(300),
@@ -342,7 +342,7 @@ export class BattleScene extends Phaser.Scene {
       Sfx.hit(dmg >= 5)
       if (!shouldReduceMotion()) {
         this.cameras.main.shake(300, 0.02)
-        this.cameras.main.flash(200, 255, 0, 0, true)
+        this.cameras.main.flash(200, 150, 30, 30, true)
       }
 
       const fx = this.defenderContainer.x

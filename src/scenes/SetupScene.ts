@@ -409,7 +409,7 @@ export class SetupScene extends Phaser.Scene {
     const tier = HEAD_START[level]
     this.boardTagline?.setText(level === 0
       ? 'Head start off — everyone starts even.'
-      : `🎁 Head start ${tier.label}: +${tier.startCoins} coins now and +${tier.perRound} every round — great for younger or newer players.`)
+      : `🎁 Head start ${tier.label}: +${tier.startCoins} coins now, then +${tier.perRound} each new round — great for younger or newer players.`)
     this.taglineTimer?.remove()
     this.taglineTimer = this.time.delayedCall(4000, () => this.refreshPartyOptions())
   }

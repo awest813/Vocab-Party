@@ -13,7 +13,8 @@ import { getProgress, recordGame } from '../systems/Progress'
 import { rewardParty } from '../systems/Unlocks'
 import { unlock } from '../systems/Achievements'
 import { BOARDS, getBoard, lapLength } from '../systems/BoardLayout'
-import { getSettings } from '../systems/GameSettings'
+import { getSettings, shouldReduceMotion } from '../systems/GameSettings'
+import { fitText } from '../ui/fitText'
 
 export class ResultsScene extends Phaser.Scene {
   constructor() { super('ResultsScene') }
@@ -30,7 +31,8 @@ export class ResultsScene extends Phaser.Scene {
 
     paintStage(this, { topColor: COLORS.bgDeep, bottomColor: 0x152038 })
     addStarfieldBackdrop(this, 0.4)
-    addAmbientMotes(this, 32)
+    const reduce = shouldReduceMotion()
+    if (!reduce) addAmbientMotes(this, 32)
     Sfx.startMusic('results')
 
     // Soft gold stage light
@@ -177,6 +179,7 @@ export class ResultsScene extends Phaser.Scene {
       const nameT = this.add.text(x, cardY + 8, player.name, {
         fontSize: '20px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5).setAlpha(0)
+      fitText(nameT, 140)
       // Trophies decide the winner, so they lead; points (the tiebreak) come second.
       const scoreT = this.add.text(x, cardY + 36, `🏆 ${player.trophies}`, {
         fontSize: '22px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
@@ -199,7 +202,7 @@ export class ResultsScene extends Phaser.Scene {
         delay: isAutoSimMode() ? rank * 12 + 24 : rank * 180 + 420,
       })
 
-      if (rank === 0 && !isAutoSimMode()) {
+      if (rank === 0 && !isAutoSimMode() && !reduce) {
         this.tweens.add({
           targets: [cardG, emoji, nameT, scoreT, starT, badge, badgeNum],
           y: '-=10',
@@ -238,7 +241,7 @@ export class ResultsScene extends Phaser.Scene {
       ).setOrigin(0.5).setAlpha(0)
       this.tweens.add({ targets: statsLine, alpha: 1, duration: 400, delay: 400 })
 
-      if (!isAutoSimMode()) {
+      if (!isAutoSimMode() && !reduce) {
         for (let t = 0; t < 10; t++) {
           this.time.delayedCall(t * 320, () => {
             this.createFirework(
@@ -253,38 +256,43 @@ export class ResultsScene extends Phaser.Scene {
     const awards = state.bonusAwards ?? []
     if (awards.length > 0) {
       const line = awards.map(a => `${a.icon} ${a.title.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}: ${a.winners.map(id => state.players.find(p => p.id === id)?.name ?? '?').join(' & ')}`).join('   ·   ')
-      this.add.text(w / 2, 186, line, { fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mist) }).setOrigin(0.5)
+      this.add.text(w / 2, 186, line, {
+        fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mist), align: 'center', wordWrap: { width: w - 120 },
+      }).setOrigin(0.5)
     }
 
     const studyBtn = createButton(this, w / 2, h - 52, '📖 STUDY SHEET', COLORS.warning, 0xd9800f, 260, 56)
     studyBtn.on('pointerdown', () => this.openStudySheet(state))
 
-    const playAgainBtn = createButton(this, w / 2 - 300, h - 52, 'PLAY AGAIN', COLORS.party, COLORS.partyDeep, 280, 56)
-    playAgainBtn.on('pointerdown', () => {
+    // One exit only: a second tap (or tapping both buttons) must not start two scenes.
+    let leaving = false
+    const leave = (key: 'SetupScene' | 'MenuScene', fade: boolean) => {
+      if (leaving) return
+      leaving = true
+      if (!fade) {
+        this.scene.start(key)
+        return
+      }
       this.cameras.main.fadeOut(280, 0, 0, 0)
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-        this.scene.start('SetupScene')
-      })
-    })
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start(key))
+    }
+
+    const playAgainBtn = createButton(this, w / 2 - 300, h - 52, 'PLAY AGAIN', COLORS.party, COLORS.partyDeep, 280, 56)
+    playAgainBtn.on('pointerdown', () => leave('SetupScene', true))
 
     const menuBtn = createButton(this, w / 2 + 300, h - 52, 'MAIN MENU', COLORS.skyDeep, COLORS.skyBtnDeep, 280, 56)
-    menuBtn.on('pointerdown', () => {
-      this.cameras.main.fadeOut(280, 0, 0, 0)
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-        this.scene.start('MenuScene')
-      })
-    })
+    menuBtn.on('pointerdown', () => leave('MenuScene', true))
 
     const onEnter = () => {
       if (this.studySheet) return
-      this.scene.start('SetupScene')
+      leave('SetupScene', false)
     }
     const onEsc = () => {
       if (this.studySheet) {
         this.closeStudySheet()
         return
       }
-      this.scene.start('MenuScene')
+      leave('MenuScene', false)
     }
     this.input.keyboard?.on('keydown-ENTER', onEnter)
     this.input.keyboard?.on('keydown-ESC', onEsc)

@@ -34,6 +34,11 @@ export function readSave(): SaveData | null {
     const board = getBoard(data.state.options?.board)
     if (data.state.players.some(p => typeof p.position !== 'number' || p.position < 0 || p.position >= board.nodes.length || !p.stats)) return null
     if (typeof data.roundsPerGame !== 'number' || data.roundsPerGame < 1) return null
+    const st = data.state
+    if (!Number.isInteger(st.currentPlayer) || st.currentPlayer < 0 || st.currentPlayer >= st.players.length) return null
+    if (!Number.isInteger(st.round) || st.round < 1) return null
+    if (data.shopOwners !== undefined && (typeof data.shopOwners !== 'object' || data.shopOwners === null)) return null
+    if (st.players.some(p => !Array.isArray(p.inventory) || !Array.isArray(p.stats.missed) || typeof p.coins !== 'number')) return null
     // Tide boards store the current tide; anything unexpected is dropped and re-derived from the round.
     if (data.state.tide !== undefined && data.state.tide !== 'high' && data.state.tide !== 'low') delete data.state.tide
     return data

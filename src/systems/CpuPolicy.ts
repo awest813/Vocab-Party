@@ -272,7 +272,8 @@ export function cpuChooseItem(
   const leading = rankAmongPlayers === 0
   const lowOnCoins = coins < 8
   const pressure = endgamePressure(ctx?.round, ctx?.totalRounds)
-  const rivals = ctx?.rivals ?? []
+  // Darts are the only use of these: a shielded rival would just block one.
+  const rivals = (ctx?.rivals ?? []).filter(r => !r.shieldActive)
   const leader = [...rivals].sort((a, b) => {
     if (b.trophies !== a.trophies) return b.trophies - a.trophies
     return b.score - a.score
@@ -315,10 +316,12 @@ export function cpuChooseItem(
   if (!nearStar && starDist > 14 && coins >= starCost - 4) push('warp', 58)
   else if (!nearStar && behind && coins >= starCost - 4) push('warp', 36)
 
-  // Poison: snipe coin leaders / trophy threats
-  if (richestRival && richestRival.coins >= 12 && behind) push('poison_dart', 60)
-  else if (leader && leader.trophies > trophies && leader.coins >= 8) push('poison_dart', 52)
-  else if (behind && Math.random() < 0.35) push('poison_dart', 28)
+  // Poison: snipe coin leaders / trophy threats (unshielded rivals only).
+  if (rivals.length > 0 || !ctx?.rivals) {
+    if (richestRival && richestRival.coins >= 12 && behind) push('poison_dart', 60)
+    else if (leader && leader.trophies > trophies && leader.coins >= 8) push('poison_dart', 52)
+    else if (behind && Math.random() < 0.35) push('poison_dart', 28)
+  }
 
   if (scored.length === 0) return -1
 

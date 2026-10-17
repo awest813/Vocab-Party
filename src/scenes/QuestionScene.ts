@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { createButton, setButtonFill } from '../ui/Button'
+import { createButton, setButtonFill, setButtonLabel } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { createDimmer, createPanel } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
@@ -240,6 +240,26 @@ export class QuestionScene extends Phaser.Scene {
     /** Set once the timer is built; clears it away when the question is answered. */
     let hideTimer = () => {}
 
+    /**
+     * Mark the right answer ✓ (green) and a wrong pick ✗ (red); dim the rest. Marks, not just colour:
+     * answer C is already green, and colour alone fails colour-blind players.
+     */
+    const revealAnswer = (picked: number) => {
+      this.answerContainers.forEach((c, idx) => {
+        this.tweens.killTweensOf(c)
+        if (idx === q.correct) {
+          setButtonFill(c, COLORS.mint)
+          setButtonLabel(c, `✓ ${labels[idx]}: ${q.answers[idx]}`)
+          c.setAlpha(1)
+          this.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, duration: 160, yoyo: true })
+        } else if (idx === picked) {
+          setButtonFill(c, COLORS.danger)
+          setButtonLabel(c, `✗ ${labels[idx]}: ${q.answers[idx]}`)
+          c.setAlpha(1)
+        } else c.setAlpha(0.35)
+      })
+    }
+
     const pickAnswer = (i: number, btn: Phaser.GameObjects.Container | null) => {
       if (answered) return
       answered = true
@@ -249,12 +269,7 @@ export class QuestionScene extends Phaser.Scene {
       const correct = i === q.correct
       const timeBonus = correct ? Math.max(1, Math.ceil(secondsLeft / 3)) : 0
       const speedSurge = correct && secondsLeft >= 10
-      // Highlight correct (green) and picked wrong (red) buttons
-      this.answerContainers.forEach((c, idx) => {
-        if (idx === q.correct) setButtonFill(c, COLORS.mint)
-        else if (idx === i && !correct) setButtonFill(c, COLORS.danger)
-        else c.setAlpha(0.4)
-      })
+      revealAnswer(i)
       this.handleAnswer(correct, timeBonus, speedSurge, btn, onComplete, q.explanation)
     }
 
@@ -379,9 +394,16 @@ export class QuestionScene extends Phaser.Scene {
         const simulatedSecondsLeft = Math.max(1, Math.floor(secondsLeft * Phaser.Math.FloatBetween(0.45, 0.95)))
         const timeBonus = correct ? Math.max(1, Math.ceil(simulatedSecondsLeft / 3)) : 0
         const speedSurge = correct && simulatedSecondsLeft >= 10
+        revealAnswer(pickIndex)
         this.handleAnswer(correct, timeBonus, speedSurge, null, onComplete, q.explanation)
       })
     }
+  }
+
+  /** Brief translucent wash over the screen (a camera flash always starts fully opaque). */
+  private tintFlash(color: number, alpha: number, ms: number) {
+    const veil = this.add.rectangle(0, 0, this.scale.width, this.scale.height, color, alpha).setOrigin(0).setDepth(199)
+    this.tweens.add({ targets: veil, alpha: 0, duration: ms, ease: 'Sine.easeOut', onComplete: () => veil.destroy() })
   }
 
   handleAnswer(
@@ -398,7 +420,7 @@ export class QuestionScene extends Phaser.Scene {
     if (correct) {
       Sfx.correct()
       showConfetti(this)
-      if (!shouldReduceMotion()) this.cameras.main.flash(400, 100, 255, 100)
+      if (!shouldReduceMotion()) this.tintFlash(COLORS.mint, 0.22, 360)
 
       if (speedSurge) {
         // Speed surge particle burst
@@ -429,28 +451,23 @@ export class QuestionScene extends Phaser.Scene {
       banner.add([bg, txt]).setScale(3).setAlpha(0)
       this.tweens.add({ targets: banner, scaleX: 1, scaleY: 1, alpha: 1, duration: 300, ease: 'Expo.easeOut' })
 
-      if (timeBonus > 0) {
-        this.time.delayedCall(this.d(400), () => {
-          this.add.text(w / 2, h / 2 + 100, `SPEED BONUS +${timeBonus}`, {
-            fontSize: '26px', fontFamily: FONT.display, color: '#88ddff', stroke: '#102844', strokeThickness: 4
-          }).setOrigin(0.5).setDepth(201)
-        })
-      }
-      this.time.delayedCall(this.d(600), () => {
-        this.add.text(w / 2, h / 2 + 160, `+${10 + timeBonus} pts`, {
-          fontSize: '22px', fontFamily: FONT.display, color: hexColor(COLORS.mint), stroke: '#004400', strokeThickness: 4
+      // One line in the gap between the banner and the answers (it used to sit on the buttons).
+      this.time.delayedCall(this.d(400), () => {
+        this.add.text(w / 2, h / 2 - 12, `+${10 + timeBonus} pts${timeBonus > 0 ? `   ·   ⚡ speed bonus +${timeBonus}` : ''}`, {
+          fontSize: '24px', fontFamily: FONT.display, color: '#ffffff', stroke: '#0b3d1e', strokeThickness: 5,
         }).setOrigin(0.5).setDepth(201)
       })
     } else {
       Sfx.wrong()
       if (!shouldReduceMotion()) {
-        this.cameras.main.shake(300, 0.01)
-        this.cameras.main.flash(300, 255, 0, 0, true)
+        // A nudge, not a punishment: soft shake and a dim red tint rather than a full red screen.
+        this.cameras.main.shake(220, 0.005)
+        this.tintFlash(COLORS.danger, 0.2, 300)
       }
       
       const banner = this.add.container(w / 2, h / 2 - 92).setDepth(200)
       const bg = this.add.rectangle(0, 0, w, 112, COLORS.danger, 0.55)
-      const txt = this.add.text(0, 0, 'WRONG', {
+      const txt = this.add.text(0, 0, 'NOT QUITE', {
         fontSize: '78px', fontFamily: FONT.display, color: '#ffffff', stroke: '#440000', strokeThickness: 10
       }).setOrigin(0.5)
       banner.add([bg, txt]).setScale(3).setAlpha(0)

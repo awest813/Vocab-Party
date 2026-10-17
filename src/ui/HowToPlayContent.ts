@@ -26,7 +26,7 @@ export const HOW_TO_TILES: HowToTile[] = [
 
 export const HOW_TO_RULES = [
   '🎭 Setup: pick characters, one of 4 boards (G), a word level, and Quick / Classic / Full Map',
-  '🎁 Head start: give a younger or newer player extra coins at the start and every round',
+  '🎁 Head start: give a younger or newer player extra coins at the start and each new round',
   '🎲 Roll to move — or switch to your character\'s special die (D / tap the die)',
   '📖 Vocab & grammar tiles ask questions for points',
   '🏆 Stars: land on OR walk past a star tile to buy — rich players can buy several at once',
