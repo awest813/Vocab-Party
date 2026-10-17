@@ -40,7 +40,8 @@ if (isTouchPreferred()) {
 }
 
 const config: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  // ?renderer=canvas forces the Canvas renderer (fallback for machines with broken/slow WebGL).
+  type: new URLSearchParams(window.location.search).get('renderer') === 'canvas' ? Phaser.CANVAS : Phaser.AUTO,
   parent: 'app',
   backgroundColor: '#070b14',
   scale: {

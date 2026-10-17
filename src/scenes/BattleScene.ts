@@ -67,18 +67,21 @@ export class BattleScene extends Phaser.Scene {
     const vsContainer = this.add.container(w / 2, h / 2).setDepth(100)
     const vsBg = this.add.rectangle(0, 0, w, h, 0x000000, 0.72).setAlpha(0)
     const vsText = this.add.text(0, -20, 'VS', {
-      fontSize: '100px', fontFamily: FONT.display, color: hexColor(COLORS.coral),
+      fontSize: '128px', fontFamily: FONT.display, color: hexColor(COLORS.coral),
       stroke: '#000000', strokeThickness: 12
     }).setOrigin(0.5).setScale(3).setAlpha(0)
 
-    const atkSide = this.createVsToken(attacker, -220, 40, COLORS.coral).setAlpha(0)
-    const defSide = this.createVsToken(defender, 220, 40, COLORS.sky).setAlpha(0)
+    const atkSide = this.createVsToken(attacker, -300, 10, COLORS.coral).setAlpha(0)
+    const defSide = this.createVsToken(defender, 300, 10, COLORS.sky).setAlpha(0)
 
     vsContainer.add([vsBg, vsText, atkSide, defSide])
     this.tweens.add({ targets: vsBg, alpha: 1, duration: this.d(150) })
     this.tweens.add({ targets: vsText, scaleX: 1, scaleY: 1, alpha: 1, duration: this.d(500), ease: 'Back.easeOut' })
-    this.tweens.add({ targets: atkSide, alpha: 1, x: '-=30', duration: this.d(400), delay: this.d(300) })
-    this.tweens.add({ targets: defSide, alpha: 1, x: '+=30', duration: this.d(400), delay: this.d(400) })
+    // Fighters slam in from the edges.
+    atkSide.x -= 260
+    defSide.x += 260
+    this.tweens.add({ targets: atkSide, alpha: 1, x: '+=260', duration: this.d(380), delay: this.d(200), ease: 'Back.easeOut' })
+    this.tweens.add({ targets: defSide, alpha: 1, x: '-=260', duration: this.d(380), delay: this.d(320), ease: 'Back.easeOut' })
     if (!shouldReduceMotion()) this.cameras.main.flash(this.d(400), 255, 0, 0, true)
 
     this.time.delayedCall(this.d(1500), () => {
@@ -109,14 +112,17 @@ export class BattleScene extends Phaser.Scene {
 
   private createVsToken(player: Player, x: number, y: number, accent: number): Phaser.GameObjects.Container {
     const side = this.add.container(x, y)
+    // Big fighters on glowing discs so the face-off reads from across the room.
+    side.add(this.add.circle(0, -10, 92, accent, 0.18))
+    side.add(this.add.circle(0, -10, 78, accent, 0.28).setStrokeStyle(4, accent, 0.9))
     const tex = characterTextureKey(player.characterIndex)
     if (this.textures.exists(tex)) {
-      side.add(this.add.image(0, -8, tex).setDisplaySize(56, 70))
+      side.add(this.add.image(0, -14, tex).setDisplaySize(118, 148))
     } else {
-      side.add(this.add.text(0, 0, player.emoji, { fontSize: '48px' }).setOrigin(0.5))
+      side.add(this.add.text(0, -10, player.emoji, { fontSize: '96px' }).setOrigin(0.5))
     }
-    side.add(this.add.text(0, 52, player.name, {
-      fontSize: '20px', fontFamily: FONT.display, color: hexColor(accent),
+    side.add(this.add.text(0, 112, player.name.toUpperCase(), {
+      fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: hexColor(accent), strokeThickness: 5,
     }).setOrigin(0.5))
     return side
   }
@@ -145,7 +151,7 @@ export class BattleScene extends Phaser.Scene {
 
     const tex = characterTextureKey(player.characterIndex)
     const avatar = this.textures.exists(tex)
-      ? this.add.image(0, -28, tex).setDisplaySize(58, 72)
+      ? this.add.image(0, -24, tex).setDisplaySize(76, 95)
       : this.add.text(0, -28, player.emoji, { fontSize: '64px' }).setOrigin(0.5)
 
     const stats = this.add.text(0, 48, `ATK ${Math.max(1, player.atk)}   DEF ${Math.max(1, player.def)}   EVD ${Math.max(1, player.evd)}`, {
@@ -331,7 +337,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     if (dmg > 0) {
-      this.statusText.setText(`💥 ${dmg} CRITICAL HIT!`)
+      this.statusText.setText(dmg >= 5 ? `💥 CRITICAL HIT! ${dmg} damage!` : `💥 HIT! ${dmg} damage`)
       Sfx.hit(dmg >= 4)
       if (!shouldReduceMotion()) {
         this.cameras.main.shake(300, 0.02)
