@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { TEXTURE_KEYS } from './ExternalAssetKeys'
 import { COLORS } from '../ui/Theme'
+import { equippedDice, isGolden } from './Unlocks'
 
 // Texture key constants — swap any key's source in PreloadScene for a real PNG asset
 export const PLAYER_TEXTURE_KEYS = [
@@ -341,7 +342,14 @@ function tryPortraitToken(scene: Phaser.Scene, key: string, def: CharacterDef): 
   return true
 }
 
-function generateCharacterTexture(scene: Phaser.Scene, key: string, def: CharacterDef): void {
+/** Golden-edition preview texture for the Party Shop (key `preview_golden_<index>`). */
+export function goldenPreviewKey(scene: Phaser.Scene, index: number): string {
+  const key = `preview_golden_${index}`
+  if (!scene.textures.exists(key)) generateCharacterTexture(scene, key, characterDef(index), true)
+  return key
+}
+
+function generateCharacterTexture(scene: Phaser.Scene, key: string, def: CharacterDef, forceGolden = false): void {
   if (scene.textures.exists(key)) scene.textures.remove(key)
 
   // Prefer clear procedural pawns; portraits are muddy albedo crops at token size.
@@ -349,16 +357,26 @@ function generateCharacterTexture(scene: Phaser.Scene, key: string, def: Charact
   const usePortrait = false
   if (usePortrait && tryPortraitToken(scene, key, def)) return
 
+  // Party Shop golden editions swap the body colour for gold and add a sparkle.
+  const golden = forceGolden || isGolden(CHARACTER_DEFS.indexOf(def))
+  const color = golden ? 0xf4c430 : def.color
   const g = scene.add.graphics()
-  drawTokenPedestal(g, def.color)
-  if (def.cls === 'ranger') drawRangerHoodBack(g, def.color)
-  drawChibiBody(g, def.color)
+  drawTokenPedestal(g, color)
+  if (def.cls === 'ranger') drawRangerHoodBack(g, color)
+  drawChibiBody(g, color)
   drawChibiFace(g, {
     eyeColor: def.cls === 'robot' ? 0xff3344 : 0x1a1a22,
     mouth: def.cls === 'pirate' ? 'grin' : 'smile',
     blush: def.cls !== 'ninja' && def.cls !== 'robot',
   })
-  drawAccessoryForClass(g, def.cls, def.color)
+  drawAccessoryForClass(g, def.cls, color)
+  if (golden) {
+    g.fillStyle(0xffffff, 0.95)
+    for (const [sx, sy, r] of [[CX + 21, CY - 14, 3], [CX - 22, CY + 8, 2.2], [CX + 16, CY + 16, 1.8]]) {
+      g.fillTriangle(sx - r, sy, sx + r, sy, sx, sy - r * 2.2)
+      g.fillTriangle(sx - r, sy, sx + r, sy, sx, sy + r * 2.2)
+    }
+  }
   g.generateTexture(key, TOKEN_W, TOKEN_H)
   g.destroy()
 }
@@ -434,34 +452,18 @@ export function generateTileTextures(scene: Phaser.Scene): void {
 // Dice face textures — prefer Kenney white dice (tinted), else procedural
 // ---------------------------------------------------------------------------
 
+/** Dice faces in the equipped colour (Party Shop dice skins); call again after changing skins. */
 export function generateDiceTextures(scene: Phaser.Scene): void {
   const SIZE = 64
   const CORNER = 12
-  const DIE_COLOR = 0xf04a6a
-  const DIE_DARK = 0xb02848
+  const skin = equippedDice()
+  const DIE_COLOR = skin.face
+  const DIE_DARK = skin.dark
+  const PIP = skin.pip
 
   for (let face = 1; face <= 6; face++) {
     const key = DICE_TEXTURE_KEYS[face - 1]
     if (scene.textures.exists(key)) scene.textures.remove(key)
-
-    const kenneyKey = `kenney_die_${face}`
-    if (scene.textures.exists(kenneyKey)) {
-      const rt = scene.make.renderTexture({ width: SIZE, height: SIZE }, false)
-      const img = scene.make.image({ x: SIZE / 2, y: SIZE / 2, key: kenneyKey }, false)
-      img.setDisplaySize(SIZE - 4, SIZE - 4)
-      img.setTint(0xffc0d0)
-      rt.draw(img)
-      // Color wash frame
-      const frame = scene.make.graphics({ x: 0, y: 0 }, false)
-      frame.lineStyle(4, DIE_COLOR, 0.85)
-      frame.strokeRoundedRect(3, 3, SIZE - 6, SIZE - 6, 10)
-      rt.draw(frame)
-      rt.saveTexture(key)
-      rt.destroy()
-      img.destroy()
-      frame.destroy()
-      continue
-    }
 
     const g = scene.add.graphics()
     g.fillStyle(0x000000, 0.28)
@@ -477,13 +479,13 @@ export function generateDiceTextures(scene: Phaser.Scene): void {
     g.lineTo(6, SIZE * 0.38)
     g.closePath()
     g.fillPath()
-    g.lineStyle(2.5, 0xffd0dc, 0.65)
+    g.lineStyle(2.5, 0xffffff, 0.45)
     g.strokeRoundedRect(3, 3, SIZE - 8, SIZE - 8, CORNER)
 
     DICE_DOT_POSITIONS[face - 1].forEach(({ x, y }) => {
       g.fillStyle(DIE_DARK, 0.35)
       g.fillCircle(x + 1, y + 1, 5.5)
-      g.fillStyle(0xffffff, 1)
+      g.fillStyle(PIP, 1)
       g.fillCircle(x, y, 5)
       g.fillStyle(0xffffff, 0.55)
       g.fillCircle(x - 1.5, y - 1.5, 2.2)

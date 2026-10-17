@@ -637,7 +637,7 @@ class SfxSystem {
   }
 }
 
-export type MusicTrack = 'menu' | 'board' | 'minigame' | 'results'
+export type MusicTrack = 'menu' | 'board' | 'minigame' | 'results' | 'lofi' | 'fiesta'
 
 interface TrackDef {
   bpm: number
@@ -702,6 +702,38 @@ const MUSIC_TRACKS: Record<MusicTrack, TrackDef> = {
     kick: [0, 4, 8, 12],
     snare: [4, 12],
     hat: [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15],
+  },
+  // Party Shop board theme: mellow lo-fi seventh chords (Cmaj7 – Am7 – Dm7 – G7).
+  lofi: {
+    bpm: 84,
+    chords: [[60, 64, 67, 71], [57, 60, 64, 67], [62, 65, 69, 72], [55, 59, 62, 65]],
+    arp: [0, 2, 1, 3, 2, 1, 3, 2],
+    lead: [
+      [_, _, _, _, 76, _, _, 74, _, _, 72, _, _, _, _, _],
+      [_, _, _, _, 72, _, _, 71, _, _, 69, _, _, _, _, _],
+      [_, _, _, _, 77, _, _, 76, _, _, 74, _, 72, _, _, _],
+      [_, _, _, _, 74, _, _, 71, _, _, _, _, 67, _, _, _],
+    ],
+    bass: [0, 7, 10],
+    kick: [0, 10],
+    snare: [8],
+    hat: [4, 12, 14],
+  },
+  // Party Shop board theme: bright brassy G – C – D – G fiesta.
+  fiesta: {
+    bpm: 128,
+    chords: [[55, 59, 62], [60, 64, 67], [62, 66, 69], [55, 59, 62]],
+    arp: [0, 1, 2, 1, 0, 2, 1, 2],
+    lead: [
+      [79, _, 79, _, 83, _, 81, _, 79, _, _, 74, _, 79, _, _],
+      [76, _, 76, _, 79, _, 77, _, 76, _, _, 72, _, 76, _, _],
+      [78, _, 78, _, 81, _, 79, _, 78, _, 76, _, 74, _, _, _],
+      [79, _, 83, _, 86, _, _, _, 83, _, 79, _, 74, _, _, _],
+    ],
+    bass: [0, 4, 8, 12],
+    kick: [0, 4, 8, 12],
+    snare: [4, 12],
+    hat: [2, 6, 10, 14],
   },
   // Triumphant C – F – G – C
   results: {

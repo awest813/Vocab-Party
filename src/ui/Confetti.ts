@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
+import { equippedConfetti } from '../systems/Unlocks'
 
 const CONFETTI_COLORS = [0xff4444, 0x44ff88, 0x4488ff, 0xffdd00, 0xff88ff, 0x44ffff]
 
@@ -33,10 +34,57 @@ function showParticleConfetti(scene: Phaser.Scene, cx: number, cy: number): bool
   return true
 }
 
+/** Emoji confetti (Party Shop styles like Star Shower or Heart Burst). */
+function showEmojiConfetti(scene: Phaser.Scene, cx: number, cy: number, emoji: string[]): void {
+  for (let i = 0; i < 26; i++) {
+    const piece = scene.add.text(cx + Phaser.Math.Between(-80, 80), cy, Phaser.Utils.Array.GetRandom(emoji), {
+      fontSize: `${Phaser.Math.Between(20, 36)}px`,
+    }).setOrigin(0.5).setDepth(100)
+    scene.tweens.add({
+      targets: piece,
+      x: cx + Phaser.Math.Between(-420, 420),
+      y: cy + Phaser.Math.Between(220, 560),
+      angle: Phaser.Math.Between(-240, 240),
+      alpha: 0,
+      duration: Phaser.Math.Between(1300, 2600),
+      ease: 'Quad.easeIn',
+      delay: Phaser.Math.Between(0, 400),
+      onComplete: () => piece.destroy(),
+    })
+  }
+}
+
+/** Single-palette burst (e.g. Gold Rush) using the white glow particle, tinted. */
+function showTintedConfetti(scene: Phaser.Scene, cx: number, cy: number, colors: number[]): void {
+  const key = scene.textures.exists(TEXTURE_KEYS.particleWhite) ? TEXTURE_KEYS.particleWhite : TEXTURE_KEYS.particleSquare
+  if (!scene.textures.exists(key)) return
+  const emitter = scene.add.particles(cx, cy, key, {
+    speed: { min: 140, max: 400 },
+    angle: { min: 60, max: 120 },
+    lifespan: { min: 1200, max: 2400 },
+    scale: { start: 0.4, end: 0.02 },
+    gravityY: 240,
+    tint: colors,
+    blendMode: Phaser.BlendModes.ADD,
+    emitting: false,
+  }).setDepth(100)
+  emitter.explode(90)
+  scene.time.delayedCall(3000, () => emitter.destroy())
+}
+
 export function showConfetti(scene: Phaser.Scene, x?: number, y?: number): void {
   const cx = x ?? scene.scale.width / 2
   const cy = y ?? scene.scale.height / 3
+  const style = equippedConfetti()
 
+  if (style.emoji?.length) {
+    showEmojiConfetti(scene, cx, cy, style.emoji)
+    return
+  }
+  if (style.colors?.length) {
+    showTintedConfetti(scene, cx, cy, style.colors)
+    return
+  }
   if (showParticleConfetti(scene, cx, cy)) return
 
   for (let i = 0; i < 50; i++) {

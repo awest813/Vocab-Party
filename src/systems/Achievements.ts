@@ -2,12 +2,20 @@ import { Sfx } from './Sfx'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { getProgress, masteryOf, saveProgress } from './Progress'
 import { shouldReduceMotion } from './GameSettings'
+import { getTickets, onTickets, rewardAchievement } from './Unlocks'
+
+// Every ticket reward gets the same corner toast as achievements.
+onTickets((gained, reason) => showAchievementToast({
+  id: 'tickets', icon: '🎟️', kicker: 'PARTY TICKETS', title: `+${gained} tickets`, desc: `${reason} · ${getTickets()} to spend in the Party Shop`,
+}))
 
 export interface AchievementDef {
   id: string
   icon: string
   title: string
   desc: string
+  /** Toast header; defaults to "ACHIEVEMENT UNLOCKED". */
+  kicker?: string
 }
 
 export const ACHIEVEMENTS: AchievementDef[] = [
@@ -43,6 +51,7 @@ export function unlock(id: string): boolean {
   p.achievements[id] = Date.now()
   saveProgress()
   showAchievementToast(def)
+  rewardAchievement(id)
   return true
 }
 
@@ -86,14 +95,16 @@ function playNextToast() {
     `transition:transform ${shouldReduceMotion() ? 0 : 380}ms cubic-bezier(.2,1.4,.4,1), opacity 300ms`,
     'transform:translateX(120%)', 'opacity:0',
   ].join(';')
-  el.innerHTML = `<div style="font-size:34px;line-height:1"></div><div><div style="font-size:11px;letter-spacing:1px;color:${hexColor(COLORS.gold)};font-family:${FONT.display}">ACHIEVEMENT UNLOCKED</div><div style="font-size:20px;font-family:${FONT.display}"></div><div style="font-size:12px;color:${hexColor(COLORS.mist)}"></div></div>`
+  el.innerHTML = `<div style="font-size:34px;line-height:1"></div><div><div style="font-size:11px;letter-spacing:1px;color:${hexColor(COLORS.gold)};font-family:${FONT.display}"></div><div style="font-size:20px;font-family:${FONT.display}"></div><div style="font-size:12px;color:${hexColor(COLORS.mist)}"></div></div>`
   const [iconEl, textBox] = Array.from(el.children) as HTMLElement[]
   iconEl.textContent = def.icon
   const lines = Array.from(textBox.children) as HTMLElement[]
+  lines[0].textContent = def.kicker ?? 'ACHIEVEMENT UNLOCKED'
   lines[1].textContent = def.title
   lines[2].textContent = def.desc
   document.body.appendChild(el)
-  Sfx.star()
+  if (def.id === 'tickets') Sfx.coin()
+  else Sfx.star()
   requestAnimationFrame(() => {
     el.style.transform = 'translateX(0)'
     el.style.opacity = '1'

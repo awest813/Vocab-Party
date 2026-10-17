@@ -19,6 +19,7 @@ import { PauseScene } from './scenes/PauseScene'
 import { ArcadeScene } from './scenes/ArcadeScene'
 import { BonusStarsScene } from './scenes/BonusStarsScene'
 import { WordBookScene } from './scenes/WordBookScene'
+import { ShopScene } from './scenes/ShopScene'
 import { isTouchPreferred } from './systems/GameSettings'
 
 /**
@@ -63,7 +64,7 @@ const config: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: 0 }, debug: false },
   },
-  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene, ArcadeScene, BonusStarsScene, WordBookScene],
+  scene: [BootScene, PreloadScene, MenuScene, SetupScene, BoardScene, QuestionScene, MinigameScene, ResultsScene, BattleScene, PauseScene, ArcadeScene, BonusStarsScene, WordBookScene, ShopScene],
 }
 
 initGameFlagsFromLocation()

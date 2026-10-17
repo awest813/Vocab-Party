@@ -29,6 +29,7 @@ import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
+import { equippedBoardTrack } from '../systems/Unlocks'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
 import { recordWords, wordFromQuestion } from '../systems/Progress'
@@ -251,7 +252,7 @@ export class BoardScene extends Phaser.Scene {
     this.createPauseButton()
     const escHandler = () => this.pauseGame()
     this.input.keyboard?.on('keydown-ESC', escHandler)
-    Sfx.startMusic('board')
+    Sfx.startMusic(equippedBoardTrack())
 
     const touch = isTouchPreferred(this.sys.game)
 
@@ -2189,7 +2190,7 @@ export class BoardScene extends Phaser.Scene {
       onComplete: (result: MinigameResult) => {
         this.scene.stop('MinigameScene')
         this.scene.resume()
-        Sfx.startMusic('board')
+        Sfx.startMusic(equippedBoardTrack())
         this.absorbMinigameStudy(result)
         done(result)
       },

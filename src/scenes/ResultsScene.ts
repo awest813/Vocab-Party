@@ -10,6 +10,7 @@ import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { characterDef, characterTextureKey } from '../systems/SpriteFactory'
 import { Sfx } from '../systems/Sfx'
 import { getProgress, recordGame } from '../systems/Progress'
+import { rewardParty } from '../systems/Unlocks'
 import { unlock } from '../systems/Achievements'
 import { getBoard } from '../systems/BoardLayout'
 import { getSettings } from '../systems/GameSettings'
@@ -46,6 +47,11 @@ export class ResultsScene extends Phaser.Scene {
       const humanWon = !sorted[0].isCpu
       const boardId = getBoard(state.options?.board).id
       recordGame(humanWon, boardId)
+      rewardParty({
+        bestHumanTrophies: Math.max(0, ...state.players.filter(p => !p.isCpu).map(p => p.trophies)),
+        humanWon,
+        rounds: state.round,
+      })
       // Record immediately (leaving Results quickly must not lose them); toasts are DOM overlays.
       {
         unlock('first_party')
@@ -99,7 +105,7 @@ export class ResultsScene extends Phaser.Scene {
     // Classic podium order: 2nd | 1st | 3rd | (4th)
     const medals = ['1', '2', '3', '4']
     const medalColors = [COLORS.gold, 0xc0c8d4, 0xcd8f4a, 0x6a7a90]
-    const podiumH = [210, 168, 128, 96]
+    const podiumH = [190, 150, 115, 85]
     const playerCount = sorted.length
     // Even spacing across center for up to 4 players: positions relative to rank display order
     // Display order left-to-right for Mario Party feel: 4th, 2nd, 1st, 3rd when 4 players
@@ -143,7 +149,8 @@ export class ResultsScene extends Phaser.Scene {
         color: '#000000',
       }).setAlpha(0.22).setOrigin(0.5)
 
-      const cardY = podiumBase - ph - 86
+      // Cards stand on their podium (the winner's still hops above it), clear of the header lines.
+      const cardY = podiumBase - ph - 76
       const cardG = this.add.graphics()
       cardG.fillStyle(0x000000, 0.3)
       cardG.fillRoundedRect(x - 78, cardY - 72, 156, 148, 14)
