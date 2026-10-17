@@ -140,11 +140,11 @@ export type CpuRivalView = {
   coins: number
   score: number
   trophies: number
+  shieldActive?: boolean
 }
 
 export type CpuSelfView = CpuRivalView & {
   inventory: string[]
-  shieldActive?: boolean
 }
 
 /** Extra context for item use. */
@@ -165,7 +165,6 @@ export type CpuBoardContext = {
   starCost?: number
 }
 
-/** Golden Key forces a roll of exactly 3. */
 /** The Golden Key fixes the next roll at 6 (the standard die's max). */
 const GOLDEN_KEY_STEPS = 6
 const DEFAULT_STAR_COST = 20
@@ -613,7 +612,8 @@ export function cpuChoosePoisonTarget(
   }
 
   const ranked = others.map(({ p, i }) => {
-    const score = p.coins * 2 + p.trophies * 15 + p.score * 0.25
+    // A shield would just eat the dart, so smart CPUs aim elsewhere.
+    const score = p.coins * 2 + p.trophies * 15 + p.score * 0.25 - (p.shieldActive ? 1000 : 0)
     return { i, score }
   })
   ranked.sort((a, b) => b.score - a.score)

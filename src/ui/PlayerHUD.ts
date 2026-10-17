@@ -249,6 +249,10 @@ export class PlayerHUD {
         }
         if (player.dashActive) {
           status.add(this.scene.add.text(sx, 0, '🏃', { fontSize: '14px' }).setOrigin(1, 0.5))
+          sx -= 18
+        }
+        if ((player.forcedMoveValue ?? 0) > 0) {
+          status.add(this.scene.add.text(sx, 0, '🔑', { fontSize: '14px' }).setOrigin(1, 0.5))
         }
       }
     })

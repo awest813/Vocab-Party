@@ -97,6 +97,8 @@ const PARTY_PAYOUTS: Record<number, number[]> = {
 }
 const PARTY_WIN_POINTS = 10
 const DUEL_STEAL = 6
+/** Coins a Poison Dart takes from its target and hands to the thrower. */
+const POISON_STEAL = 6
 const DUEL_WIN_POINTS = 10
 
 export class BoardScene extends Phaser.Scene {
@@ -1255,9 +1257,18 @@ export class BoardScene extends Phaser.Scene {
           ? cpuChoosePoisonTarget(playerIndex, this.state.players, player.cpuLevel)
           : chosenTarget!
         const target = this.state.players[targetIdx]
-        target.coins = Math.max(0, target.coins - 8)
+        if (target.shieldActive) {
+          target.shieldActive = false
+          Sfx.block()
+          this.showFloatyText(target, '🛡️ Dart blocked!', '#44ccff')
+          break
+        }
+        const stolen = Math.min(target.coins, POISON_STEAL)
+        target.coins -= stolen
+        player.coins += stolen
         Sfx.coinLoss()
-        this.showFloatyText(target, '🎯 Poisoned! -8 coins', '#ff4444')
+        this.showFloatyText(target, stolen > 0 ? `🎯 Poisoned! -${stolen} coins` : '🎯 Poisoned! (no coins)', '#ff4444')
+        if (stolen > 0) this.time.delayedCall(this.d(450), () => this.showFloatyText(player, `+${stolen} coins`, '#ffd700'))
         break
       }
       case 'golden_key':
@@ -1265,6 +1276,8 @@ export class BoardScene extends Phaser.Scene {
         this.showFloatyText(player, '🔑 Next roll: 6', '#ffee44')
         break
     }
+    // Inventory, coins and active effects (🛡️ 📈 🏃) change right away, not at the next turn.
+    this.hud.update(this.state)
 
     await new Promise(r => this.time.delayedCall(this.d(800), r))
   }
