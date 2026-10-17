@@ -277,7 +277,7 @@ export class MenuScene extends Phaser.Scene {
     gear.on('pointerdown', () => this.openSettings())
 
     const hint = this.add.text(w / 2, h - 48, touch
-      ? `Tap ${save ? 'CONTINUE PARTY' : 'ENTER PARTY'} to begin  ·  Rotate landscape for the best view`
+      ? `Tap ${save ? 'CONTINUE PARTY' : 'ENTER PARTY'} to begin`
       : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  L = Word Lists  ·  P = Shop  ·  ? = Help' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  L = Word Lists  ·  P = Shop  ·  ? = Help', {
       fontSize: '14px',
       fontFamily: FONT.body,

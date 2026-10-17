@@ -311,7 +311,7 @@ export class BoardScene extends Phaser.Scene {
     this.dieFaceText = this.add.text(w / 2 + 80, h - 60, '', {
       fontSize: '30px', fontFamily: FONT.display, color: '#ffffff', stroke: '#000000', strokeThickness: 6,
     }).setOrigin(0.5).setDepth(DEPTH.chrome + 1)
-    this.dieLabel = this.add.text(w / 2 + 20, h - 20, '', {
+    this.dieLabel = this.add.text(w / 2 + 20, h - 12, '', {
       fontSize: '11px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
     }).setOrigin(0.5).setDepth(DEPTH.chrome)
 
@@ -722,8 +722,7 @@ export class BoardScene extends Phaser.Scene {
   private tileInspectHint() {
     const ev = this.board.event
     if (ev?.kind === 'tides' && this.state) {
-      const n = this.roundsUntilTide()
-      const when = `turns in ${n} round${n === 1 ? '' : 's'}`
+      const when = this.tideCountdown()
       const tide = this.state.tide === 'low'
         ? `🏖️ LOW TIDE: sandbar shortcut open, 🌊 shore tiles flipped · ${when}`
         : `🌊 HIGH TIDE: sandbar flooded · ${when}`
@@ -739,6 +738,13 @@ export class BoardScene extends Phaser.Scene {
     const ev = this.board.event
     if (ev?.kind !== 'tides') return 0
     return ev.period - ((this.state.round - 1) % ev.period)
+  }
+
+  /** "turns in N rounds", or that it stays put when the party ends first. */
+  private tideCountdown(): string {
+    const n = this.roundsUntilTide()
+    if (this.state.round + n > this.roundsPerGame) return 'stays until the end'
+    return `turns in ${n} round${n === 1 ? '' : 's'}`
   }
 
   createToken(player: Player, index: number): Phaser.GameObjects.Container {
@@ -2225,6 +2231,7 @@ export class BoardScene extends Phaser.Scene {
     const ev = this.board.event
     if (ev?.kind !== 'tides') return
     this.state.tide = to
+    this.roundText.setText(`Round ${this.state.round} / ${this.roundsPerGame}`)
     this.nodes = resolveNodes(this.board, to)
     this.tiles = resolveTiles(this.board, to)
     const low = to === 'low'
@@ -2235,7 +2242,9 @@ export class BoardScene extends Phaser.Scene {
     this.cameras.main.flash(380, 60, 170, 230, true)
     this.drawFlood(true)
 
-    // Shore tiles swap type (bonus ↔ penalty) with a splash.
+    await this.showAnnouncement(low ? '🏖️ LOW TIDE! The sandbar is open!' : '🌊 HIGH TIDE! The sandbar floods!', '#48cae4')
+    // Then show *where* things changed: shore tiles flip (bonus ↔ penalty) with a splash, and the
+    // changed tiles plus the sandbar pulse so players can see what the banner meant.
     Object.keys(ev.lowTideTiles).map(Number).forEach(i => {
       const type = this.getTileTypeAt(i)
       const img = this.tileImages.get(i)
@@ -2258,7 +2267,7 @@ export class BoardScene extends Phaser.Scene {
       glyph?.setText(TILE_LABELS[type])
     })
 
-    await this.showAnnouncement(low ? '🏖️ LOW TIDE! The sandbar is open!' : '🌊 HIGH TIDE! The sandbar floods!', '#48cae4')
+    this.pulseTiles([...Object.keys(ev.lowTideTiles).map(Number), ...(low ? ev.sandbar : [])], low ? 0xffe066 : 0x9be8ff)
 
     // Anyone caught on the sandbar is washed back to shore.
     if (!low) {
@@ -2275,7 +2284,24 @@ export class BoardScene extends Phaser.Scene {
     }
     if (!isAutoSimMode()) {
       await this.showAnnouncement(low ? '🌊 Shore tiles flipped: 💀 ↔ ⭐' : '🌊 Shore tiles are back to normal', '#9be8ff')
+      // A beat before any next banner (e.g. Last Stretch) so the tide moment isn't buried.
+      await new Promise(r => this.time.delayedCall(this.d(700), r))
     }
+  }
+
+  /** Pulsing rings on tiles that just changed, so a banner's "where" is obvious. */
+  private pulseTiles(ids: number[], color: number) {
+    if (isAutoSimMode()) return
+    ids.forEach(id => {
+      const img = this.tileImages.get(id)
+      if (!img) return
+      const ring = this.add.rectangle(img.x, img.y, TILE_SIZE + 6, TILE_SIZE + 6).setStrokeStyle(4, color, 1).setDepth(3)
+      this.tweens.add({
+        targets: ring, alpha: { from: 1, to: 0.15 }, scale: { from: 1, to: 1.12 },
+        duration: 360, yoyo: true, repeat: shouldReduceMotion() ? 0 : 3,
+        onComplete: () => ring.destroy(),
+      })
+    })
   }
 
   /** Owned shops pay their owner a little every round, so a shop is an investment, not a gamble. */
@@ -2353,7 +2379,7 @@ export class BoardScene extends Phaser.Scene {
     const ev = this.board.event
     if (ev?.kind === 'tides') {
       // Rounds until the tide next turns (it flips at the start of round 1 + k·period).
-      parts.push(`${this.state.tide === 'low' ? '🏖️ Low tide' : '🌊 High tide'} · turns in ${this.roundsUntilTide()}`)
+      parts.push(`${this.state.tide === 'low' ? '🏖️ Low tide' : '🌊 High tide'} · ${this.tideCountdown()}`)
     }
     this.nextEventText.setText(parts.join('\n'))
     if (ev) this.tileHintText?.setText(this.tileInspectHint())

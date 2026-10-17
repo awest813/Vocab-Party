@@ -297,7 +297,10 @@ export function wordLevelCycle(): WordLevel[] {
 export function wordLevelLabel(level: WordLevel = getSettings().wordLevel): string {
   if (level !== 'custom') return WORD_LEVEL_LABEL[level]
   const list = getActiveList()
-  return list && isListPlayable(list) ? `📝 ${list.name}` : WORD_LEVEL_LABEL.all
+  if (!list || !isListPlayable(list)) return WORD_LEVEL_LABEL.all
+  // Keep it short enough for the Setup/Arcade toggle buttons.
+  const name = Array.from(list.name)
+  return `📝 ${name.length > 18 ? `${name.slice(0, 17).join('').trimEnd()}…` : list.name}`
 }
 
 /**
@@ -357,7 +360,8 @@ export function enrichEntry(e: WordEntry, lexicon: ReadonlyMap<string, LexiconLi
     synonyms: e.synonyms ?? (lex.synonyms && lex.synonyms.length > 0 ? [...lex.synonyms] : undefined),
     antonyms: e.antonyms ?? (lex.antonyms && lex.antonyms.length > 0 ? [...lex.antonyms] : undefined),
     pos: e.pos ?? parsePos(lex.pos),
-    fromLexicon: true,
+    // Only flag it when the word bank supplied the definition the teacher left out.
+    fromLexicon: !e.definition,
   }
 }
 
@@ -470,7 +474,8 @@ export function parseWordList(text: string): ParseResult {
     if (!raw) return
     const rawWord = String(raw.word ?? '').trim()
     if (rawWord.length > MAX_WORD_LEN || rawWord.split(/\s+/).length > 4) {
-      warnings.push({ line: lineNo, message: `Line ${lineNo}: couldn't find a word (try "word - definition")` })
+      const start = rawLine.trim().slice(0, 28)
+      warnings.push({ line: lineNo, message: `Line ${lineNo} skipped: “${start}${rawLine.trim().length > 28 ? '…' : ''}” — add a dash after the word (word - definition)` })
       return
     }
     const e = sanitizeEntry(raw)

@@ -80,7 +80,7 @@ export class WordBookScene extends Phaser.Scene {
     achBtn.on('pointerdown', () => this.openAchievements())
 
     const stats = [
-      `${records.length} words seen`,
+      `${records.length} word${records.length === 1 ? '' : 's'} seen`,
       `${mastered} mastered`,
       total > 0 ? `${Math.round((right / total) * 100)}% accuracy` : '— accuracy',
       `Parties won ${p.gamesWon}/${p.gamesPlayed}`,

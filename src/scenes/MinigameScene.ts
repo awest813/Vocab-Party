@@ -918,9 +918,10 @@ export class MinigameScene extends Phaser.Scene {
     const score = result.scores[me.id] ?? 0
     const prevBest = getPersonalBests()[this.def.id] ?? 0
     const isBest = recordPersonalBest(this.def.id, score)
+    let ticketsEarned = 0
     if (!isAutoSimMode()) {
       const medal = score >= this.def.cpu.hard[1] ? 3 : score >= this.def.cpu.normal[1] ? 2 : score >= this.def.cpu.easy[1] ? 1 : 0
-      if (score > 0) rewardArcade(this.def.id, medal, score >= this.def.cpu.easy[0])
+      if (score > 0) ticketsEarned = rewardArcade(this.def.id, medal, score >= this.def.cpu.easy[0])
       if (score >= this.def.cpu.hard[1]) unlock('gold_medal')
       const bests = getPersonalBests()
       if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all')
@@ -945,7 +946,9 @@ export class MinigameScene extends Phaser.Scene {
 
     // Medal against CPU tiers
     const tier = score >= this.def.cpu.hard[1] ? '🥇 Beat a Hard CPU’s best!' : score >= this.def.cpu.normal[1] ? '🥈 Beat a Normal CPU’s best' : score >= this.def.cpu.easy[1] ? '🥉 Beat an Easy CPU’s best' : 'Keep practicing — you’ve got this!'
-    panel.add(this.add.text(0, 4, tier, { fontSize: '20px', fontFamily: FONT.body, color: '#ffffff' }).setOrigin(0.5))
+    // Show the ticket payoff right on the panel (the corner toast is easy to miss).
+    const tierLine = ticketsEarned > 0 ? `${tier}   ·   🎟️ +${ticketsEarned} tickets` : tier
+    panel.add(this.add.text(0, 4, tierLine, { fontSize: '20px', fontFamily: FONT.body, color: '#ffffff' }).setOrigin(0.5))
 
     const missed = (result.study[me.id] ?? []).filter(e => !e.correct).slice(0, 4)
     if (missed.length > 0) {

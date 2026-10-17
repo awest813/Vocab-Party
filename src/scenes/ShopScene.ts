@@ -4,7 +4,7 @@ import { Sfx } from '../systems/Sfx'
 import { unlock } from '../systems/Achievements'
 import { generateDiceTextures, generatePlayerTextures, goldenPreviewKey } from '../systems/SpriteFactory'
 import { buy, equip, getTickets, isEquipped, isOwned, UNLOCKS, type UnlockItem, type UnlockKind } from '../systems/Unlocks'
-import { createButton, setButtonEnabled, setButtonFill } from '../ui/Button'
+import { createButton, setButtonEnabled, setButtonFill, setButtonLabel } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
 import { addVignette, paintStage } from '../ui/Panel'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
@@ -146,9 +146,27 @@ export class ShopScene extends Phaser.Scene {
       : owned ? (item.kind === 'golden' ? 'WEAR' : 'EQUIP') : `🎟️ ${item.cost}`
     const affordable = getTickets() >= item.cost
     const fill = equipped ? COLORS.partyDeep : owned ? COLORS.skyDeep : affordable ? COLORS.warning : COLORS.chrome
-    const btn = createButton(this, 0, CARD_H / 2 - 30, label, fill, fill, CARD_W - 40, 42)
+    const lockedLabel = `🎟️ ${item.cost} · need ${item.cost - getTickets()} more`
+    const btn = createButton(this, 0, CARD_H / 2 - 30, !owned && !affordable ? lockedLabel : label, fill, fill, CARD_W - 40, 42)
     if (!owned && !affordable) setButtonEnabled(btn, false)
-    btn.on('pointerdown', () => this.activate(item))
+    // Buying takes two taps so a stray tap can't spend a child's tickets.
+    let armed = false
+    btn.on('pointerdown', () => {
+      if (!owned && !armed) {
+        armed = true
+        Sfx.uiToggle()
+        setButtonLabel(btn, `TAP AGAIN TO BUY · 🎟️ ${item.cost}`)
+        setButtonFill(btn, COLORS.party)
+        this.time.delayedCall(3000, () => {
+          if (!btn.active) return
+          armed = false
+          setButtonLabel(btn, label)
+          setButtonFill(btn, fill)
+        })
+        return
+      }
+      this.activate(item)
+    })
     c.add(btn)
     return c
   }

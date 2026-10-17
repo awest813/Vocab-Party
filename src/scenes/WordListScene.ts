@@ -109,7 +109,7 @@ export class WordListScene extends Phaser.Scene {
       fontSize: '40px', fontFamily: FONT.display, color: hexColor(COLORS.gold),
       stroke: hexColor(COLORS.goldDeep), strokeThickness: 7,
     }).setOrigin(0.5)
-    this.add.text(w / 2, 80, 'Paste this week\'s vocabulary — board questions and minigames play with your words', {
+    this.add.text(w / 2, 80, 'Paste this week\'s vocabulary — board questions and most minigames play with your words', {
       fontSize: '16px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
     }).setOrigin(0.5)
 
@@ -330,7 +330,8 @@ export class WordListScene extends Phaser.Scene {
       el.style.top = `${r.top + rect.y * sy}px`
       el.style.width = `${rect.w * sx}px`
       el.style.height = `${rect.h * sy}px`
-      el.style.fontSize = `${Math.max(12, font * sx)}px`
+      // 16px minimum on touch devices: smaller inputs make iOS Safari zoom the whole page.
+      el.style.fontSize = `${Math.max(isTouchPreferred(this.sys.game) ? 16 : 12, font * sx)}px`
       el.style.borderRadius = `${Math.max(6, 12 * sx)}px`
     }
     place(this.nameInput, NAME_RECT, 20)

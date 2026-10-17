@@ -421,8 +421,8 @@ export class QuestionScene extends Phaser.Scene {
         }
       }
 
-      const banner = this.add.container(w / 2, h / 2).setDepth(200)
-      const bg = this.add.rectangle(0, 0, w, 140, COLORS.mint, 0.55)
+      const banner = this.add.container(w / 2, h / 2 - 92).setDepth(200)
+      const bg = this.add.rectangle(0, 0, w, 112, COLORS.mint, 0.55)
       const txt = this.add.text(0, 0, 'CORRECT!', {
         fontSize: '78px', fontFamily: FONT.display, color: '#ffffff', stroke: '#004400', strokeThickness: 10
       }).setOrigin(0.5)
@@ -448,8 +448,8 @@ export class QuestionScene extends Phaser.Scene {
         this.cameras.main.flash(300, 255, 0, 0, true)
       }
       
-      const banner = this.add.container(w / 2, h / 2).setDepth(200)
-      const bg = this.add.rectangle(0, 0, w, 140, COLORS.danger, 0.55)
+      const banner = this.add.container(w / 2, h / 2 - 92).setDepth(200)
+      const bg = this.add.rectangle(0, 0, w, 112, COLORS.danger, 0.55)
       const txt = this.add.text(0, 0, 'WRONG', {
         fontSize: '78px', fontFamily: FONT.display, color: '#ffffff', stroke: '#440000', strokeThickness: 10
       }).setOrigin(0.5)
