@@ -834,7 +834,19 @@ export class MinigameScene extends Phaser.Scene {
       row.add(this.add.text(-334, -1, PLACE_LABEL[place - 1] ?? `${place}th`, {
         fontSize: '28px', fontFamily: FONT.display, color: '#0a101c',
       }).setOrigin(0.5))
-      row.add(this.portrait(p, -240, -1, 58))
+      const face = this.portrait(p, -240, -1, 58)
+      row.add(face)
+      // Reactions: the winner hops with a crown, last place droops.
+      if (!shouldReduceMotion() && !isAutoSimMode()) {
+        const last = place === Math.max(...rows.map(r => result.placements[r.id])) && rows.length > 1
+        if (place === 1) {
+          row.add(this.add.text(-240, -40, '👑', { fontSize: '26px' }).setOrigin(0.5))
+          this.tweens.add({ targets: face, y: -9, duration: 320, yoyo: true, repeat: -1, ease: 'Quad.easeOut', delay: this.d(900) })
+        } else if (last) {
+          this.tweens.add({ targets: face, angle: -12, y: 4, duration: 700, delay: this.d(1100), ease: 'Sine.easeInOut' })
+          row.add(this.add.text(-208, -26, '💧', { fontSize: '18px' }).setOrigin(0.5).setAlpha(0.85))
+        }
+      }
       row.add(this.add.text(-196, -14, fitName(p.name, 12), { fontSize: '26px', fontFamily: FONT.display, color: '#ffffff' }).setOrigin(0, 0.5))
       row.add(this.add.text(-196, 16, p.isCpu ? `CPU · ${CPU_LEVEL_LABEL[p.cpuLevel]}` : 'Player', { fontSize: '14px', fontFamily: FONT.body, color: hexColor(COLORS.mute) }).setOrigin(0, 0.5))
       row.add(this.add.text(110, -1, `${result.scores[p.id]} pts`, {
