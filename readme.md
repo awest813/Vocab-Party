@@ -78,14 +78,16 @@ node scripts/check-boards.mjs
 | 🏔️ Spelling Summit | 55 | Long switchback climb with a skip-ahead ledge | — |
 | 🌊 Thesaurus Tides | 49 | Island coastline with a cliff path past the star cove | **Tide Turn:** the tide flips every 3 rounds (rounds 1–3 high, 4–6 low, …). At low tide a sandbar causeway opens across the bay (a 4-tile shortcut that skips 10 tiles) and the 🌊-marked shore tiles flip ⭐ Bonus ↔ 💀 Penalty. When the tide comes back in, anyone on the sandbar is washed ashore. |
 
-4. **Party minigames:** after every round, all players compete in a randomly chosen minigame (a roulette picks it). Placement pays coins: 1st +10, 2nd +5, 3rd +2. Several humans take turns on the same device (hot-seat); CPUs play alongside with live "ghost" scores.
-5. **Last Stretch:** in the final rounds, bonus and penalty tiles double and the last-place player gets a +10 coin comeback boost.
+4. **Party minigames:** after every round, all players compete in a randomly chosen minigame (a roulette picks it). Placement pays coins: 1st +6 (and +10 points), 2nd +4, 3rd +2, 4th +1; equal scores go to whoever got there first. Several humans take turns on the same device (hot-seat); CPUs play alongside with live "ghost" scores.
+5. **Last Stretch:** in the final rounds, bonus and penalty tiles double and the last-place player gets a +15 coin comeback boost, and the music switches to the faster finale.
 6. **Bonus Stars:** when the rounds run out, three extra trophies are awarded — 📚 Word Wizard (most correct answers), 🎮 Minigame Master (most minigame wins), 🧭 Explorer (most spaces travelled).
 7. **Win condition:** first to **5 trophies**, or most trophies (then score) when rounds end.
 8. The results screen has a **📖 Study Sheet** listing each player's missed words and questions.
 9. Games **autosave** at the start of every turn — pick **Continue Party** on the main menu to resume.
 10. The **📖 Word Book** (main menu) tracks every word you've practiced on this device, with mastery levels, definitions, and a *Practice weak words* mode.
-11. **🏅 Achievements** — 16 badges for parties, minigames, boards, and word mastery; view them from the Word Book.
+11. **🏅 Achievements** — 27 badges for parties, minigames, boards, word mastery and collecting; view them from the Word Book. Each one pays 15 Party Tickets.
+12. **📝 Word Lists (for teachers)** — paste this week's vocabulary (`word - definition | example sentence`, `word: definition`, spreadsheet columns or CSV) or start from a sample list, then set it active. Board vocab questions and the minigames then play with your words. Lists stay on this device.
+13. **🎟️ Party Shop** — earn Party Tickets by finishing parties (more for trophies and wins against CPUs), Arcade practice and medals (capped daily), and achievements. Spend them on cosmetics only: dice colours, golden characters, confetti styles and extra board music. No learning content is ever locked.
 
 ### Minigames
 

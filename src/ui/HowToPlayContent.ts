@@ -31,12 +31,12 @@ export const HOW_TO_RULES = [
   '🏆 Stars: land on OR walk past a star tile to buy — rich players can buy several at once',
   '🛍️ Item shops let you pick a card or pass · use ITEMS on your turn',
   '⚔️ Landing on another player starts a battle',
-  '🎉 After each round everyone plays a vocab minigame — 1st place wins 10 coins',
+  '🎉 After each round everyone plays a vocab minigame — 1st place wins 6 coins + 10 points',
   '🔥 Last Stretch: final rounds double bonus/penalty tiles; last place gets a boost',
   '🌊 Thesaurus Tides: the tide turns every 3 rounds — low tide opens a sandbar shortcut',
   '🌟 Bonus Stars at the end: Word Wizard, Minigame Master, Explorer (+1 🏆 each)',
   '🎯 First to 5 trophies wins — or most trophies (then score) when rounds end',
-  '💾 Games autosave every turn · 📖 the Word Book tracks every word you practice',
+  '💾 Autosave every turn · 📝 Word Lists play your own words · 🎟️ tickets buy cosmetics in the Shop',
 ]
 
 export const HOW_TO_CONTROLS_DESKTOP = [
