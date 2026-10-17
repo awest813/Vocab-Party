@@ -191,7 +191,8 @@ export const contextClues: MinigameDef = {
         const item = ctx.bank.draw('legacy-context', legacy)
         return { kicker: 'FILL IN THE BLANK', prompt: item.prompt, promptSize: 28, choices: item.choices, correct: item.correct, word: item.choices[item.correct], note: item.prompt }
       }
-      let w: LexWord = ctx.bank.word()
+      // Only words whose example sentence contains them (custom list words may have no sentence).
+      let w: LexWord = ctx.bank.word(x => blankOut(x.sentence, x.word) !== null, 'context')
       let blanked = blankOut(w.sentence, w.word)
       for (let tries = 0; !blanked && tries < 6; tries++) {
         w = ctx.bank.word()

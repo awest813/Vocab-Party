@@ -9,6 +9,7 @@ import { addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { ContentBank } from '../minigames/ContentBank'
 import { ACHIEVEMENTS, isUnlocked } from '../systems/Achievements'
+import { findListEntry } from '../systems/WordLists'
 import type { MinigameSceneData } from './MinigameScene'
 
 type Filter = 'all' | Mastery
@@ -344,6 +345,7 @@ export class WordBookScene extends Phaser.Scene {
     const word = this.selected
     const rec = getProgress().words[word]
     const lex = this.bank.allWords.find(x2 => x2.word === word)
+    const listEntry = lex ? undefined : findListEntry(word)
     const m = rec ? masteryOf(rec) : 'learning'
     let y = top + 34
     const line = (text: string, size: number, color: string, gap = 10, family: string = FONT.body) => {
@@ -366,6 +368,19 @@ export class WordBookScene extends Phaser.Scene {
       }
       line('EXAMPLE', 12, hexColor(COLORS.gold), 2, FONT.display)
       line(`“${lex.sentence}”`, 16, '#c8d8ff', 14)
+    } else if (listEntry?.definition) {
+      // A word from a teacher's custom list that the built-in lexicon doesn't know.
+      line('MEANING', 12, hexColor(COLORS.gold), 2, FONT.display)
+      line(listEntry.definition, 18, '#ffffff', 14)
+      if (listEntry.synonyms?.length) {
+        line('SYNONYMS', 12, hexColor(COLORS.gold), 2, FONT.display)
+        line(listEntry.synonyms.join(', '), 16, hexColor(COLORS.frost), 14)
+      }
+      if (listEntry.sentence) {
+        line('EXAMPLE', 12, hexColor(COLORS.gold), 2, FONT.display)
+        line(`“${listEntry.sentence}”`, 16, '#c8d8ff', 14)
+      }
+      line('📝 From your word lists', 13, hexColor(COLORS.teal), 10)
     } else if (rec?.note) {
       line('NOTE', 12, hexColor(COLORS.gold), 2, FONT.display)
       line(rec.note, 17, '#ffffff', 14)

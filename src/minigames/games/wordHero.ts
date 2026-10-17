@@ -28,6 +28,7 @@ const TEMPO: Record<WordLevel, { start: number; end: number; travel: number }> =
   all: { start: 104, end: 128, travel: 2300 },
   standard: { start: 104, end: 128, travel: 2300 },
   challenge: { start: 112, end: 140, travel: 2100 },
+  custom: { start: 104, end: 128, travel: 2300 },
 }
 
 type Mode = 'synonym' | 'antonym'

@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { createButton, setButtonEnabled, setButtonLabel } from '../ui/Button'
 import { addAmbientMotes, addStarfieldBackdrop, driftStarfield } from '../ui/Starfield'
-import { addVignette, createInsetPlate, paintStage } from '../ui/Panel'
+import { addVignette, createInsetPlate, paintStage, showToast } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { BOARDS, getBoard } from '../systems/BoardLayout'
 import { characterDie } from '../systems/DiceSystem'
@@ -16,7 +16,8 @@ import {
 import type { CpuLevel } from '../systems/CpuPolicy'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL } from '../systems/CpuPolicy'
 import { isAutoSimMode, getAutoSimFullMap, getAutoSimRounds, getAutoSimPlayers, getAutoSimMinigames, getAutoSimBoard } from '../systems/gameFlags'
-import { getSettings, isTouchPreferred, setSettings, shouldReduceMotion, WORD_LEVEL_LABEL, WORD_LEVEL_ORDER } from '../systems/GameSettings'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { customFallbackMessage, cycleWordLevel as nextWordLevel, wordLevelLabel } from '../systems/WordLists'
 import { Sfx } from '../systems/Sfx'
 
 const MAX_PLAYERS = 4
@@ -123,6 +124,9 @@ export class SetupScene extends Phaser.Scene {
     const h = this.scale.height
     const reduce = shouldReduceMotion()
     const touch = isTouchPreferred(this.sys.game)
+    // Scene instances are reused: coming back (e.g. from Word Lists) must re-enable the controls.
+    this.leaving = false
+    this.activeRow = -1
 
     paintStage(this)
     const stars = addStarfieldBackdrop(this, 0.42)
@@ -134,6 +138,10 @@ export class SetupScene extends Phaser.Scene {
     const backBtn = createButton(this, 100, 48, '← MENU', COLORS.bgPanelAlt, COLORS.chromeDeep, 140, 48)
     backBtn.setDepth(10)
     backBtn.on('pointerdown', () => this.scene.start('MenuScene'))
+
+    const listsBtn = createButton(this, w - 110, 48, '📝 LISTS', COLORS.teal, COLORS.tealDeep, 160, 48)
+    listsBtn.setDepth(10)
+    listsBtn.on('pointerdown', () => this.openWordLists())
 
     const headerPanel = this.add.container(w / 2, 58).setDepth(5)
     const hShadow = this.add.graphics()
@@ -236,7 +244,7 @@ export class SetupScene extends Phaser.Scene {
 
     this.add.text(w / 2, rosterTop + 24, touch
       ? 'Tap portrait or name tag to change character  ·  Tap START'
-      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  L words  ·  M minigames  ·  B bonus  ·  Enter', {
+      : 'Click portrait to change character  ·  1–3 length  ·  G board  ·  L words  ·  W word lists  ·  M minigames  ·  B bonus  ·  Enter', {
       fontSize: '13px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -342,6 +350,7 @@ export class SetupScene extends Phaser.Scene {
       else if (ev.code === 'KeyG') this.cycleBoard()
       else if (ev.code === 'KeyL') this.cycleWordLevel()
       else if (ev.code === 'KeyB') this.toggleBonusStars()
+      else if (ev.code === 'KeyW') this.openWordLists()
     }
     this.input.keyboard?.on('keydown', onRules)
     this.events.once('shutdown', () => this.input.keyboard?.off('keydown', onRules))
@@ -372,11 +381,21 @@ export class SetupScene extends Phaser.Scene {
     })
 
     this.cameras.main.fadeIn(360, 7, 11, 20)
+
+    // The saved setting asks for a custom list that's gone or too short: say so (play falls back to all levels).
+    const fallback = isAutoSimMode() ? null : customFallbackMessage()
+    if (fallback) this.time.delayedCall(500, () => showToast(this, fallback, 652, COLORS.warning))
+  }
+
+  private openWordLists() {
+    if (this.leaving) return
+    this.leaving = true
+    this.scene.start('WordListScene', { returnTo: 'SetupScene' })
   }
 
   private refreshPartyOptions() {
     if (this.freqBtn) setButtonLabel(this.freqBtn, `🎮 ${FREQ_LABEL[this.partyOptions.minigames]}`)
-    if (this.levelBtn) setButtonLabel(this.levelBtn, `🎓 Words: ${WORD_LEVEL_LABEL[getSettings().wordLevel]}`)
+    if (this.levelBtn) setButtonLabel(this.levelBtn, this.levelLabel())
     if (this.bonusBtn) setButtonLabel(this.bonusBtn, `🌟 Bonus: ${this.partyOptions.bonusStars ? 'ON' : 'OFF'}`)
     const board = getBoard(this.partyOptions.board)
     if (this.boardBtn) setButtonLabel(this.boardBtn, `${board.emoji} ${board.name}`)
@@ -385,10 +404,17 @@ export class SetupScene extends Phaser.Scene {
 
   private cycleWordLevel() {
     if (this.leaving) return
-    const cur = getSettings().wordLevel
-    setSettings({ wordLevel: WORD_LEVEL_ORDER[(WORD_LEVEL_ORDER.indexOf(cur) + 1) % WORD_LEVEL_ORDER.length] })
+    const message = nextWordLevel()
     this.refreshPartyOptions()
     Sfx.uiToggle()
+    if (message) showToast(this, message, 652, COLORS.warning)
+  }
+
+  private levelLabel(): string {
+    const label = wordLevelLabel()
+    // The list name replaces "Words:" so longer names still fit the button.
+    if (label.startsWith('📝')) return label.length > 21 ? `${label.slice(0, 20)}…` : label
+    return `🎓 Words: ${label}`
   }
 
   private cycleBoard() {

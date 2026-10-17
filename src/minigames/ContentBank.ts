@@ -1,11 +1,13 @@
 import Phaser from 'phaser'
 import { filterByLevel } from '../systems/GameSettings'
+import { activeCustomList, playableEntries, setLexiconFromCache } from '../systems/WordLists'
 
 export type PartOfSpeech = 'noun' | 'verb' | 'adjective' | 'adverb'
 
 export interface LexWord {
   word: string
-  pos: PartOfSpeech
+  /** Always set for lexicon words; custom list words may not have one. */
+  pos?: PartOfSpeech
   definition: string
   synonyms: string[]
   antonyms: string[]
@@ -166,7 +168,14 @@ function contentTokens(def: string): Set<string> {
 
 /** Typed, fault-tolerant access to every word/grammar bank the minigames draw from. */
 export class ContentBank {
+  /** The words games draw from: the teacher's list in custom mode, else the level-filtered lexicon. */
   readonly words: LexWord[]
+  /** Level-filtered lexicon words — the fallback when a custom list lacks what a game needs. */
+  readonly lexWords: LexWord[]
+  /** True when the active custom word list drives this bank. */
+  readonly custom: boolean
+  /** Name of the custom list in play (for UI), when `custom`. */
+  readonly customName?: string
   /** Every valid lexicon word, ignoring the Word Level setting (for lookups). */
   readonly allWords: LexWord[]
   readonly affixes: AffixItem[]
@@ -181,9 +190,11 @@ export class ContentBank {
 
   /** Words to favour (e.g. the player's weak words from the Word Book). */
   private focus: LexWord[] = []
+  private customSet = new Set<LexWord>()
 
   constructor(cache: Phaser.Cache.CacheManager, focusWords?: string[]) {
     const lex = (cache.json.get('lexicon') ?? {}) as LexiconJson
+    setLexiconFromCache(cache)
     const vocab = (cache.json.get('vocab') ?? {}) as Record<string, unknown[]>
     const grammar = (cache.json.get('grammar') ?? {}) as Record<string, unknown[]>
 
@@ -191,16 +202,30 @@ export class ContentBank {
       w && typeof w.word === 'string' && Array.isArray(w.synonyms) && w.synonyms.length > 0 && typeof w.definition === 'string')
     this.allWords = validWords.length >= 12 ? validWords : FALLBACK_WORDS
     // Respect the player's Word Level setting, keeping pools big enough to play.
-    this.words = validWords.length >= 12 ? filterByLevel(validWords, 40) : FALLBACK_WORDS
+    this.lexWords = validWords.length >= 12 ? filterByLevel(validWords, 40) : FALLBACK_WORDS
+    const list = activeCustomList()
+    const customWords = list ? customLexWords(list) : []
+    this.custom = customWords.length > 0
+    this.customName = this.custom ? list?.name : undefined
+    this.words = this.custom ? customWords : this.lexWords
+    this.customSet = new Set(customWords)
     this.affixes = (lex.affixes?.length ?? 0) >= 4 ? filterByLevel(lex.affixes!, 12) : FALLBACK_AFFIXES
-    this.spelling = (lex.spelling?.length ?? 0) >= 4 ? filterByLevel(lex.spelling!, 12) : FALLBACK_SPELLING
+    const customSpelling = this.custom ? spellingFrom(customWords) : []
+    this.spelling = customSpelling.length >= 4 ? customSpelling
+      : (lex.spelling?.length ?? 0) >= 4 ? filterByLevel(lex.spelling!, 12) : FALLBACK_SPELLING
     this.roots = (lex.roots?.length ?? 0) >= 3 ? filterByLevel(lex.roots!, 16) : FALLBACK_ROOTS
     const compounds = (lex.compounds ?? []).filter(c =>
       c && typeof c.word === 'string' && c.word === `${c.a}${c.b}` && Array.isArray(c.distractors) && c.distractors.length >= 3)
     this.compounds = compounds.length >= 5 ? filterByLevel(compounds, 12) : FALLBACK_COMPOUNDS
     if (focusWords && focusWords.length > 0) {
       const set = new Set(focusWords.map(w => w.toLowerCase()))
-      this.focus = this.allWords.filter(w => set.has(w.word))
+      const seen = new Set<string>()
+      this.focus = [...customWords, ...this.allWords].filter(w => {
+        const k = w.word.toLowerCase()
+        if (!set.has(k) || seen.has(k)) return false
+        seen.add(k)
+        return true
+      })
     }
 
     type Raw = { sentence?: string; prompt?: string; word?: string; choices?: string[]; correct?: number; correct_index?: number; level?: number }
@@ -215,10 +240,11 @@ export class ContentBank {
       })
 
     // Respect the Word Level setting; a level with too few items falls back to the full list.
-    this.contextClues = filterByLevel(asChoice(vocab.minigame_context_clues, r => r.sentence), 10)
+    // Custom lists replace the hand-written vocab items, so games stick to the teacher's words.
+    this.contextClues = this.custom ? [] : filterByLevel(asChoice(vocab.minigame_context_clues, r => r.sentence), 10)
     this.homophones = filterByLevel(asChoice(vocab.minigame_homophones, r => r.prompt), 10)
-    this.antonyms = filterByLevel(asChoice(vocab.minigame_antonyms, r => r.word), 6)
-    this.synonyms = filterByLevel(asChoice(vocab.minigame_synonyms, r => r.word), 6)
+    this.antonyms = this.custom ? [] : filterByLevel(asChoice(vocab.minigame_antonyms, r => r.word), 6)
+    this.synonyms = this.custom ? [] : filterByLevel(asChoice(vocab.minigame_synonyms, r => r.word), 6)
     this.grammarFix = filterByLevel([
       ...asChoice(grammar.minigame_sentence_fix, r => r.prompt),
       ...asChoice(grammar.minigame_comma, () => 'Which sentence uses commas correctly?'),
@@ -237,9 +263,23 @@ export class ContentBank {
       // A handful of weak words shouldn't repeat every other round — scale the focus share with the pool.
       if (pool.length > 0 && Math.random() < Math.min(0.6, pool.length * 0.12)) return this.draw(`focus:${key}:${pool.length}`, pool)
     }
-    if (!filter) return this.draw('words', this.words)
+    if (!filter) return this.draw(this.custom ? 'custom-words' : 'words', this.words)
     const pool = this.words.filter(filter)
+    if (this.custom) {
+      // Custom entries often lack synonyms, antonyms, a part of speech or a sentence. Games that
+      // need those fall back to lexicon words; a few matches share the draws with the lexicon.
+      if (pool.length >= 6) return this.draw(`custom:${key}:${pool.length}`, pool)
+      const lexPool = this.lexWords.filter(filter)
+      if (pool.length > 0 && (lexPool.length === 0 || Math.random() < 0.5)) return this.draw(`custom:${key}:${pool.length}`, pool)
+      if (lexPool.length > 0) return this.draw(`words:${key}:${lexPool.length}`, lexPool)
+      return this.draw('lex-words', this.lexWords)
+    }
     return pool.length > 0 ? this.draw(`words:${key}:${pool.length}`, pool) : this.draw('words', this.words)
+  }
+
+  /** True for words from the teacher's custom list. */
+  isCustomWord(w: LexWord): boolean {
+    return this.customSet.has(w)
   }
 
   /**
@@ -258,12 +298,61 @@ export class ContentBank {
       || x.antonyms.some(a => related.has(a))
       || w.antonyms.some(a => x.synonyms.includes(a))
       || [...contentTokens(x.definition)].some(t => defTokens.has(t))
-    const strict = pickDistinct(this.words, n, x => (filter ? !filter(x) : false) || isRelated(x))
-    if (strict.length >= n) return strict
-    // Very small banks: relax the filter rather than return too few distractors.
-    const extra = pickDistinct(this.words, n - strict.length, x =>
-      x.word === w.word || related.has(x.word) || strict.includes(x) || (filter ? !filter(x) : false)
-      || x.synonyms.some(sy => related.has(sy)) || x.antonyms.some(a => related.has(a)))
-    return [...strict, ...extra]
+    const pickFrom = (pool: readonly LexWord[], want: number, taken: LexWord[]): LexWord[] => {
+      const takenWords = new Set(taken.map(t => t.word))
+      // Custom words often have no part of speech; don't let a same-POS filter rule them out.
+      const skip = (x: LexWord) => takenWords.has(x.word) || (filter ? !(this.customSet.has(x) && x.pos === undefined) && !filter(x) : false)
+      const strict = pickDistinct(pool, want, x => skip(x) || isRelated(x))
+      if (strict.length >= want) return strict
+      // Very small banks: relax the filter rather than return too few distractors.
+      const extra = pickDistinct(pool, want - strict.length, x =>
+        skip(x) || x.word === w.word || related.has(x.word) || strict.includes(x)
+        || x.synonyms.some(sy => related.has(sy)) || x.antonyms.some(a => related.has(a)))
+      return [...strict, ...extra]
+    }
+    // Custom words get distractors from the same list (topped up from the lexicon if it runs short);
+    // lexicon words — including fallbacks drawn in custom mode — use the lexicon.
+    const primary = this.custom && this.customSet.has(w) ? this.words : this.lexWords
+    const picked = pickFrom(primary, n, [])
+    if (picked.length >= n || !this.custom) return picked
+    const secondary = primary === this.words ? this.lexWords : this.words
+    return [...picked, ...pickFrom(secondary, n - picked.length, picked)]
   }
+}
+
+/** Turn the active list's entries (already merged with the lexicon) into game words. */
+function customLexWords(list: Parameters<typeof playableEntries>[0]): LexWord[] {
+  return playableEntries(list).map(e => ({
+    word: e.word,
+    pos: e.pos,
+    definition: e.definition,
+    synonyms: e.synonyms ?? [],
+    antonyms: e.antonyms ?? [],
+    sentence: e.sentence ?? '',
+  }))
+}
+
+/** Plausible misspellings for Spelling Bee: doubled/dropped letters, swapped neighbours, vowel swaps. */
+export function misspellingsOf(word: string): string[] {
+  const out = new Set<string>()
+  const vowels = 'aeiou'
+  for (let i = 1; i < word.length - 1; i++) {
+    const ch = word[i]
+    if (ch === word[i + 1]) out.add(word.slice(0, i) + word.slice(i + 1))
+    else if (!vowels.includes(ch)) out.add(word.slice(0, i) + ch + word.slice(i))
+    if (vowels.includes(ch)) {
+      const alt = ch === 'e' ? 'i' : ch === 'i' ? 'e' : ch === 'a' ? 'e' : ch === 'o' ? 'u' : 'o'
+      out.add(word.slice(0, i) + alt + word.slice(i + 1))
+    }
+    if (ch !== word[i + 1]) out.add(word.slice(0, i) + word[i + 1] + ch + word.slice(i + 2))
+  }
+  out.delete(word)
+  return shuffled([...out].filter(m => m.length >= 3))
+}
+
+function spellingFrom(words: readonly LexWord[]): SpellingItem[] {
+  return words
+    .filter(w => /^[a-z]{5,14}$/.test(w.word))
+    .map(w => ({ correct: w.word, misspellings: misspellingsOf(w.word).slice(0, 3) }))
+    .filter(item => item.misspellings.length >= 3)
 }

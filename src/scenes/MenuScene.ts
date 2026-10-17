@@ -12,6 +12,7 @@ import { describeSave, readSave } from '../systems/SaveGame'
 import { getTickets } from '../systems/Unlocks'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { TILE_COLORS } from '../systems/SpriteFactory'
+import { getActiveList } from '../systems/WordLists'
 
 const TILE_PREVIEW_EMOJI: Record<string, string> = {
   vocab: '📖', grammar: '✏️', bonus: '⭐', star: '🏆', mystery: '❓', minigame: '🕹️', swap: '🔄',
@@ -217,12 +218,13 @@ export class MenuScene extends Phaser.Scene {
     arcadeBtn.setDepth(6)
     arcadeBtn.on('pointerdown', goArcade)
 
-    const howBtn = createButton(this, w / 2 - 188, 532 + shift, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 176, 52)
+    // Four-across utility row: How to Play · Word Book · Word Lists · Settings.
+    const howBtn = createButton(this, w / 2 - 282, 532 + shift, 'HOW TO PLAY', COLORS.skyBtn, COLORS.skyBtnDeep, 176, 52)
     howBtn.setDepth(6)
     howBtn.on('pointerdown', () => this.openHowTo())
 
     // Settings live on the ⚙ button (top right); this slot is the Party Shop.
-    const shopBtn = createButton(this, w / 2 + 188, 532 + shift, `🎟️ SHOP · ${getTickets()}`, COLORS.gold, COLORS.goldDeep, 176, 52)
+    const shopBtn = createButton(this, w / 2 + 282, 532 + shift, `🎟️ SHOP · ${getTickets()}`, COLORS.gold, COLORS.goldDeep, 176, 52)
     shopBtn.setDepth(6)
     const goShop = () => {
       if (this.modalOpen || leaving) return
@@ -231,7 +233,7 @@ export class MenuScene extends Phaser.Scene {
     }
     shopBtn.on('pointerdown', goShop)
 
-    const bookBtn = createButton(this, w / 2, 532 + shift, '📖 WORD BOOK', COLORS.mint, 0x2fb56a, 176, 52)
+    const bookBtn = createButton(this, w / 2 - 94, 532 + shift, '📖 WORD BOOK', COLORS.mint, 0x2fb56a, 176, 52)
     bookBtn.setDepth(6)
     const goBook = () => {
       if (this.modalOpen || leaving) return
@@ -240,10 +242,24 @@ export class MenuScene extends Phaser.Scene {
     }
     bookBtn.on('pointerdown', goBook)
 
+    const active = getActiveList()
+    const listsBtn = createButton(this, w / 2 + 94, 532 + shift, '📝 WORD LISTS', COLORS.teal, COLORS.tealDeep, 176, 52)
+    listsBtn.setDepth(6)
+    const goLists = () => {
+      if (this.modalOpen || leaving) return
+      leaving = true
+      this.scene.start('WordListScene', { returnTo: 'MenuScene' })
+    }
+    listsBtn.on('pointerdown', goLists)
+    const listsSub = this.add.text(w / 2 + 94, 532 + shift + 36, active ? `Active: ${active.name}` : 'For teachers', {
+      fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mist),
+    }).setOrigin(0.5, 0).setDepth(6).setAlpha(0)
+    this.tweens.add({ targets: listsSub, alpha: 0.85, duration: reduce ? 0 : 400, delay: reduce ? 0 : 900 })
+
     // Stagger CTA entrance
     if (continueSub) continueSub.setAlpha(0)
     if (continueSub) this.tweens.add({ targets: continueSub, alpha: 1, duration: reduce ? 0 : 400, delay: reduce ? 0 : 300 })
-    ;[...ctas, arcadeBtn, howBtn, bookBtn, shopBtn].forEach((btn, i) => {
+    ;[...ctas, arcadeBtn, howBtn, bookBtn, listsBtn, shopBtn].forEach((btn, i) => {
       btn.setAlpha(0)
       btn.y += 18
       this.tweens.add({
@@ -262,7 +278,7 @@ export class MenuScene extends Phaser.Scene {
 
     const hint = this.add.text(w / 2, h - 48, touch
       ? `Tap ${save ? 'CONTINUE PARTY' : 'ENTER PARTY'} to begin  ·  Rotate landscape for the best view`
-      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  ? = How to Play' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  P = Shop  ·  ? = How to Play', {
+      : save ? 'Enter = Continue  ·  N = New party  ·  A = Arcade  ·  L = Word Lists  ·  P = Shop  ·  ? = Help' : 'Enter = Start  ·  A = Arcade  ·  W = Word Book  ·  L = Word Lists  ·  P = Shop  ·  ? = Help', {
       fontSize: '14px',
       fontFamily: FONT.body,
       color: hexColor(COLORS.mute),
@@ -303,6 +319,7 @@ export class MenuScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-W', goBook)
     this.input.keyboard?.on('keydown-P', goShop)
     this.input.keyboard?.on('keydown-A', goArcade)
+    this.input.keyboard?.on('keydown-L', goLists)
     this.input.keyboard?.on('keydown', openHowToFromKeyboard)
     this.input.keyboard?.on('keydown-H', onHelpKey)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -312,6 +329,7 @@ export class MenuScene extends Phaser.Scene {
       this.input.keyboard?.off('keydown-W', goBook)
       this.input.keyboard?.off('keydown-P', goShop)
       this.input.keyboard?.off('keydown-A', goArcade)
+      this.input.keyboard?.off('keydown-L', goLists)
       this.input.keyboard?.off('keydown', openHowToFromKeyboard)
       this.input.keyboard?.off('keydown-H', onHelpKey)
     })

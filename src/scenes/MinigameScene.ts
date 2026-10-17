@@ -311,6 +311,13 @@ export class MinigameScene extends Phaser.Scene {
       padding: { x: 6, y: 3 },
     }).setOrigin(0, 0.5)
     panel.add(chip)
+    if (this.bank.custom && this.bank.customName) {
+      // Teacher mode: show which word list this round draws from.
+      panel.add(this.add.text(-300 + chip.width + 10, -190, ` 📝 ${this.bank.customName} `, {
+        fontSize: '16px', fontFamily: FONT.display, color: '#0a101c', backgroundColor: hexColor(COLORS.teal),
+        padding: { x: 6, y: 3 },
+      }).setOrigin(0, 0.5))
+    }
     panel.add(this.add.text(0, -150, def.tagline, {
       fontSize: '22px', fontFamily: FONT.body, color: hexColor(COLORS.frost), fontStyle: 'italic',
       align: 'center', wordWrap: { width: 820 },

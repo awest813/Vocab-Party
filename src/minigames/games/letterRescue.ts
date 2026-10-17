@@ -141,7 +141,7 @@ export const letterRescue: MinigameDef = {
 
       const card = scene.add.container(area.cx, area.top + 66)
       card.add(drawCard(scene, Math.min(area.width - 20, 860), 116, accent))
-      card.add(scene.add.text(0, -34, `CLUE · ${word.pos.toUpperCase()} · ${word.word.length} LETTERS`, {
+      card.add(scene.add.text(0, -34, `CLUE${word.pos ? ` · ${word.pos.toUpperCase()}` : ''} · ${word.word.length} LETTERS`, {
         fontSize: '14px', fontFamily: FONT.display, color: hexColor(accent),
       }).setOrigin(0.5))
       card.add(scene.add.text(0, 10, `“${word.definition}”`, {

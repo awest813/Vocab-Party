@@ -205,3 +205,37 @@ export function createInsetPlate(
 export function accentLabel(color: number): string {
   return hexColor(color)
 }
+
+const toasts = new WeakMap<Phaser.Scene, Phaser.GameObjects.Container>()
+
+/** Brief message plate that fades out on its own (one at a time per scene). */
+export function showToast(scene: Phaser.Scene, message: string, y = scene.scale.height - 120, color: number = COLORS.gold): void {
+  const prev = toasts.get(scene)
+  if (prev?.active) prev.destroy()
+  const c = scene.add.container(scene.scale.width / 2, y).setDepth(DEPTH.banner + 50)
+  const t = scene.add.text(0, 0, message, {
+    fontSize: '18px',
+    fontFamily: FONT.body,
+    color: hexColor(COLORS.frost),
+    align: 'center',
+    wordWrap: { width: 760 },
+  }).setOrigin(0.5)
+  const pw = t.width + 40
+  const ph = t.height + 22
+  const g = scene.add.graphics()
+  g.fillStyle(0x000000, 0.4)
+  g.fillRoundedRect(-pw / 2 + 2, -ph / 2 + 4, pw, ph, 12)
+  g.fillStyle(0x0b1222, 0.97)
+  g.fillRoundedRect(-pw / 2, -ph / 2, pw, ph, 12)
+  g.lineStyle(2, color, 0.9)
+  g.strokeRoundedRect(-pw / 2, -ph / 2, pw, ph, 12)
+  c.add([g, t])
+  toasts.set(scene, c)
+  scene.tweens.add({
+    targets: c,
+    alpha: 0,
+    delay: 3600,
+    duration: 400,
+    onComplete: () => { if (c.active) c.destroy() },
+  })
+}

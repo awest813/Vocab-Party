@@ -1,9 +1,10 @@
 import Phaser from 'phaser'
 import { CPU_LEVEL_LABEL, DEFAULT_CPU_LEVEL, type CpuLevel } from '../systems/CpuPolicy'
-import { getSettings, isTouchPreferred, setSettings, shouldReduceMotion, WORD_LEVEL_LABEL, WORD_LEVEL_ORDER } from '../systems/GameSettings'
+import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
+import { customFallbackMessage, cycleWordLevel, wordLevelLabel } from '../systems/WordLists'
 import { Sfx } from '../systems/Sfx'
 import { createButton, setButtonLabel } from '../ui/Button'
-import { addVignette, paintStage } from '../ui/Panel'
+import { addVignette, paintStage, showToast } from '../ui/Panel'
 import { addAmbientMotes, addStarfieldBackdrop } from '../ui/Starfield'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { getPersonalBests, MINIGAMES, recordPersonalBest } from '../minigames/registry'
@@ -62,14 +63,20 @@ export class ArcadeScene extends Phaser.Scene {
     }
     modeBtn.on('pointerdown', cycleMode)
 
-    const levelLabel = () => `🎓 ${WORD_LEVEL_LABEL[getSettings().wordLevel]}`
-    const levelBtn = createButton(this, w - 150, 104, levelLabel(), COLORS.bgPanelAlt, COLORS.chromeDeep, 200, 38)
+    const levelLabel = () => {
+      const label = wordLevelLabel()
+      if (!label.startsWith('📝')) return `🎓 ${label}`
+      return label.length > 19 ? `${label.slice(0, 18)}…` : label
+    }
+    const levelBtn = createButton(this, w - 150, 104, levelLabel(), COLORS.bgPanelAlt, COLORS.chromeDeep, 220, 38)
     const cycleLevel = () => {
-      const cur = getSettings().wordLevel
-      setSettings({ wordLevel: WORD_LEVEL_ORDER[(WORD_LEVEL_ORDER.indexOf(cur) + 1) % WORD_LEVEL_ORDER.length] })
+      const message = cycleWordLevel()
       setButtonLabel(levelBtn, levelLabel())
       Sfx.uiToggle()
+      if (message) showToast(this, message, h - 70, COLORS.warning)
     }
+    const fallback = customFallbackMessage()
+    if (fallback) this.time.delayedCall(400, () => showToast(this, fallback, h - 70, COLORS.warning))
     levelBtn.on('pointerdown', cycleLevel)
 
     const rows = Math.ceil(MINIGAMES.length / COLS)
