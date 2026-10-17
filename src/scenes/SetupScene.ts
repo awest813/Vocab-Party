@@ -5,7 +5,7 @@ import { addVignette, createInsetPlate, paintStage, showToast } from '../ui/Pane
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { BOARDS, getBoard, lapLength } from '../systems/BoardLayout'
 import { characterDie } from '../systems/DiceSystem'
-import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
+import { CHARACTER_COUNT, DEFAULT_PARTY_OPTIONS, HEAD_START, type MinigameFrequency, type PartyOptions } from '../systems/GameState'
 import {
   CHARACTER_DEFS,
   CHARACTER_COUNT as SPRITE_CHARACTER_COUNT,
@@ -88,6 +88,9 @@ export class SetupScene extends Phaser.Scene {
   private playerCount = 4
   private cpuModeByRow: CpuSlotMode[] = ['off', 'normal', 'normal', 'normal']
   private cpuToggleTexts: Phaser.GameObjects.Text[] = []
+  /** Head-start handicap per roster slot (humans only): 0 off, 1 ★, 2 ★★. */
+  private headStartByRow: number[] = [0, 0, 0, 0]
+  private headStartTexts: Phaser.GameObjects.Text[] = []
   /** Selected character index per roster slot (into CHARACTER_DEFS). */
   private characterByRow: number[] = [0, 1, 2, 3]
   private mapPreset: MapPresetId = 'classic'
@@ -257,6 +260,7 @@ export class SetupScene extends Phaser.Scene {
     this.rows = []
     this.rowContainers = []
     this.cpuToggleTexts = []
+    this.headStartTexts = []
     const ROW_SPACING = 62
     const startY = rosterTop + 66
     for (let i = 0; i < MAX_PLAYERS; i++) {
@@ -396,6 +400,18 @@ export class SetupScene extends Phaser.Scene {
     if (this.leaving) return
     this.leaving = true
     this.scene.start('WordListScene', { returnTo: 'SetupScene' })
+  }
+
+  private taglineTimer?: Phaser.Time.TimerEvent
+
+  /** Borrow the caption line for a moment to say what the head start actually gives. */
+  private explainHeadStart(level: number) {
+    const tier = HEAD_START[level]
+    this.boardTagline?.setText(level === 0
+      ? 'Head start off — everyone starts even.'
+      : `🎁 Head start ${tier.label}: +${tier.startCoins} coins now and +${tier.perRound} every round — great for younger or newer players.`)
+    this.taglineTimer?.remove()
+    this.taglineTimer = this.time.delayedCall(4000, () => this.refreshPartyOptions())
   }
 
   private refreshPartyOptions() {
@@ -712,6 +728,22 @@ export class SetupScene extends Phaser.Scene {
     })
     this.cpuToggleTexts.push(cpuToggle)
 
+    // Handicap for younger / newer players: extra coins now and a small allowance every round.
+    const headStart = this.add.text(inputX + inputW / 2 + 18, rowY, '', {
+      fontSize: '14px',
+      fontFamily: FONT.display,
+      padding: { left: 10, right: 10, top: 6, bottom: 6 },
+    }).setOrigin(0, 0.5)
+    headStart.setInteractive({ useHandCursor: true })
+    headStart.on('pointerdown', () => {
+      if (index >= this.playerCount || this.cpuModeByRow[index] !== 'off') return
+      this.headStartByRow[index] = (this.headStartByRow[index] + 1) % HEAD_START.length
+      Sfx.uiToggle()
+      this.refreshCpuToggle(index)
+      this.explainHeadStart(this.headStartByRow[index])
+    })
+    this.headStartTexts.push(headStart)
+
     const bg = this.add.rectangle(inputX, rowY, inputW, inputH, COLORS.bgPanel)
     bg.setStrokeStyle(2, COLORS.mute)
     bg.setInteractive()
@@ -733,7 +765,7 @@ export class SetupScene extends Phaser.Scene {
       color: hexColor(COLORS.sky),
     }).setOrigin(0, 0.5).setVisible(false)
 
-    container.add([rowPlate, ring, token, tokenHit, label, charName, cycleHint, dieText, cpuToggle, bg, nameText, cursor])
+    container.add([rowPlate, ring, token, tokenHit, label, charName, cycleHint, dieText, cpuToggle, headStart, bg, nameText, cursor])
 
     const row: InputRow = {
       label,
@@ -775,6 +807,17 @@ export class SetupScene extends Phaser.Scene {
       t.setColor(mode === 'hard' ? '#ffe0a8' : '#b6f0d0')
       t.setBackgroundColor(mode === 'hard' ? '#3a2a18' : '#163028')
     }
+    const hs = this.headStartTexts[index]
+    if (hs) {
+      if (mode !== 'off') this.headStartByRow[index] = 0
+      const level = this.headStartByRow[index]
+      const tier = HEAD_START[level]
+      hs.setVisible(mode === 'off' && index < this.playerCount)
+      hs.setText(level === 0 ? 'HEAD START · OFF' : `HEAD START ${tier.label}`)
+      hs.setColor(level === 0 ? hexColor(COLORS.mute) : '#ffe7a3')
+      hs.setBackgroundColor(level === 0 ? hexColor(COLORS.bgPanelAlt) : '#3a2f12')
+      hs.input?.hitArea.setTo(0, 0, hs.width, hs.height)
+    }
   }
 
   refreshRows() {
@@ -810,8 +853,9 @@ export class SetupScene extends Phaser.Scene {
         } else {
           cpuT.disableInteractive()
           this.cpuModeByRow[i] = 'off'
-          this.refreshCpuToggle(i)
+          this.headStartByRow[i] = 0
         }
+        this.refreshCpuToggle(i)
       }
       if (!this.tweens.isTweening(this.rowContainers[i])) {
         this.rowContainers[i]?.setAlpha(enabled ? 1 : 0.45)
@@ -926,6 +970,7 @@ export class SetupScene extends Phaser.Scene {
           roundsPerGame,
           playerCpu,
           playerCpuLevels,
+          playerHeadStarts: this.headStartByRow.slice(0, this.playerCount).map((lvl, i) => (slice[i] === 'off' ? lvl : 0)),
           partyOptions: { ...this.partyOptions },
         })
       })

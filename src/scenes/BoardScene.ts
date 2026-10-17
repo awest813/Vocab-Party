@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 import type { CpuLevel } from '../systems/CpuPolicy'
-import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS } from '../systems/GameState'
+import { GameState, Player, TileType, createInitialState, ITEMS, type Item, addStudyMiss, type PartyOptions, DEFAULT_PARTY_OPTIONS, headStartTier } from '../systems/GameState'
 import { characterDie, faceSummary, maxMove, rollBlockDie, rollDie, STANDARD_DIE, type DieDef } from '../systems/DiceSystem'
 import { BOARD_COLS, BOARD_ROWS, BoardNode, getBoard, isSubmerged, resolveNodes, resolveTiles, tideForRound, type BoardDef, type TidePhase } from '../systems/BoardLayout'
 import { createButton, setButtonEnabled } from '../ui/Button'
@@ -217,6 +217,8 @@ export class BoardScene extends Phaser.Scene {
     playerCpu?: boolean[]
     playerCpuLevels?: CpuLevel[]
     playerCharacters?: number[]
+    /** Head-start handicap per player (0–2); ignored for CPUs. */
+    playerHeadStarts?: number[]
     partyOptions?: PartyOptions
     resume?: SaveData
   }) {
@@ -247,6 +249,12 @@ export class BoardScene extends Phaser.Scene {
     const characters = data?.playerCharacters ?? names.map((_, i) => i)
 
     this.state = createInitialState(names, emojis, cpuFlags, cpuLevels, characters, data?.partyOptions ?? DEFAULT_PARTY_OPTIONS)
+    this.state.players.forEach((p, i) => {
+      const level = p.isCpu ? 0 : data?.playerHeadStarts?.[i] ?? 0
+      if (level <= 0) return
+      p.headStart = level
+      p.coins += headStartTier(level).startCoins
+    })
     const resumed = data?.resume
     if (resumed) {
       this.state = resumed.state
@@ -2317,13 +2325,18 @@ export class BoardScene extends Phaser.Scene {
     })
   }
 
-  /** Owned shops pay their owner a little every round, so a shop is an investment, not a gamble. */
+  /**
+   * Owned shops pay their owner a little every round, so a shop is an investment, not a gamble.
+   * Players with a head start get their allowance at the same moment (one floaty per player).
+   */
   private payShopDividends() {
     for (const p of this.state.players) {
-      const owned = this.countOwnedShops(p.id)
-      if (owned === 0) continue
-      p.coins += owned * SHOP_ROUND_DIVIDEND
-      this.showFloatyText(p, `🏪 +${owned * SHOP_ROUND_DIVIDEND} 🪙 shop income`, '#ffd24a')
+      const shop = this.countOwnedShops(p.id) * SHOP_ROUND_DIVIDEND
+      const boost = headStartTier(p.headStart).perRound
+      if (shop + boost === 0) continue
+      p.coins += shop + boost
+      const why = [shop > 0 ? `🏪 ${shop}` : '', boost > 0 ? `🎁 ${boost}` : ''].filter(Boolean).join(' + ')
+      this.showFloatyText(p, shop > 0 && boost > 0 ? `+${shop + boost} 🪙 (${why})` : shop > 0 ? `🏪 +${shop} 🪙 shop income` : `🎁 +${boost} 🪙 head start`, '#ffd24a')
     }
     this.hud.update(this.state)
   }
@@ -2392,7 +2405,8 @@ export class BoardScene extends Phaser.Scene {
     const ev = this.board.event
     if (ev?.kind === 'tides') {
       // Rounds until the tide next turns (it flips at the start of round 1 + k·period).
-      parts.push(`${this.state.tide === 'low' ? '🏖️ Low tide' : '🌊 High tide'} · ${this.tideCountdown()}`)
+      // Two short lines: one long line ran under the 4th player's HUD card.
+      parts.push(this.state.tide === 'low' ? '🏖️ Low tide' : '🌊 High tide', this.tideCountdown())
     }
     this.nextEventText.setText(parts.join('\n'))
     if (ev) this.tileHintText?.setText(this.tileInspectHint())

@@ -67,7 +67,9 @@ export class ResultsScene extends Phaser.Scene {
         if (prog.gamesPlayed >= 10) unlock('parties_10')
         if (prog.gamesWon >= 5) unlock('wins_5')
         const cpus = state.players.filter(p => p.isCpu)
-        if (humanWon && cpus.length >= 3 && cpus.every(p => p.cpuLevel === 'hard')) unlock('hard_win')
+        // Beating three Hard CPUs only counts without a head start.
+        const fairWin = humanWon && !sorted[0].headStart
+        if (fairWin && cpus.length >= 3 && cpus.every(p => p.cpuLevel === 'hard')) unlock('hard_win')
       }
     }
 

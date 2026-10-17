@@ -81,6 +81,19 @@ export interface Player {
   stats: PlayerStats
   /** Which die this player rolls: the standard block or their character die. */
   useCharacterDie?: boolean
+  /** Handicap for a less experienced human: 0 none, 1 ★, 2 ★★ (see HEAD_START). */
+  headStart?: number
+}
+
+/** Head-start handicap tiers: extra coins at the start, then a small allowance every round. */
+export const HEAD_START = [
+  { label: 'OFF', startCoins: 0, perRound: 0 },
+  { label: '★', startCoins: 10, perRound: 2 },
+  { label: '★★', startCoins: 20, perRound: 4 },
+] as const
+
+export function headStartTier(level: number | undefined) {
+  return HEAD_START[Math.max(0, Math.min(HEAD_START.length - 1, Math.floor(level ?? 0)))]
 }
 
 /** How often an all-player party minigame runs between rounds. */

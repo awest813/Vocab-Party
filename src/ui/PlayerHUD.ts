@@ -253,6 +253,11 @@ export class PlayerHUD {
         }
         if ((player.forcedMoveValue ?? 0) > 0) {
           status.add(this.scene.add.text(sx, 0, '🔑', { fontSize: '14px' }).setOrigin(1, 0.5))
+          sx -= 18
+        }
+        if ((player.headStart ?? 0) > 0) {
+          // Shown to everyone so a handicap is never a secret.
+          status.add(this.scene.add.text(sx, 0, '🎁', { fontSize: '14px' }).setOrigin(1, 0.5).setAlpha(0.85))
         }
       }
     })
