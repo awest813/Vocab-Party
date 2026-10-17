@@ -9,6 +9,7 @@ import { paintStage } from '../ui/Panel'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { isAutoSimMode } from '../systems/gameFlags'
 import { generateFxTextures } from '../systems/ProceduralFx'
+import { setLexiconFromCache } from '../systems/WordLists'
 import { createButton } from '../ui/Button'
 
 export class PreloadScene extends Phaser.Scene {
@@ -138,6 +139,8 @@ export class PreloadScene extends Phaser.Scene {
     generateDiceTextures(this)
     generatePlayerTextures(this)
     generateTileTextures(this)
+    // Lets teacher word lists auto-fill definitions, synonyms and sentences for words the game knows.
+    setLexiconFromCache(this.cache)
 
     this.cameras.main.fadeIn(isAutoSimMode() ? 40 : 360, 7, 11, 20)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE, () => {

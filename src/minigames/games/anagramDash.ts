@@ -208,7 +208,7 @@ export const anagramDash: MinigameDef = {
 
       const card = scene.add.container(area.cx, cardY)
       card.add(drawCard(scene, Math.min(area.width - 20, 860), 150, accent))
-      card.add(scene.add.text(0, -46, `UNSCRAMBLE · ${word.word.length} LETTERS · ${word.pos.toUpperCase()}`, {
+      card.add(scene.add.text(0, -46, `UNSCRAMBLE · ${word.word.length} LETTERS${word.pos ? ` · ${word.pos.toUpperCase()}` : ''}`, {
         fontSize: '15px', fontFamily: FONT.display, color: hexColor(accent),
       }).setOrigin(0.5))
       card.add(scene.add.text(0, 12, `“${word.definition}”`, {

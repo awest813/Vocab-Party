@@ -16,15 +16,19 @@ export type GameSettings = {
   wordLevel: WordLevel
 }
 
-export type WordLevel = 'all' | 'starter' | 'standard' | 'challenge'
+/** 'custom' plays the teacher's active word list (see WordLists.ts); it filters like 'all'. */
+export type WordLevel = 'all' | 'starter' | 'standard' | 'challenge' | 'custom'
 
+/** Built-in levels; the Words toggles append 'custom' when a word list is active. */
 export const WORD_LEVEL_ORDER: WordLevel[] = ['all', 'starter', 'standard', 'challenge']
 export const WORD_LEVEL_LABEL: Record<WordLevel, string> = {
   all: 'All levels',
   starter: 'Starter',
   standard: 'Standard',
   challenge: 'Challenge',
+  custom: 'My word list',
 }
+const STORED_LEVELS: WordLevel[] = [...WORD_LEVEL_ORDER, 'custom']
 
 /** Content levels (1–3) included by each setting. */
 export function allowedLevels(level: WordLevel): Set<number> {
@@ -38,7 +42,7 @@ export function allowedLevels(level: WordLevel): Set<number> {
 
 /** Keep items whose `level` fits the current setting; fall back to everything if too few remain. */
 export function filterByLevel<T extends { level?: number }>(items: T[], minKeep: number, level: WordLevel = getSettings().wordLevel): T[] {
-  if (level === 'all') return items
+  if (level === 'all' || level === 'custom') return items
   const allowed = allowedLevels(level)
   const kept = items.filter(i => typeof i.level !== 'number' || allowed.has(i.level))
   return kept.length >= minKeep ? kept : items
@@ -72,7 +76,7 @@ export function getSettings(): GameSettings {
         sfxVolume: clamp01(typeof parsed.sfxVolume === 'number' ? parsed.sfxVolume : DEFAULTS.sfxVolume),
         musicVolume: clamp01(typeof parsed.musicVolume === 'number' ? parsed.musicVolume : DEFAULTS.musicVolume),
         reducedMotion: Boolean(parsed.reducedMotion),
-        wordLevel: WORD_LEVEL_ORDER.includes(parsed.wordLevel as WordLevel) ? parsed.wordLevel as WordLevel : DEFAULTS.wordLevel,
+        wordLevel: STORED_LEVELS.includes(parsed.wordLevel as WordLevel) ? parsed.wordLevel as WordLevel : DEFAULTS.wordLevel,
       }
       return { ...cached }
     }

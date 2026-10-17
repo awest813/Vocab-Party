@@ -167,7 +167,8 @@ export const whackAWord: MinigameDef = {
       const hole = Phaser.Utils.Array.GetRandom(free) as number
       const wantGood = Math.random() < 0.48
       const word = ctx.bank.word(
-        w => !DUAL_POS.has(w.word) && (wantGood ? w.pos === targetPos : w.pos !== targetPos),
+        // Custom list words without a known part of speech can't be judged, so they sit this game out.
+        w => w.pos !== undefined && !DUAL_POS.has(w.word) && (wantGood ? w.pos === targetPos : w.pos !== targetPos),
         `whack:${wantGood ? '' : 'not-'}${targetPos}`,
       )
       // Derive from the word itself, in case the filtered pool was empty and fell back.
@@ -305,7 +306,7 @@ export const wordSorter: MinigameDef = {
 
     const showWord = () => {
       if (ctx.isOver()) return
-      const w = ctx.bank.word(x => x.sentence.toLowerCase().includes(x.word), 'sorter')
+      const w = ctx.bank.word(x => x.pos !== undefined && x.sentence.toLowerCase().includes(x.word), 'sorter')
       const card = scene.add.container(area.cx, area.top + 130)
       card.add(drawCard(scene, Math.min(area.width - 40, 820), 210, accent))
       card.add(scene.add.text(0, -76, 'WHAT PART OF SPEECH?', { fontSize: '15px', fontFamily: FONT.display, color: hexColor(accent) }).setOrigin(0.5))

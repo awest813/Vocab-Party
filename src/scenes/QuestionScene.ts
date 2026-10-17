@@ -8,7 +8,8 @@ import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { filterByLevel, isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
-import { drawFromDeck } from '../minigames/ContentBank'
+import { drawFromDeck, pickDistinct } from '../minigames/ContentBank'
+import { activeCustomList, playableEntries, type WordEntry, type WordList } from '../systems/WordLists'
 
 interface QuestionData {
   question: string
@@ -16,6 +17,8 @@ interface QuestionData {
   correct: number
   explanation?: string
   level?: number
+  /** The word being studied, when known (custom-list questions). */
+  word?: string
 }
 
 export interface QuestionResolution {
@@ -25,6 +28,8 @@ export interface QuestionResolution {
   /** The question text (for the end-of-game study sheet). */
   question?: string
   explanation?: string
+  /** The studied word, when the question knows it (feeds the Word Book). */
+  word?: string
 }
 
 interface QuestionSceneData {
@@ -56,8 +61,60 @@ const FALLBACK_QUESTIONS: Record<'vocab' | 'grammar', QuestionData> = {
   },
 }
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** The sentence with the word (and any ending, e.g. "orbits") blanked out, or null if it isn't there. */
+function blankSentence(sentence: string | undefined, word: string): string | null {
+  if (!sentence) return null
+  const m = new RegExp(`(^|[^\\p{L}])(${escapeRe(word)}\\p{L}*)`, 'iu').exec(sentence)
+  if (!m) return null
+  const idx = m.index + m[1].length
+  // "a/an" right before the blank would give the answer away.
+  const before = sentence.slice(0, idx).replace(/\b(an?|An?) $/, a => (a[0] === 'A' ? 'A(n) ' : 'a(n) '))
+  return `${before}_____${sentence.slice(idx + m[2].length)}`
+}
+
+let customQuestionCount = 0
+
+/**
+ * A board question built from the teacher's active word list: definition → word, word → definition,
+ * or fill-in-the-blank when the entry has an example sentence. Distractors are other list words.
+ */
+export function customVocabQuestion(list: WordList): QuestionData | null {
+  const entries = playableEntries(list)
+  if (entries.length < 4) return null
+  const e = drawFromDeck(`board-custom:${list.id}`, entries)
+  const key = (x: WordEntry) => x.word.toLowerCase()
+  const others = pickDistinct(entries, 3, x =>
+    key(x) === key(e) || x.definition.toLowerCase() === e.definition.toLowerCase())
+  if (others.length < 3) return null
+  const blanked = blankSentence(e.sentence, e.word)
+  const shortDefs = [e, ...others].every(x => x.definition.length <= 80)
+  const kinds: ('def' | 'word' | 'blank')[] = ['def', ...(shortDefs ? ['word' as const] : []), ...(blanked ? ['blank' as const] : [])]
+  const kind = kinds[customQuestionCount++ % kinds.length]
+  const explanation = `${e.word}: ${e.definition}`
+  if (kind === 'word') {
+    return {
+      question: `What does '${e.word}' mean?`,
+      answers: [e.definition, ...others.map(o => o.definition)].map(cap),
+      correct: 0,
+      explanation,
+      word: e.word,
+    }
+  }
+  return {
+    question: kind === 'blank' ? `Which word completes the sentence?\n“${blanked}”` : `Which word means “${e.definition}”?`,
+    answers: [e.word, ...others.map(o => o.word)],
+    correct: 0,
+    explanation,
+    word: e.word,
+  }
+}
+
 export class QuestionScene extends Phaser.Scene {
   private currentQuestion?: string
+  private currentWord?: string
   constructor() { super('QuestionScene') }
 
   private d(ms: number) {
@@ -78,10 +135,14 @@ export class QuestionScene extends Phaser.Scene {
       ? this.cache.json.get('vocab')?.questions as QuestionData[] | undefined
       : this.cache.json.get('grammar')?.questions as QuestionData[] | undefined
     const questions = Array.isArray(bank) ? filterByLevel(bank, 10) : []
-    const raw: QuestionData = questions.length > 0
+    // Teacher mode: vocab tiles ask about the active custom list (grammar tiles stay grammar).
+    const customList = type === 'vocab' ? activeCustomList() : undefined
+    const custom = customList ? customVocabQuestion(customList) : null
+    const raw: QuestionData = custom ?? (questions.length > 0
       ? drawFromDeck(`board-${data.type}`, questions)
-      : FALLBACK_QUESTIONS[type]
+      : FALLBACK_QUESTIONS[type])
     this.currentQuestion = raw.question
+    this.currentWord = raw.word
     // Shuffle answer order each time so players (and CPUs) can't learn a key pattern.
     const order = raw.answers.map((_, i) => i)
     Phaser.Utils.Array.Shuffle(order)
@@ -127,7 +188,7 @@ export class QuestionScene extends Phaser.Scene {
     }
 
     const headerColor = type === 'vocab' ? hexColor(COLORS.sky) : hexColor(COLORS.warning)
-    const headerLabel = type === 'vocab' ? 'VOCABULARY QUESTION' : 'GRAMMAR QUESTION'
+    const headerLabel = type === 'vocab' ? (custom ? `📝 ${customList!.name.toUpperCase()}` : 'VOCABULARY QUESTION') : 'GRAMMAR QUESTION'
     const header = this.add.text(w / 2, h / 2 - 210, headerLabel, {
       fontSize: '26px',
       fontFamily: FONT.display,
@@ -406,6 +467,7 @@ export class QuestionScene extends Phaser.Scene {
       speedSurge: correct && speedSurge,
       question: this.currentQuestion,
       explanation,
+      word: this.currentWord,
     }))
   }
 }

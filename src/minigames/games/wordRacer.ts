@@ -186,7 +186,7 @@ export const wordRacer: MinigameDef = {
       lastProgressAt = elapsed
       const card = scene.add.container(area.cx, cardY)
       card.add(drawCard(scene, Math.min(area.width - 40, 860), 104, accent))
-      card.add(scene.add.text(0, -30, `TYPE THE WORD · ${word.word.length} LETTERS · ${word.pos.toUpperCase()}`, {
+      card.add(scene.add.text(0, -30, `TYPE THE WORD · ${word.word.length} LETTERS${word.pos ? ` · ${word.pos.toUpperCase()}` : ''}`, {
         fontSize: '14px', fontFamily: FONT.display, color: hexColor(accent),
       }).setOrigin(0.5))
       card.add(scene.add.text(0, 12, `“${word.definition}”`, {

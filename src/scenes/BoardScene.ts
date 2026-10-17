@@ -1286,7 +1286,7 @@ export class BoardScene extends Phaser.Scene {
               this.scene.stop('QuestionScene')
               this.scene.resume()
               if (!player.isCpu && !isAutoSimMode() && type === 'vocab' && result.question) {
-                const word = wordFromQuestion(result.question)
+                const word = result.word ?? wordFromQuestion(result.question)
                 if (word) recordWords([{ word, correct: result.correct, note: result.explanation }])
                 checkWordAchievements()
               }
