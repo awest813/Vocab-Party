@@ -28,7 +28,7 @@ import {
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { TEXTURE_KEYS } from '../systems/ExternalAssetKeys'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
-import { Sfx } from '../systems/Sfx'
+import { Sfx, type MusicTrack } from '../systems/Sfx'
 import { equippedBoardTrack, isEquipped } from '../systems/Unlocks'
 import type { QuestionResolution } from './QuestionScene'
 import { clearSave, writeSave, type SaveData } from '../systems/SaveGame'
@@ -252,7 +252,7 @@ export class BoardScene extends Phaser.Scene {
     this.createPauseButton()
     const escHandler = () => this.pauseGame()
     this.input.keyboard?.on('keydown-ESC', escHandler)
-    Sfx.startMusic(equippedBoardTrack())
+    Sfx.startMusic(this.boardMusic())
 
     const touch = isTouchPreferred(this.sys.game)
 
@@ -1472,6 +1472,7 @@ export class BoardScene extends Phaser.Scene {
       onComplete: (result: BattleResult) => {
         this.scene.stop('BattleScene')
         this.scene.resume()
+        Sfx.startMusic(this.boardMusic())
 
         const attacker = this.state.players[playerIndex]
         const defender = otherOnTile
@@ -2117,9 +2118,15 @@ export class BoardScene extends Phaser.Scene {
     return this.state.lastStretchDone
   }
 
+  /** The equipped board theme, or the faster finale once the Last Stretch begins. */
+  private boardMusic(): MusicTrack {
+    return this.state?.lastStretchDone ? 'finale' : equippedBoardTrack()
+  }
+
   /** Mario Party–style "last turns" event: the trailing player gets a comeback boost. */
   private async startLastStretch() {
     this.state.lastStretchDone = true
+    Sfx.startMusic('finale')
     this.rolling = true
     const ranked = [...this.state.players].sort((a, b) => (a.trophies - b.trophies) || (a.score - b.score))
     const trailing = ranked[0]
@@ -2190,7 +2197,7 @@ export class BoardScene extends Phaser.Scene {
       onComplete: (result: MinigameResult) => {
         this.scene.stop('MinigameScene')
         this.scene.resume()
-        Sfx.startMusic(equippedBoardTrack())
+        Sfx.startMusic(this.boardMusic())
         this.absorbMinigameStudy(result)
         done(result)
       },

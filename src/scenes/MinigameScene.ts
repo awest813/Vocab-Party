@@ -3,7 +3,7 @@ import { CPU_LEVEL_LABEL, type CpuLevel } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { rewardArcade } from '../systems/Unlocks'
-import { Sfx } from '../systems/Sfx'
+import { minigameTrack, Sfx } from '../systems/Sfx'
 import { characterTextureKey } from '../systems/SpriteFactory'
 import { createButton } from '../ui/Button'
 import { showConfetti } from '../ui/Confetti'
@@ -151,7 +151,7 @@ export class MinigameScene extends Phaser.Scene {
     const forced = getMinigame(data.gameId)
     this.def = forced ?? pickPartyMinigame()
     this.paintBackdrop()
-    Sfx.startMusic('minigame')
+    Sfx.startMusic(minigameTrack(this.def.id))
     if (forced) this.showIntro()
     else this.showRoulette()
   }

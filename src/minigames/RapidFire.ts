@@ -149,9 +149,10 @@ export function runRapidFire(ctx: MinigameContext, next: () => RapidQuestion, op
       missRun = 0
       tile.setChoiceState('correct')
       tiles.forEach((t, j) => { if (j !== i) t.setChoiceState('off') })
-      Sfx.correct()
+      Sfx.combo(streak)
       ctx.addScore(1, tile.x, tile.y - 30)
       if (streak % streakEvery === 0) {
+        Sfx.streakBonus()
         // Award now (the clock could expire during a delay); only the flash waits.
         ctx.addScore(1, tile.x + 70, tile.y - 60)
         ctx.after(120, () => ctx.flash(`🔥 STREAK BONUS ×${streak}`, '#ffb84a'))

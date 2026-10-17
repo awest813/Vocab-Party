@@ -84,6 +84,7 @@ export const letterRescue: MinigameDef = {
     const popBalloon = () => {
       const b = balloons[lives]
       if (!b) return
+      Sfx.pop()
       if (ctx.reduceMotion) {
         b.setVisible(false)
         return

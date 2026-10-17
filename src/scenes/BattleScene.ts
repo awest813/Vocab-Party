@@ -59,6 +59,7 @@ export class BattleScene extends Phaser.Scene {
     }
     addVignette(this, 0.55, -3)
     Sfx.battle()
+    Sfx.startMusic('battle')
 
     const attacker = data.state.players[data.attackerIndex]
     const defender = data.state.players[data.defenderIndex]

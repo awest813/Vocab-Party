@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { getSettings, type WordLevel } from '../../systems/GameSettings'
 import { isAutoSimMode } from '../../systems/gameFlags'
-import { Sfx } from '../../systems/Sfx'
+import { minigameTrack, Sfx } from '../../systems/Sfx'
 import { FONT, hexColor } from '../../ui/Theme'
 import type { LexWord } from '../ContentBank'
 import type { MinigameDef } from '../types'
@@ -467,7 +467,7 @@ export const wordHero: MinigameDef = {
       },
       stop() {
         notes.forEach(n => { n.done = true })
-        Sfx.startMusic('minigame')
+        Sfx.startMusic(minigameTrack('word-hero'))
         // Song summary under the runner's TIME'S UP banner.
         const total = stats.hits + stats.missed
         const acc = total > 0 ? Math.round((stats.hits / total) * 100) : 0

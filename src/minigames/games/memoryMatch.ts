@@ -138,7 +138,7 @@ export const memoryMatch: MinigameDef = {
 
     const flip = (card: Card) => {
       if (busy || card.open || card.matched || ctx.isOver()) return
-      Sfx.uiClick()
+      Sfx.flip()
       if (!first) {
         first = card
         flipTo(card, true)

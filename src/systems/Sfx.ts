@@ -296,6 +296,55 @@ class SfxSystem {
     this.tone({ freq: 1319, type: 'square', duration: 0.1, gain: 0.05, delay: 0.05 })
   }
 
+  /** Correct answer in a streak: the chime climbs a semitone per hit (capped), for a combo feel. */
+  combo(streak: number) {
+    this.unlock()
+    if (!this.fresh('combo')) return
+    const k = Math.pow(2, Math.min(Math.max(0, streak - 1), 9) / 12)
+    this.tone({ freq: 523.25 * k, type: 'sine', duration: 0.09, gain: 0.13 })
+    this.tone({ freq: 659.25 * k, type: 'sine', duration: 0.1, gain: 0.11, delay: 0.06 })
+    this.tone({ freq: 783.99 * k, type: 'triangle', duration: 0.16, gain: 0.1, delay: 0.12 })
+  }
+
+  /** Streak bonus fanfare: quick rising arpeggio with a sparkle. */
+  streakBonus() {
+    this.unlock()
+    ;[784, 988, 1175, 1568].forEach((f, i) => this.tone({ freq: f, type: 'square', duration: 0.08, gain: 0.07, delay: 0.1 + i * 0.05 }))
+    this.tone({ freq: 2093, type: 'sine', duration: 0.3, gain: 0.05, delay: 0.32 })
+  }
+
+  /** Card flip (Memory Match). */
+  flip() {
+    this.unlock()
+    if (!this.fresh('flip')) return
+    this.noiseBurst(0.05, 0.07, 2600)
+    this.tone({ freq: 600, endFreq: 900, type: 'triangle', duration: 0.05, gain: 0.05 })
+  }
+
+  /** Balloon pop (Letter Rescue). */
+  pop() {
+    this.unlock()
+    if (!this.fresh('pop')) return
+    this.noiseBurst(0.07, 0.14, 1500)
+    this.tone({ freq: 900, endFreq: 300, type: 'sine', duration: 0.08, gain: 0.08 })
+  }
+
+  /** Mallet bonk (Whack-a-Word); `good` adds a bright ding. */
+  bonk(good = true) {
+    this.unlock()
+    if (!this.fresh('bonk')) return
+    this.tone({ freq: 240, endFreq: 120, type: 'triangle', duration: 0.09, gain: 0.16 })
+    this.noiseBurst(0.04, 0.08, 900)
+    if (good) this.tone({ freq: 1318.5, type: 'sine', duration: 0.18, gain: 0.07, delay: 0.05 })
+  }
+
+  /** A link snapping into place (Link Up). */
+  zip() {
+    this.unlock()
+    if (!this.fresh('zip')) return
+    this.tone({ freq: 400, endFreq: 1600, type: 'triangle', duration: 0.12, gain: 0.07 })
+  }
+
   /** Coins paid out or lost: a short falling jingle. */
   coinLoss() {
     this.unlock()
@@ -637,7 +686,7 @@ class SfxSystem {
   }
 }
 
-export type MusicTrack = 'menu' | 'board' | 'minigame' | 'results' | 'lofi' | 'fiesta'
+export type MusicTrack = 'menu' | 'board' | 'minigame' | 'minigame2' | 'minigame3' | 'battle' | 'finale' | 'results' | 'lofi' | 'fiesta'
 
 interface TrackDef {
   bpm: number
@@ -702,6 +751,70 @@ const MUSIC_TRACKS: Record<MusicTrack, TrackDef> = {
     kick: [0, 4, 8, 12],
     snare: [4, 12],
     hat: [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15],
+  },
+  // Second minigame theme: funky E minor groove (Em – C – D – Bm).
+  minigame2: {
+    bpm: 146,
+    chords: [[52, 55, 59], [48, 52, 55], [50, 54, 57], [47, 50, 54]],
+    arp: [0, 2, 1, 2, 0, 1, 2, 1],
+    lead: [
+      [76, _, 76, 79, _, 76, _, 74, 76, _, _, _, 71, _, 74, _],
+      [72, _, 72, 76, _, 72, _, 71, 72, _, _, _, 67, _, 71, _],
+      [74, _, 74, 78, _, 74, _, 72, 74, _, 78, _, 81, _, _, _],
+      [78, _, 76, _, 74, _, 71, _, 74, _, _, _, 71, _, _, _],
+    ],
+    bass: [0, 3, 6, 8, 11, 14],
+    kick: [0, 6, 8, 14],
+    snare: [4, 12],
+    hat: [2, 3, 6, 10, 11, 14],
+  },
+  // Third minigame theme: bouncy D major skip (D – G – A – D).
+  minigame3: {
+    bpm: 132,
+    chords: [[50, 54, 57], [55, 59, 62], [57, 61, 64], [50, 54, 57]],
+    arp: [0, 1, 2, 1, 0, 1, 2, 1],
+    lead: [
+      [78, _, 81, _, 78, _, 74, _, 76, _, 78, _, 81, _, _, _],
+      [79, _, 83, _, 79, _, 76, _, 74, _, 76, _, 79, _, _, _],
+      [81, _, 85, _, 81, _, 76, _, 79, _, 78, _, 76, _, _, _],
+      [78, _, 74, _, 76, _, 78, _, 74, _, _, _, _, _, _, _],
+    ],
+    bass: [0, 4, 8, 12],
+    kick: [0, 8],
+    snare: [4, 12],
+    hat: [2, 6, 10, 14],
+  },
+  // Battle: tense D minor stabs (Dm – Bb – C – A).
+  battle: {
+    bpm: 160,
+    chords: [[50, 53, 57], [46, 50, 53], [48, 52, 55], [45, 49, 52]],
+    arp: [0, 0, 1, 2, 0, 0, 2, 1],
+    lead: [
+      [74, _, _, 74, _, _, 77, _, 76, _, 74, _, 72, _, _, _],
+      [70, _, _, 70, _, _, 74, _, 72, _, 70, _, 69, _, _, _],
+      [72, _, _, 72, _, _, 76, _, 74, _, 72, _, 71, _, _, _],
+      [69, _, 73, _, 76, _, 73, _, 81, _, _, _, 76, _, _, _],
+    ],
+    bass: [0, 2, 4, 6, 8, 10, 12, 14],
+    kick: [0, 4, 8, 12],
+    snare: [4, 12],
+    hat: [1, 3, 5, 7, 9, 11, 13, 15],
+  },
+  // Last Stretch: the board groove's chords, faster and driving.
+  finale: {
+    bpm: 140,
+    chords: [[53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64]],
+    arp: [0, 1, 2, 1, 0, 2, 1, 2],
+    lead: [
+      [72, _, 74, _, 76, _, 77, _, 79, _, 77, _, 76, _, 74, _],
+      [74, _, 76, _, 77, _, 79, _, 81, _, 79, _, 77, _, 76, _],
+      [76, _, 79, _, 76, _, 72, _, 71, _, 72, _, 74, _, 76, _],
+      [81, _, _, _, 79, _, 77, _, 76, _, 74, _, 72, _, _, _],
+    ],
+    bass: [0, 2, 4, 6, 8, 10, 12, 14],
+    kick: [0, 4, 8, 12],
+    snare: [4, 12],
+    hat: [2, 6, 10, 14],
   },
   // Party Shop board theme: mellow lo-fi seventh chords (Cmaj7 – Am7 – Dm7 – G7).
   lofi: {
@@ -774,6 +887,13 @@ function midiFreq(m: number): number {
 }
 
 export const Sfx = new SfxSystem()
+
+/** Three minigame themes rotate by game, so back-to-back games don't sound the same. */
+export function minigameTrack(gameId: string): MusicTrack {
+  let h = 0
+  for (const ch of gameId) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  return (['minigame', 'minigame2', 'minigame3'] as const)[h % 3]
+}
 
 /** Install a one-time unlock on the first pointer/key interaction with the page. */
 export function installAudioUnlock() {

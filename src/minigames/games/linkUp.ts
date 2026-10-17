@@ -90,6 +90,7 @@ export const linkUp: MinigameDef = {
         paint(a, 'done')
         paint(n, 'done')
         redrawLines()
+        Sfx.zip()
         Sfx.correct()
         ctx.addScore(1, (a.x + n.x) / 2, (a.y + n.y) / 2 - 30)
         const w = words[a.pair]

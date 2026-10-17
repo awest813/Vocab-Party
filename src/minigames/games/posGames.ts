@@ -144,7 +144,7 @@ export const whackAWord: MinigameDef = {
       if (!m || m.dead || ctx.isOver()) return
       const { x, y } = holePos(i)
       if (m.good) {
-        Sfx.correct()
+        Sfx.bonk(true)
         ctx.addScore(1, x, y - 90)
         ctx.recordWord(m.word.word, true, `${m.word.pos}: ${m.word.definition}`)
         hideMole(m, 'hit')
@@ -346,12 +346,13 @@ export const wordSorter: MinigameDef = {
       }
       if (chosen.pos === w.pos) {
         streak++
-        Sfx.correct()
+        Sfx.combo(streak)
         drawBin(chosen.g, chosen.pos, 'good')
         ctx.addScore(1, binX(i), binY - 90)
         if (streak % 5 === 0) {
           // Award now so the buzzer can't swallow it; only the flash is cosmetic.
           ctx.addScore(1, binX(i) + 60, binY - 120)
+          Sfx.streakBonus()
           ctx.flash(`🔥 STREAK ×${streak}`, '#ffb84a')
         }
         ctx.recordWord(w.word, true, `${w.pos}: ${w.definition}`)
