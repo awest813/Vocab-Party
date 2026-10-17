@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import { CPU_LEVEL_LABEL, type CpuLevel } from '../systems/CpuPolicy'
 import { isAutoSimMode, scaleAutoSimDelay } from '../systems/gameFlags'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
-import { rewardArcade } from '../systems/Unlocks'
+import { medalCount, rewardArcade } from '../systems/Unlocks'
 import { Sfx } from '../systems/Sfx'
 import { characterTextureKey } from '../systems/SpriteFactory'
 import { createButton } from '../ui/Button'
@@ -904,6 +904,8 @@ export class MinigameScene extends Phaser.Scene {
       if (score >= this.def.cpu.hard[1]) unlock('gold_medal')
       const bests = getPersonalBests()
       if (MINIGAMES.every(m => (bests[m.id] ?? 0) > 0)) unlock('arcade_all')
+      if (medalCount(3) >= 5) unlock('gold_5')
+      if (medalCount(1) >= MINIGAMES.length) unlock('bronze_all')
     }
 
     const panel = createPanel(this, {

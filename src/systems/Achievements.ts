@@ -2,12 +2,15 @@ import { Sfx } from './Sfx'
 import { COLORS, FONT, hexColor } from '../ui/Theme'
 import { getProgress, masteryOf, saveProgress } from './Progress'
 import { shouldReduceMotion } from './GameSettings'
-import { getTickets, onTickets, rewardAchievement } from './Unlocks'
+import { getLifetimeTickets, getTickets, onTickets, rewardAchievement } from './Unlocks'
 
 // Every ticket reward gets the same corner toast as achievements.
-onTickets((gained, reason) => showAchievementToast({
-  id: 'tickets', icon: '🎟️', kicker: 'PARTY TICKETS', title: `+${gained} tickets`, desc: `${reason} · ${getTickets()} to spend in the Party Shop`,
-}))
+onTickets((gained, reason) => {
+  showAchievementToast({
+    id: 'tickets', icon: '🎟️', kicker: 'PARTY TICKETS', title: `+${gained} tickets`, desc: `${reason} · ${getTickets()} to spend in the Party Shop`,
+  })
+  if (getLifetimeTickets() >= 500) unlock('tickets_500')
+})
 
 export interface AchievementDef {
   id: string
@@ -35,6 +38,16 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'words_100', icon: '📚', title: 'Word Collector', desc: 'Practice 100 different words.' },
   { id: 'master_10', icon: '⭐', title: 'Wordsmith', desc: 'Master 10 words.' },
   { id: 'master_50', icon: '👑', title: 'Lexicon Legend', desc: 'Master 50 words.' },
+  { id: 'parties_10', icon: '🎊', title: 'Party Animal', desc: 'Finish 10 parties.' },
+  { id: 'wins_5', icon: '🏅', title: 'Repeat Champion', desc: 'Win 5 parties.' },
+  { id: 'hard_win', icon: '🤖', title: 'CPU Crusher', desc: 'Win a party against three Hard CPUs.' },
+  { id: 'gold_5', icon: '🎖️', title: 'Golden Touch', desc: 'Earn a gold medal in 5 different minigames.' },
+  { id: 'bronze_all', icon: '🎯', title: 'All-Rounder', desc: 'Earn at least bronze in every minigame.' },
+  { id: 'words_250', icon: '📕', title: 'Bookworm', desc: 'Practice 250 different words.' },
+  { id: 'master_100', icon: '🧠', title: 'Walking Dictionary', desc: 'Master 100 words.' },
+  { id: 'shop_first', icon: '🛍️', title: 'Treat Yourself', desc: 'Buy something in the Party Shop.' },
+  { id: 'golden_one', icon: '✨', title: 'Gold Standard', desc: 'Unlock a golden character.' },
+  { id: 'tickets_500', icon: '🎟️', title: 'Ticket Tycoon', desc: 'Earn 500 Party Tickets in total.' },
 ]
 
 export function isUnlocked(id: string): boolean {
@@ -63,6 +76,8 @@ export function checkWordAchievements(): void {
   if (records.length >= 100) unlock('words_100')
   if (mastered >= 10) unlock('master_10')
   if (mastered >= 50) unlock('master_50')
+  if (records.length >= 250) unlock('words_250')
+  if (mastered >= 100) unlock('master_100')
 }
 
 const toastQueue: AchievementDef[] = []

@@ -61,6 +61,11 @@ export class ResultsScene extends Phaser.Scene {
         if (humanWon && getSettings().wordLevel === 'challenge') unlock('challenge_win')
         const awards = state.bonusAwards ?? []
         if (awards.length === 3 && state.players.some(p => !p.isCpu && awards.every(a => a.winners.includes(p.id)))) unlock('bonus_sweep')
+        const prog = getProgress()
+        if (prog.gamesPlayed >= 10) unlock('parties_10')
+        if (prog.gamesWon >= 5) unlock('wins_5')
+        const cpus = state.players.filter(p => p.isCpu)
+        if (humanWon && cpus.length >= 3 && cpus.every(p => p.cpuLevel === 'hard')) unlock('hard_win')
       }
     }
 

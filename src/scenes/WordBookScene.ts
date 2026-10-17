@@ -162,9 +162,12 @@ export class WordBookScene extends Phaser.Scene {
   }
 
   /** Badge gallery: unlocked achievements in color with dates, locked ones dimmed. */
-  private openAchievements() {
+  private openAchievements(page = 0) {
     this.closeAchievements()
     Sfx.uiClick()
+    const PER_PAGE_ACH = 16
+    const pages = Math.max(1, Math.ceil(ACHIEVEMENTS.length / PER_PAGE_ACH))
+    page = Phaser.Math.Clamp(page, 0, pages - 1)
     const w = this.scale.width
     const h = this.scale.height
     const layer = this.add.container(0, 0).setDepth(100)
@@ -190,7 +193,7 @@ export class WordBookScene extends Phaser.Scene {
     const x0 = w / 2 - (cols * cw + (cols - 1) * 12) / 2 + cw / 2
     const y0 = h / 2 - ph / 2 + 80 + ch / 2
     const stamps = getProgress().achievements ?? {}
-    ACHIEVEMENTS.forEach((a, i) => {
+    ACHIEVEMENTS.slice(page * PER_PAGE_ACH, (page + 1) * PER_PAGE_ACH).forEach((a, i) => {
       const on = isUnlocked(a.id)
       const x = x0 + (i % cols) * (cw + 12)
       const y = y0 + Math.floor(i / cols) * (ch + 8)
@@ -216,6 +219,17 @@ export class WordBookScene extends Phaser.Scene {
     const close = createButton(this, w / 2, h / 2 + ph / 2 - 32, 'CLOSE', COLORS.chrome, COLORS.chromeDeep, 180, 46)
     close.on('pointerdown', () => this.closeAchievements())
     layer.add(close)
+    if (pages > 1) {
+      const prev = createButton(this, w / 2 - 190, h / 2 + ph / 2 - 32, '◀', COLORS.bgPanelAlt, COLORS.chromeDeep, 70, 46)
+      const next = createButton(this, w / 2 + 190, h / 2 + ph / 2 - 32, '▶', COLORS.bgPanelAlt, COLORS.chromeDeep, 70, 46)
+      prev.on('pointerdown', () => this.openAchievements(page - 1))
+      next.on('pointerdown', () => this.openAchievements(page + 1))
+      setButtonEnabled(prev, page > 0)
+      setButtonEnabled(next, page < pages - 1)
+      layer.add([prev, next, this.add.text(w / 2 + 250, h / 2 + ph / 2 - 32, `${page + 1} / ${pages}`, {
+        fontSize: '16px', fontFamily: FONT.display, color: hexColor(COLORS.mist),
+      }).setOrigin(0, 0.5)])
+    }
   }
 
   private entries(): [string, WordRecord][] {

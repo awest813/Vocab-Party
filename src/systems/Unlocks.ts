@@ -130,6 +130,20 @@ export function getTickets(): number {
   return load().tickets
 }
 
+export function getLifetimeTickets(): number {
+  return load().earned
+}
+
+/** How many different minigames have a medal of at least `tier` (1 bronze, 2 silver, 3 gold). */
+export function medalCount(tier: 1 | 2 | 3): number {
+  const games = new Set<string>()
+  for (const c of load().claimed) {
+    const m = /^medal:(.+):([123])$/.exec(c)
+    if (m && Number(m[2]) >= tier) games.add(m[1])
+  }
+  return games.size
+}
+
 export function isOwned(id: string): boolean {
   return load().owned.includes(id)
 }

@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { isTouchPreferred, shouldReduceMotion } from '../systems/GameSettings'
 import { Sfx } from '../systems/Sfx'
+import { unlock } from '../systems/Achievements'
 import { generateDiceTextures, generatePlayerTextures, goldenPreviewKey } from '../systems/SpriteFactory'
 import { buy, equip, getTickets, isEquipped, isOwned, UNLOCKS, type UnlockItem, type UnlockKind } from '../systems/Unlocks'
 import { createButton, setButtonEnabled, setButtonFill } from '../ui/Button'
@@ -180,6 +181,8 @@ export class ShopScene extends Phaser.Scene {
       }
       Sfx.purchase()
       showConfetti(this, this.scale.width / 2, 200)
+      unlock('shop_first')
+      if (item.kind === 'golden') unlock('golden_one')
     } else {
       equip(item.id)
       Sfx.uiToggle()
