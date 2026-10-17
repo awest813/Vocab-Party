@@ -190,9 +190,12 @@ export class WordListScene extends Phaser.Scene {
     layer.add(this.add.text(TEXT_RECT.x, TEXT_RECT.y - 14, 'WORDS · one per line', { fontSize: '12px', fontFamily: FONT.display, color: hexColor(COLORS.gold) }).setOrigin(0, 0.5))
     this.savedText = this.add.text(TEXT_RECT.x + TEXT_RECT.w, TEXT_RECT.y - 14, '', { fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mint) }).setOrigin(1, 0.5)
     layer.add(this.savedText)
-    layer.add(this.add.text(TEXT_RECT.x, TEXT_RECT.y + TEXT_RECT.h + 10,
-      'Formats: word - definition | example sentence\nAlso: word: definition · word⇥definition (from a spreadsheet)\nor CSV with a header: word,definition,sentence,synonyms,antonyms', {
-        fontSize: '12px', fontFamily: FONT.body, color: hexColor(COLORS.mute), lineSpacing: 2,
+    // Phones scale the canvas down a lot, so touch gets a shorter, larger cheat sheet.
+    const touch = isTouchPreferred(this.sys.game)
+    layer.add(this.add.text(TEXT_RECT.x, TEXT_RECT.y + TEXT_RECT.h + 10, touch
+      ? 'Type: word - definition | example\nAlso works: word: definition · spreadsheet rows'
+      : 'Formats: word - definition | example sentence\nAlso: word: definition · word⇥definition (from a spreadsheet)\nor CSV with a header: word,definition,sentence,synonyms,antonyms', {
+        fontSize: touch ? '19px' : '12px', fontFamily: FONT.body, color: hexColor(touch ? COLORS.mist : COLORS.mute), lineSpacing: 2,
       }))
 
     this.activeBtn = createButton(this, 848, 148, '⭐ SET ACTIVE', COLORS.gold, COLORS.goldDeep, 230, 46)
